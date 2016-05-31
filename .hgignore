@@ -1,0 +1,14 @@
+syntax: glob
+
+devdata.db
+.git
+*.pyc
+*.pyo
+.idea
+venv
+*.egg
+*.egg-info
+.coverage
+*.swp
+*.DS_Store
+*.orig
