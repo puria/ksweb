@@ -37,7 +37,7 @@ def bootstrap(command, conf, vars):
     u1.user_name = 'lawyer'
     u1.display_name = 'Lawyer'
     u1.email_address = 'lawyer1@somedomain.com'
-    u.groups = [g1]
+    u1.groups = [g1]
     u1.password = 'lawyerks'
 
     u2 = model.User()
