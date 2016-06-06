@@ -38,6 +38,7 @@ class RootController(BaseController):
         tmpl_context.project_name = "ksweb"
 
     @expose('ksweb.templates.index')
+    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def index(self):
         """Handle the front-page."""
         return dict(page='index')
