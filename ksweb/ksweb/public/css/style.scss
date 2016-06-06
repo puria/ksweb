@@ -1,3 +1,5 @@
+@import "palette.scss";
+
 /* TurboGears flash bootstrap look */
 #flash > div {
   padding: 8px 35px 8px 14px;
@@ -29,7 +31,7 @@
   border-color: #bce8f1;
 }
 
-/* Footer styling */
+/* Footer styling
 .footer {
     margin-top: 45px;
     padding: 35px 30px 36px;
@@ -41,30 +43,38 @@
     color: #555;
 }
 
-/* Replace base style of bootstrap navigation bar */
+*/
 
-.navbar {
-    border-radius: 0px;
+/* Layout style for sidebar and content */
+
+html,body,.ks-container
+{
+    height:100%;
 }
 
-.navbar-default {
-    background-color: #004c99;
-    border-color: #004c99;
-    color: #ffffff;
+.ks-container
+{
+    display:table;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
-.navbar-default .navbar-brand {
-    color: #ffffff;
+.ks-row
+{
+    height: 100%;
+    display: table-row;
 }
 
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-    color: #0072e5;
-    background-color: transparent;
+.ks-sidebar {
+  background: $light-gray;
+  display: table-cell;
+  float: none;
 }
 
-
-.navbar-default .navbar-nav>li>a {
-	font-size: 15px;
-	line-height: 1;
-	color: #ffffff;
+.ks-content {
+    display: table-cell;
+    float: none;
 }

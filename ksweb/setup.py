@@ -43,7 +43,8 @@ install_requires = [
     "tw2.forms",
     "tgext.admin >= 0.6.1",
     "WebHelpers2",
-    "tgext.webassets==0.0.2"
+    "tgext.webassets==0.0.2",
+    "libsass==0.8.3"
 ]
 
 if py_version != (3, 2):

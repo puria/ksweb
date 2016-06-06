@@ -138,11 +138,13 @@ from tgext import webassets
 webassets.plugme(base_config, bundles={
     'js_all': webassets.Bundle('javascript/jquery.js', 'javascript/bootstrap.min.js',
                                filters='rjsmin', output='assets/js_all.js'),
-    #    'css_all': webassets.Bundle('css/style.css', 'css/bootstrap.min.css',
-
-    'css_all': webassets.Bundle('css/style.css', 'css/ks_theme.css',
+    'css_all': webassets.Bundle('css/ks_theme.css',
+                                webassets.Bundle('css/style.scss', filters='libsass'),
+                                webassets.Bundle('css/navbar.scss', filters='libsass'),
+                                webassets.Bundle('css/sidebar.scss', filters='libsass'),
                                filters='cssmin', output='assets/css_all.css')
 })
+
 
 try:
     # Enable DebugBar if available, install tgext.debugbar to turn it on
