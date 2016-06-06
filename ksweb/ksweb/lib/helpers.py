@@ -3,7 +3,6 @@
 import logging
 from markupsafe import Markup
 from datetime import datetime
-
 log = logging.getLogger(__name__)
 
 
@@ -19,7 +18,10 @@ def icon(icon_name):
 # Import commonly used helpers from WebHelpers2 and TG
 from tg.util.html import script_json_encode
 
+from ..controllers import partials
+
 try:
     from webhelpers2 import date, html, number, misc, text
 except SyntaxError:
     log.error("WebHelpers2 helpers not available with this Python Version")
+
