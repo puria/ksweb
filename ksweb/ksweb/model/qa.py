@@ -8,7 +8,7 @@ from ksweb.model import DBSession
 
 
 class Qa(MappedClass):
-    QA_TYPE = [u"Text", u"Single", u"Multi"]
+    QA_TYPE = [u"text", u"single", u"multi"]
 
     class __mongometa__:
         session = DBSession
