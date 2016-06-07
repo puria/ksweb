@@ -141,9 +141,9 @@ webassets.plugme(base_config, bundles={
                                'javascript/ractive.js',
                                filters='rjsmin', output='assets/js_all.js'),
     'css_all': webassets.Bundle('css/ks_theme.css',
-                                webassets.Bundle('css/style.scss', filters='libsass'),
-                                webassets.Bundle('css/navbar.scss', filters='libsass'),
-                                webassets.Bundle('css/sidebar.scss', filters='libsass'),
+                                webassets.Bundle('css/style.scss', filters='libsass', output='assets_debug/style.css'),
+                                webassets.Bundle('css/navbar.scss', filters='libsass', output='assets_debug/navbar.css'),
+                                webassets.Bundle('css/sidebar.scss', filters='libsass', output='assets_debug/sidebar.css'),
                                filters='cssmin', output='assets/css_all.css')
 })
 
