@@ -12,4 +12,4 @@ venv
 *.swp
 *.DS_Store
 *.orig
-.webassets-cache/*
+ksweb/ksweb/public/.webassets-cache/*

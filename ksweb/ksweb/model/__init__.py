@@ -15,5 +15,7 @@ def init_model(engine):
 
 # Import your model modules here.
 from ksweb.model.auth import User, Group, Permission
+from ksweb.model.category import Category
+from ksweb.model.qa import Qa
 
-__all__ = ('User', 'Group', 'Permission')
+__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa')

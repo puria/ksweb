@@ -136,7 +136,9 @@ base_config.sa_auth.post_logout_url = '/post_logout'
 from tgext import webassets
 
 webassets.plugme(base_config, bundles={
-    'js_all': webassets.Bundle('javascript/jquery.js', 'javascript/bootstrap.min.js',
+    'js_all': webassets.Bundle('javascript/jquery.js',
+                               'javascript/bootstrap.min.js',
+                               'javascript/ractive.js',
                                filters='rjsmin', output='assets/js_all.js'),
     'css_all': webassets.Bundle('css/ks_theme.css',
                                 webassets.Bundle('css/style.scss', filters='libsass'),
