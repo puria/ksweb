@@ -46,6 +46,21 @@ def bootstrap(command, conf, vars):
     u2.email_address = 'user@somedomain.com'
     u2.password = 'userks'
 
+    c1 = model.Category(
+        name="Category 1",
+        visible=True
+    )
+
+    c2 = model.Category(
+        name="Category 2",
+        visible=True
+    )
+
+    c3 = model.Category(
+        name="Not Visible Category",
+        visible=False
+    )
+
     model.DBSession.flush()
     model.DBSession.clear()
 
