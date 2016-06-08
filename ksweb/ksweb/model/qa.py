@@ -27,6 +27,7 @@ class Qa(MappedClass):
     category = RelationProperty('Category')
 
     title = FieldProperty(s.String, required=True)
+    question = FieldProperty(s.String, required=True)
     tooltip = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*QA_TYPE), required=True)
     answers = FieldProperty(s.Anything)

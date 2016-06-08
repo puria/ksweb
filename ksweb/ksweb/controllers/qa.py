@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
-
+from bson import ObjectId
 from tg import expose, redirect, validate, flash, url, validation_errors_response, response, RestController, \
-    decode_params
+    decode_params, request
 # from tg.i18n import ugettext as _
 # from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
@@ -52,4 +52,17 @@ class QaController(RestController):
                 return dict(
                     errors={'answers': 'Inserire almeno una risposta'})
 
+        user = request.identity['user']
+
+        model.Qa(
+            _owner=user._id,
+            _category=ObjectId(category),
+            title=title,
+            question=question,
+            tooltip=tooltip,
+            type=answer_type,
+            answers=answers,
+            public=True,
+            visible=True
+        )
         return dict(errors=None)
