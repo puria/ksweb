@@ -47,10 +47,10 @@ class QaController(RestController):
         print "answers: %s" % answers
 
         if answer_type == "single" or answer_type == "multi":
-            if len(answers) <= 0:
+            if len(answers) < 2:
                 response.status_code = 412
                 return dict(
-                    errors={'answers': 'Inserire almeno una risposta'})
+                    errors={'answers': 'Inserire almeno due risposte'})
 
         user = request.identity['user']
 
