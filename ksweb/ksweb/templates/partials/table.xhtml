@@ -1,0 +1,38 @@
+
+<div class="col-md-12" style="padding-top: 25px;">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th py:for="idx, field in enumerate(fields['columns_name'])">
+                    <!--<a href="${tg.url('/pikablink_admin/' + entity_name, params=dict(order_by=fields[0][idx], desc= not desc and order_by==fields[0][idx]))}">-->
+                    ${field} <!-- ${h.icon('arrow-up' if not desc else 'arrow-down') if order_by==fields[0][idx] else '' } -->
+                    <!--</a>-->
+                </th>
+                <th py:if="actions">
+                    <!-- nameless column -->
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr py:for="entity in entities">
+            ${h.table_row_content(entity, fields['fields_name'])}
+                <td py:if="actions">
+                    ${h.material_icon('more_horiz')}
+                    <!--
+                    <a class="btn btn-primary" href="${tg.url('/pikablink_admin/'+entity_name+'/edit',
+                            params={entity_name:entity._id})}" title="Modifica">
+                            ${h.icon("pencil")}
+                    </a>
+                    <a class="btn btn-danger" href="${tg.url('/pikablink_admin/'+entity_name+'/delete?'+entity_name+'='+str(entity._id))}" title="Elimina" onclick="return confirm('Sei sicuro di voler eliminare?')">
+                            ${h.icon("remove")}
+                    </a>
+                    -->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
+</div>

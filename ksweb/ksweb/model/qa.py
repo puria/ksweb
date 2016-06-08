@@ -3,8 +3,13 @@
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
+from ming.odm.icollection import InstrumentedList
 
 from ksweb.model import DBSession
+
+
+def _format_instrumented_list(l):
+        return ', '.join(l)
 
 
 class Qa(MappedClass):
@@ -17,6 +22,11 @@ class Qa(MappedClass):
             ('_owner',),
             ('_category',),
         ]
+
+    __ROW_CONVERTERS__ = {
+        #InstrumentedObj: _format_instrumented_obj,
+        InstrumentedList: _format_instrumented_list,
+    }
 
     _id = FieldProperty(s.ObjectId)
 
