@@ -14,11 +14,19 @@
             border:2px solid blue;
         }
 
+        input[type="radio"], input[type="checkbox"] {
+            vertical-align: middle;
+            height: 24px;
+            width: 24px;
+            margin: 2px 2px 0;
+            line-height: normal;
+        }
+
     </style>
     <script id="QAForm_template" type="text/html">
         <![CDATA[
         <form class="form-horizontal" on-submit="submit-form">
-            <div class="row" style="padding-top: 20px">
+            <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
                     Create Q / A
                 </div>
@@ -31,109 +39,106 @@
                 </div>
             </div>
             <hr/>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="extra-fields-add-form">
-                        <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                            <div class="col-sm-3">
-                                <input id="extra-fields-form-title" type="text" class="form-control" placeholder="TITLE" value="{{create.title}}"/>
-                                {{#if errors.title}}
-                                <span class="help-block">{{errors.title}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="form-group {{errors.category ? 'has-error' : ''}}">
-                            <div class="col-sm-3">
-                                <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                                    <option value="" disabled selected hidden>Select Category</option>
-                                    {{#each categories}}
-                                    <option value="{{._id}}">{{.name}}</option>
-                                    {{/each}}
-                                </select>
+            <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="TITLE" value="{{create.title}}"/>
+                    {{#if errors.title}}
+                    <span class="help-block">{{errors.title}}</span>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group {{errors.category ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
+                        <option value="" disabled selected hidden>Select Category</option>
+                        {{#each categories}}
+                        <option value="{{._id}}">{{.name}}</option>
+                        {{/each}}
+                    </select>
 
-                                {{#if errors.category}}
-                                <span class="help-block">{{errors.category}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="form-group {{errors.question ? 'has-error' : ''}}">
-                            <div class="col-sm-3">
-                                <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Text" value="{{create.question}}"/>
-                                {{#if errors.question}}
-                                <span class="help-block">{{errors.question}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="form-group {{errors.tooltip ? 'has-error' : ''}}">
-                            <div class="col-sm-3">
-                                <input id="extra-fields-form-tooltip" type="text" class="form-control" placeholder="Tooltip" value="{{create.tooltip}}"/>
-                                {{#if errors.tooltip}}
-                                <span class="help-block">{{errors.tooltip}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="form-group {{errors.link ? 'has-error' : ''}}">
-                            <div class="col-sm-3">
-                                <input id="extra-fields-form-link" type="text" class="form-control" placeholder="Link" value="{{create.link}}"/>
-                                {{#if errors.link}}
-                                <span class="help-block">{{errors.link}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                Type of Answer
-                            </div>
-                            <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
-                                <div class="col-sm-3 col-sm-offset-1">
-                                    <label>
-                                        <input type="radio" name="answer_type" value="single" onclick="ractive_qa.switchResponseType('single');" />
-                                        <img src="${tg.url('/img/radio_single.png')}"  alt="Single"/>
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="answer_type" value="multi" onclick="ractive_qa.switchResponseType('multi');" />
-                                        <img src="${tg.url('/img/radio_multi.png')}"  alt="Multi"/>
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="answer_type" value="text" onclick="ractive_qa.switchResponseType('text');" />
-                                        <img src="${tg.url('/img/radio_text.png')}"  alt="Text"/>
-                                    </label>
-                                </div>
-                                {{#if errors.answer_type}}
-                                <span class="help-block">{{errors.answer_type}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            {{#if answer_type == 'single' || answer_type == 'multi'}}
-                            <div class="form-group {{errors.answers ? 'has-error' : ''}}">
-                                <div class="col-md-12" id="response">
-                                    {{#each available_reponse}}
-                                    <div class="col-md-12"><input type="{{input_type}}" name="example_response"> {{.}}</div>
-                                    {{/each}}
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-inline form-group">
-                                        <label for="response_text" onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
-                                        <input id="response_text" type="text" class="form-control" placeholder="Answer"/>
-                                    </div>
-                                </div>
-                                {{#if errors.answers}}
-                                <span class="help-block">{{errors.answers}}</span>
-                                {{/if}}
-                                {{/if}}
-                            </div>
-                            {{#if answer_type == 'text'}}
-                            <div class="col-md-12">
-                                Risposta di tipo testo
-                            </div>
-                            {{/if}}
-                        </div>
+                    {{#if errors.category}}
+                    <span class="help-block">{{errors.category}}</span>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group {{errors.question ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Text" value="{{create.question}}"/>
+                    {{#if errors.question}}
+                    <span class="help-block">{{errors.question}}</span>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group {{errors.tooltip ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <input id="extra-fields-form-tooltip" type="text" class="form-control" placeholder="Tooltip" value="{{create.tooltip}}"/>
+                    {{#if errors.tooltip}}
+                    <span class="help-block">{{errors.tooltip}}</span>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group {{errors.link ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <input id="extra-fields-form-link" type="text" class="form-control" placeholder="Link" value="{{create.link}}"/>
+                    {{#if errors.link}}
+                    <span class="help-block">{{errors.link}}</span>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    Type of Answer
+                </div>
+            </div>
+            <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
+                <div class="col-sm-3 col-sm-offset-1">
+                    <label>
+                        <input type="radio" name="answer_type" value="single" onclick="ractive_qa.switchResponseType('single');" />
+                        <img src="${tg.url('/img/radio_single.png')}"  alt="Single"/>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer_type" value="multi" onclick="ractive_qa.switchResponseType('multi');" />
+                        <img src="${tg.url('/img/radio_multi.png')}"  alt="Multi"/>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer_type" value="text" onclick="ractive_qa.switchResponseType('text');" />
+                        <img src="${tg.url('/img/radio_text.png')}"  alt="Text"/>
+                    </label>
+                </div>
+                {{#if errors.answer_type}}
+                <span class="help-block">{{errors.answer_type}}</span>
+                {{/if}}
+            </div>
+            {{#if answer_type == 'single' || answer_type == 'multi'}}
+            <div class="form-group {{errors.answers ? 'has-error' : ''}}">
+
+                {{#each available_reponse}}
+                <div class="col-md-12">
+                    <input type="{{input_type}}" name="example_response"> {{.}}
+                </div>
+                {{/each}}
+
+                <div class="col-md-3">
+                    <div class="form-inline">
+                        <label for="response_text" onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
+                        <input id="response_text" type="text" class="form-control" placeholder="Answer"/>
                     </div>
                 </div>
-            <!--</div>-->
+                {{#if errors.answers}}
+                <span class="help-block">{{errors.answers}}</span>
+                {{/if}}
+            </div>
+            {{/if}}
+
+            {{#if answer_type == 'text'}}
+            <div class="form-group">
+                <div class="col-md-12">
+                    Risposta di tipo testo
+                </div>
+            </div>
+            {{/if}}
         </form>
-        ]]>
+    ]]>
     </script>
 </head>
 
