@@ -68,3 +68,17 @@ class TestController(object):
     def tearDown(self):
         """Tear down test fixture for each functional test method."""
         teardown_db()
+
+    def _login_admin(self):
+        self.app.get(
+            '/login_handler?login=admin&password=adminks', status=302
+        )
+
+    def _login_lavewr(self):
+        self.app.get('/login_handler?login=lawyer&password=lawyerks', status=302)
+
+    def _get_user(self, email_address):
+        return model.User.query.get(email_address=email_address)
+
+    def _get_category(self, category_name):
+        return model.Category.query.get(name=category_name)

@@ -37,8 +37,8 @@ class TestAuthentication(TestController):
         resp = resp.follow(status=200)
         form = resp.form
         # Submitting the login form:
-        form['login'] = 'manager'
-        form['password'] = 'managepass'
+        form['login'] = 'admin'
+        form['password'] = 'adminks'
         post_login = form.submit(status=302)
         # Being redirected to the initially requested page:
         ok_(post_login.location.startswith('http://localhost/post_login'))
@@ -54,8 +54,8 @@ class TestAuthentication(TestController):
         resp = self.app.get('/login', status=200)
         form = resp.form
         # Submitting the login form:
-        form['login'] = 'manager'
-        form['password'] = 'managepass'
+        form['login'] = 'admin'
+        form['password'] = 'adminks'
         post_login = form.submit(status=302)
         # Being redirected to the home page:
         ok_(post_login.location.startswith('http://localhost/post_login'))
@@ -67,7 +67,7 @@ class TestAuthentication(TestController):
     def test_logout(self):
         """Logouts must work correctly"""
         # Logging in voluntarily the quick way:
-        resp = self.app.get('/login_handler?login=manager&password=managepass',
+        resp = self.app.get('/login_handler?login=admin&password=adminks',
                             status=302)
         resp = resp.follow(status=302)
         ok_('authtkt' in resp.request.cookies,
@@ -84,8 +84,8 @@ class TestAuthentication(TestController):
 
     def test_failed_login_keeps_username(self):
         """Wrong password keeps user_name in login form"""
-        resp = self.app.get('/login_handler?login=manager&password=badpassword',
+        resp = self.app.get('/login_handler?login=admin&password=badpassword',
                             status=302)
         resp = resp.follow(status=200)
         ok_('Invalid Password' in resp, resp)
-        eq_(resp.form['login'].value, 'manager')
+        eq_(resp.form['login'].value, 'admin')

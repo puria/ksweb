@@ -29,7 +29,9 @@ class Qa(MappedClass):
     title = FieldProperty(s.String, required=True)
     question = FieldProperty(s.String, required=True)
     tooltip = FieldProperty(s.String, required=False)
+    link = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*QA_TYPE), required=True)
+
     answers = FieldProperty(s.Anything)
 
     public = FieldProperty(s.Bool, if_missing=True)
