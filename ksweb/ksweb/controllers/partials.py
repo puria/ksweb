@@ -9,3 +9,12 @@ def user_menu(section=None, **kw):
 def sidebar(section=None, **kw):
     return render_template(dict(), template_name='ksweb.templates.partials.sidebar')
 
+
+def table(entities, fields, actions, **kw):
+    return render_template(
+        dict(
+            fields=fields,
+            entities=entities,
+            actions=actions
+        ),
+        template_name='ksweb.templates.partials.table')

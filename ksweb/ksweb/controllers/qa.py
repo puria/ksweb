@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
 from bson import ObjectId
-from tg import expose, redirect, validate, flash, url, validation_errors_response, response, RestController, \
-    decode_params, request
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg import expose, validate, validation_errors_response, response, RestController, decode_params, request
+import tg
+from tg.decorators import paginate
+from tg.i18n import lazy_ugettext as l_
 from tg import predicates
-
 from tw2.core import StringLengthValidator, OneOfValidator
-
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator
 
@@ -16,8 +15,17 @@ class QaController(RestController):
     allow_only = predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer'))
 
     @expose('ksweb.templates.qa.index')
+    @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
     def get_all(self, **kw):
-        return dict(page='qa-index')
+        return dict(
+            page='qa-index',
+            fields={
+                'columns_name': ['Name', 'Category', 'Question', 'Type'],
+                'fields_name': ['title', 'category', 'question', 'type']
+            },
+            entities=model.Qa.query.find(),
+            actions=True
+        )
 
     @expose('json')
     @expose('ksweb.templates.qa.new')

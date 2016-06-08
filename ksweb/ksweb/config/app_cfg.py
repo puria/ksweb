@@ -144,6 +144,7 @@ webassets.plugme(base_config, bundles={
                                 webassets.Bundle('css/style.scss', filters='libsass', output='assets_debug/style.css'),
                                 webassets.Bundle('css/navbar.scss', filters='libsass', output='assets_debug/navbar.css'),
                                 webassets.Bundle('css/sidebar.scss', filters='libsass', output='assets_debug/sidebar.css'),
+                                webassets.Bundle('css/table.scss', filters='libsass', output='assets_debug/table.css'),
                                filters='cssmin', output='assets/css_all.css')
 })
 
