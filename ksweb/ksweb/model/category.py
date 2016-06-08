@@ -10,14 +10,14 @@ class Category(MappedClass):
     class __mongometa__:
         session = DBSession
         name = 'categories'
+        unique_indexes = [('name',), ]
         indexes = [
-            ('pippo',),
             ('visible',),
         ]
 
     _id = FieldProperty(s.ObjectId)
 
-    name = FieldProperty(s.String, required=True)
+    name = FieldProperty(s.String, required=True, unique=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
 __all__ = ['Category']

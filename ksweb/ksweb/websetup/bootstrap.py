@@ -20,7 +20,7 @@ def bootstrap(command, conf, vars):
     u = model.User()
     u.user_name = 'admin'
     u.display_name = 'Example admin'
-    u.email_address = 'admin@somedomain.com'
+    u.email_address = 'admin@ks.axantweb.com'
     u.groups = [g]
     u.password = 'adminks'
 
@@ -36,7 +36,7 @@ def bootstrap(command, conf, vars):
     u1 = model.User()
     u1.user_name = 'lawyer'
     u1.display_name = 'Lawyer'
-    u1.email_address = 'lawyer1@somedomain.com'
+    u1.email_address = 'lawyer1@ks.axantweb.com'
     u1.groups = [g1]
     u1.password = 'lawyerks'
 
@@ -47,12 +47,12 @@ def bootstrap(command, conf, vars):
     u2.password = 'userks'
 
     c1 = model.Category(
-        name="Category 1",
+        name="Category_1",
         visible=True
     )
 
     c2 = model.Category(
-        name="Category 2",
+        name="Category_2",
         visible=True
     )
 
