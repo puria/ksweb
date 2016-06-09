@@ -7,7 +7,6 @@ from tg import expose, redirect, validate, flash, url, RestController, decode_pa
 # from tg.i18n import ugettext as _
 # from tg import predicates
 
-# from ksweb.model import DBSession
 from tw2.core import OneOfValidator, LengthValidator, StringLengthValidator
 
 from ksweb import model
@@ -51,7 +50,6 @@ class PreconditionSimpleController(RestController):
             )
         else:
             #  CASO AVANZATO sono state selezionate piu' risposte, devo prima creare tutte le precondizioni semplici e poi creare quella complessa
-
             if answer_type == "have_response":
                 #  Create one precondition simple for all possibility answer to question
                 #  After that create a complex precondition with previous simple precondition
@@ -63,8 +61,7 @@ class PreconditionSimpleController(RestController):
 
                 if len(interested_response) <= 1:
                     response.status_code = 412
-                    return dict(
-                        errors={'interested_response': 'Inserire almeno una risposta'})
+                    return dict(errors={'interested_response': 'Inserire almeno una risposta'})
 
             base_precond = []
             for resp in interested_response:

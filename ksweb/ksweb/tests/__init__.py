@@ -82,3 +82,20 @@ class TestController(object):
 
     def _get_category(self, category_name):
         return model.Category.query.get(name=category_name)
+
+    def _create_qa(self, title, category_id, question, tooltip, link, type, answers):
+        self.app.post_json(
+            '/qa/post', params={
+                'title': title,
+                'category': str(category_id),
+                'question': question,
+                'tooltip': tooltip,
+                'link': link,
+                'answer_type': type,
+                'answers': answers
+            }
+        )
+
+    def _get_qa(self, title):
+        return model.Qa.query.get(title=title)
+
