@@ -71,7 +71,7 @@ class PreconditionSimpleController(RestController):
                     return dict(
                         errors={'interested_response': 'Inserire almeno una risposta'})
 
-            """
+
             base_precond = []
             for resp in interested_response:
                 prec = model.Precondition(
@@ -86,10 +86,10 @@ class PreconditionSimpleController(RestController):
                 base_precond.append(prec)
             res = []
             for prc in base_precond[:-1]:
-                res.append(ObjectId(prc))
+                res.append(prc._id)
                 res.append('|')
 
-            res.append(ObjectId(base_precond[-1]))
+            res.append(base_precond[-1]._id)
 
             model.Precondition(
                 _owner=user._id,
@@ -97,5 +97,5 @@ class PreconditionSimpleController(RestController):
                 type='advanced',
                 condition=res
             )
-            """
-        return dict()
+
+        return dict(errors=None)
