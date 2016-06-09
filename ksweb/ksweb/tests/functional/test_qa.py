@@ -159,3 +159,45 @@ class TestQaController(TestController):
         qa_multi = model.Qa.query.get(title=qa_text_multi['title'])
         assert qa_multi
         assert errors == None
+
+    def test_get_one(self):
+        self._login_lavewr()
+
+        category1 = self._get_category('Category_1')
+
+        qa_text_multi = {
+            'title': 'Title of QA',
+            'category': str(category1._id),
+            'question': 'Text of the question',
+            'tooltip': 'Tooltip of QA1',
+            'link': 'http://www.axant.it',
+            'answer_type': "multi",
+            'answers': ['First', 'Second']
+        }
+
+        resp = self.app.post_json(
+            '/qa/post', params=qa_text_multi,
+        )
+
+        qa = model.Qa.query.get(title=qa_text_multi['title'])
+
+        resp = self.app.get('/qa/get_one', params={'id':str(qa._id)}).json
+        assert resp['qa']['title'] == qa_text_multi['title']
+        assert str(resp['qa']['_category']) == qa_text_multi['category']
+        assert resp['qa']['question'] == qa_text_multi['question']
+        assert resp['qa']['tooltip'] == qa_text_multi['tooltip']
+        assert resp['qa']['link'] == qa_text_multi['link']
+        assert resp['qa']['type'] == qa_text_multi['answer_type'], (resp, qa_text_multi)
+        assert resp['qa']['answers'] == qa_text_multi['answers']
+
+        assert resp['qa']['_id'] == str(qa._id), "%s - %s" % (resp['qa']['_id'], qa._id)
+
+    def test_get_single_or_multi_question(self):
+        self._login_lavewr()
+
+        self.test_post_valid_qa_text()
+        self.test_post_valid_qa_multi()
+        self.test_post_valid_qa_single()
+
+        resp = self.app.get('/qa/get_single_or_multi_question').json
+        assert len(resp['questions']) == 2

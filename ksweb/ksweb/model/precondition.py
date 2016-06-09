@@ -22,8 +22,8 @@ class Precondition(MappedClass):
     _owner = ForeignIdProperty('User')
     owner = RelationProperty('User')
 
-    #_category = ForeignIdProperty('Category')
-    #category = RelationProperty('Category')
+    _category = ForeignIdProperty('Category')
+    category = RelationProperty('Category')
 
     title = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*PRECONDITION_TYPE), required=True)
