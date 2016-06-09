@@ -43,7 +43,8 @@ def material_icon(icon_name):
         # Table
         'done': '&#xE876;',
         'clear': '&#xE14C;',
-        'more_horiz': '&#xE5D3;'
+        'more_horiz': '&#xE5D3;',   # TODO
+        'keyboard_arrow_dow': '&#xE313;'   # TODO
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
@@ -69,8 +70,8 @@ def table_row_content(entity, fields):
     return html.HTML(*tags)
 table_row_content.ROW_CONVERSIONS = {
     model.Category: lambda c: c.name,
-    bool: lambda b: material_icon('done') if b else material_icon('clear')
-
+    bool: lambda b: material_icon('done') if b else material_icon('clear'),
+    model.User: lambda u: u.display_name
 }
 
 def bootstrap_pager(paginator):
