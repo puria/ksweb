@@ -3,7 +3,7 @@
     <title py:block="master_title">Precondizione</title>
     <script id="PreconditionSimpleForm_template" type="text/html">
         <![CDATA[
-        <form class="form-horizontal" on-submit="submit-form">
+        <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
             <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
                     Precondizione Semplice
@@ -37,13 +37,13 @@
                 <div class="col-md-12">
                     <div class="radio">
                       <label>
-                        <input type="radio" name="{{create.response_type}}" value="have_response" />
+                        <input type="radio" name="{{create.answer_type}}" value="have_response" />
                         Utente ha risposto alla domanda
                       </label>
                     </div>
                     <div class="radio">
                       <label>
-                        <input type="radio" name="{{create.response_type}}" value="what_response" />
+                        <input type="radio" name="{{create.answer_type}}" value="what_response" />
                         L'utente ha selezionato uno dei seguenti valori
                       </label>
                     </div>
@@ -52,15 +52,16 @@
                 <span class="help-block">{{errors.answer_type}}</span>
                 {{/if}}
             </div>
-            <div class="form-group {{errors.response ? 'has-error' : ''}}">
+
+            <div class="form-group {{errors.interested_response ? 'has-error' : ''}}">
                 {{#each available_reponse}}
                 <div class="col-md-12">
-                    <input type="checkbox" name="{{create.interested_response}}" value="{{.}}"> {{.}}
+                    <input type="checkbox" name="{{create.interested_response}}" value="{{.}}" > {{.}}
                 </div>
                 {{/each}}
 
-                {{#if errors.response}}
-                <span class="help-block">{{errors.response}}</span>
+                {{#if errors.interested_response}}
+                <span class="help-block">{{errors.interested_response}}</span>
                 {{/if}}
             </div>
 
@@ -97,9 +98,10 @@
             self.set('available_reponse', []);
 
             self.on('submit-form', function(event) {
-                console.log(self.get('create'));
-
-                self.createPreconditionSimple(self.get('create'));
+                var all_var = self.get('create');
+                console.log("Sto inviando");
+                console.log(all_var);
+                self.createPreconditionSimple(all_var);
                 return false;
             });
 
@@ -122,10 +124,10 @@
             console.log(JSON.stringify(field));
 
             var api_params = JSON.stringify(field);
-            /*
+
             $.ajax({
                 type: "post",
-                url: "${tg.url('/qa/post')}",
+                url: "${tg.url('/precondition/simple/post')}",
                 data: api_params,
                 dataType: "json",
                 processData: false,
@@ -134,7 +136,8 @@
                 self.set('create', {});
                 self.set('saving', false);
                 self.set('editing', false);
-                window.location.replace("${tg.url('/qa/')}");
+                console.log(data);
+
 
             }).fail(function(jqXHR) {
                 var data = jQuery.parseJSON(jqXHR.responseText);
@@ -143,7 +146,7 @@
                 self.set('errors', data.errors);
                 self.set('saving', false);
             });
-            */
+
         }
     });
     ]]>
@@ -155,15 +158,14 @@
       var self = this;
       if (!resp_id) return;
 
+      self.set('create.title', '');
+      self.set('available_reponse', []);
       console.log(resp_id);
       jQuery.get("${tg.url('/qa/get_one')}", {'id':resp_id}, function(data) {
           self.set('available_reponse', data['qa']['answers'])
       })
     });
 
-    ractive_precondition_simple.observe('create.response_type', function(select_response, other) {
-       console.log(select_response);
-    });
 </script>
 </body>
 </html>
