@@ -10,7 +10,7 @@ from ksweb import model
 from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
-from ksweb.controllers.precondition import PreconditionController
+from ksweb.controllers.precondition.precondition import PreconditionController
 from ksweb.controllers.qa import QaController
 from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
