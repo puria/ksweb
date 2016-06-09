@@ -1,6 +1,6 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">New QA</title>
+    <title py:block="master_title">KS | Nuova QA</title>
     <style>
 
         label > input{ /*HIDE RADIO*/
@@ -28,20 +28,20 @@
         <form class="form-horizontal" on-submit="submit-form">
             <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
-                    Create Q / A
+                    Crea Q / A
                 </div>
                 <div class="col-md-6 text-right">
                     {{#if saving}}
                     Saving...
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
                     {{/if}}
                 </div>
             </div>
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-sm-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="TITLE" value="{{create.title}}"/>
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
@@ -50,7 +50,7 @@
             <div class="form-group {{errors.category ? 'has-error' : ''}}">
                 <div class="col-sm-3">
                     <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                        <option value="" disabled selected hidden>Select Category</option>
+                        <option value="" disabled selected hidden>Seleziona una categoria</option>
                         {{#each categories}}
                         <option value="{{._id}}">{{.name}}</option>
                         {{/each}}
@@ -63,7 +63,7 @@
             </div>
             <div class="form-group {{errors.question ? 'has-error' : ''}}">
                 <div class="col-sm-3">
-                    <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Text" value="{{create.question}}"/>
+                    <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Testo" value="{{create.question}}"/>
                     {{#if errors.question}}
                     <span class="help-block">{{errors.question}}</span>
                     {{/if}}
@@ -87,7 +87,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-12">
-                    Type of Answer
+                    Tipo di risposta
                 </div>
             </div>
             <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">

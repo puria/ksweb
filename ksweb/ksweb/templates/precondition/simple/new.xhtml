@@ -1,6 +1,6 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">Precondizione</title>
+    <title py:block="master_title">KS | Precondizione</title>
     <script id="PreconditionSimpleForm_template" type="text/html">
         <![CDATA[
         <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
@@ -19,7 +19,7 @@
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-sm-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="TITOLO" value="{{create.title}}"/>
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
@@ -29,7 +29,7 @@
             <div class="form-group {{errors.category ? 'has-error' : ''}}">
                 <div class="col-sm-3">
                     <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                        <option value="" disabled selected hidden>Select Category</option>
+                        <option value="" disabled selected hidden>Seleziona una categoria</option>
                         {{#each categories}}
                         <option value="{{._id}}">{{.name}}</option>
                         {{/each}}
