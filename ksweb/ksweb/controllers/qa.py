@@ -8,7 +8,7 @@ from tg.i18n import lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator
+from ksweb.lib.validator import CategoryExistValidator, QAExistValidator
 
 
 class QaController(RestController):
@@ -26,6 +26,19 @@ class QaController(RestController):
             entities=model.Qa.query.find(),
             actions=True
         )
+
+    @expose('json')
+    @validate({
+        'id': QAExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def get_one(self, id,  **kw):
+        qa = model.Qa.query.get(_id=ObjectId(id))
+        return dict(qa=qa)
+
+    @expose('json')
+    def get_single_or_multi_question(self):
+        questions = model.Qa.query.find({'type': {'$in': ['single', 'multi']}, 'public': True}).all()
+        return dict(questions=[{'_id': qa._id, 'title': qa.title} for qa in questions])
 
     @expose('json')
     @expose('ksweb.templates.qa.new')

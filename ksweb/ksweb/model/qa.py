@@ -21,6 +21,7 @@ class Qa(MappedClass):
         indexes = [
             ('_owner',),
             ('_category',),
+            ('type', 'public',),
         ]
 
     __ROW_CONVERTERS__ = {
