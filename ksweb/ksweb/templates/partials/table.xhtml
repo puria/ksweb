@@ -19,20 +19,30 @@
             <tr py:for="entity in entities">
             ${h.table_row_content(entity, fields['fields_name'])}
                 <td py:if="actions">
-                    ${h.material_icon('more_horiz')}
-                    <!--
-                    <a class="btn btn-primary" href="${tg.url('/pikablink_admin/'+entity_name+'/edit',
-                            params={entity_name:entity._id})}" title="Modifica">
-                            ${h.icon("pencil")}
-                    </a>
-                    <a class="btn btn-danger" href="${tg.url('/pikablink_admin/'+entity_name+'/delete?'+entity_name+'='+str(entity._id))}" title="Elimina" onclick="return confirm('Sei sicuro di voler eliminare?')">
-                            ${h.icon("remove")}
-                    </a>
-                    -->
+                    <a class="actions" href="#">${h.material_icon('more_horiz')}</a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
     <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
+
+    <div id="actions-popover-content" class="hidden">
+        Condividi
+        <br/>
+        Scarica
+        <br/>
+        Lorem Ipsum
+    </div>
+<script>
+    $(document).ready(function(){
+        $('.actions').popover({
+            html : true,
+            content: function() {
+                return $("#actions-popover-content").html();
+                },
+            placement: 'bottom'
+        });
+    });
+    </script>
 </div>

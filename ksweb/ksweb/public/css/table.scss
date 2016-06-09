@@ -2,15 +2,15 @@
 
 .table-row-title {
   font-size: 15px;
-  color: $blue;
   font-weight: bold;
 }
-
 .table-row{
   font-size: 12px;
   color: $light-blue;
 }
-
-.material-icon-more_horiz{
+.material-icon-more_horiz, .popover-content, .table-row-title {
   color: $blue;
+}
+a, a:focus {
+  outline: none;
 }
