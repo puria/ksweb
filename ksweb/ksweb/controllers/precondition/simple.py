@@ -16,10 +16,6 @@ from ksweb.lib.validator import QAExistValidator
 
 class PreconditionSimpleController(RestController):
 
-    @expose('ksweb.templates.precondition/simple')
-    def new(self, **kw):
-        return dict(page='precondition/simple-index')
-
     @expose('ksweb.templates.precondition.simple.new')
     def new(self, **kw):
         return dict(page='precondition-new')
@@ -27,12 +23,13 @@ class PreconditionSimpleController(RestController):
     @decode_params('json')
     @expose('json')
     @validate({
+        'title': StringLengthValidator(min=4),
+        'category': QAExistValidator(required=True),
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
-        #'interested_response': LengthValidator(required=False),
-        'title': StringLengthValidator(min=4),
+        'category': LengthValidator(required=False),
     }, error_handler=validation_errors_response)
-    def post(self, question, answer_type, interested_response, title,  **kw):
+    def post(self, title, category, question, answer_type, interested_response,  **kw):
 
         print "question: %s" % question
         print "answer_type: %s" % answer_type
@@ -47,6 +44,7 @@ class PreconditionSimpleController(RestController):
             print "Base case -> Simple Precondition"
             model.Precondition(
                 _owner=user._id,
+                _category=ObjectId(category),
                 title=title,
                 type='simple',
                 condition=[ObjectId(question), interested_response[0]]
@@ -55,27 +53,24 @@ class PreconditionSimpleController(RestController):
             #  CASO AVANZATO sono state selezionate piu' risposte, devo prima creare tutte le precondizioni semplici e poi creare quella complessa
 
             if answer_type == "have_response":
-                print "have_response"
+                #  Create one precondition simple for all possibility answer to question
+                #  After that create a complex precondition with previous simple precondition
                 interested_response = model.Qa.query.get(_id=ObjectId(question)).answers
 
-                #  Devo creare una precondizione semplice per ogni possibile risposta alla domanda
-                #  Creare una precondizione complessa che utilizzi tutte le precondizioni semplici e le metta in or
-
             if answer_type == "what_response":
-                print "what_response"
-                #  Devo creare una precondizione semplice per ogni risposta selezionata della domanda
-                #  Creare una precondizione complessa che utilizzi tutte le precondizioni semplici e le metta in or
+                #  Create one precondition simple for all selected answer to question
+                #  After that create a complex precondition with previous simple precondition
 
                 if len(interested_response) <= 1:
                     response.status_code = 412
                     return dict(
                         errors={'interested_response': 'Inserire almeno una risposta'})
 
-
             base_precond = []
             for resp in interested_response:
                 prec = model.Precondition(
                     _owner=user._id,
+                    _category=ObjectId(category),
                     title="_base_for_%s" % title,
                     type='simple',
                     condition=[ObjectId(question), resp],
@@ -84,18 +79,20 @@ class PreconditionSimpleController(RestController):
                     visible=False
                 )
                 base_precond.append(prec)
-            res = []
-            for prc in base_precond[:-1]:
-                res.append(prc._id)
-                res.append('|')
 
-            res.append(base_precond[-1]._id)
+            condition = []
+            for prc in base_precond[:-1]:
+                condition.append(prc._id)
+                condition.append('|')
+
+            condition.append(base_precond[-1]._id)
 
             model.Precondition(
                 _owner=user._id,
+                _category=ObjectId(category),
                 title=title,
                 type='advanced',
-                condition=res
+                condition=condition
             )
 
         return dict(errors=None)
