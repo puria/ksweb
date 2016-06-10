@@ -2,6 +2,8 @@
 """Unit and functional test suite for ksweb."""
 
 from os import getcwd
+
+from bson import ObjectId
 from paste.deploy import loadapp
 from webtest import TestApp
 from gearbox.commands.setup_app import SetupAppCommand
@@ -9,6 +11,7 @@ from tg import config
 from tg.util import Bunch
 
 from ksweb import model
+from ksweb.model import DBSession
 
 __all__ = ['setup_app', 'setup_db', 'teardown_db', 'TestController']
 
@@ -95,6 +98,27 @@ class TestController(object):
                 'answers': answers
             }
         )
+
+    def _create_output(self, title, category, precondition, content):
+        self.app.post_json(
+            '/output/post', params={
+                'title': title,
+                'content': content,
+                'category': str(category._id),
+                'precondition': str(precondition._id)
+            }
+        )
+
+    def _create_precondition(self, title, user, category_id, condition=None):
+        p = model.Precondition(
+                _owner=user._id,
+                _category=category_id,
+                title=title,
+                type='simple',
+                condition=condition or {}
+        )
+        DBSession.flush(p)
+        return p
 
     def _get_qa(self, title):
         return model.Qa.query.get(title=title)
