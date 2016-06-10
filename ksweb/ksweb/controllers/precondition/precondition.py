@@ -28,6 +28,6 @@ class PreconditionController(BaseController):
                 'columns_name': ['Nome', 'Tipo', 'Proprietario'],
                 'fields_name': ['title', 'type', 'owner']
             },
-            entities=model.Precondition.query.find({'visible': True}),
+            entities=model.Precondition.query.find({'visible': True}).sort('title'),
             actions=True
         )

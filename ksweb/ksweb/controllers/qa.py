@@ -23,7 +23,7 @@ class QaController(RestController):
                 'columns_name': ['Name', 'Category', 'Question', 'Type'],
                 'fields_name': ['title', 'category', 'question', 'type']
             },
-            entities=model.Qa.query.find(),
+            entities=model.Qa.query.find().sort('title'),
             actions=True
         )
 
