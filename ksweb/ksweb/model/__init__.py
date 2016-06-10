@@ -18,5 +18,6 @@ from ksweb.model.auth import User, Group, Permission
 from ksweb.model.category import Category
 from ksweb.model.qa import Qa
 from ksweb.model.precondition import Precondition
+from ksweb.model.output import Output
 
-__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition')
+__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output')

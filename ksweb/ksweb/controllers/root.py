@@ -10,11 +10,12 @@ from ksweb import model
 from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
+from ksweb.controllers.output import OutputController
 from ksweb.controllers.precondition.precondition import PreconditionController
 from ksweb.controllers.qa import QaController
 from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
-from ksweb.model import Category
+from ksweb.model import Category, Precondition
 
 __all__ = ['RootController']
 
@@ -36,6 +37,7 @@ class RootController(BaseController):
     admin = AdminController(model, None, config_type=TGAdminConfig)
     qa = QaController()
     precondition = PreconditionController()
+    output = OutputController()
 
     error = ErrorController()
 
@@ -108,3 +110,8 @@ class RootController(BaseController):
     def available_categories(self):
         categories = Category.query.find({'visible': True}).all()
         return dict(categories=categories)
+
+    @expose('json')
+    def available_preconditions(self):
+        preconditions = Precondition.query.find({'visible': True}).sort('title').all()
+        return dict(preconditions=preconditions)

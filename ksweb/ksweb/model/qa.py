@@ -19,6 +19,7 @@ class Qa(MappedClass):
         session = DBSession
         name = 'qas'
         indexes = [
+            ('title',),
             ('_owner',),
             ('_category',),
             ('type', 'public',),

@@ -70,6 +70,7 @@ def table_row_content(entity, fields):
     return html.HTML(*tags)
 table_row_content.ROW_CONVERSIONS = {
     model.Category: lambda c: c.name,
+    model.Precondition: lambda p: p.title,
     bool: lambda b: material_icon('done') if b else material_icon('clear'),
     model.User: lambda u: u.display_name
 }
