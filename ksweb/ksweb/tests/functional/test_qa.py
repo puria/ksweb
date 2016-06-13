@@ -42,8 +42,13 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_params
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
+        auto_precondition = model.Precondition.query.get(title=qa_text_params['title']+' compilata')
+
         assert qa_text
-        assert resp['errors'] == None
+        assert resp['errors'] is None
+        assert auto_precondition
+
+
 
     def test_post_valid_qa_single_with_not_valid_answers(self):
         self._login_lavewr()

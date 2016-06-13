@@ -68,16 +68,25 @@ class QaController(RestController):
 
         user = request.identity['user']
 
-        model.Qa(
-            _owner=user._id,
-            _category=ObjectId(category),
-            title=title,
-            question=question,
-            tooltip=tooltip,
-            link=link,
-            type=answer_type,
-            answers=answers,
-            public=True,
-            visible=True
-        )
+        qa = model.Qa(
+                _owner=user._id,
+                _category=ObjectId(category),
+                title=title,
+                question=question,
+                tooltip=tooltip,
+                link=link,
+                type=answer_type,
+                answers=answers,
+                public=True,
+                visible=True
+            )
+
+        if answer_type == 'text':  # model.Qa.QA_TYPE[0]
+                        model.Precondition(
+                            _owner=user._id,
+                            _category=ObjectId(category),
+                            title=title + ' compilata',
+                            type='simple',
+                            condition=[qa._id, ''])
+
         return dict(errors=None)

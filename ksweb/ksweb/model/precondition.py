@@ -30,7 +30,10 @@ class Precondition(MappedClass):
     condition = FieldProperty(s.Anything)
     """
     In case of type: simple
-    the condition is like: [ObjectId('qa'), 'String_response]
+    the condition is like: [ObjectId('qa'), 'String_response']
+
+    In case of type: simple
+    the condition is like: [ObjectId('qa'), 'String_response']
 
     In case of type advanced
     the condition is like: [ObjectId(precond_1), &, ObjectId(precond_2), | , ObjectId(precond_3)]
