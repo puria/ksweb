@@ -21,9 +21,8 @@ class PreconditionController(BaseController):
     
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "preconditions"
-
         
-    simple= PreconditionSimpleController()
+    simple = PreconditionSimpleController()
     advanced = PreconditionAdvancedController()
 
     @expose('ksweb.templates.precondition.index')
