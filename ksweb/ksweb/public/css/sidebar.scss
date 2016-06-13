@@ -16,6 +16,18 @@
   padding-bottom: 5px;
 }
 
+.category-name {
+  color: $dark-blue;
+  font-weight: bold;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+.category-name-separator {
+  border-bottom: 2px solid $dark-blue;
+  margin: 0px !important;
+}
+
+
 a:hover {
     color: $white;
 }
