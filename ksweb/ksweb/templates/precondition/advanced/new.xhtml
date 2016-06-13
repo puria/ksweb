@@ -28,11 +28,11 @@
 
             <div class="form-group">
                 Operatori:
-                <span onclick="ractive_precondition_simple.addOperator('and')"><img src="${tg.url('/img/and.png')}"></span>
-                <span onclick="ractive_precondition_simple.addOperator('or')"><img src="${tg.url('/img/or.png')}"></span>
-                <span onclick="ractive_precondition_simple.addOperator('not')"><img src="${tg.url('/img/not.png')}"></span>
-                <span onclick="ractive_precondition_simple.addOperator('(')"><img src="${tg.url('/img/bracket_open.png')}"></span>
-                <span onclick="ractive_precondition_simple.addOperator(')')"><img src="${tg.url('/img/bracket_close.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/and.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('or','${tg.url("/img/or_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/or.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('not', '${tg.url("/img/not_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/not.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('(', '${tg.url("/img/bracket_open_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_open.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}"></span>
                 <input type="button" value="Paste HTML" onclick="document.getElementById('advanced').focus(); pasteHtmlAtCaret('<b>INSERTED</b>'); ">
             </div>
 
@@ -43,12 +43,18 @@
             </div>
 
             <div class="col-md-12" >
-            {{#each conditions}}
+            {{#conditions:i}}
                 <span class="precond-element">
-                    <span on-click="selectElem:{{.}}">{{.}}</span>
-                    <span id="delete_elem" class="precondition-editor-icon-remove" on-click="deleteElem:{{.}}">${h.material_icon('add_circle_outline_rotate')}</span>
+                    {{#if .type == 'operator'}}
+                        <img src="{{.img_uri}}" alt="{{.content}}" />
+                    {{/if}}
+
+                    {{#if .type == 'precondition'}}
+                    <span on-click="selectElem:{{.}}">{{.title}}</span>
+                    {{/if}}
+                     <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
                 </span>
-            {{/each}}
+            {{/items}}
             </div>
 
         </form>
@@ -62,8 +68,17 @@
 </div>
 <script>
     /*
-        Devo migrare la logica a ractive
-        Ractive deve tenere traccia della struttura dati dentro ad una variabile.
+        Ractive in `conditions` contiene la struttura dati delle precondizioni e degli operatori:
+
+        Gli elementi che può contenere sono di due tipologie:
+        -  Precondizioni
+        -  Operatori logici
+
+        Percio dovro differenziare i due casi tipo:
+        type: [operator, precondition]
+        content: [AND, OR, NOT, ( , ) , ObjId('precondizione)
+        img_uri: uri of image
+
         Devo fare poi solo il template che deve visualizzare tutti i vari elementi del template
     */
 
@@ -125,6 +140,8 @@
             self.set('response_type', null);
             self.set('categories', []);
 
+            self.set('unique_id_conditions', 0);
+
             self.set('conditions', []);
             self.set('coursor_position', 0);
 
@@ -157,22 +174,43 @@
                             callback();
                     });
         },
-        addOperator: function(operator) {
+        addOperator: function(operator, img_uri) {
             var self = this;
             var uri='http://placehold.it/50x50';
             console.log("add operator:" + operator);
             $('#advanced').append($('<img>',{id:'theImg',src:uri}))
-            self.get('conditions').push(operator);
-        },
 
-        addPrecondition: function(precondition) {
+            var unique_id = self.get('unique_id_conditions');
+            unique_id +=1;
+            self.set('unique_id_conditions', unique_id);
+
+            var elem = {
+                'key':unique_id,
+                'type':'operator',
+                'content': operator,
+                'img_uri': img_uri
+            };
+
+            self.get('conditions').push(elem);
+        },
+        addPrecondition: function(id, title) {
             var self = this;
-            console.log("add precondition:" + precondition);
-            self.get('conditions').push(precondition);
+            console.log("add _id:" + id);
+            console.log("add title:" + title);
+
+            var unique_id = self.get('unique_id_conditions');
+            unique_id +=1;
+            self.set('unique_id_conditions', unique_id);
+
+            var elem = {
+                'key':unique_id,
+                'type':'precondition',
+                'content': id,
+                'title': title
+            };
+
+            self.get('conditions').push(elem);
         },
-
-
-
         createPreconditionAdvanced: function(field) {
             var self = this;
             //self.set('saving', true);
@@ -214,11 +252,13 @@
     ractive_precondition_simple.on('selectElem', function ( event, elem ) {
         var self = this;
         console.log("Elemento selezionato: "+ elem);
+        console.log(elem);
     });
 
     ractive_precondition_simple.on('deleteElem', function ( event, elem ) {
         var self = this;
         console.log("Elemento da eliminare: "+ elem);
+        self.splice('conditions', elem, 1)
     });
 
 
