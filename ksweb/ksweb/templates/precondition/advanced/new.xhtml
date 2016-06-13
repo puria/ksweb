@@ -33,13 +33,6 @@
                 <span onclick="ractive_precondition_simple.addOperator('not', '${tg.url("/img/not_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/not.png')}"></span>
                 <span onclick="ractive_precondition_simple.addOperator('(', '${tg.url("/img/bracket_open_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_open.png')}"></span>
                 <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}"></span>
-                <input type="button" value="Paste HTML" onclick="document.getElementById('advanced').focus(); pasteHtmlAtCaret('<b>INSERTED</b>'); ">
-            </div>
-
-            <div class="form-group">
-                <div id="advanced" contentEditable="true">Type here. You can insert images too
-                  <img src="http://t2.gstatic.com/images?q=tbn:ANd9GcQCze-mfukcuvzKk7Ilj2zQ0CS6PbOkq7ZhRInnNd1Yz3TQzU4e&t=1" />
-                </div>
             </div>
 
             <div class="col-md-12" >
@@ -83,50 +76,6 @@
     */
 
     <![CDATA[
-        document.onkeydown = function (e) {
-            console.log("Premuto: "+e.which);
-            if(e.which == 9){
-                console.log("skippooo");
-                return false;
-            }
-        };
-
-    function pasteHtmlAtCaret(html) {
-        html = '<img src="${tg.url('/img/and.png')}">';
-        var sel, range;
-        if (window.getSelection) {
-            // IE9 and non-IE
-            sel = window.getSelection();
-            if (sel.getRangeAt && sel.rangeCount) {
-                range = sel.getRangeAt(0);
-                range.deleteContents();
-
-                // Range.createContextualFragment() would be useful here but is
-                // non-standard and not supported in all browsers (IE9, for one)
-                var el = document.createElement("div");
-                el.innerHTML = html;
-                var frag = document.createDocumentFragment(), node, lastNode;
-                while ( (node = el.firstChild) ) {
-                    lastNode = frag.appendChild(node);
-                }
-                range.insertNode(frag);
-
-                // Preserve the selection
-                if (lastNode) {
-                    range = range.cloneRange();
-                    range.setStartAfter(lastNode);
-                    range.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-            }
-        } else if (document.selection && document.selection.type != "Control") {
-            // IE < 9
-            document.selection.createRange().pasteHTML(html);
-        }
-    }
-
-
 
     var PreconditionSimple = Ractive.extend({
         template: '#PreconditionSimpleForm_template',
