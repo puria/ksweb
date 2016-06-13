@@ -50,7 +50,6 @@
             </div>
 
             <div class="form-group {{errors.conditions ? 'has-error' : ''}}">
-            <!--<div class="col-md-12" >-->
                 {{#conditions:i}}
                     <span class="precond-element">
                         {{#if .type == 'operator'}}
@@ -104,20 +103,15 @@
             var self = this;
             self.set('errors', {});
             self.set('saving', false);
-            self.set('response_type', null);
             self.set('categories', []);
-
-            self.set('unique_id_conditions', 0);
-
             self.set('conditions', []);
-            self.set('coursor_position', 0);
 
             self.on('submit-form', function(event) {
                 var all_var = self.get('create');
                 console.log("Sto inviando");
                 console.log(all_var);
                 all_var['conditions'] = self.get('conditions');
-                console.log("aggiungo le conditions");
+                console.log("add the conditions");
                 console.log(all_var)
                 self.createPreconditionAdvanced(all_var);
                 return false;
@@ -146,14 +140,7 @@
         },
         addOperator: function(operator, img_uri) {
             var self = this;
-            var uri='http://placehold.it/50x50';
             console.log("add operator:" + operator);
-            $('#advanced').append($('<img>',{id:'theImg',src:uri}))
-
-            var unique_id = self.get('unique_id_conditions');
-            unique_id +=1;
-            self.set('unique_id_conditions', unique_id);
-
             var elem = {
                 'key':unique_id,
                 'type':'operator',
@@ -167,11 +154,6 @@
             var self = this;
             console.log("add _id:" + id);
             console.log("add title:" + title);
-
-            var unique_id = self.get('unique_id_conditions');
-            unique_id +=1;
-            self.set('unique_id_conditions', unique_id);
-
             var elem = {
                 'key':unique_id,
                 'type':'precondition',
@@ -183,13 +165,11 @@
         },
         createPreconditionAdvanced: function(field) {
             var self = this;
-            //self.set('saving', true);
-            console.log("JSON.stringify");
-            console.log(field);
+            self.set('saving', true);
+            console.log("Sending:");
             console.log(JSON.stringify(field));
 
             var api_params = JSON.stringify(field);
-
             $.ajax({
                 type: "post",
                 url: "${tg.url('/precondition/advanced/post')}",
@@ -221,13 +201,13 @@
 
     ractive_precondition_simple.on('selectElem', function ( event, elem ) {
         var self = this;
-        console.log("Elemento selezionato: "+ elem);
+        console.log("Selected element: "+ elem);
         console.log(elem);
     });
 
     ractive_precondition_simple.on('deleteElem', function ( event, elem ) {
         var self = this;
-        console.log("Elemento da eliminare: "+ elem);
+        console.log("Element to remove: "+ elem);
         self.splice('conditions', elem, 1)
     });
 
