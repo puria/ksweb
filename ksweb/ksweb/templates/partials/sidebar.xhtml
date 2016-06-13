@@ -1,21 +1,21 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
     <div class="row sidebar-item">
-        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
+        <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
             ${h.material_icon('insert_drive_file')} DOCUMENTI
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'questions']}">
+        <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'questions']}">
             ${h.material_icon('content_paste')} QUESTIONARI
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
+        <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
             <a href="${tg.url('/output')}">${h.material_icon('flip_to_front')} OUTPUT</a>
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
         <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
@@ -24,10 +24,10 @@
         <div class="col-md-2"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
+        <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
             <a href="${tg.url('/qa')}">${h.material_icon('view_list')} Q/A</a>
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
     </div>
 
     <div py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'" id="precondition-ractive" class="row" style="padding-top: 50%;">

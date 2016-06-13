@@ -9,6 +9,7 @@ from tg.i18n import lazy_ugettext as l_
 from tg import predicates, tmpl_context
 
 from ksweb import model
+from ksweb.model import Precondition
 from .simple import PreconditionSimpleController
 from .advanced import PreconditionAdvancedController
 from ksweb.lib.base import BaseController
@@ -52,3 +53,8 @@ class PreconditionController(BaseController):
         ])['result']
         print res
         return dict(precond=res)
+
+    @expose('json')
+    def available_preconditions(self):
+        preconditions = Precondition.query.find({'visible': True}).sort('title').all()
+        return dict(preconditions=preconditions)
