@@ -40,10 +40,17 @@
                 Precondizioni
             </div>
             {{#each preconditions}}
-            <div class="col-md-12" >
-                {{.precondition[0].title}}
-                <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._id}}', '{{.precondition[0].title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
-            </div>
+                <div class="col-md-12 category-name">
+                    {{.category_name}}
+                    <hr class="category-name-separator">
+                </div>
+
+                {{#each precondition}}
+                <div class="col-md-12">
+                    {{.title}}
+                    <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._category}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                </div>
+                {{/each}}
             {{/each}}
         ]]>
     </script>

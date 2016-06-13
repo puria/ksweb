@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Precondition controller module"""
 import tg
+from bson import ObjectId
 from tg import expose, predicates, redirect, validate, flash, url
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
@@ -40,6 +41,7 @@ class PreconditionController(BaseController):
 
     @expose('json')
     def sidebar_precondition(self):
+
         res = model.Precondition.query.aggregate([
             {
                 '$match': {'visible': True}
@@ -47,11 +49,15 @@ class PreconditionController(BaseController):
             {
                 '$group': {
                     '_id': '$_category',
-                    'precondition': {'$push': "$$ROOT"}
+                    'precondition': {'$push': "$$ROOT",}
                 }
             }
         ])['result']
-        print res
+
+        #  Insert category name into res
+        for e in res:
+            e['category_name'] = model.Category.query.get(_id=ObjectId(e['_id'])).name
+
         return dict(precond=res)
 
     @expose('json')
