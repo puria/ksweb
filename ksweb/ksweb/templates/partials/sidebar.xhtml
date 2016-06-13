@@ -34,12 +34,6 @@
 
     </div>
 
-
-    <!--<div py:if="sidebar_section == 'preconditions'">
-
-
-
-    </div>-->
     <script id="PreconditionSimpleList" type="text/html">
         <![CDATA[
             <div class="col-md-12">
@@ -48,7 +42,7 @@
             {{#each preconditions}}
             <div class="col-md-12" >
                 {{.precondition[0].title}}
-                <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('precondition')">${h.material_icon('add_circle_outline')}</span>
+                <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._id}}', '{{.precondition[0].title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
             </div>
             {{/each}}
         ]]>
