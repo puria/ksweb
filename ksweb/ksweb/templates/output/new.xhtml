@@ -29,7 +29,7 @@
             <div class="form-group {{errors.category ? 'has-error' : ''}}">
                 <div class="col-sm-3">
                     <select id="form-category" class="form-control" value="{{create.category}}">
-                        <option value="" disabled selected hidden>Seleziona una categoria</option>
+                        <option value="" disabled selected>Seleziona una categoria</option>
                         {{#each categories}}
                         <option value="{{._id}}">{{.name}}</option>
                         {{/each}}
