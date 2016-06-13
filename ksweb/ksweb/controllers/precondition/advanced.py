@@ -13,14 +13,15 @@ from ksweb import model
 from ksweb.lib.validator import QAExistValidator
 
 
-class PreconditionSimpleController(RestController):
+class PreconditionAdvancedController(RestController):
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "preconditions"
+        tmpl_context.sidebar_precondition_advanced = "preconditions-advanced"
 
 
-    @expose('ksweb.templates.precondition.simple.new')
+    @expose('ksweb.templates.precondition.advanced.new')
     def new(self, **kw):
-        return dict(page='precondition-new')
+        return dict()
 
     @decode_params('json')
     @expose('json')

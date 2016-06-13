@@ -108,3 +108,22 @@ thead tr {
     font-size: 12px;
 
 }
+
+
+/* Temporaney precondition advanced css */
+
+.precond-element {
+	border-radius: 15px;
+	background-color: $carbon;
+    font-size: 12px;
+	color: $white;
+    padding: 5px 8px;
+}
+
+
+.material-icon-add_circle_outline_rotate {
+  z-index: 2;
+  -webkit-transform: rotate(-315deg);
+  transform: rotate(-315deg);
+
+}

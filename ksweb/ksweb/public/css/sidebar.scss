@@ -8,3 +8,21 @@
 .sidebar-item {
   padding-bottom: 10px;
 }
+
+.sidebar_active {
+  background-color: $dark-blue;
+  border-radius: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+a:hover {
+    color: $white;
+}
+a:link {
+    text-decoration: none;
+}
+
+#add_circle_outline:hover {
+  color: #2a6496;
+}

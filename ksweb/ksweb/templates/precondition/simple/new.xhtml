@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
+            <div id="answer_type" class="form-group {{errors.answer_type ? 'has-error' : ''}}">
                 <div class="col-md-12">
                     <div class="radio">
                       <label>
@@ -76,7 +76,7 @@
                 {{/if}}
             </div>
 
-            <div class="form-group {{errors.interested_response ? 'has-error' : ''}}">
+            <div id="interested_response" class="form-group {{errors.interested_response ? 'has-error' : ''}}" style="display: none">
                 {{#each available_reponse}}
                 <div class="col-md-12">
                     <input type="checkbox" name="{{create.interested_response}}" value="{{.}}" > {{.}}
@@ -127,7 +127,7 @@
         },
         loadCategory: function(callback) {
             var self = this;
-            jQuery.get("${tg.url('/available_categories')}",
+            jQuery.get("${tg.url('/category/get_all')}",
                     function(data) {
                         self.set('categories', data['categories']);
                         if (callback)
@@ -185,7 +185,6 @@
       var self = this;
       if (!resp_id) return;
 
-      self.set('create.title', '');
       self.set('available_reponse', []);
       console.log(resp_id);
       jQuery.get("${tg.url('/qa/get_one')}", {'id':resp_id}, function(data) {
@@ -193,6 +192,12 @@
       })
     });
 
+    ractive_precondition_simple.observe('create.answer_type', function ( int_resp, oldValue ) {
+        if(int_resp == 'have_response')
+            jQuery("#interested_response").hide();
+        if(int_resp == 'what_response')
+            jQuery("#interested_response").show();
+    });
 </script>
 </body>
 </html>

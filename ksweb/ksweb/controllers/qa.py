@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
 from bson import ObjectId
-from tg import expose, validate, validation_errors_response, response, RestController, decode_params, request
+from tg import expose, validate, validation_errors_response, response, RestController, decode_params, request, tmpl_context
 import tg
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
@@ -12,6 +12,9 @@ from ksweb.lib.validator import CategoryExistValidator, QAExistValidator
 
 
 class QaController(RestController):
+    def _before(self, *args, **kw):
+        tmpl_context.sidebar_section = "qas"
+
     allow_only = predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer'))
 
     @expose('ksweb.templates.qa.index')
