@@ -107,8 +107,3 @@ class RootController(BaseController):
         """
         flash(_('We hope to see you soon!'))
         return HTTPFound(location=came_from)
-
-    @expose('json')
-    def available_preconditions(self):
-        preconditions = Precondition.query.find({'visible': True}).sort('title').all()
-        return dict(preconditions=preconditions)

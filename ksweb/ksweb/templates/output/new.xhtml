@@ -104,39 +104,13 @@
         },
         loadPrecondition: function(callback) {
             var self = this;
-            jQuery.get("${tg.url('/available_preconditions')}",
+            jQuery.get("${tg.url('/precondition/available_preconditions')}",
                     function(data) {
                         self.set('preconditions', data['preconditions']);
                         if (callback)
                             callback();
                     });
         },
-        /*
-        switchResponseType: function(section) {
-            var self = this;
-            if(section == 'single')
-                self.set('input_type', 'radio');
-            if(section == 'multi')
-                self.set('input_type', 'checkbox');
-
-            jQuery("#insert_answer").empty();
-
-            self.set('answer_type', section);
-            self.set('available_reponse', []);
-        },
-        addResponse: function() {
-            var self = this;
-            jQuery("#insert_answer").empty();
-            var resp = jQuery("#response_text").val();
-            if(!resp || 0 === resp.length || /^\s*$/.test(resp)) {
-                alert("Risposta non valida");
-                return;
-            }
-            jQuery("#response_text").val("");
-            self.push('available_reponse', resp);
-        },
-        */
-
         create_output: function(field) {
             var self = this;
             self.set('saving', true);
