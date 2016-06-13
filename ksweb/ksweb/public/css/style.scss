@@ -52,33 +52,16 @@ html,body,.ks-container
     height:100%;
 }
 
-.ks-container
-{
-    display:table;
-    width: 100%;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    padding-left: 0px;
-    padding-right: 0px;
-}
-
 .ks-row
 {
     height: 100%;
-    display: table-row;
 }
 
 .ks-sidebar {
   background: $light-gray;
-  display: table-cell;
-  float: none;
+  height: 100%;
+  overflow: scroll;
 }
-
-.ks-content {
-    display: table-cell;
-    float: none;
-}
-
 
 .ks-section-name {
   font-size: 18px;

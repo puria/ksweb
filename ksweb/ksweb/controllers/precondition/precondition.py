@@ -40,7 +40,6 @@ class PreconditionController(BaseController):
 
     @expose('json')
     def sidebar_precondition(self):
-
         res = model.Precondition.query.aggregate([
             {
                 '$match': {'visible': True}
