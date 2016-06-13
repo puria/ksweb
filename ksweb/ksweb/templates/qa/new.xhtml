@@ -176,7 +176,7 @@
         },
         loadCategory: function(callback) {
             var self = this;
-            jQuery.get("${tg.url('/available_categories')}",
+            jQuery.get("${tg.url('/category/get_all')}",
                     function(data) {
                         self.set('categories', data['categories']);
                         if (callback)

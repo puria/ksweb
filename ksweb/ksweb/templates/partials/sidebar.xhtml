@@ -1,32 +1,99 @@
-<div class="sidebar-default">
+<div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
     <div class="row sidebar-item">
-        <div class="col-md-10">
+        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
             ${h.material_icon('insert_drive_file')} DOCUMENTI
         </div>
         <div class="col-md-2"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-10">
+        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'questions']}">
             ${h.material_icon('content_paste')} QUESTIONARI
         </div>
         <div class="col-md-2"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-10">
+        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
             ${h.material_icon('flip_to_front')} OUTPUT
         </div>
         <div class="col-md-2"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-10">
+        <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
             <a href="${tg.url('/precondition')}">${h.material_icon('group_work')} PRE-CONDIZIONI</a>
         </div>
         <div class="col-md-2"></div>
     </div>
     <div class="row sidebar-item">
-        <div class="col-md-10">
+        <div class="col-md-12 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
             <a href="${tg.url('/qa')}">${h.material_icon('view_list')} Q/A</a>
         </div>
         <div class="col-md-2"></div>
     </div>
+
+    <div py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'" id="precondition-ractive" class="row" style="padding-top: 50%;">
+
+    </div>
+
+
+    <!--<div py:if="sidebar_section == 'preconditions'">
+
+
+
+    </div>-->
+    <script id="PreconditionSimpleList" type="text/html">
+        <![CDATA[
+            <div class="col-md-12">
+                Precondizioni
+            </div>
+            {{#each preconditions}}
+            <div class="col-md-12" >
+                {{.precondition[0].title}}
+                <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('precondition')">${h.material_icon('add_circle_outline')}</span>
+            </div>
+            {{/each}}
+        ]]>
+    </script>
+    <script>
+        var PreconditionSimpleList = Ractive.extend({
+        template: '#PreconditionSimpleList',
+        onconstruct: function(options) {
+            var self = this;
+        },
+        oninit: function() {
+            var self = this;
+            self.set('errors', {});
+            self.set('saving', false);
+            self.set('preconditions', []);
+            self.set('categories', []);
+
+            self.loadPreconditions();
+            self.loadCategory();
+
+        },
+        loadPreconditions: function(callback) {
+            var self = this;
+            jQuery.get("${tg.url('/precondition/sidebar_precondition')}",
+                    function(data) {
+                        console.log(data)
+                        self.set('preconditions', data['precond']);
+                        console.log(self.get('preconditions'));
+                        if (callback)
+                            callback();
+                    });
+        },
+        loadCategory: function(callback) {
+            var self = this;
+            jQuery.get("${tg.url('/category/get_all')}",
+                    function(data) {
+                        self.set('categories', data['categories']);
+                        if (callback)
+                            callback();
+                    });
+        }
+    });
+    </script>
+    <script>
+        var ractive_precondition_simple_list = new PreconditionSimpleList({el: '#precondition-ractive'});
+
+    </script>
 </div>
