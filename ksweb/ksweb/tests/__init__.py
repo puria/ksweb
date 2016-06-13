@@ -109,13 +109,13 @@ class TestController(object):
             }
         )
 
-    def _create_precondition(self, title, user, category_id, condition=None):
+    def _create_precondition(self, title, user, category_id, condition=[], precond_type='simple'):
         p = model.Precondition(
                 _owner=user._id,
                 _category=category_id,
                 title=title,
-                type='simple',
-                condition=condition or {}
+                type=precond_type,
+                condition=condition
         )
         DBSession.flush(p)
         return p
