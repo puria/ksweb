@@ -10,7 +10,7 @@ from tg import expose, redirect, validate, flash, url, RestController, decode_pa
 from tw2.core import OneOfValidator, LengthValidator, StringLengthValidator
 
 from ksweb import model
-from ksweb.lib.validator import QAExistValidator
+from ksweb.lib.validator import QAExistValidator, CategoryExistValidator
 
 
 class PreconditionSimpleController(RestController):
@@ -26,10 +26,9 @@ class PreconditionSimpleController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=4),
-        'category': QAExistValidator(required=True),
+        'category': CategoryExistValidator(required=True),
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
-        'category': LengthValidator(required=False),
     }, error_handler=validation_errors_response)
     def post(self, title, category, question, answer_type, interested_response,  **kw):
 

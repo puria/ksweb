@@ -48,7 +48,7 @@
                 {{#each precondition}}
                 <div class="col-md-12">
                     {{.title}}
-                    <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._category}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                 </div>
                 {{/each}}
             {{/each}}

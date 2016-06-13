@@ -49,21 +49,25 @@
                 <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}"></span>
             </div>
 
-            <div class="col-md-12" >
-            {{#conditions:i}}
-                <span class="precond-element">
-                    {{#if .type == 'operator'}}
-                        <img src="{{.img_uri}}" alt="{{.content}}" />
-                    {{/if}}
+            <div class="form-group {{errors.conditions ? 'has-error' : ''}}">
+            <!--<div class="col-md-12" >-->
+                {{#conditions:i}}
+                    <span class="precond-element">
+                        {{#if .type == 'operator'}}
+                            <img src="{{.img_uri}}" alt="{{.content}}" />
+                        {{/if}}
 
-                    {{#if .type == 'precondition'}}
-                    <span on-click="selectElem:{{.}}">{{.title}}</span>
-                    {{/if}}
-                     <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-                </span>
-            {{/items}}
+                        {{#if .type == 'precondition'}}
+                        <span on-click="selectElem:{{.}}">{{.title}}</span>
+                        {{/if}}
+                         <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+                    </span>
+                {{/items}}
+
+                {{#if errors.conditions}}
+                <span class="help-block">{{errors.conditions}}</span>
+                {{/if}}
             </div>
-
         </form>
     ]]>
     </script>
@@ -112,6 +116,9 @@
                 var all_var = self.get('create');
                 console.log("Sto inviando");
                 console.log(all_var);
+                all_var['conditions'] = self.get('conditions');
+                console.log("aggiungo le conditions");
+                console.log(all_var)
                 self.createPreconditionAdvanced(all_var);
                 return false;
             });
