@@ -38,7 +38,13 @@ def material_icon(icon_name):
 
         # QA
         'save': '&#xE161;',
+
+        # Mix
         'add_circle_outline': '&#xE148;',
+        'add_circle_outline_rotate': '&#xE148;',
+        'add_circle': '&#xE147;',
+        'remove_circle_outline': '&#xE15D;',
+        'clear': '&#xE14C;',
 
         # Table
         'done': '&#xE876;',
@@ -73,6 +79,7 @@ table_row_content.ROW_CONVERSIONS = {
     bool: lambda b: material_icon('done') if b else material_icon('clear'),
     model.User: lambda u: u.display_name
 }
+
 
 def bootstrap_pager(paginator):
     return html.HTML.div(paginator.pager(

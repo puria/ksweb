@@ -1,0 +1,227 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">KS | Precondizione</title>
+    <script id="PreconditionSimpleForm_template" type="text/html">
+        <![CDATA[
+        <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
+            <div class="form-group" style="padding-top: 20px">
+                <div class="col-md-6 text-left ks-section-name">
+                    Precondizione Avanzata
+                </div>
+                <div class="col-md-6 text-right">
+                    {{#if saving}}
+                    Saving...
+                    {{else}}
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+                    {{/if}}
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
+                    {{#if errors.title}}
+                    <span class="help-block">{{errors.title}}</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                Operatori:
+                <span onclick="ractive_precondition_simple.addOperator('and')"><img src="${tg.url('/img/and.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('or')"><img src="${tg.url('/img/or.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('not')"><img src="${tg.url('/img/not.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator('(')"><img src="${tg.url('/img/bracket_open.png')}"></span>
+                <span onclick="ractive_precondition_simple.addOperator(')')"><img src="${tg.url('/img/bracket_close.png')}"></span>
+                <input type="button" value="Paste HTML" onclick="document.getElementById('advanced').focus(); pasteHtmlAtCaret('<b>INSERTED</b>'); ">
+            </div>
+
+            <div class="form-group">
+                <div id="advanced" contentEditable="true">Type here. You can insert images too
+                  <img src="http://t2.gstatic.com/images?q=tbn:ANd9GcQCze-mfukcuvzKk7Ilj2zQ0CS6PbOkq7ZhRInnNd1Yz3TQzU4e&t=1" />
+                </div>
+            </div>
+
+            <div class="col-md-12" >
+            {{#each conditions}}
+                <span class="precond-element">
+                    <span on-click="selectElem:{{.}}">{{.}}</span>
+                    <span id="delete_elem" class="precondition-editor-icon-remove" on-click="deleteElem:{{.}}">${h.material_icon('add_circle_outline_rotate')}</span>
+                </span>
+            {{/each}}
+            </div>
+
+        </form>
+    ]]>
+    </script>
+</head>
+
+<body py:block="body" py:strip="True">
+<div id="qa-ractive" style="padding-top: 20px">
+
+</div>
+<script>
+    /*
+        Devo migrare la logica a ractive
+        Ractive deve tenere traccia della struttura dati dentro ad una variabile.
+        Devo fare poi solo il template che deve visualizzare tutti i vari elementi del template
+    */
+
+    <![CDATA[
+        document.onkeydown = function (e) {
+            console.log("Premuto: "+e.which);
+            if(e.which == 9){
+                console.log("skippooo");
+                return false;
+            }
+        };
+
+    function pasteHtmlAtCaret(html) {
+        html = '<img src="${tg.url('/img/and.png')}">';
+        var sel, range;
+        if (window.getSelection) {
+            // IE9 and non-IE
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+
+                // Range.createContextualFragment() would be useful here but is
+                // non-standard and not supported in all browsers (IE9, for one)
+                var el = document.createElement("div");
+                el.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ( (node = el.firstChild) ) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+
+                // Preserve the selection
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        } else if (document.selection && document.selection.type != "Control") {
+            // IE < 9
+            document.selection.createRange().pasteHTML(html);
+        }
+    }
+
+
+
+    var PreconditionSimple = Ractive.extend({
+        template: '#PreconditionSimpleForm_template',
+        onconstruct: function(options) {
+            var self = this;
+        },
+        oninit: function() {
+            var self = this;
+            self.set('errors', {});
+            self.set('saving', false);
+            self.set('response_type', null);
+            self.set('categories', []);
+
+            self.set('conditions', []);
+            self.set('coursor_position', 0);
+
+            self.on('submit-form', function(event) {
+                var all_var = self.get('create');
+                console.log("Sto inviando");
+                console.log(all_var);
+                self.createPreconditionAdvanced(all_var);
+                return false;
+            });
+
+            self.loadCategory();
+            self.loadQuestion();
+        },
+        loadCategory: function(callback) {
+            var self = this;
+            jQuery.get("${tg.url('/category/get_all')}",
+                    function(data) {
+                        self.set('categories', data['categories']);
+                        if (callback)
+                            callback();
+                    });
+        },
+        loadQuestion: function(callback) {
+            var self = this;
+            jQuery.get("${tg.url('/qa/get_single_or_multi_question')}",
+                    function(data) {
+                        self.set('questions', data['questions']);
+                        if (callback)
+                            callback();
+                    });
+        },
+        addOperator: function(operator) {
+            var self = this;
+            var uri='http://placehold.it/50x50';
+            console.log("add operator:" + operator);
+            $('#advanced').append($('<img>',{id:'theImg',src:uri}))
+            self.get('conditions').push(operator);
+        },
+
+        addPrecondition: function(precondition) {
+            var self = this;
+            console.log("add precondition:" + precondition);
+            self.get('conditions').push(precondition);
+        },
+
+
+
+        createPreconditionAdvanced: function(field) {
+            var self = this;
+            //self.set('saving', true);
+            console.log("JSON.stringify");
+            console.log(field);
+            console.log(JSON.stringify(field));
+
+            var api_params = JSON.stringify(field);
+
+            $.ajax({
+                type: "post",
+                url: "${tg.url('/precondition/advanced/post')}",
+                data: api_params,
+                dataType: "json",
+                processData: false,
+                contentType: 'application/json'
+            }).done(function(data) {
+                self.set('create', {});
+                self.set('saving', false);
+                self.set('editing', false);
+                console.log(data);
+                window.location.replace("${tg.url('/precondition/')}");
+
+            }).fail(function(jqXHR) {
+                var data = jQuery.parseJSON(jqXHR.responseText);
+                console.log("fail");
+                console.log(data);
+                self.set('errors', data.errors);
+                self.set('saving', false);
+            });
+
+        }
+    });
+    ]]>
+</script>
+<script>
+    var ractive_precondition_simple = new PreconditionSimple({el: '#qa-ractive'});
+
+    ractive_precondition_simple.on('selectElem', function ( event, elem ) {
+        var self = this;
+        console.log("Elemento selezionato: "+ elem);
+    });
+
+    ractive_precondition_simple.on('deleteElem', function ( event, elem ) {
+        var self = this;
+        console.log("Elemento da eliminare: "+ elem);
+    });
+
+
+</script>
+</body>
+</html>
