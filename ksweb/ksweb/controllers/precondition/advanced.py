@@ -10,7 +10,7 @@ from tg import expose, redirect, validate, flash, url, RestController, decode_pa
 from tw2.core import OneOfValidator, LengthValidator, StringLengthValidator
 
 from ksweb import model
-from ksweb.lib.validator import QAExistValidator
+from ksweb.lib.validator import CategoryExistValidator
 
 
 class PreconditionAdvancedController(RestController):
@@ -27,73 +27,72 @@ class PreconditionAdvancedController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=4),
-        'category': QAExistValidator(required=True),
-        'question': QAExistValidator(required=True),
-        'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
-        'category': LengthValidator(required=False),
+        'category': CategoryExistValidator(required=True),
+        'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
-    def post(self, title, category, question, answer_type, interested_response,  **kw):
-
-        print "question: %s" % question
-        print "answer_type: %s" % answer_type
-        print "interested_response: %s" % interested_response
+    def post(self, title, category, conditions, **kw):
         print "title: %s" % title
-        print kw
+        print "category: %s" % category
+        print "kw: %s" % kw
+        #  Fare scrematura di argomenti per evitare di eseguire del codice python potenzialmente dannoso
+        #  Fare eval
+        #  Se tutto ok ok vuol dire che va bene altrimenti errori
+
+        option_type=['precondition', 'operator']
+        operator_accepted=['and', 'or', 'not', '(', ')']
+
+        '''
+        {u'content': u'575581e4c42d75124a0a9602', u'type': u'precondition', u'key': 1, u'title': u'Ha risposto a domanda2'}
+        {u'content': u'or', u'img_uri': u'/img/or_dark.png', u'type': u'operator', u'key': 2}
+        {u'content': u'575581e4c42d75124a0a9601', u'type': u'precondition', u'key': 3, u'title': u'Ha risposto a domanda1'}
+        '''
+
+        bool_str = ""
+        condition = []
+
+        for cond in conditions:
+            print cond
+            if cond['type'] == 'precondition':
+                #  Check if precondition exist
+                print "verify precondition id"
+                precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
+                print precond
+                if not precond:
+                    response.status_code = 412
+                    return dict(errors={'conditions': 'Precondizione non trovata.'})
+
+                bool_str += "True "
+                condition.append(ObjectId(cond['content']))
+
+            elif cond['type'] == 'operator':
+                print "verify operator"
+                #  Check if operator is valid
+                if not cond['content'] in operator_accepted:
+                    response.status_code = 412
+                    return dict(errors={'conditions': 'Operatore logico non valido.'})
+
+                bool_str += cond['content']+" "
+                condition.append(cond['content'])
+
+            else:
+                print "not valid type"
+                return "error"
+        try:
+            res_eval = eval(bool_str)
+        except SyntaxError as e:
+            response.status_code = 412
+            return dict(errors={'conditions': 'Errore di sinstassi.'})
+
+        print "eval: %s" % bool_str
+        print "res: %s" % res_eval
         user = request.identity['user']
 
-        #  CASO BASE in cui risco a creare una precondizione semplice per definizione e' quella di che venga solamente selezionata una risposta
-        if len(interested_response) == 1:
-            #  La risposta e' solo una creo una precondizione semplice
-            print "Base case -> Simple Precondition"
-            model.Precondition(
-                _owner=user._id,
-                _category=ObjectId(category),
-                title=title,
-                type='simple',
-                condition=[ObjectId(question), interested_response[0]]
-            )
-        else:
-            #  CASO AVANZATO sono state selezionate piu' risposte, devo prima creare tutte le precondizioni semplici e poi creare quella complessa
-            if answer_type == "have_response":
-                #  Create one precondition simple for all possibility answer to question
-                #  After that create a complex precondition with previous simple precondition
-                interested_response = model.Qa.query.get(_id=ObjectId(question)).answers
-
-            if answer_type == "what_response":
-                #  Create one precondition simple for all selected answer to question
-                #  After that create a complex precondition with previous simple precondition
-
-                if len(interested_response) <= 1:
-                    response.status_code = 412
-                    return dict(errors={'interested_response': 'Inserire almeno una risposta'})
-
-            base_precond = []
-            for resp in interested_response:
-                prec = model.Precondition(
-                    _owner=user._id,
-                    _category=ObjectId(category),
-                    title="_base_for_%s" % title,
-                    type='simple',
-                    condition=[ObjectId(question), resp],
-
-                    public=True,
-                    visible=False
-                )
-                base_precond.append(prec)
-
-            condition = []
-            for prc in base_precond[:-1]:
-                condition.append(prc._id)
-                condition.append('|')
-
-            condition.append(base_precond[-1]._id)
-
-            model.Precondition(
-                _owner=user._id,
-                _category=ObjectId(category),
-                title=title,
-                type='advanced',
-                condition=condition
-            )
+        model.Precondition(
+            _owner=user._id,
+            _category=ObjectId(category),
+            title=title,
+            type='advanced',
+            condition=condition
+        )
 
         return dict(errors=None)
