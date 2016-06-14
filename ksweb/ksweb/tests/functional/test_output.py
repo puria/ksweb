@@ -51,10 +51,10 @@ class TestOutput(TestController):
         self._login_lavewr()
 
         output_params = {
-            'title': '123',
+            'title': '1',
             'category': '56c59ab417928003321d5a55',
             'precondition': '56c59ab417928003321d5a55',
-            'content': 'cot'
+            'content': 'c'
         }
 
         resp = self.app.post_json(
@@ -62,9 +62,11 @@ class TestOutput(TestController):
         ).json['errors']
 
         output = model.Output.query.get(title=output_params['title'])
+        print "reeeesp"
+        print resp
 
-        assert resp['content'] == 'Must be at least 4 characters', resp
+        assert resp['content'] == 'Must be at least 2 characters', resp
         assert resp['category'] == 'Categoria non esistente', resp
         assert resp['precondition'] == 'Precondizione non esistente', resp
-        assert resp['title'] == 'Must be at least 4 characters', resp
+        assert resp['title'] == 'Must be at least 2 characters', resp
         assert output is None
