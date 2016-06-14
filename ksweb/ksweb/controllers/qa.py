@@ -51,9 +51,9 @@ class QaController(RestController):
     @decode_params('json')
     @expose('json')
     @validate({
-        'title': StringLengthValidator(min=4),
+        'title': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
-        'question': StringLengthValidator(min=4),
+        'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
         'answer_type': OneOfValidator(values=model.Qa.QA_TYPE, required=True),

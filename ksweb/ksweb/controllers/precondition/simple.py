@@ -25,7 +25,7 @@ class PreconditionSimpleController(RestController):
     @decode_params('json')
     @expose('json')
     @validate({
-        'title': StringLengthValidator(min=4),
+        'title': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
