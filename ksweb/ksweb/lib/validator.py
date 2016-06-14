@@ -16,6 +16,7 @@ class QAExistValidator(Validator):
         if qa is None:
             raise ValidationError(u'Domanda non esistente', self)
 
+
 class CategoryExistValidator(Validator):
     def _validate_python(self, value, state=None):
 

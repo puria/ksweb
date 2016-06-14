@@ -38,8 +38,8 @@ class OutputController(RestController):
     @decode_params('json')
     @expose('json')
     @validate({
-        'title': StringLengthValidator(min=4),
-        'content': StringLengthValidator(min=4),
+        'title': StringLengthValidator(min=2),
+        'content': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)

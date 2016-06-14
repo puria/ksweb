@@ -25,7 +25,7 @@ class PreconditionAdvancedController(RestController):
     @decode_params('json')
     @expose('json')
     @validate({
-        'title': StringLengthValidator(min=4),
+        'title': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
