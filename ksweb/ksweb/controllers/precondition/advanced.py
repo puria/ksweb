@@ -62,7 +62,7 @@ class PreconditionAdvancedController(RestController):
             res_eval = eval(bool_str)
         except SyntaxError as e:
             response.status_code = 412
-            return dict(errors={'conditions': 'Errore di sinstassi.'})
+            return dict(errors={'conditions': 'Errore di sintassi.'})
 
         user = request.identity['user']
         model.Precondition(
