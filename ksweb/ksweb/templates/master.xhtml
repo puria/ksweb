@@ -42,7 +42,7 @@
 
     <div class="collapse navbar-collapse" id="navbar-content">
       <ul py:if="request.identity" class="nav navbar-nav">
-        <li><a href="${tg.url('/profile')}" class="">${h.material_icon('account_circle')}</a></li>
+        <li><a href="${tg.url('/#')}" class="">${h.material_icon('account_circle')}</a></li>
         <li class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">
           <span class="submenu">
               ${request.identity['user'].display_name}
