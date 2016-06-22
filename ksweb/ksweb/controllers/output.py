@@ -57,3 +57,23 @@ class OutputController(RestController):
             visible=True
         )
         return dict(errors=None)
+
+    @expose('json')
+    def sidebar_output(self):
+        res = model.Output.query.aggregate([
+            {
+                '$match': {'visible': True}
+            },
+            {
+                '$group': {
+                    '_id': '$_category',
+                    'output': {'$push': "$$ROOT",}
+                }
+            }
+        ])['result']
+
+        #  Insert category name into res
+        for e in res:
+            e['category_name'] = model.Category.query.get(_id=ObjectId(e['_id'])).name
+
+        return dict(outputs=res)

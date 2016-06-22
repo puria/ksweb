@@ -11,12 +11,12 @@ from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
 from ksweb.controllers.category import CategoryController
+from ksweb.controllers.document import DocumentController
 from ksweb.controllers.output import OutputController
 from ksweb.controllers.precondition.precondition import PreconditionController
 from ksweb.controllers.qa import QaController
 from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
-from ksweb.model import Category, Precondition
 
 __all__ = ['RootController']
 
@@ -40,6 +40,7 @@ class RootController(BaseController):
     precondition = PreconditionController()
     category = CategoryController()
     output = OutputController()
+    document = DocumentController()
 
     error = ErrorController()
 

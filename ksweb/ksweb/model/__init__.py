@@ -19,5 +19,5 @@ from ksweb.model.category import Category
 from ksweb.model.qa import Qa
 from ksweb.model.precondition import Precondition
 from ksweb.model.output import Output
-
-__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output')
+from ksweb.model.document import Document
+__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output', 'Document')

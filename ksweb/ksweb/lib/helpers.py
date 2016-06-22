@@ -39,6 +39,9 @@ def material_icon(icon_name):
         # QA
         'save': '&#xE161;',
 
+        #  Document
+        'create': '&#xE150;',
+
         # Mix
         'add_circle_outline': '&#xE148;',
         'add_circle_outline_rotate': '&#xE148;',
@@ -67,13 +70,26 @@ def table_row_content(entity, fields):
         data = getattr(entity, field)
         converters_map = {}
         if field != '_id':
+            converted_value = data
             if type(data) in table_row_content.ROW_CONVERSIONS:
                 converters_map = table_row_content.ROW_CONVERSIONS
-            elif hasattr(entity, '__ROW_CONVERTERS__'):
-                converters_map = entity.__ROW_CONVERTERS__
-        convert = converters_map.get(type(data), lambda o: o)
-        tags.append(html.HTML.td(convert(data), class_=css_class.get(field, 'table-row')))
+                convert = converters_map.get(type(data), lambda o: o)
+                converted_value = convert(data)
+
+            elif hasattr(entity, '__ROW_TYPE_CONVERTERS__'):
+                converters_map = entity.__ROW_TYPE_CONVERTERS__
+                convert = converters_map.get(type(data), lambda o: o)
+                converted_value = convert(data)
+
+            elif hasattr(entity, '__ROW_COLUM_CONVERTERS__'):
+                print "%s ha un tipo column custom" % entity.title
+                converters_map = entity.__ROW_COLUM_CONVERTERS__
+                convert = converters_map.get(field, lambda o: o)
+                converted_value = convert(entity)
+
+        tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'table-row')))
     return html.HTML(*tags)
+
 table_row_content.ROW_CONVERSIONS = {
     model.Category: lambda c: c.name,
     model.Precondition: lambda p: p.title,

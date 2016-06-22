@@ -1,33 +1,36 @@
 # -*- coding: utf-8 -*-
-"""Qa model module."""
+"""Document model module."""
+import tg
+from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
-from ming.odm.icollection import InstrumentedList
 
 from ksweb.model import DBSession
 
 
-def _format_instrumented_list(l):
-        return ', '.join(l)
+def _custom_title(obj):
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(id=obj._id)), obj.title))
 
 
-class Qa(MappedClass):
-    QA_TYPE = [u"text", u"single", u"multi"]
+def _content_preview(obj):
+    return Markup("Little preview of: %s" % obj._id)
 
+
+class Document(MappedClass):
     class __mongometa__:
         session = DBSession
-        name = 'qas'
+        name = 'documents'
         indexes = [
-            ('title',),
             ('_owner',),
+            ('public',),
+            ('title',),
             ('_category',),
-            ('type', 'public',),
         ]
 
-    __ROW_TYPE_CONVERTERS__ = {
-        #InstrumentedObj: _format_instrumented_obj,
-        InstrumentedList: _format_instrumented_list,
+    __ROW_COLUM_CONVERTERS__ = {
+        'title': _custom_title,
+        'content': _content_preview
     }
 
     _id = FieldProperty(s.ObjectId)
@@ -39,15 +42,10 @@ class Qa(MappedClass):
     category = RelationProperty('Category')
 
     title = FieldProperty(s.String, required=True)
-    question = FieldProperty(s.String, required=True)
-    tooltip = FieldProperty(s.String, required=False)
-    link = FieldProperty(s.String, required=False)
-    type = FieldProperty(s.OneOf(*QA_TYPE), required=True)
 
-    answers = FieldProperty(s.Anything)
+    content = FieldProperty(s.Anything, required=True)
 
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
-
-__all__ = ['Qa']
+__all__ = ['Document']

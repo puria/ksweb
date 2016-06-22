@@ -17,7 +17,7 @@ class Output(MappedClass):
             ('title',),
         ]
 
-    __ROW_CONVERTERS__ = {}
+    __ROW_TYPE_CONVERTERS__ = {}
 
     _id = FieldProperty(s.ObjectId)
 

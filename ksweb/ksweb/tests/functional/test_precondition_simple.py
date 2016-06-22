@@ -149,5 +149,30 @@ class TestPreconditionSimple(TestController):
 
         assert errors is not None
 
+    def test_sidebar_precondition(self):
+        self._login_lavewr()
+        category1 = self._get_category('Category_1')
+        category2 = self._get_category('Category_2')
+        lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
+        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_precondition('Precond1', lawyer, category1._id)
+        self._create_precondition('Precond2', lawyer, category2._id)
+        resp = self.app.get('/precondition/sidebar_precondition')
 
+        assert 'Category_1' in resp
+        assert 'Category_2' in resp
+        assert 'Precond1' in resp
+        assert 'Precond2' in resp
+
+    def test_available_preconditions(self):
+        self._login_lavewr()
+        category1 = self._get_category('Category_1')
+        lawyer = self._get_user('lawyer1@ks.axantweb.com')
+
+        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_precondition(title='Precond1', user=lawyer, category_id=category1._id, visible=True)
+        self._create_precondition(title='Precond2', user=lawyer, category_id=category1._id, visible=False)
+        resp = self.app.get('/precondition/available_preconditions')
+        assert "Precond1" in resp
+        assert "Precond2" not in resp

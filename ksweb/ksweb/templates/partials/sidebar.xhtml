@@ -1,7 +1,7 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
     <div class="row sidebar-item">
         <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
-            ${h.material_icon('insert_drive_file')} DOCUMENTI
+            <a href="${tg.url('/document')}">${h.material_icon('insert_drive_file')} DOCUMENTI</a>
         </div>
         <div class="col-md-1"></div>
     </div>
@@ -33,7 +33,7 @@
     <div py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'" id="precondition-ractive" class="row" style="padding-top: 50%;">
 
     </div>
-
+    <!-- Precondition Advanced -->
     <script id="PreconditionSimpleList" type="text/html">
         <![CDATA[
             <div class="col-md-12">
@@ -93,8 +93,77 @@
         }
     });
     </script>
+
+  <!-- End Precondition -->
+
+
+    <div py:if="getattr(tmpl_context, 'sidebar_document', '') == 'document-new'" id="output-ractive" class="row" style="padding-top: 50%;">
+
+    </div>
+  <!-- Output -->
+
+  <script id="OutputList" type="text/html">
+        <![CDATA[
+            <div class="col-md-12">
+                Output
+            </div>
+            {{#each outputs}}
+                <div class="col-md-12 category-name">
+                    {{.category_name}}
+                    <hr class="category-name-separator">
+                </div>
+
+                {{#each output}}
+                <div class="col-md-12">
+                    {{.title}}
+                    <span id="add_circle_outline" onclick="ractive_document.addOutput('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                </div>
+                {{/each}}
+            {{/each}}
+        ]]>
+    </script>
+    <script>
+        var OutputList = Ractive.extend({
+        template: '#OutputList',
+        onconstruct: function(options) {
+            var self = this;
+        },
+        oninit: function() {
+            var self = this;
+            self.set('errors', {});
+            self.set('saving', false);
+            self.set('outputs', []);
+            self.set('categories', []);
+
+            self.loadOutputs();
+            self.loadCategory();
+
+        },
+        loadOutputs: function(callback) {
+            var self = this;
+            jQuery.get("${tg.url('/output/sidebar_output')}",
+                    function(data) {
+                        self.set('outputs', data['outputs']);
+                        if (callback)
+                            callback();
+                    });
+        },
+        loadCategory: function(callback) {
+            var self = this;
+            jQuery.get("${tg.url('/category/get_all')}",
+                    function(data) {
+                        self.set('categories', data['categories']);
+                        if (callback)
+                            callback();
+                    });
+        }
+    });
+    </script>
+
+  <!-- End Output  -->
+
     <script>
         var ractive_precondition_simple_list = new PreconditionSimpleList({el: '#precondition-ractive'});
-
+        var ractive_output_list = new OutputList({el: '#output-ractive'});
     </script>
 </div>

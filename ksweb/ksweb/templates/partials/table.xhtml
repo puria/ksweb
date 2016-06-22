@@ -5,9 +5,10 @@
             <thead>
             <tr>
                 <th py:for="idx, field in enumerate(fields['columns_name'])">
-                    <!--<a href="${tg.url('/pikablink_admin/' + entity_name, params=dict(order_by=fields[0][idx], desc= not desc and order_by==fields[0][idx]))}">-->
-                    ${field} <!-- ${h.icon('arrow-up' if not desc else 'arrow-down') if order_by==fields[0][idx] else '' } -->
-                    <!--</a>-->
+                    <!--<a href="${tg.url('/pikablink_admin/' + entity_name, params=dict(order_by=fields[0][idx], desc= not desc and order_by==fields[0][idx]))}">
+                    ${field} ${h.icon('arrow-up' if not desc else 'arrow-down') if order_by==fields[0][idx] else '' }
+                    </a>-->
+                    ${field}
                 </th>
                 <th py:if="actions">
                     <!-- nameless column -->

@@ -1,7 +1,10 @@
+from ksweb import model
+from ksweb.model import DBSession
 from ksweb.tests import TestController
-from ksweb.lib.validator import CategoryExistValidator, QAExistValidator
+from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, DocumentExistValidator, \
+    PreconditionExistValidator, DocumentContentValidator
 from tw2.core import ValidationError
-
+from test_document import TestDocument
 
 class TestValidators(TestController):
     application_under_test = 'main'
@@ -70,6 +73,122 @@ class TestValidators(TestController):
         validator = CategoryExistValidator()
         try:
             res = validator._validate_python('5757ce79c42d752bde919318')
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_document_exist_validator(self):
+        model.Document(
+            _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
+            _category=self._get_category('Category_1')._id,
+            title="Titolone",
+            content=[],
+            public=True,
+            visible=True
+        )
+        DBSession.flush()
+        document = model.Document.query.get(title="Titolone")
+        validator = DocumentExistValidator()
+        try:
+            res = validator._validate_python(str(document._id))
+        except ValidationError:
+            assert False
+        else:
+            assert True
+
+    def test_document_not_exist_validator(self):
+
+        validator = DocumentExistValidator()
+        try:
+            res = validator._validate_python("5757ce79c42d752bde919318")
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_document_invalid_id_validator(self):
+
+        validator = DocumentExistValidator()
+        try:
+            res = validator._validate_python("Invalid")
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_precondition_exist_invalid_id_validator(self):
+        validator = PreconditionExistValidator()
+        try:
+            res = validator._validate_python("Invalid")
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_document_content_validator(self):
+        model.Output(
+            title="FakeOutput",
+            content="Content of the fake output",
+            _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
+            _category=self._get_category('Category_1')._id,
+            _precondition=None,
+        )
+        DBSession.flush()
+        output = model.Output.query.get(title="FakeOutput")
+
+        validator = DocumentContentValidator()
+        try:
+            res = validator._validate_python([
+                {
+                    'type': "text",
+                    'content': "Buongiorno",
+                    'title': ""
+                },
+                {
+                    'type': "output",
+                    'content': str(output._id),
+                    'title': output.title
+                },
+            ])
+        except ValidationError:
+            assert False
+        else:
+            assert True
+
+
+    def test_document_content_validator_invalid_output(self):
+
+        validator = DocumentContentValidator()
+        try:
+            res = validator._validate_python([
+                {
+                    'type': "text",
+                    'content': "Buongiorno",
+                    'title': ""
+                },
+                {
+                    'type': "output",
+                    'content': "5757ce79c42d752bde919318",
+                    'title': "fake title"
+                },
+            ])
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_document_content_validator_invalid_type_output(self):
+
+        validator = DocumentContentValidator()
+        try:
+            res = validator._validate_python([
+                {
+                    'type': "fake_type",
+                    'content': "Buongiorno",
+                    'title': ""
+                }
+            ])
         except ValidationError:
             assert True
         else:

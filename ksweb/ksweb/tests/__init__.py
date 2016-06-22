@@ -86,6 +86,15 @@ class TestController(object):
     def _get_category(self, category_name):
         return model.Category.query.get(name=category_name)
 
+    def _get_precond_by_title(self, title):
+        return model.Precondition.query.get(title=title)
+
+    def get_output_by_title(self, title):
+        return model.Output.query.get(title=title)
+
+    def get_document_by_title(self, title):
+        return model.Document.query.get(title=title)
+
     def _create_qa(self, title, category_id, question, tooltip, link, type, answers):
         self.app.post_json(
             '/qa/post', params={
@@ -109,13 +118,15 @@ class TestController(object):
             }
         )
 
-    def _create_precondition(self, title, user, category_id, condition=[], precond_type='simple'):
+    def _create_precondition(self, title, user, category_id, condition=[], precond_type='simple', public=True, visible=True):
         p = model.Precondition(
                 _owner=user._id,
                 _category=category_id,
                 title=title,
                 type=precond_type,
-                condition=condition
+                condition=condition,
+                public=public,
+                visible=visible
         )
         DBSession.flush(p)
         return p
