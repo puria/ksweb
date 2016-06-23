@@ -2,13 +2,10 @@
 """Document controller module"""
 import tg
 from bson import ObjectId
-from tg import expose, tmpl_context, predicates, RestController, request, validate, flash, response, validation_errors_response
+from tg import expose, tmpl_context, predicates, RestController, request, validate, validation_errors_response
 from tg.decorators import paginate, decode_params
 from tg.i18n import lazy_ugettext as l_
-
-# from ksweb.model import DBSession
 from tw2.core import StringLengthValidator
-
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, DocumentExistValidator, DocumentContentValidator
 

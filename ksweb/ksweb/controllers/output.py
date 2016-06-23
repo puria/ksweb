@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
 from bson import ObjectId
-from tg import expose, validate, validation_errors_response, response, RestController, decode_params, request, tmpl_context
+from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context
 import tg
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
-from tw2.core import StringLengthValidator, OneOfValidator
+from tw2.core import StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, PreconditionExistValidator, \
+from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
     OutputExistValidator
 
 

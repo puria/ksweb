@@ -1,50 +1,50 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">KS | Documenti</title>
-    <script id="DocumentForm_template" type="text/html">
-        <![CDATA[
-        <form id="document-form" class="form-horizontal" on-submit="submit-form">
-            <div class="form-group" style="padding-top: 20px">
-                <div class="col-md-6 text-left ks-section-name">
-                    Documento
-                </div>
-                <div class="col-md-6 text-right">
-                    {{#if saving}}
-                    Saving...
-                    {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
-                    {{/if}}
-                </div>
-            </div>
-            <hr/>
-            <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
-                    {{#if errors.title}}
-                    <span class="help-block">{{errors.title}}</span>
-                    {{/if}}
-                </div>
-            </div>
-            <div class="form-group {{errors.category ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                    <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                        <option value="" disabled selected>Seleziona una categoria</option>
-                        {{#each categories}}
-                        <option value="{{._id}}">{{.name}}</option>
-                        {{/each}}
-                    </select>
+  <title py:block="master_title">KS | Documenti</title>
+  <script id="DocumentForm_template" type="text/html">
+    <![CDATA[
+    <form id="document-form" class="form-horizontal" on-submit="submit-form">
+      <div class="form-group" style="padding-top: 20px">
+        <div class="col-md-6 text-left ks-section-name">
+          Documento
+        </div>
+        <div class="col-md-6 text-right">
+          {{#if saving}}
+          Saving...
+          {{else}}
+          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+          {{/if}}
+        </div>
+      </div>
+      <hr/>
+      <div class="form-group {{errors.title ? 'has-error' : ''}}">
+        <div class="col-md-3">
+          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
+          {{#if errors.title}}
+          <span class="help-block">{{errors.title}}</span>
+          {{/if}}
+        </div>
+      </div>
+      <div class="form-group {{errors.category ? 'has-error' : ''}}">
+        <div class="col-md-3">
+          <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
+            <option value="" disabled selected>Seleziona una categoria</option>
+            {{#each categories}}
+            <option value="{{._id}}">{{.name}}</option>
+            {{/each}}
+          </select>
 
-                    {{#if errors.category}}
-                    <span class="help-block">{{errors.category}}</span>
-                    {{/if}}
-                </div>
-            </div>
-            <div class="form-group">
-                Azioni:
-                <span onclick="ractive_document.addText()">${h.material_icon('create')}</span>
-            </div>
-            <div class="form-group {{errors.content ? 'has-error' : ''}}">
-                  {{#content:i}}
+          {{#if errors.category}}
+          <span class="help-block">{{errors.category}}</span>
+          {{/if}}
+        </div>
+      </div>
+      <div class="form-group">
+        Azioni:
+        <span onclick="ractive_document.addText()">${h.material_icon('create')}</span>
+      </div>
+      <div class="form-group {{errors.content ? 'has-error' : ''}}">
+        {{#content:i}}
                       <span class="editor-element">
                           {{#if .type == 'text'}}
                             <span class="editor-text" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
@@ -55,15 +55,15 @@
                           {{/if}}
                           <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
                       </span>
-                  {{/items}}
+        {{/items}}
 
-                  {{#if errors.content}}
-                  <span class="help-block">{{errors.content}}</span>
-                  {{/if}}
-              </div>
-        </form>
+        {{#if errors.content}}
+        <span class="help-block">{{errors.content}}</span>
+        {{/if}}
+      </div>
+    </form>
     ]]>
-    </script>
+  </script>
 </head>
 
 <body py:block="body" py:strip="True">
@@ -72,133 +72,133 @@
 </div>
 <script>
 
-    <![CDATA[
+  <![CDATA[
 
-    var Document = Ractive.extend({
-        template: '#DocumentForm_template',
-        onconstruct: function(options) {
-            var self = this;
-            //  Default settings
-            self.submit_type = 'POST';
-            self.submit_url = '${tg.url('/document/post')}';
-            self.edit_mode=false;
-            self.document = options['document'];
-        },
-        oninit: function() {
-            var self = this;
-            self.set('content', []);
+  var Document = Ractive.extend({
+    template: '#DocumentForm_template',
+    onconstruct: function(options) {
+      var self = this;
+      //  Default settings
+      self.submit_type = 'POST';
+      self.submit_url = '${tg.url('/document/post')}';
+      self.edit_mode=false;
+      self.document = options['document'];
+    },
+    oninit: function() {
+      var self = this;
+      self.set('content', []);
 
-            //  Check if document is provided
-            if (! jQuery.isEmptyObject(self.document)) {
-              self.edit_mode = true;
-              self.submit_type = 'PUT';
-              self.submit_url = '${tg.url('/document/put')}';
+      //  Check if document is provided
+      if (! jQuery.isEmptyObject(self.document)) {
+        self.edit_mode = true;
+        self.submit_type = 'PUT';
+        self.submit_url = '${tg.url('/document/put')}';
 
-              //Set the document value as default
-              self.set('create.title', self.document['title']);
-              self.set('create.category', self.document['_category']);
-              self.set('create._id', self.document['_id']);
-              self.set('content', self.document['content']);
-            }
-            self.set('errors', {});
-            self.set('saving', false);
-            self.set('categories', []);
+        //Set the document value as default
+        self.set('create.title', self.document['title']);
+        self.set('create.category', self.document['_category']);
+        self.set('create._id', self.document['_id']);
+        self.set('content', self.document['content']);
+      }
+      self.set('errors', {});
+      self.set('saving', false);
+      self.set('categories', []);
 
-            self.loadCategory();
-            self.on('submit-form', function(event) {
-                var all_var = self.get('create');
-                all_var['content'] = self.get('content');
-                console.log(all_var)
-                self.createDocument(all_var);
-                return false;
-            });
-
-        },
-        loadCategory: function(callback) {
-            var self = this;
-            jQuery.get("${tg.url('/category/get_all')}",
-                    function(data) {
-                        self.set('categories', data['categories']);
-                        if (callback)
-                            callback();
-                    });
-          },
-        addText: function() {
-          var self = this;
-          var elem = {
-                'type':"text",
-                'content': "Testo",
-                'title': ""
-            };
-            self.get('content').push(elem);
-        },
-        addOutput: function(id, title) {
-            var self = this;
-            console.log("add _id:" + id);
-            console.log("add title:" + title);
-            var elem = {
-                'type':'output',
-                'content': id,
-                'title': title
-            };
-            self.get('content').push(elem);
-        },
-
-        createDocument: function(field) {
-            var self = this;
-            self.set('saving', true);
-            console.log("Sending:");
-            console.log(JSON.stringify(field));
-
-            var api_params = JSON.stringify(field);
-            $.ajax({
-                type: self.submit_type,
-                url: self.submit_url,
-                data: api_params,
-                dataType: "json",
-                processData: false,
-                contentType: 'application/json'
-            }).done(function(data) {
-                self.set('create', {});
-                self.set('saving', false);
-                self.set('editing', false);
-                console.log(data);
-                window.location.replace("${tg.url('/document/')}");
-
-            }).fail(function(jqXHR) {
-                var data = jQuery.parseJSON(jqXHR.responseText);
-                console.log("fail");
-                console.log(data);
-                self.set('errors', data.errors);
-                self.set('saving', false);
-            });
-        }
-    });
-    ]]>
-</script>
-<script>
-    var ractive_document = new Document({
-      el: '#document-ractive',
-      document: ${Markup(h.script_json_encode(document))},
-    });
-
-    ractive_document.on('showOutputDetails', function(event, elem) {
-      $.get( "${tg.url('/output/output_human_readable_details', qualified=True)}",{ id: elem.content}, function(data) {
-        alert(JSON.stringify(data['output'], null, 2));
+      self.loadCategory();
+      self.on('submit-form', function(event) {
+        var all_var = self.get('create');
+        all_var['content'] = self.get('content');
+        console.log(all_var)
+        self.createDocument(all_var);
+        return false;
       });
 
+    },
+    loadCategory: function(callback) {
+      var self = this;
+      jQuery.get("${tg.url('/category/get_all')}",
+          function(data) {
+            self.set('categories', data['categories']);
+            if (callback)
+              callback();
+          });
+    },
+    addText: function() {
+      var self = this;
+      var elem = {
+        'type':"text",
+        'content': "Testo",
+        'title': ""
+      };
+      self.get('content').push(elem);
+    },
+    addOutput: function(id, title) {
+      var self = this;
+      console.log("add _id:" + id);
+      console.log("add title:" + title);
+      var elem = {
+        'type':'output',
+        'content': id,
+        'title': title
+      };
+      self.get('content').push(elem);
+    },
+
+    createDocument: function(field) {
+      var self = this;
+      self.set('saving', true);
+      console.log("Sending:");
+      console.log(JSON.stringify(field));
+
+      var api_params = JSON.stringify(field);
+      $.ajax({
+        type: self.submit_type,
+        url: self.submit_url,
+        data: api_params,
+        dataType: "json",
+        processData: false,
+        contentType: 'application/json'
+      }).done(function(data) {
+        self.set('create', {});
+        self.set('saving', false);
+        self.set('editing', false);
+        console.log(data);
+        window.location.replace("${tg.url('/document/')}");
+
+      }).fail(function(jqXHR) {
+        var data = jQuery.parseJSON(jqXHR.responseText);
+        console.log("fail");
+        console.log(data);
+        self.set('errors', data.errors);
+        self.set('saving', false);
+      });
+    }
+  });
+  ]]>
+</script>
+<script>
+  var ractive_document = new Document({
+    el: '#document-ractive',
+    document: ${Markup(h.script_json_encode(document))},
+  });
+
+  ractive_document.on('showOutputDetails', function(event, elem) {
+    $.get( "${tg.url('/output/output_human_readable_details', qualified=True)}",{ id: elem.content}, function(data) {
+      alert(JSON.stringify(data['output'], null, 2));
     });
 
-    ractive_document.on('selectElem', function ( event, elem ) {
-        var self = this;
-        console.log("Selected element: "+ elem.content);
-    });
+  });
 
-    ractive_document.on('deleteElem', function ( event, elem ) {
-        var self = this;
-        console.log("Element to remove: "+ elem);
-        self.splice('content', elem, 1)
-    });
+  ractive_document.on('selectElem', function ( event, elem ) {
+    var self = this;
+    console.log("Selected element: "+ elem.content);
+  });
+
+  ractive_document.on('deleteElem', function ( event, elem ) {
+    var self = this;
+    console.log("Element to remove: "+ elem);
+    self.splice('content', elem, 1)
+  });
 
 </script>
 </body>
