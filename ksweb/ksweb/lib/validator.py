@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bson import ObjectId
 from bson.errors import InvalidId
 from tw2.core import Validator, ValidationError

@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 """Category controller module"""
 from bson import ObjectId
-from tg import expose, redirect, validate, flash, url, RestController, validation_errors_response
-
-# from tg.i18n import ugettext as _
-# from tg import predicates
-
-# from ksweb.model import DBSession
+from tg import expose, validate, RestController, validation_errors_response
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator
 

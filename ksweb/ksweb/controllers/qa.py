@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
 from bson import ObjectId
-from tg import expose, validate, validation_errors_response, response, RestController, decode_params, request, tmpl_context
+from tg import expose, validate, validation_errors_response, response, RestController, \
+    decode_params, request, tmpl_context
 import tg
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_

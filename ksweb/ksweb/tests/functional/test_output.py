@@ -94,6 +94,3 @@ class TestOutput(TestController):
         resp = self.app.get('/output/output_human_readable_details', params={'id': output1._id})
         assert 'human_readbale_content' in resp
         assert output1._id in resp
-
-
-

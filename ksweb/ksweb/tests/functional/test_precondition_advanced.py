@@ -216,4 +216,3 @@ class TestPreconditionAdvanced(TestController):
         errors = resp.json['errors']
 
         assert errors is not None
-

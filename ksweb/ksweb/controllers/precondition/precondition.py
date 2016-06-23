@@ -2,13 +2,10 @@
 """Precondition controller module"""
 import tg
 from bson import ObjectId
-from tg import expose, predicates, redirect, validate, flash, url
+from tg import expose
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
-
-# from tg.i18n import ugettext as _
 from tg import predicates, tmpl_context
-
 from ksweb import model
 from ksweb.model import Precondition
 from .simple import PreconditionSimpleController

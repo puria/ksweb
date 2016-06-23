@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 """Precondition/simple controller module"""
 from bson import ObjectId
-from tg import expose, redirect, validate, flash, url, RestController, decode_params, validation_errors_response, \
-    request, response, tmpl_context
-
-# from tg.i18n import ugettext as _
-# from tg import predicates
-
+from tg import expose, validate, RestController, decode_params, \
+    validation_errors_response, request, response, tmpl_context
 from tw2.core import LengthValidator, StringLengthValidator
-
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator
 

@@ -5,8 +5,8 @@
 }
 
 .navbar-brand {
-    padding-left: 10px;
-    padding-top: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
 }
 
 .navbar-display-name {
@@ -34,18 +34,18 @@
 
 /* Pupup */
 .submenu > span {
-    position: relative;
+  position: relative;
 }
 
 .submenu > span > div {
-    display: none;
-    position: absolute;
-    top: 25px;
-    left: -75px;
-    z-index: 99;
-    width: 160px;
+  display: none;
+  position: absolute;
+  top: 25px;
+  left: -75px;
+  z-index: 99;
+  width: 160px;
 }
 
 .submenu:hover > span > div {
-    display: block;
+  display: block;
 }
