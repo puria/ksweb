@@ -82,7 +82,6 @@ def table_row_content(entity, fields):
                 converted_value = convert(data)
 
             elif hasattr(entity, '__ROW_COLUM_CONVERTERS__'):
-                print "%s ha un tipo column custom" % entity.title
                 converters_map = entity.__ROW_COLUM_CONVERTERS__
                 convert = converters_map.get(field, lambda o: o)
                 converted_value = convert(entity)
