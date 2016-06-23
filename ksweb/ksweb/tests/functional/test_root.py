@@ -17,8 +17,13 @@ from ksweb.tests import TestController
 
 
 class TestRootController(TestController):
-    """Tests for the method in the root controller."""
+    application_under_test = 'main'
 
+    """Tests for the method in the root controller."""
     def test_index(self):
+        self._login_lavewr()
+        resp = self.app.get('/')
+
+    def test_index_redirect(self):
         """The front page is working properly"""
-        resp = self.app.get('/', status=401)
+        resp = self.app.get('/', status=302)

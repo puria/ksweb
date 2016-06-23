@@ -62,8 +62,6 @@ class TestOutput(TestController):
         ).json['errors']
 
         output = model.Output.query.get(title=output_params['title'])
-        print "reeeesp"
-        print resp
 
         assert resp['content'] == 'Must be at least 2 characters', resp
         assert resp['category'] == 'Categoria non esistente', resp
@@ -82,3 +80,20 @@ class TestOutput(TestController):
         self._create_output("Out1", category1, precond1, "Output content")
         resp = self.app.get('/output/sidebar_output')
         assert "Out1" in resp
+
+    def test_output_human_readable_details(self):
+        self._login_lavewr()
+        category1 = self._get_category('Category_1')
+        lawyer = self._get_user('lawyer1@ks.axantweb.com')
+
+        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_precondition(title='Precond1', user=lawyer, category_id=category1._id, visible=True)
+        precond1 = self._get_precond_by_title('Precond1')
+        self._create_output("Out1", category1, precond1, "Output content")
+        output1=self.get_output_by_title('Out1')
+        resp = self.app.get('/output/output_human_readable_details', params={'id': output1._id})
+        assert 'human_readbale_content' in resp
+        assert output1._id in resp
+
+
+

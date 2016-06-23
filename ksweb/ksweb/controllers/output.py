@@ -8,7 +8,8 @@ from tg.i18n import lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, PreconditionExistValidator
+from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, PreconditionExistValidator, \
+    OutputExistValidator
 
 
 class OutputController(RestController):
@@ -77,3 +78,27 @@ class OutputController(RestController):
             e['category_name'] = model.Category.query.get(_id=ObjectId(e['_id'])).name
 
         return dict(outputs=res)
+
+    @expose('json')
+    @decode_params('json')
+    @validate({
+        'id': OutputExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def output_human_readable_details(self, id,  **kw):
+        output = model.Output.query.get(_id=ObjectId(id))
+
+        return dict(output={
+            '_id': output._id,
+            'title': output.title,
+            'content': output.human_readbale_content,
+            'human_readbale_content': output.human_readbale_content,
+            '_owner': output._owner,
+            'owner': output.owner.display_name,
+            '_precondition': output._precondition,
+            'precondition': output.precondition.title,
+            '_category': output._category,
+            'category': output.category.name,
+            'public': output.public,
+            'visible': output.visible,
+            'created_at': output.created_at
+        })

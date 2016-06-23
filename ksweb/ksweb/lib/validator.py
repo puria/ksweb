@@ -53,6 +53,18 @@ class PreconditionExistValidator(Validator):
             raise ValidationError(u'Precondizione non esistente', self)
 
 
+class OutputExistValidator(Validator):
+    def _validate_python(self, value, state=None):
+
+        try:
+            output = model.Output.query.get(_id=ObjectId(value))
+        except InvalidId:
+            raise ValidationError(u'Output non esistente', self)
+
+        if output is None:
+            raise ValidationError(u'Output non esistente', self)
+
+
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):
         document_accepted_type = ['text', 'output']
