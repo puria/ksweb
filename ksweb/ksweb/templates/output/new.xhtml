@@ -1,13 +1,13 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-  <title py:block="master_title">KS | Nuovo Output</title>
+  <title py:block="master_title">KS | Output</title>
 
   <script id="OutputForm_template" type="text/html">
     <![CDATA[
     <form class="form-horizontal" on-submit="submit-form">
       <div class="form-group" style="padding-top: 20px">
         <div class="col-md-6 text-left ks-section-name">
-          Crea Output
+          Output
         </div>
         <div class="col-md-6 text-right">
           {{#if saving}}
@@ -54,6 +54,29 @@
           {{/if}}
         </div>
       </div>
+      <div class="form-group">
+        Azioni:
+        <span onclick="ractive_output.addText()">${h.material_icon('create')}</span>
+      </div>
+      <div class="form-group {{errors.content ? 'has-error' : ''}}">
+        {{#create.content:i}}
+          <span class="editor-element">
+              {{#if .type == 'text'}}
+                <span class="editor-text" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
+              {{/if}}
+
+              {{#if .type == 'precond'}}
+                <span on-click="selectElem:{{.}}">{{.title}}</span>
+              {{/if}}
+              <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+          </span>
+        {{/items}}
+
+        {{#if errors.content}}
+        <span class="help-block">{{errors.content}}</span>
+        {{/if}}
+      </div>
+      <!--
       <div class="form-group {{errors.content ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <textarea class="form-control" rows="5" id="form-content" value="{{create.content}}" placeholder="Inserisci output"></textarea>
@@ -62,6 +85,7 @@
           {{/if}}
         </div>
       </div>
+      -->
     </form>
     ]]>
   </script>
@@ -76,17 +100,38 @@
     template: '#OutputForm_template',
     onconstruct: function(options) {
       var self = this;
-      self.fieldset = options['fieldset'];
+      //  Default settings
+      self.submit_type = 'POST';
+      self.submit_url = '${tg.url('/output/post')}';
+      self.edit_mode=false;
+      self.output = options['output'];
+
     },
     oninit: function() {
       var self = this;
+
+      self.set('create.content', []);
+
+      //  Check if document is provided
+      if (! jQuery.isEmptyObject(self.output)) {
+        self.edit_mode = true;
+        self.submit_type = 'PUT';
+        self.submit_url = '${tg.url('/output/put')}';
+
+        //Set the output value as default
+        self.set('create.title', self.output['title']);
+        self.set('create.category', self.output['_category']);
+        self.set('create.precondition', self.output['_precondition']);
+        self.set('create._id', self.output['_id']);
+        self.set('create.content', self.output['content']);
+      }
+
       self.set('errors', {});
       self.set('saving', false);
 
       self.on('submit-form', function(event) {
-        var all_var = self.get('create');
-        console.log(all_var);
-        self.create_output(all_var);
+        console.log(self.get('create'));
+        self.create_output(self.get('create'));
         return false;
       });
 
@@ -111,6 +156,15 @@
               callback();
           });
     },
+    addText: function() {
+      var self = this;
+      var elem = {
+        'type':"text",
+        'content': "Testo",
+        'title': ""
+      };
+      self.get('create.content').push(elem);
+    },
     create_output: function(field) {
       var self = this;
       self.set('saving', true);
@@ -120,8 +174,8 @@
       var api_params = JSON.stringify(field);
 
       $.ajax({
-        type: "post",
-        url: "${tg.url('/output/post')}",
+        type: self.submit_type,
+        url: self.submit_url,
         data: api_params,
         dataType: "json",
         processData: false,
@@ -142,7 +196,21 @@
   });
 </script>
 <script>
-  var ractive_output = new OutputEditor({fieldset: 'output', el: '#output-ractive'});
+  var ractive_output = new OutputEditor({
+    el: '#output-ractive',
+    output: ${Markup(h.script_json_encode(output))},
+  });
+
+  ractive_output.on('selectElem', function ( event, elem ) {
+    var self = this;
+    console.log("Selected element: "+ elem.content);
+  });
+
+  ractive_output.on('deleteElem', function ( event, elem ) {
+    var self = this;
+    console.log("Element to remove: "+ elem);
+    self.splice('create.content', elem, 1)
+  });
 </script>
 </body>
 </html>

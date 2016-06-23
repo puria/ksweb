@@ -35,7 +35,13 @@ class TestOutput(TestController):
             'title': 'Title of Output',
             'category': str(category1._id),
             'precondition': str(precondition._id),
-            'content': 'content'
+            'content': [
+                {
+                    'type': "text",
+                    'content': "content",
+                    'title': ""
+                }
+            ]
         }
 
         resp = self.app.post_json(
@@ -54,7 +60,13 @@ class TestOutput(TestController):
             'title': '1',
             'category': '56c59ab417928003321d5a55',
             'precondition': '56c59ab417928003321d5a55',
-            'content': 'c'
+            'content': [
+                {
+                    'type': "text",
+                    'content': "content",
+                    'title': ""
+                }
+            ]
         }
 
         resp = self.app.post_json(
@@ -63,7 +75,6 @@ class TestOutput(TestController):
 
         output = model.Output.query.get(title=output_params['title'])
 
-        assert resp['content'] == 'Must be at least 2 characters', resp
         assert resp['category'] == 'Categoria non esistente', resp
         assert resp['precondition'] == 'Precondizione non esistente', resp
         assert resp['title'] == 'Must be at least 2 characters', resp

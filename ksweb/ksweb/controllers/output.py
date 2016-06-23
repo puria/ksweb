@@ -9,7 +9,7 @@ from tg import predicates
 from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
-    OutputExistValidator
+    OutputExistValidator, OutputContentValidator
 
 
 class OutputController(RestController):
@@ -34,17 +34,17 @@ class OutputController(RestController):
     @expose('json')
     @expose('ksweb.templates.output.new')
     def new(self, **kw):
-        return dict(errors=None)
+        return dict(output={}, errors=None)
 
     @decode_params('json')
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'content': StringLengthValidator(min=2),
+        'content': OutputContentValidator(),
         'category': CategoryExistValidator(required=True),
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def post(self, title, content, category, precondition,  **kw):
+    def post(self, title, content, category, precondition, **kw):
 
         user = request.identity['user']
 
@@ -58,6 +58,33 @@ class OutputController(RestController):
             visible=True
         )
         return dict(errors=None)
+
+    @decode_params('json')
+    @expose('json')
+    @validate({
+        '_id': OutputExistValidator(required=True),
+        'title': StringLengthValidator(min=2),
+        'content': OutputContentValidator(),
+        'category': CategoryExistValidator(required=True),
+        'precondition': PreconditionExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def put(self, _id, title, content, category, precondition,  **kw):
+        output = model.Output.query.find({'_id': ObjectId(_id)}).first()
+
+        output.title = title
+        output._category = ObjectId(category)
+        output._precondition = ObjectId(precondition)
+        output.content = content
+
+        return dict(errors=None)
+
+    @expose('ksweb.templates.output.new')
+    @validate({
+        'id': OutputExistValidator(required=True)
+    }, error_handler=validation_errors_response)
+    def edit(self, id, **kw):
+        output = model.Output.query.find({'_id': ObjectId(id)}).first()
+        return dict(output=output, errors=None)
 
     @expose('json')
     def sidebar_output(self):

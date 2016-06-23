@@ -53,7 +53,7 @@
               {{#if .type == 'output'}}
                 <span on-click="showOutputDetails:{{.}}">{{.title}}</span>
               {{/if}}
-              <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+              <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
           </span>
         {{/items}}
 
