@@ -51,16 +51,16 @@
 
       <div class="form-group {{errors.conditions ? 'has-error' : ''}}">
         {{#conditions:i}}
-                    <span class="editor-element">
-                        {{#if .type == 'operator'}}
-                            <img src="{{.img_uri}}" alt="{{.content}}" />
-                        {{/if}}
+            <span class="editor-element">
+                {{#if .type == 'operator'}}
+                    <img src="{{.img_uri}}" alt="{{.content}}" />
+                {{/if}}
 
-                        {{#if .type == 'precondition'}}
-                        <span on-click="selectElem:{{.}}">{{.title}}</span>
-                        {{/if}}
-                         <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-                    </span>
+                {{#if .type == 'precondition'}}
+                <span on-click="selectElem:{{.}}">{{.title}}</span>
+                {{/if}}
+                 <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+            </span>
         {{/items}}
 
         {{#if errors.conditions}}

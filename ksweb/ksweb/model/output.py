@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
 """Output model module."""
+import tg
+from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
 from datetime import datetime
 from ksweb.model import DBSession
+
+
+def _custom_title(obj):
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/output/edit', params=dict(id=obj._id)), obj.title))
+
+
+def _content_preview(obj):
+    return Markup("Little preview of: %s" % obj._id)
 
 
 class Output(MappedClass):
@@ -16,7 +26,10 @@ class Output(MappedClass):
             ('title',),
         ]
 
-    __ROW_TYPE_CONVERTERS__ = {}
+    __ROW_COLUM_CONVERTERS__ = {
+        'title': _custom_title,
+        'content': _content_preview
+    }
 
     _id = FieldProperty(s.ObjectId)
 
@@ -25,9 +38,22 @@ class Output(MappedClass):
     """
     Possible content of the output is a list with two elements type:
         - text
-        - Response of the Preconditions questions
+        - precondition_response
 
-        but for the moment is really simple text ;)
+    If the type is text the content contain the text
+    If the type is precondition_response the content contain the obj id of the related precondition/response
+
+
+
+
+    An example of the content is this
+    "content" : [
+        {
+            "content" : "Simple text",
+            "type" : "text",
+            "title" : ""
+        }
+    ]
 
     """
     _owner = ForeignIdProperty('User')
