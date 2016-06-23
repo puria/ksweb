@@ -2,7 +2,7 @@ from ksweb import model
 from ksweb.model import DBSession
 from ksweb.tests import TestController
 from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, DocumentExistValidator, \
-    PreconditionExistValidator, DocumentContentValidator
+    PreconditionExistValidator, DocumentContentValidator, OutputExistValidator
 from tw2.core import ValidationError
 from test_document import TestDocument
 
@@ -126,6 +126,44 @@ class TestValidators(TestController):
         else:
             assert False
 
+    def test_output_exist_validator(self):
+        model.Output(
+            title="Fake_output",
+            content=[],
+            _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
+            _category=self._get_category('Category_1')._id,
+            _precondition=None
+        )
+        DBSession.flush()
+        output = model.Output.query.get(title="Fake_output")
+        validator = OutputExistValidator()
+        try:
+            res = validator._validate_python(str(output._id))
+        except ValidationError:
+            assert False
+        else:
+            assert True
+
+    def test_output_not_exist_validator(self):
+
+        validator = OutputExistValidator()
+        try:
+            res = validator._validate_python("5757ce79c42d752bde919318")
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_output_invalid_id_validator(self):
+
+        validator = OutputExistValidator()
+        try:
+            res = validator._validate_python("Invalid")
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
     def test_document_content_validator(self):
         model.Output(
             title="FakeOutput",
@@ -193,3 +231,4 @@ class TestValidators(TestController):
             assert True
         else:
             assert False
+

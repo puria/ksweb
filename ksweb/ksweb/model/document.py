@@ -44,6 +44,29 @@ class Document(MappedClass):
     title = FieldProperty(s.String, required=True)
 
     content = FieldProperty(s.Anything, required=True)
+    """
+    Possible content of the document is a list with two elements type:
+        - text
+        - output
+
+        If the type is text the content contain the text
+        If the type is output the content contain the obj id of the related output
+
+
+        An example of the content is this
+        "content" : [
+            {
+                "content" : "575eb879c42d7518bb972256",
+                "type" : "output",
+                "title" : "ciao"
+            },
+            {
+                "content" : "Simple text",
+                "type" : "text",
+                "title" : ""
+            }
+        ]
+    """
 
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)

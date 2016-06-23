@@ -51,7 +51,7 @@
                           {{/if}}
 
                           {{#if .type == 'output'}}
-                            <span on-click="selectElem:{{.}}">{{.title}}</span>
+                            <span on-click="showOutputDetails:{{.}}">{{.title}}</span>
                           {{/if}}
                           <span id="delete_elem" class="precondition-editor-icon-remove cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
                       </span>
@@ -180,12 +180,18 @@
     var ractive_document = new Document({
       el: '#document-ractive',
       document: ${Markup(h.script_json_encode(document))},
+    });
+
+    ractive_document.on('showOutputDetails', function(event, elem) {
+      $.get( "${tg.url('/output/output_human_readable_details', qualified=True)}",{ id: elem.content}, function(data) {
+        alert(JSON.stringify(data['output'], null, 2));
+      });
 
     });
 
     ractive_document.on('selectElem', function ( event, elem ) {
         var self = this;
-        console.log("Selected element: "+ elem);
+        console.log("Selected element: "+ elem.content);
     });
 
     ractive_document.on('deleteElem', function ( event, elem ) {
