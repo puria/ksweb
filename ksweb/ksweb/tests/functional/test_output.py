@@ -52,6 +52,37 @@ class TestOutput(TestController):
         assert output
         assert resp['errors'] is None, resp
 
+    def test_creation_output_with_fake_qa_related(self):
+        self._login_lavewr()
+
+        category1 = self._get_category('Category_1')
+        precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
+        fake_qa = self._create_fake_qa('Fake name')
+        output_params = {
+            'title': 'Title of Output',
+            'category': str(category1._id),
+            'precondition': str(precondition._id),
+            'content': [
+                {
+                    'type': "text",
+                    'content': "content",
+                    'title': ""
+                },
+                {
+                    "content": str(fake_qa._id),
+                    "type": "qa_response",
+                    "title": fake_qa.title
+               }
+            ]
+        }
+
+        resp = self.app.post_json(
+            '/output/post', params=output_params,
+            status=412
+        ).json
+
+        assert resp['errors'] is not None, resp
+
     def test_put_output(self):
         self.test_creation_output()
         category1 = self._get_category('Category_1')
@@ -86,6 +117,39 @@ class TestOutput(TestController):
         assert output_updated._id == output1._id
         assert output_updated.title == output_params['title']
         assert output_updated.content == output_params['content']
+
+    def test_put_output_with_fake_qa_related(self):
+        self.test_creation_output()
+        category1 = self._get_category('Category_1')
+        precondition = self._get_precond_by_title('Precondition 1')
+
+        output1 = self._get_output_by_title('Title of Output')
+        fake_qa = self._create_fake_qa('Fake name')
+
+        output_params = {
+            '_id': str(output1._id),
+            'title': 'Title of Output edited',
+            'category': str(category1._id),
+            'precondition': str(precondition._id),
+            'content': [
+                {
+                    'type': 'text',
+                    'content': "content",
+                    'title': ""
+                },
+                {
+                    "content": str(fake_qa._id),
+                    "type": "qa_response",
+                    "title": fake_qa.title
+               }
+            ]
+        }
+
+        resp = self.app.put_json(
+            '/output/put', params=output_params,
+            status=412
+        ).json
+        assert resp['errors'] is not None, resp
 
     def test_edit_output(self):
         self._login_lavewr()

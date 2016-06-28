@@ -28,7 +28,7 @@ class TestDocument(TestController):
         self._login_lavewr()
 
         category1 = self._get_category('Category_1')
-        
+
         output1 = self._create_fake_output('Output1')
 
         document_params = {
