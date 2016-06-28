@@ -68,15 +68,15 @@ class OutputExistValidator(Validator):
 
 class OutputContentValidator(Validator):
     def _validate_python(self, value, state=None):
-        document_accepted_type = ['text', 'precondition_response']
+        document_accepted_type = ['text', 'qa_response']
         for cond in value:
             if cond['type'] not in document_accepted_type:
                 raise ValidationError(u'Condizione non valida.', self)
 
-            if cond['type'] == 'precondition_response':
-                precondition = model.Precondition.query.get(_id=ObjectId(cond['content']))
-                if not precondition:
-                    raise ValidationError(u'Precondizione non trovato.', self)
+            if cond['type'] == 'qa_response':
+                qa = model.Qa.query.get(_id=ObjectId(cond['content']))
+                if not qa:
+                    raise ValidationError(u'Domanda non trovata.', self)
 
 
 class DocumentContentValidator(Validator):
