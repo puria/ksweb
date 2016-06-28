@@ -7,13 +7,25 @@ import tg
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
-from tw2.core import StringLengthValidator
+from tw2.core import StringLengthValidator, ValidationError
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
 
 
 class OutputController(RestController):
+    def _validate_precondition_with_qa(self, precondition, content):
+        #  Check content precondition element
+        precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
+        related_qa = precond.response_interested
+        #  Check elem['content'] contain the obj id of the related
+        for elem in content:
+            if elem['type'] == 'qa_response':
+                if elem['content'] not in related_qa.keys():
+                    response.status_code = 412
+                    return dict(errors={'content': 'Domanda non legata alla precondizione utilizzata'})
+        return dict()
+
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "outputs"
 
@@ -46,17 +58,10 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
-        """
         #  Check content precondition element
-        precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
-        related_qa = precond.response_interested
-        #  Check elem['content'] contain the obj id of the related
-        for elem in content:
-            if elem['type'] == 'qa_response':
-                if elem['content'] not in related_qa.keys():
-                    response.status_code = 412
-                    return dict(errors={'content': 'Domanda non legata alla precondizione utilizzata'})
-        """
+        error = self._validate_precondition_with_qa(precondition, content)
+        if error:
+            return error
 
         user = request.identity['user']
         model.Output(
@@ -80,20 +85,12 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def put(self, _id, title, content, category, precondition,  **kw):
-        """
         #  Check content precondition element
-        precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
-        related_qa = precond.response_interested
-        #  Check elem['content'] contain the obj id of the related
-        for elem in content:
-            if elem['type'] == 'qa_response':
-                if elem['content'] not in related_qa.keys():
-                    response.status_code = 412
-                    return dict(errors={'content': 'Domanda %s non legata alla precondizione utilizzata' % elem['title']})
-        """
+        error = self._validate_precondition_with_qa(precondition, content)
+        if error:
+            return error
 
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
-
         output.title = title
         output._category = ObjectId(category)
         output._precondition = ObjectId(precondition)

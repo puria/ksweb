@@ -170,7 +170,7 @@ class TestController(object):
         if not category_id:
             category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
 
-        return self._create_simple_precondition(title, category_id, self._create_fake_qa(title)._id, 'what_response', self.FAKE_RESPONSE[0])
+        return self._create_simple_precondition(title, category_id, self._create_fake_qa(title)._id, 'what_response', [self.FAKE_RESPONSE[0]])
 
     def _create_advanced_precondition(self, title, category_id, conditions=[]):
         self.app.post_json(
