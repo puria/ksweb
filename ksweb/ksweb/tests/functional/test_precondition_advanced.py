@@ -34,7 +34,7 @@ class TestPreconditionAdvanced(TestController):
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
         self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
-        qa = self._get_qa(qa_params['title'])
+        qa = self._get_qa_by_title(qa_params['title'])
 
         precondition1_params = {
             'title': 'Have resp1',
@@ -57,7 +57,7 @@ class TestPreconditionAdvanced(TestController):
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
         self._create_qa(qa2_params['title'], qa2_params['category'], qa2_params['question'], qa2_params['tooltip'], qa2_params['link'], qa2_params['answer_type'], qa2_params['answers'])
-        qa2 = self._get_qa(qa2_params['title'])
+        qa2 = self._get_qa_by_title(qa2_params['title'])
 
         precondition2_params = {
             'title': 'Have resp2',
@@ -110,8 +110,8 @@ class TestPreconditionAdvanced(TestController):
             '/precondition/qa_precondition', params={'id': str(precond._id)}
         ).json
         assert resp
-        qa = self._get_qa('Title of QA')
-        qa2 = self._get_qa('Title of QA2')
+        qa = self._get_qa_by_title('Title of QA')
+        qa2 = self._get_qa_by_title('Title of QA2')
         assert str(qa._id) in resp['qas'].keys()
         assert str(qa2._id) in resp['qas'].keys()
 
@@ -121,13 +121,11 @@ class TestPreconditionAdvanced(TestController):
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition('Titolo2', lawyer, category1._id)
 
-        #  Ora che ho le due precondizioni posso creare quella composta
         precond_advanced = {
             'title': 'Resp1 or Resp2',
             'category': str(category1._id),
-            'conditions':[
+            'conditions': [
                 {
                     'type': 'precondition',
                     'content': str(lawyer._id)
@@ -156,13 +154,11 @@ class TestPreconditionAdvanced(TestController):
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition('Titolo2', lawyer, category1._id)
 
-        #  Ora che ho le due precondizioni posso creare quella composta
         precond_advanced = {
             'title': 'Resp1 or Resp2',
             'category': str(category1._id),
-            'conditions':[
+            'conditions': [
                 {
                     'type': 'operator',
                     'content': 'fake_operator'
@@ -187,13 +183,11 @@ class TestPreconditionAdvanced(TestController):
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition('Titolo2', lawyer, category1._id)
 
-        #  Ora che ho le due precondizioni posso creare quella composta
         precond_advanced = {
             'title': 'Resp1 or Resp2',
             'category': str(category1._id),
-            'conditions':[
+            'conditions': [
                 {
                     'type': 'fake_content',
                     'content': 'fake_operator'
@@ -218,13 +212,11 @@ class TestPreconditionAdvanced(TestController):
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition('Titolo2', lawyer, category1._id)
 
-        #  Ora che ho le due precondizioni posso creare quella composta
         precond_advanced = {
             'title': 'Resp1 or Resp2',
             'category': str(category1._id),
-            'conditions':[
+            'conditions': [
                 {
                     'type': 'operator',
                     'content': 'or'

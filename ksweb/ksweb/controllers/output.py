@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
 from bson import ObjectId
-from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context
+from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
+    response
 import tg
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
@@ -45,9 +46,19 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
+        """
+        #  Check content precondition element
+        precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
+        related_qa = precond.response_interested
+        #  Check elem['content'] contain the obj id of the related
+        for elem in content:
+            if elem['type'] == 'qa_response':
+                if elem['content'] not in related_qa.keys():
+                    response.status_code = 412
+                    return dict(errors={'content': 'Domanda non legata alla precondizione utilizzata'})
+        """
 
         user = request.identity['user']
-
         model.Output(
             _owner=user._id,
             _category=ObjectId(category),
@@ -69,6 +80,18 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def put(self, _id, title, content, category, precondition,  **kw):
+        """
+        #  Check content precondition element
+        precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
+        related_qa = precond.response_interested
+        #  Check elem['content'] contain the obj id of the related
+        for elem in content:
+            if elem['type'] == 'qa_response':
+                if elem['content'] not in related_qa.keys():
+                    response.status_code = 412
+                    return dict(errors={'content': 'Domanda %s non legata alla precondizione utilizzata' % elem['title']})
+        """
+
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
 
         output.title = title

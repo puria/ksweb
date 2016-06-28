@@ -26,18 +26,11 @@ class PreconditionSimpleController(RestController):
         'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, category, question, answer_type, interested_response,  **kw):
-
-        print "question: %s" % question
-        print "answer_type: %s" % answer_type
-        print "interested_response: %s" % interested_response
-        print "title: %s" % title
-        print kw
         user = request.identity['user']
 
         #  CASO BASE in cui risco a creare una precondizione semplice per definizione e' quella di che venga solamente selezionata una risposta
         if len(interested_response) == 1:
             #  La risposta e' solo una creo una precondizione semplice
-            print "Base case -> Simple Precondition"
             model.Precondition(
                 _owner=user._id,
                 _category=ObjectId(category),

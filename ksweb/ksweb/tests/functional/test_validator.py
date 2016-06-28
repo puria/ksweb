@@ -22,9 +22,8 @@ class TestValidators(TestController):
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
+        qa = self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
 
-        qa = self._get_qa(qa_params['title'])
         validator = QAExistValidator()
         try:
             res = validator._validate_python(str(qa._id))
@@ -167,9 +166,8 @@ class TestValidators(TestController):
 
     def test_output_content_validator(self):
         self._login_lavewr()
-        self._create_qa('FakeQa1', self._get_category('Category_1')._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        qa1 = self._create_qa('FakeQa1', self._get_category('Category_1')._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
-        qa1 = self._get_qa('FakeQa1')
 
         validator = OutputContentValidator()
         try:

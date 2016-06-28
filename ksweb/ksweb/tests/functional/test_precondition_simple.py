@@ -37,7 +37,7 @@ class TestPreconditionSimple(TestController):
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
         self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
-        qa = self._get_qa(qa_params['title'])
+        qa = self._get_qa_by_title(qa_params['title'])
 
         precondition_params = {
             'title': 'Title of the precondition',
@@ -69,7 +69,7 @@ class TestPreconditionSimple(TestController):
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
         self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
-        qa = self._get_qa(qa_params['title'])
+        qa = self._get_qa_by_title(qa_params['title'])
 
         precondition_params = {
             'title': 'Title of the precondition',
@@ -101,7 +101,7 @@ class TestPreconditionSimple(TestController):
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
         self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
-        qa = self._get_qa(qa_params['title'])
+        qa = self._get_qa_by_title(qa_params['title'])
 
         precondition_params = {
             'title': 'Title of the precondition',
@@ -133,7 +133,7 @@ class TestPreconditionSimple(TestController):
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
         self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
-        qa = self._get_qa(qa_params['title'])
+        qa = self._get_qa_by_title(qa_params['title'])
 
         precondition_params = {
             'title': 'Title of the precondition',
@@ -153,11 +153,10 @@ class TestPreconditionSimple(TestController):
         self._login_lavewr()
         category1 = self._get_category('Category_1')
         category2 = self._get_category('Category_2')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition('Precond1', lawyer, category1._id)
-        self._create_precondition('Precond2', lawyer, category2._id)
+        self._create_fake_simple_precondition('Precond1', category1._id)
+        self._create_fake_simple_precondition('Precond2', category2._id)
+
         resp = self.app.get('/precondition/sidebar_precondition')
 
         assert 'Category_1' in resp
@@ -168,11 +167,16 @@ class TestPreconditionSimple(TestController):
     def test_available_preconditions(self):
         self._login_lavewr()
         category1 = self._get_category('Category_1')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition(title='Precond1', user=lawyer, category_id=category1._id, visible=True)
-        self._create_precondition(title='Precond2', user=lawyer, category_id=category1._id, visible=False)
+
+        self._create_fake_simple_precondition('Precond1', category1._id)
+        self._create_fake_simple_precondition('Precond2', category1._id)
+
+        #  Set precond2 to not visible
+        precond2 = self._get_precond_by_title('Precond2')
+        precond2.visible = False
+        model.DBSession.flush()
         resp = self.app.get('/precondition/available_preconditions')
         assert "Precond1" in resp
         assert "Precond2" not in resp

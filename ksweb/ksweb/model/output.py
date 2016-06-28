@@ -41,9 +41,7 @@ class Output(MappedClass):
         - precondition_response
 
     If the type is text the content contain the text
-    If the type is precondition_response the content contain the obj id of the related precondition/response
-
-
+    If the type is qa_response the content contain the obj id of the related precondition/response
 
 
     An example of the content is this
@@ -52,6 +50,11 @@ class Output(MappedClass):
             "content" : "Simple text",
             "type" : "text",
             "title" : ""
+        },
+        {
+            "content" : "57723171c42d7513bb31e17d",
+            "type" : "qa_response",
+            "title" : "Colori"
         }
     ]
 
