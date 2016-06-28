@@ -25,7 +25,6 @@ class PreconditionAdvancedController(RestController):
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, category, conditions, **kw):
-        operator_accepted=['and', 'or', 'not', '(', ')']
 
         bool_str = ""
         condition = []
@@ -42,7 +41,7 @@ class PreconditionAdvancedController(RestController):
                 condition.append(ObjectId(cond['content']))
 
             elif cond['type'] == 'operator':
-                if not cond['content'] in operator_accepted:
+                if not cond['content'] in model.Precondition.PRECONDITION_OPERATOR:
                     response.status_code = 412
                     return dict(errors={'conditions': 'Operatore logico non valido.'})
 

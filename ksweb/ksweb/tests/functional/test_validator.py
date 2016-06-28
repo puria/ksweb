@@ -2,9 +2,10 @@ from ksweb import model
 from ksweb.model import DBSession
 from ksweb.tests import TestController
 from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, DocumentExistValidator, \
-    PreconditionExistValidator, DocumentContentValidator, OutputExistValidator
+    PreconditionExistValidator, DocumentContentValidator, OutputExistValidator, OutputContentValidator
 from tw2.core import ValidationError
 from test_document import TestDocument
+
 
 class TestValidators(TestController):
     application_under_test = 'main'
@@ -164,6 +165,68 @@ class TestValidators(TestController):
         else:
             assert False
 
+    def test_output_content_validator(self):
+        self._login_lavewr()
+        self._create_qa('FakeQa1', self._get_category('Category_1')._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+
+        qa1 = self._get_qa('FakeQa1')
+
+        validator = OutputContentValidator()
+        try:
+            res = validator._validate_python([
+                {
+                    'type': "text",
+                    'content': "Buongiorno",
+                    'title': ""
+                },
+                {
+                    'type': "qa_response",
+                    'content': str(qa1._id),
+                    'title': qa1.title
+                },
+            ])
+        except ValidationError:
+            assert False
+        else:
+            assert True
+
+    def test_output_content_validator_invalid_output(self):
+
+        validator = OutputContentValidator()
+        try:
+            res = validator._validate_python([
+                {
+                    'type': "text",
+                    'content': "Buongiorno",
+                    'title': ""
+                },
+                {
+                    'type': "qa_response",
+                    'content': "5757ce79c42d752bde919318",
+                    'title': "fake title"
+                },
+            ])
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_output_content_validator_invalid_type_output(self):
+
+        validator = OutputContentValidator()
+        try:
+            res = validator._validate_python([
+                {
+                    'type': "fake_type",
+                    'content': "Buongiorno",
+                    'title': ""
+                }
+            ])
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
     def test_document_content_validator(self):
         model.Output(
             title="FakeOutput",
@@ -193,7 +256,6 @@ class TestValidators(TestController):
             assert False
         else:
             assert True
-
 
     def test_document_content_validator_invalid_output(self):
 

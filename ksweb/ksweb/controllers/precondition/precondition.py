@@ -2,11 +2,11 @@
 """Precondition controller module"""
 import tg
 from bson import ObjectId
-from tg import expose
-from tg.decorators import paginate
+from tg.decorators import paginate, decode_params, validate
 from tg.i18n import lazy_ugettext as l_
-from tg import predicates, tmpl_context
+from tg import expose, predicates, tmpl_context, validation_errors_response
 from ksweb import model
+from ksweb.lib.validator import PreconditionExistValidator
 from ksweb.model import Precondition
 from .simple import PreconditionSimpleController
 from .advanced import PreconditionAdvancedController
@@ -59,3 +59,12 @@ class PreconditionController(BaseController):
     def available_preconditions(self):
         preconditions = Precondition.query.find({'visible': True}).sort('title').all()
         return dict(preconditions=preconditions)
+
+    @expose('json')
+    @decode_params('json')
+    @validate({
+        'id': PreconditionExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def qa_precondition(self, id, **kw):
+        precondition = model.Precondition.query.get(_id=ObjectId(id))
+        return dict(qas=precondition.response_interested)

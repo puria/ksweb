@@ -46,10 +46,23 @@ class TestPreconditionAdvanced(TestController):
         resp = self.app.post_json(
             '/precondition/simple/post', params=precondition1_params
         )
+
+        qa2_params = {
+            'title': 'Title of QA2',
+            'category': str(category1._id),
+            'question': 'Text of the question',
+            'tooltip': 'Tooltip of QA2',
+            'link': 'http://www.axant.it',
+            'answer_type': 'multi',
+            'answers': ['Risposta1', 'Risposta2', 'Risposta3']
+        }
+        self._create_qa(qa2_params['title'], qa2_params['category'], qa2_params['question'], qa2_params['tooltip'], qa2_params['link'], qa2_params['answer_type'], qa2_params['answers'])
+        qa2 = self._get_qa(qa2_params['title'])
+
         precondition2_params = {
             'title': 'Have resp2',
             'category': str(category1._id),
-            'question': str(qa._id),
+            'question': str(qa2._id),
             'answer_type': 'what_response',
             'interested_response': ['Risposta2']
         }
@@ -88,6 +101,19 @@ class TestPreconditionAdvanced(TestController):
 
         assert precond_advanced.type == 'advanced'
         assert errors == None
+
+    def test_qa_precondition_involved(self):
+        self._login_lavewr()
+        self.test_post_precondition_advanced()
+        precond = self._get_precond_by_title('Resp1 or Resp2')
+        resp = self.app.get(
+            '/precondition/qa_precondition', params={'id': str(precond._id)}
+        ).json
+        assert resp
+        qa = self._get_qa('Title of QA')
+        qa2 = self._get_qa('Title of QA2')
+        assert str(qa._id) in resp['qas'].keys()
+        assert str(qa2._id) in resp['qas'].keys()
 
     def test_post_advanced_precondition_with_not_valid_id(self):
         self._login_lavewr()

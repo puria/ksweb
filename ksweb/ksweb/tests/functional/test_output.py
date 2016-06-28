@@ -53,6 +53,51 @@ class TestOutput(TestController):
         assert output
         assert resp['errors'] is None, resp
 
+    def test_put_output(self):
+        self.test_creation_output()
+        category1 = self._get_category('Category_1')
+        lawyer = self._get_user('lawyer1@ks.axantweb.com')
+        precondition = self._get_precond_by_title('Precondition 1')
+
+        output1 = self.get_output_by_title('Title of Output')
+        output_params = {
+            '_id': str(output1._id),
+            'title': 'Title of Output edited',
+            'category': str(category1._id),
+            'precondition': str(precondition._id),
+            'content': [
+                {
+                    'type': 'text',
+                    'content': "content",
+                    'title': ""
+                },
+                {
+                    'type': 'text',
+                    'content': "Ciao a tutti",
+                    'title': ""
+                }
+            ]
+        }
+
+        resp = self.app.put_json(
+            '/output/put', params=output_params
+        ).json
+
+        output_updated = self.get_output_by_title('Title of Output edited')
+        assert output_updated, output_updated
+        assert output_updated._id == output1._id
+        assert output_updated.title == output_params['title']
+        assert output_updated.content == output_params['content']
+
+    def test_edit_output(self):
+        self._login_lavewr()
+        self.test_creation_output()
+        out = self.get_output_by_title('Title of Output')
+        resp = self.app.get(
+            '/output/edit', params={'id': str(out._id)}
+        )
+        assert out._id in resp
+
     def test_creation_output_with_errors(self):
         self._login_lavewr()
 
