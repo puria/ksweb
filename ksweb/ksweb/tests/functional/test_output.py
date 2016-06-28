@@ -28,8 +28,7 @@ class TestOutput(TestController):
         self._login_lavewr()
 
         category1 = self._get_category('Category_1')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
-        precondition = self._create_precondition('Precondition 1', lawyer, category1._id)
+        precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
 
         output_params = {
             'title': 'Title of Output',
@@ -56,10 +55,9 @@ class TestOutput(TestController):
     def test_put_output(self):
         self.test_creation_output()
         category1 = self._get_category('Category_1')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
         precondition = self._get_precond_by_title('Precondition 1')
 
-        output1 = self.get_output_by_title('Title of Output')
+        output1 = self._get_output_by_title('Title of Output')
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
@@ -83,7 +81,7 @@ class TestOutput(TestController):
             '/output/put', params=output_params
         ).json
 
-        output_updated = self.get_output_by_title('Title of Output edited')
+        output_updated = self._get_output_by_title('Title of Output edited')
         assert output_updated, output_updated
         assert output_updated._id == output1._id
         assert output_updated.title == output_params['title']
@@ -92,7 +90,7 @@ class TestOutput(TestController):
     def test_edit_output(self):
         self._login_lavewr()
         self.test_creation_output()
-        out = self.get_output_by_title('Title of Output')
+        out = self._get_output_by_title('Title of Output')
         resp = self.app.get(
             '/output/edit', params={'id': str(out._id)}
         )
@@ -127,26 +125,18 @@ class TestOutput(TestController):
 
     def test_sidebar_output(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition(title='Precond1', user=lawyer, category_id=category1._id, visible=True)
-        precond1 = self._get_precond_by_title('Precond1')
-        self._create_output("Out1", category1, precond1, "Output content")
+        self._create_fake_output("Out1")
+        self._create_fake_output("Out2")
         resp = self.app.get('/output/sidebar_output')
         assert "Out1" in resp
+        assert "Out2" in resp
 
     def test_output_human_readable_details(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
-        self._create_precondition(title='Precond1', user=lawyer, category_id=category1._id, visible=True)
-        precond1 = self._get_precond_by_title('Precond1')
-        self._create_output("Out1", category1, precond1, "Output content")
-        output1=self.get_output_by_title('Out1')
-        resp = self.app.get('/output/output_human_readable_details', params={'id': output1._id})
+        out1 = self._create_fake_output("Out1")
+
+        resp = self.app.get('/output/output_human_readable_details', params={'id': out1._id})
         assert 'human_readbale_content' in resp
-        assert output1._id in resp
+        assert out1._id in resp

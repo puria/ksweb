@@ -28,10 +28,8 @@ class TestDocument(TestController):
         self._login_lavewr()
 
         category1 = self._get_category('Category_1')
-        lawyer = self._get_user('lawyer1@ks.axantweb.com')
-        precondition = self._create_precondition('Precondition 1', lawyer, category1._id)
-        self._create_output("Output1", category1, precondition, "testo come output")
-        output1 = self.get_output_by_title('Output1')
+        
+        output1 = self._create_fake_output('Output1')
 
         document_params = {
             'title': 'Titolo documento 1',
@@ -60,7 +58,7 @@ class TestDocument(TestController):
 
     def test_document_edit(self):
         self.test_creation_document()
-        doc1 = self.get_document_by_title('Titolo documento 1')
+        doc1 = self._get_document_by_title('Titolo documento 1')
 
         resp = self.app.get('/document/edit', params={
             'id': str(doc1._id)
@@ -70,7 +68,7 @@ class TestDocument(TestController):
     def test_document_put(self):
         self.test_creation_document()
         category1 = self._get_category('Category_1')
-        original_document = self.get_document_by_title('Titolo documento 1')
+        original_document = self._get_document_by_title('Titolo documento 1')
 
         document_params = {
             '_id': str(original_document._id),
@@ -89,7 +87,7 @@ class TestDocument(TestController):
         ).json
 
 
-        updated_document = self.get_document_by_title(document_params['title'])
+        updated_document = self._get_document_by_title(document_params['title'])
 
         assert updated_document
         assert updated_document._id == original_document._id
