@@ -30,18 +30,6 @@ class CategoryExistValidator(Validator):
             raise ValidationError(u'Categoria non esistente', self)
 
 
-class DocumentExistValidator(Validator):
-    def _validate_python(self, value, state=None):
-
-        try:
-            document = model.Document.query.get(_id=ObjectId(value))
-        except InvalidId:
-            raise ValidationError(u'Documento non esistente', self)
-
-        if document is None:
-            raise ValidationError(u'Documento non esistente', self)
-
-
 class PreconditionExistValidator(Validator):
     def _validate_python(self, value, state=None):
 
@@ -64,6 +52,18 @@ class OutputExistValidator(Validator):
 
         if output is None:
             raise ValidationError(u'Output non esistente', self)
+
+
+class DocumentExistValidator(Validator):
+    def _validate_python(self, value, state=None):
+
+        try:
+            document = model.Document.query.get(_id=ObjectId(value))
+        except InvalidId:
+            raise ValidationError(u'Documento non esistente', self)
+
+        if document is None:
+            raise ValidationError(u'Documento non esistente', self)
 
 
 class OutputContentValidator(Validator):

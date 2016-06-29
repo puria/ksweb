@@ -52,8 +52,7 @@ def material_icon(icon_name):
         # Table
         'done': '&#xE876;',
         'clear': '&#xE14C;',
-        'more_horiz': '&#xE5D3;',   # TODO
-        'keyboard_arrow_dow': '&#xE313;'   # TODO
+        'more_horiz': '&#xE5D3;'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))

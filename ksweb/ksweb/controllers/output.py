@@ -7,7 +7,7 @@ import tg
 from tg.decorators import paginate
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
-from tw2.core import StringLengthValidator, ValidationError
+from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
