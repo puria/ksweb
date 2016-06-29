@@ -15,6 +15,7 @@ from ksweb.controllers.document import DocumentController
 from ksweb.controllers.output import OutputController
 from ksweb.controllers.precondition.precondition import PreconditionController
 from ksweb.controllers.qa import QaController
+from ksweb.controllers.questionary import QuestionaryController
 from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
 
@@ -41,6 +42,7 @@ class RootController(BaseController):
     category = CategoryController()
     output = OutputController()
     document = DocumentController()
+    questionary = QuestionaryController()
 
     error = ErrorController()
 

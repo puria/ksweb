@@ -9,6 +9,13 @@
           Documento
         </div>
         <div class="col-md-6 text-right">
+          {{#if create._id}}
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createQuestionary">
+            ${h.material_icon('create')} Crea Questionario
+          </button>
+          {{/if}}
+
           {{#if saving}}
           Saving...
           {{else}}
@@ -16,6 +23,32 @@
           {{/if}}
         </div>
       </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="createQuestionary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <form on-submit="new_questionary">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Crea un nuovo Questionario</h4>
+              </div>
+              <div class="modal-body">
+                Inserisci il titolo:
+                <input id="form-title" type="text" class="form-control" placeholder="Titolo" value="{{questionary_title}}"/>
+                {{#if errors.questionary_title}}
+                <span class="help-block">{{errors.questionary_title}}</span>
+                {{/if}}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                <button type="button" onclick="ractive_document.new_questionary('{{questionary_title}}')" class="btn btn-primary">Crea</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
       <hr/>
       <div class="form-group {{errors.title ? 'has-error' : ''}}">
         <div class="col-md-3">
@@ -143,7 +176,6 @@
       };
       self.get('content').push(elem);
     },
-
     createDocument: function(field) {
       var self = this;
       self.set('saving', true);
@@ -172,6 +204,41 @@
         self.set('errors', data.errors);
         self.set('saving', false);
       });
+    },
+    new_questionary: function(title) {
+      var self = this;
+      self.set('saving', true);
+      console.log("Sending:");
+      var questionary_params = {
+        'questionary_title': title,
+        'document_id': self.get('create._id')
+      };
+      console.log(JSON.stringify(questionary_params));
+
+      var api_params = JSON.stringify(questionary_params);
+      $.ajax({
+        type: 'POST',
+        url: '${tg.url('/questionary/create')}',
+        data: api_params,
+        dataType: "json",
+        processData: false,
+        contentType: 'application/json'
+      }).done(function(data) {
+        self.set('create', {});
+        self.set('saving', false);
+        self.set('editing', false);
+        console.log(data);
+        window.location.replace("${tg.url('/questionary/')}");
+
+      }).fail(function(jqXHR) {
+        var data = jQuery.parseJSON(jqXHR.responseText);
+        console.log("fail");
+        console.log(data);
+        self.set('errors', data.errors);
+        self.set('saving', false);
+      });
+
+
     }
   });
   ]]>

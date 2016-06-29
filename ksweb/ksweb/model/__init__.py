@@ -20,4 +20,6 @@ from ksweb.model.qa import Qa
 from ksweb.model.precondition import Precondition
 from ksweb.model.output import Output
 from ksweb.model.document import Document
-__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output', 'Document')
+from ksweb.model.questionary import Questionary
+
+__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output', 'Document', 'Questionary')
