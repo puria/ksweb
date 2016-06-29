@@ -23,7 +23,7 @@ class OutputController(RestController):
             if elem['type'] == 'qa_response':
                 if elem['content'] not in related_qa.keys():
                     response.status_code = 412
-                    return dict(errors={'content': 'Domanda non legata alla precondizione utilizzata'})
+                    return dict(errors={'content': 'Domanda %s non legata alla precondizione utilizzata' % elem['title']})
         return dict()
 
     def _before(self, *args, **kw):
