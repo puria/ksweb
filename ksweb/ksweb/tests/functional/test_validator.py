@@ -2,7 +2,8 @@ from ksweb import model
 from ksweb.model import DBSession
 from ksweb.tests import TestController
 from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, DocumentExistValidator, \
-    PreconditionExistValidator, DocumentContentValidator, OutputExistValidator, OutputContentValidator
+    PreconditionExistValidator, DocumentContentValidator, OutputExistValidator, OutputContentValidator, \
+    QuestionaryExistValidator
 from tw2.core import ValidationError
 from test_document import TestDocument
 
@@ -287,6 +288,37 @@ class TestValidators(TestController):
                     'title': ""
                 }
             ])
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_questionary_exist_validator(self):
+        self._login_lavewr()
+        fake_questionary = self._create_fake_questionary('Test_validator')
+        validator = QuestionaryExistValidator()
+        try:
+            res = validator._validate_python(str(fake_questionary._id))
+        except ValidationError:
+            assert False
+        else:
+            assert True
+
+    def test_questionary_not_exist_validator(self):
+
+        validator = QuestionaryExistValidator()
+        try:
+            res = validator._validate_python("5757ce79c42d752bde919318")
+        except ValidationError:
+            assert True
+        else:
+            assert False
+
+    def test_questionary_invalid_id_validator(self):
+
+        validator = QuestionaryExistValidator()
+        try:
+            res = validator._validate_python("Invalid")
         except ValidationError:
             assert True
         else:
