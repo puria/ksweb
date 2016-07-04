@@ -182,6 +182,91 @@ class TestController(object):
         )
         return self._get_precond_by_title(title)
 
+    def _create_fake_advanced_precondition_red_animal(self, title):
+        """
+        Create a fake a advanced precondition with 3 element
+        1 - Favourite color: Red
+        2 - or
+        3 - Animal liked: Pig or Dog
+        :param title: title of the precondition
+        :return: the created precondition
+        """
+        self._login_lavewr()
+        category1 = self._get_category('Category_1')
+        #  Devo creare almeno 1 qa con delle risposte
+
+        qa_color_param = {
+            'title': 'Favourite color',
+            'category': str(category1._id),
+            'question': 'What is your favourite color?',
+            'tooltip': 'Favourite color',
+            'link': 'http://www.axant.it',
+            'answer_type': 'single',
+            'answers': ['Red', 'Blu', 'Yellow', 'Green']
+        }
+        qa_color = self._create_qa(qa_color_param['title'], qa_color_param['category'], qa_color_param['question'], qa_color_param['tooltip'], qa_color_param['link'], qa_color_param['answer_type'], qa_color_param['answers'])
+
+        prec_red_color = {
+            'title': 'Red is Favourite',
+            'category': str(category1._id),
+            'question': str(qa_color._id),
+            'answer_type': 'what_response',
+            'interested_response': ['Red']
+        }
+        resp = self.app.post_json(
+            '/precondition/simple/post', params=prec_red_color
+        )
+
+        qa_animal_liked_param = {
+            'title': 'Animal liked',
+            'category': str(category1._id),
+            'question': 'What animal do you like?',
+            'tooltip': 'Animalsss',
+            'link': 'http://www.axant.it',
+            'answer_type': 'multi',
+            'answers': ['Dog', 'Cat', 'Pig', 'Turtle', 'Rabbit']
+        }
+        qa_animal_liked = self._create_qa(qa_animal_liked_param['title'], qa_animal_liked_param['category'], qa_animal_liked_param['question'], qa_animal_liked_param['tooltip'], qa_animal_liked_param['link'], qa_animal_liked_param['answer_type'], qa_animal_liked_param['answers'])
+
+        prec_animal_liked_pig_dog = {
+            'title': 'Like pig and dog',
+            'category': str(category1._id),
+            'question': str(qa_animal_liked._id),
+            'answer_type': 'what_response',
+            'interested_response': ['Pig', 'Dog']
+        }
+        resp = self.app.post_json(
+            '/precondition/simple/post', params=prec_animal_liked_pig_dog
+        )
+
+        precond_red = self._get_precond_by_title(prec_red_color['title'])
+        precond_pig_dog = model.Precondition.query.get(title=prec_animal_liked_pig_dog['title'])
+
+        #  Ora che ho le due precondizioni posso creare quella composta
+        precond_advanced = {
+            'title': title,
+            'category': str(category1._id),
+            'conditions': [
+                {
+                    'type': 'precondition',
+                    'content': str(precond_red._id)
+                },
+                {
+                    'type': 'operator',
+                    'content': 'or'
+                },
+                {
+                    'type': 'precondition',
+                    'content': str(precond_pig_dog._id)
+                 }
+            ]
+        }
+
+        resp = self.app.post_json(
+            '/precondition/advanced/post', params=precond_advanced
+        )
+        return self._get_precond_by_title(title)
+
     #  Output Utility
     def _get_output(self, id):
         return model.Output.query.get(_id=ObjectId(id))
@@ -259,3 +344,23 @@ class TestController(object):
             },
         ]
         return self._create_document(title, category_id, content)
+
+    #  Questionary Utility
+    def _get_questionary(self, id):
+        return model.Questionary.query.get(_id=ObjectId(id))
+
+    def _get_questionary_by_title(self, title):
+        return model.Questionary.query.get(title=title)
+
+    def _create_questionary(self, title, document_id):
+        self.app.post_json('/questionary/create', params={
+            'questionary_title': title,
+            'document_id': str(document_id)
+        })
+        return self._get_questionary_by_title(title)
+
+    def _create_fake_questionary(self, title):
+        fake_doc = self._create_fake_document(title)
+        self._create_questionary(title, fake_doc._id)
+
+        return self._get_questionary_by_title(title)

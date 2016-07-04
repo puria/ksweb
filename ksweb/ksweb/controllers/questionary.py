@@ -48,15 +48,16 @@ class QuestionaryController(BaseController):
     def create(self, questionary_title=None, document_id=None, **kw):
         #  create questionary for himself
         user = request.identity['user']
-        model.Questionary(
+        questionary = model.Questionary(
             title=questionary_title,
             _user=user._id,
             _owner=user._id,
             _document=ObjectId(document_id),
         )
-        return dict()
+        return dict(questionary=questionary)
 
     @expose('ksweb.templates.questionary.compile')
+    @expose('json')
     @validate({
         'id': QuestionaryExistValidator(required=True),
     }, error_handler=validation_errors_response)

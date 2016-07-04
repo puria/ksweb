@@ -84,69 +84,47 @@ class Questionary(MappedClass):
         riaperto il questionario dopo che è stata inserita una nuova domanda, viene ricalcolato tutto e sarà
         aggiornato.
         Va a recuperare il documento collegato e ne analizza tutto il content
-        Se a tutti gli output del content sono stati valutati restituisce come stato completed: True
-        Se invece non sono stati ancora valutati degli output restituisce come stato completed: False e la qa alla quale bisogna rispondere
-        :return:
+        :return: Se a tutti gli output del content sono stati valutati restituisce come stato completed: True
+        :return: Se invece non sono stati ancora valutati degli output restituisce come stato completed: False e la qa alla quale bisogna rispondere
         """
 
-        #  Fix 1
-        #  Svuoto il contenuto dell'output del questionario ogni volta che lo vado a valutare
         self.document_values = []
 
-        res = {}
         for elem in self.document.content:
             if elem['type'] == "text":
-                """
-                elem is like this
-                {
-                    "content" : "Simple text",
-                    "type" : "text",
-                    "title" : ""
-                }
-                """
+                #  elem is like this: { "content" : "Simple text", "type" : "text", "title" : ""}
                 self.document_values.append(elem['content'])
             elif elem['type'] == "output":
-                """
-                elem is like this
-                {
-                    "content" : "575eb879c42d7518bb972256",
-                    "type" : "output",
-                    "title" : "ciao"
-                }
-                """
-                #  Now evaluate the related output
+                #  elem is like this: {"content" : "575eb879c42d7518bb972256", "type" : "output", "title" : "ciao"}
                 output_res = self.evaluate_output(elem['content'])
-                #  Se non risulta completato significa che devo mostrare una domanda
+                #  If not yet completed, show the answer
                 if not output_res['completed']:
                     output_res['document_generated'] = self.document_values
                     return output_res
             else:
-                print "Ignoring: %s" % elem
-                continue
+                #  Insert for security evaluation
+                raise Exception("Invalid document element type: %s" % elem)
 
         return {
             'completed': True,
             'document_generated': self.document_values
         }
 
-    # def evaluate_document(self):
-    #     Inutile perche viene già svolto da evaluate_questionary
-    #     Valuta il documento associato
-    #     pass
-
     def evaluate_output(self, output_id):
+        """
+        Evaluated the related output
+        :param output_id: id of the output
+        :return:
+        """
         from ksweb import model
-        #  Valuta output
-        #  Verifico se ho già valutato questo output
+        #  Check if the output is already evaluated
+        #  If the output is already evaluated, simple getting the text of the evaluation
         if self.output_values.has_key(output_id):
-            #  Output already processed, simple getting the text of the evaluation
-            print "Output already processed, simple getting the text of the evaluation"
             self.document_values.append(self.output_values[output_id]['evaluated_text'])
             return {'completed': True}
 
-        #  Get the related output
+        #  We not have already evaluated the output, we must evaluate the related precondition
         output = model.Output.query.get(_id=ObjectId(output_id))
-        #  So che l'output non è stato ancora valutato perciò devo andare a valutare la precondizione associata
         precond = self.evaluate_precond(output.precondition)
         if precond['completed']:
             self._compile_output(output, self.precond_values[str(output._precondition)])
@@ -171,39 +149,24 @@ class Questionary(MappedClass):
         #  If the precondition is not valid, therefore the output is empty
         evaluated_text = ""
         if precondition_value:
-            #  Devo scorrere tutto il content dell'output:
-            #  Se trovo del testo lo inserisco easy
-            #  Se trovo la risposta a una domanda devo mostrare il valore della risposta
+            #  for each output content:
+            #  if is text, insert directly
+            #  if is a qa response, show the related response
             for elem in output.content:
                 if elem['type'] == "text":
-                    """
-                    elem like this
-                    {
-                        "content" : "Simple text",
-                        "type" : "text",
-                        "title" : ""
-                    }
-                    """
+                    #  elem like this { "content" : "Simple text", "type" : "text", "title" : "" }
                     evaluated_text += elem['content']
                 elif elem['type'] == "qa_response":
-                    """
-                    elem like this
-                    {
-                        "content" : "57723171c42d7513bb31e17d",
-                        "type" : "qa_response",
-                        "title" : "Colori"
-                    }
-                    """
-                    #  L'utente ha già risposto alla domanda, vado a prendre il valore dai dati salvati,
-                    #  Non mi devo preoccupare di chiedere vedere se ha risposto alla domanda, perchè questo mi è già
-                    #  garantito dal fatto che altrimenti la precondizione non sarebbe stata verificata.
+                    #  elem like this { "content" : "57723171c42d7513bb31e17d", "type" : "qa_response", "title" : "Colori" }
+                    #  Getting the response of the qa
+                    #  The user have already response to the answer oterwise is not possible evaluate the precondition
                     if isinstance(self.qa_values[elem['content']], basestring):
                         evaluated_text += self.qa_values[elem['content']]
                     else:
                         evaluated_text += ', '.join(self.qa_values[elem['content']])
                 else:
-                    print "Ignoring: %s" % elem
-                    continue
+                    #  Insert for security evaluation
+                    raise Exception("Output elem type not valid: %s" % elem)
 
         self.output_values[str(output._id)] = {
             'evaluation': True,
@@ -216,7 +179,6 @@ class Questionary(MappedClass):
         :param precondition: Precondition Object
         :return: completed: True if the precondition is already evaluated and in the precond field return the value of the precondition
         :return: completed: False if the precondition or more qas related are not already evaluated and in the qa field the qa id of the missing qa
-
         """
         if self.precond_values.has_key(str(precondition._id)):
             return {
@@ -225,16 +187,13 @@ class Questionary(MappedClass):
             }
 
         qa_involved = precondition.response_interested
+        #  Check if all qa involved have a response
         for qa_id in qa_involved.keys():
             if not qa_id in self.qa_values.keys():
                 print "QA: %s not already responded" % qa_id
-                return {
-                    'completed': False,
-                    'qa': qa_id
-                }
+                return {'completed': False, 'qa': qa_id}
 
-        #  All qa have response, we are able to evaluate to the qa
-
+        #  Now all qa have response, we are able to evaluate the precondition
         prec_str = self._precondition_str_to_evaluate(precondition)
         res_eval = eval(prec_str)
         self.precond_values[str(precondition._id)] = res_eval
@@ -256,44 +215,25 @@ class Questionary(MappedClass):
         print "Analyzing precondition: %s" % precondition
         if precondition.type == 'simple':
             if precondition.simple_text_response:
-            #if precondition.condition[1] == "":
                 str_to_eval = "'%s' != ''" % self.qa_values[str(precondition.condition[0])]
             else:
                 response_of_precondition = self.qa_values[str(precondition.condition[0])]
+                #  Check if response is only one as text for example 'red'
+                #  Cast this as list for uniform the string evaluation process
                 if isinstance(response_of_precondition, basestring):
                     response_of_precondition = [response_of_precondition]
                 for i in response_of_precondition:
                     str_to_eval = "'%s' == '%s'" % (precondition.condition[1], i)
-                #str_to_eval = "'%s' == '%s'" % (precondition.condition[1], self.qa_values[str(precondition.condition[0])])
         elif precondition.type == 'advanced':
             for cond in precondition.condition:
                 if cond in model.Precondition.PRECONDITION_OPERATOR:
                     str_to_eval += "%s " % cond
                 else:
                     related_precondition = model.Precondition.query.find({'_id': ObjectId(cond)}).first()
-
+                    #  Getting the evaluation string of this precondition
                     str_to_eval += self._precondition_str_to_evaluate(related_precondition)
-        else:
-            return str_to_eval
 
         return str_to_eval
-
-    #  Useless
-    # def evaluate_qa(self, qa):
-    #     """
-    #     Evaluate if the qa have response or not.
-    #     :param qa: Qa object
-    #     :return: True or False, if return False return Qa
-    #     """
-    #     if self.qa_values.has_key(str(qa._id)):
-    #         return {
-    #             'completed': True
-    #             }
-    #     else:
-    #         return {
-    #             'completed': False,
-    #             'qa': str(qa._id)
-    #         }
 
 
 __all__ = ['Questionary']
