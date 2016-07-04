@@ -70,7 +70,7 @@ class PreconditionSimpleController(RestController):
             condition = []
             for prc in base_precond[:-1]:
                 condition.append(prc._id)
-                condition.append('|')
+                condition.append('or')
 
             condition.append(base_precond[-1]._id)
 
