@@ -11,7 +11,8 @@ from tw2.core import StringLengthValidator
 
 from ksweb import model
 from ksweb.lib.base import BaseController
-from ksweb.lib.validator import DocumentExistValidator
+from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator
+from ksweb.model import DBSession
 
 
 class QuestionaryController(BaseController):
@@ -54,3 +55,41 @@ class QuestionaryController(BaseController):
             _document=ObjectId(document_id),
         )
         return dict()
+
+    @expose('ksweb.templates.questionary.compile')
+    @validate({
+        'id': QuestionaryExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def compile(self, id, **kwargs):
+        questionary = model.Questionary.query.get(_id=ObjectId(id))
+        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
+
+    @expose('json')
+    @decode_params('json')
+    @validate({
+        'id': QuestionaryExistValidator(required=True),
+        'qa_id': QAExistValidator(required=True),
+        'qa_response': StringLengthValidator(min=1),
+    }, error_handler=validation_errors_response)
+    def responde(self, id=None,  qa_id=None, qa_response=None, **kwargs):
+        questionary = model.Questionary.query.get(_id=ObjectId(id))
+        #  Check if the qa response is valid
+        qa = model.Qa.query.get(_id=ObjectId(qa_id))
+        # print qa.answers
+        if qa.type == "single" and not qa_response in qa.answers:
+            response.status_code = 412
+            return dict(errors={'qa_response': 'Risposta non valida'})
+
+        if qa.type == "multi":
+            #  check each qa_response if is in qa.answers
+            if isinstance(qa_response, basestring):
+                qa_response = [qa_response]
+
+            for elem in qa_response:
+                if not elem in qa.answers:
+                    response.status_code = 412
+                    return dict(errors={'qa_response': 'Risposta non valida'})
+
+        questionary.qa_values[qa_id] = qa_response
+
+        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)

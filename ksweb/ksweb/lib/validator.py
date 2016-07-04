@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import HTMLParser
+
 from bson import ObjectId
 from bson.errors import InvalidId
 from tw2.core import Validator, ValidationError
@@ -66,27 +68,41 @@ class DocumentExistValidator(Validator):
             raise ValidationError(u'Documento non esistente', self)
 
 
+class QuestionaryExistValidator(Validator):
+    def _validate_python(self, value, state=None):
+
+        try:
+            questionary = model.Questionary.query.get(_id=ObjectId(value))
+        except InvalidId:
+            raise ValidationError(u'Questionario non esistente', self)
+
+        if questionary is None:
+            raise ValidationError(u'Questionario non esistente', self)
+
+
 class OutputContentValidator(Validator):
     def _validate_python(self, value, state=None):
         document_accepted_type = ['text', 'qa_response']
         for cond in value:
-            if cond['type'] not in document_accepted_type:
-                raise ValidationError(u'Condizione non valida.', self)
-
-            if cond['type'] == 'qa_response':
+            if cond['type'] == 'text':
+                cond['content'] = HTMLParser.HTMLParser().unescape(cond['content'])
+            elif cond['type'] == 'qa_response':
                 qa = model.Qa.query.get(_id=ObjectId(cond['content']))
                 if not qa:
                     raise ValidationError(u'Domanda non trovata.', self)
+            else:
+                raise ValidationError(u'Condizione non valida.', self)
 
 
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):
         document_accepted_type = ['text', 'output']
         for cond in value:
-            if cond['type'] not in document_accepted_type:
-                raise ValidationError(u'Condizione non valida.', self)
-
-            if cond['type'] == 'output':
+            if cond['type'] == 'text':
+                cond['content'] = HTMLParser.HTMLParser().unescape(cond['content'])
+            elif cond['type'] == 'output':
                 output = model.Output.query.get(_id=ObjectId(cond['content']))
                 if not output:
                     raise ValidationError(u'Output non trovato.', self)
+            else:
+                raise ValidationError(u'Condizione non valida.', self)
