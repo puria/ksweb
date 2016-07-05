@@ -80,15 +80,17 @@ class Questionary(MappedClass):
     @property
     def evaluate_questionary(self):
         """
-        Valutazione del questionario, ogni volta svuoto il contenuto dell'output come testo, così nel caso venga
-        riaperto il questionario dopo che è stata inserita una nuova domanda, viene ricalcolato tutto e sarà
-        aggiornato.
+        Valutazione del questionario, ogni volta svuoto i valori delle valutazioni di documenti, output e precond,
+        così nel caso venga riaperto il questionario dopo che è stata inserita una nuova domanda,
+        viene ricalcolato tutto e sarà aggiornato.
         Va a recuperare il documento collegato e ne analizza tutto il content
         :return: Se a tutti gli output del content sono stati valutati restituisce come stato completed: True
         :return: Se invece non sono stati ancora valutati degli output restituisce come stato completed: False e la qa alla quale bisogna rispondere
         """
 
         self.document_values = []
+        self.output_values = {}
+        self.precond_values = {}
 
         for elem in self.document.content:
             if elem['type'] == "text":
@@ -212,7 +214,6 @@ class Questionary(MappedClass):
         from ksweb import model
 
         str_to_eval = ""
-        print "Analyzing precondition: %s" % precondition
         if precondition.type == 'simple':
             if precondition.simple_text_response:
                 str_to_eval = "'%s' != ''" % self.qa_values[str(precondition.condition[0])]
@@ -222,8 +223,12 @@ class Questionary(MappedClass):
                 #  Cast this as list for uniform the string evaluation process
                 if isinstance(response_of_precondition, basestring):
                     response_of_precondition = [response_of_precondition]
-                for i in response_of_precondition:
-                    str_to_eval = "'%s' == '%s'" % (precondition.condition[1], i)
+
+                for i in response_of_precondition[:-1]:
+                    str_to_eval += "'%s' == '%s' or " % (precondition.condition[1], i)
+
+                str_to_eval += "'%s' == '%s'" % (precondition.condition[1], response_of_precondition[-1])
+
         elif precondition.type == 'advanced':
             for cond in precondition.condition:
                 if cond in model.Precondition.PRECONDITION_OPERATOR:
@@ -232,7 +237,6 @@ class Questionary(MappedClass):
                     related_precondition = model.Precondition.query.find({'_id': ObjectId(cond)}).first()
                     #  Getting the evaluation string of this precondition
                     str_to_eval += self._precondition_str_to_evaluate(related_precondition)
-
         return str_to_eval
 
 
