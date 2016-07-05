@@ -1,0 +1,17 @@
+@import "palette.scss";
+
+.editor-element {
+	border-radius: 15px;
+	background-color: $carbon;
+	font-size: 12px;
+	color: $white;
+	padding: 8px;
+}
+
+.editor-text {
+	border-radius: 5px;
+	background-color: $dark-grey;
+	font-size: 12px;
+	color: $white;
+	padding: 2px 3px;
+}

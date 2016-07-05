@@ -1,0 +1,215 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">KS | Precondizione</title>
+  <script id="PreconditionSimpleForm_template" type="text/html">
+    <![CDATA[
+    <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
+      <div class="form-group" style="padding-top: 20px">
+        <div class="col-md-6 text-left ks-section-name">
+          Precondizione Avanzata
+        </div>
+        <div class="col-md-6 text-right">
+          {{#if saving}}
+          Saving...
+          {{else}}
+          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+          {{/if}}
+        </div>
+      </div>
+      <hr/>
+      <div class="form-group {{errors.title ? 'has-error' : ''}}">
+        <div class="col-md-3">
+          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
+          {{#if errors.title}}
+          <span class="help-block">{{errors.title}}</span>
+          {{/if}}
+        </div>
+      </div>
+      <div class="form-group {{errors.category ? 'has-error' : ''}}">
+        <div class="col-md-3">
+          <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
+            <option value="" disabled selected>Seleziona una categoria</option>
+            {{#each categories}}
+            <option value="{{._id}}">{{.name}}</option>
+            {{/each}}
+          </select>
+
+          {{#if errors.category}}
+          <span class="help-block">{{errors.category}}</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="form-group">
+        Operatori:
+        <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/and.png')}"></span>
+        <span onclick="ractive_precondition_simple.addOperator('or','${tg.url("/img/or_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/or.png')}"></span>
+        <span onclick="ractive_precondition_simple.addOperator('not', '${tg.url("/img/not_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/not.png')}"></span>
+        <span onclick="ractive_precondition_simple.addOperator('(', '${tg.url("/img/bracket_open_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_open.png')}"></span>
+        <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')"><img class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}"></span>
+      </div>
+
+      <div class="form-group {{errors.conditions ? 'has-error' : ''}}">
+        {{#conditions:i}}
+            <span class="editor-element">
+                {{#if .type == 'operator'}}
+                    <img src="{{.img_uri}}" alt="{{.content}}" />
+                {{/if}}
+
+                {{#if .type == 'precondition'}}
+                <span on-click="selectElem:{{.}}">{{.title}}</span>
+                {{/if}}
+                 <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+            </span>
+        {{/items}}
+
+        {{#if errors.conditions}}
+        <span class="help-block">{{errors.conditions}}</span>
+        {{/if}}
+      </div>
+    </form>
+    ]]>
+  </script>
+</head>
+
+<body py:block="body" py:strip="True">
+<div id="qa-ractive" style="padding-top: 20px">
+
+</div>
+<script>
+  /*
+      Ractive in `conditions` contiene la struttura dati delle precondizioni e degli operatori:
+
+      Gli elementi che può contenere sono di due tipologie:
+      -  Precondizioni
+      -  Operatori logici
+
+      Percio dovro differenziare i due casi tipo:
+      type: [operator, precondition]
+      content: [AND, OR, NOT, ( , ) , ObjId('precondizione)
+      img_uri: uri of image
+
+      Devo fare poi solo il template che deve visualizzare tutti i vari elementi del template
+  */
+
+  <![CDATA[
+
+  var PreconditionSimple = Ractive.extend({
+    template: '#PreconditionSimpleForm_template',
+    onconstruct: function(options) {
+      var self = this;
+    },
+    oninit: function() {
+      var self = this;
+      self.set('errors', {});
+      self.set('saving', false);
+      self.set('categories', []);
+      self.set('conditions', []);
+
+      self.on('submit-form', function(event) {
+        var all_var = self.get('create');
+        console.log("Sto inviando");
+        console.log(all_var);
+        all_var['conditions'] = self.get('conditions');
+        console.log("add the conditions");
+        console.log(all_var)
+        self.createPreconditionAdvanced(all_var);
+        return false;
+      });
+
+      self.loadCategory();
+      self.loadQuestion();
+    },
+    loadCategory: function(callback) {
+      var self = this;
+      jQuery.get("${tg.url('/category/get_all')}",
+          function(data) {
+            self.set('categories', data['categories']);
+            if (callback)
+              callback();
+          });
+    },
+    loadQuestion: function(callback) {
+      var self = this;
+      jQuery.get("${tg.url('/qa/get_single_or_multi_question')}",
+          function(data) {
+            self.set('questions', data['questions']);
+            if (callback)
+              callback();
+          });
+    },
+    addOperator: function(operator, img_uri) {
+      var self = this;
+      console.log("add operator:" + operator);
+      var elem = {
+        'type':'operator',
+        'content': operator,
+        'img_uri': img_uri
+      };
+
+      self.get('conditions').push(elem);
+    },
+    addPrecondition: function(id, title) {
+      var self = this;
+      console.log("add _id:" + id);
+      console.log("add title:" + title);
+      var elem = {
+        'type':'precondition',
+        'content': id,
+        'title': title
+      };
+
+      self.get('conditions').push(elem);
+    },
+    createPreconditionAdvanced: function(field) {
+      var self = this;
+      self.set('saving', true);
+      console.log("Sending:");
+      console.log(JSON.stringify(field));
+
+      var api_params = JSON.stringify(field);
+      $.ajax({
+        type: "post",
+        url: "${tg.url('/precondition/advanced/post')}",
+        data: api_params,
+        dataType: "json",
+        processData: false,
+        contentType: 'application/json'
+      }).done(function(data) {
+        self.set('create', {});
+        self.set('saving', false);
+        self.set('editing', false);
+        console.log(data);
+        window.location.replace("${tg.url('/precondition/')}");
+
+      }).fail(function(jqXHR) {
+        var data = jQuery.parseJSON(jqXHR.responseText);
+        console.log("fail");
+        console.log(data);
+        self.set('errors', data.errors);
+        self.set('saving', false);
+      });
+
+    }
+  });
+  ]]>
+</script>
+<script>
+  var ractive_precondition_simple = new PreconditionSimple({el: '#qa-ractive'});
+
+  ractive_precondition_simple.on('selectElem', function ( event, elem ) {
+    var self = this;
+    console.log("Selected element: "+ elem);
+    console.log(elem);
+  });
+
+  ractive_precondition_simple.on('deleteElem', function ( event, elem ) {
+    var self = this;
+    console.log("Element to remove: "+ elem);
+    self.splice('conditions', elem, 1)
+  });
+
+
+</script>
+</body>
+</html>
