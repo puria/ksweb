@@ -67,4 +67,4 @@ class PreconditionController(BaseController):
     }, error_handler=validation_errors_response)
     def qa_precondition(self, id, **kw):
         precondition = model.Precondition.query.get(_id=ObjectId(id))
-        return dict(qas=precondition.response_interested)
+        return dict(qas=precondition.response_interested[0])

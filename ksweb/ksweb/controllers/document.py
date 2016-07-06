@@ -44,6 +44,9 @@ class DocumentController(RestController):
     def post(self, title, content, category,  **kw):
 
         user = request.identity['user']
+        if content is None:
+            content = []
+
         model.Document(
             _owner=user._id,
             _category=ObjectId(category),
@@ -67,6 +70,8 @@ class DocumentController(RestController):
 
         document.title = title
         document._category = ObjectId(category)
+        if content is None:
+            content = []
         document.content = content
 
         return dict(errors=None)

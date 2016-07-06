@@ -51,7 +51,7 @@ class Precondition(MappedClass):
             return
 
     @property
-    def response_interested(self):
+    def response_interested(self, ordered_qa=[]):
         """
         Example of the return value
         {
@@ -73,20 +73,31 @@ class Precondition(MappedClass):
         }
         :return:
         """
+
         res_dict = {}
         if self.type == 'simple':
             qa = Qa.query.get(_id=self.condition[0])
             res_dict[str(qa._id)] = qa
-            return res_dict
+            return res_dict, [str(qa._id)]
 
         for cond in self.condition:
             if cond in Precondition.PRECONDITION_OPERATOR:
                 continue
             else:
                 rel_ent = Precondition.query.get(_id=cond)
-                res_dict.update(rel_ent.response_interested)
+                #res_dict.update(rel_ent.response_interested)
+                resp_int, resp_qa = rel_ent.response_interested
+                for i in resp_qa:
+                    if i not in ordered_qa:
+                        print "append %s" % (i)
+                        ordered_qa.append(i)
+                    else:
+                        print "%s gia presente" % i
 
-        return res_dict
+                res_dict.update(resp_int)
+
+
+        return res_dict, ordered_qa
 
     @property
     def simple_text_response(self):

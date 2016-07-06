@@ -188,9 +188,12 @@ class Questionary(MappedClass):
                 'precond': self.precond_values[str(precondition._id)]
             }
 
-        qa_involved = precondition.response_interested
+        qa_involved, ordered_qa = precondition.response_interested
+
         #  Check if all qa involved have a response
-        for qa_id in qa_involved.keys():
+        #for qa_id in qa_involved.keys():
+        for qa_id in ordered_qa:
+            print "Check qa: %s" % qa_id
             if not qa_id in self.qa_values.keys():
                 print "QA: %s not already responded" % qa_id
                 return {'completed': False, 'qa': qa_id}
