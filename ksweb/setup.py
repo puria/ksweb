@@ -60,6 +60,9 @@ setup(
     url='',
     packages=find_packages(exclude=['ez_setup']),
     install_requires=install_requires,
+    extras_require={
+       'testing': testpkgs
+    },
     include_package_data=True,
     test_suite='nose.collector',
     tests_require=testpkgs,
