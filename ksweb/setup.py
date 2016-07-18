@@ -27,7 +27,7 @@ except ImportError:
     from setuptools import setup, find_packages
 
 testpkgs = [
-    'WebTest >= 1.2.3',
+    'WebTest == 1.4.3',
     'nose',
     'coverage',
     'gearbox'
