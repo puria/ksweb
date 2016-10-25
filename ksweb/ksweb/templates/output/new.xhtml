@@ -84,7 +84,7 @@
           {{#each qas}}
             <div class="row">
               <div class="col-md-6">
-                <span id="add_circle_outline" onclick="ractive_output.addResponseOf('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                <span id="add_circle_outline" onclick='ractive_output.addResponseOf("{{._id}}", "{{.title}}")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
 
                 {{.title}}
               </div>
