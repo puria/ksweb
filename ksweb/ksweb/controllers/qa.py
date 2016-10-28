@@ -27,7 +27,7 @@ class QaController(RestController):
                 'columns_name': ['Name', 'Category', 'Question', 'Type'],
                 'fields_name': ['title', 'category', 'question', 'type']
             },
-            entities=model.Qa.query.find().sort('title'),
+            entities=model.Qa.qa_available_for_user(request.identity['user']._id),
             actions=True
         )
 
@@ -36,12 +36,15 @@ class QaController(RestController):
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def get_one(self, id,  **kw):
-        qa = model.Qa.query.get(_id=ObjectId(id))
+        qa = model.Qa.query.find({'_id': ObjectId(id), '_owner': request.identity['user']._id}).first()
         return dict(qa=qa)
 
     @expose('json')
     def get_single_or_multi_question(self):
-        questions = model.Qa.query.find({'type': {'$in': ['single', 'multi']}, 'public': True}).all()
+        questions = model.Qa.query.find({
+            'type': {'$in': ['single', 'multi']},
+            '_owner': request.identity['user']._id
+        }).all()
         return dict(questions=[{'_id': qa._id, 'title': qa.title} for qa in questions])
 
     @expose('json')
