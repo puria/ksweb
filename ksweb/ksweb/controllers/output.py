@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
 from bson import ObjectId
+from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 import tg
-from tg.decorators import paginate
+from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator
@@ -40,7 +41,7 @@ class OutputController(RestController):
                 'columns_name': ['Nome', 'Categoria', 'Precondizione', 'Testo'],
                 'fields_name': ['title', 'category', 'precondition', 'content']
             },
-            entities=model.Output.query.find().sort('title'),
+            entities=model.Output.output_available_for_user(request.identity['user']._id),
             actions=True
         )
 
@@ -84,6 +85,7 @@ class OutputController(RestController):
         'category': CategoryExistValidator(required=True),
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
     def put(self, _id, title, content, category, precondition,  **kw):
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
@@ -100,17 +102,21 @@ class OutputController(RestController):
 
     @expose('ksweb.templates.output.new')
     @validate({
-        'id': OutputExistValidator(required=True)
+        '_id': OutputExistValidator(required=True)
     }, error_handler=validation_errors_response)
-    def edit(self, id, **kw):
-        output = model.Output.query.find({'_id': ObjectId(id)}).first()
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
+    def edit(self, _id, **kw):
+        output = model.Output.query.find({'_id': ObjectId(_id)}).first()
         return dict(output=output, errors=None)
 
     @expose('json')
     def sidebar_output(self):
         res = model.Output.query.aggregate([
             {
-                '$match': {'visible': True}
+                '$match': {
+                    '_owner': request.identity['user']._id,
+                    'visible': True
+                }
             },
             {
                 '$group': {

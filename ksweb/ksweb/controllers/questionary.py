@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Questionary controller module"""
 from bson import ObjectId
+from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, response, validate, flash, url, predicates, validation_errors_response, decode_params, request, \
     tmpl_context
-from tg.decorators import paginate
+from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 import tg
 # from tg.i18n import ugettext as _
@@ -59,21 +60,23 @@ class QuestionaryController(BaseController):
     @expose('ksweb.templates.questionary.compile')
     @expose('json')
     @validate({
-        'id': QuestionaryExistValidator(required=True),
+        '_id': QuestionaryExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def compile(self, id, **kwargs):
-        questionary = model.Questionary.query.get(_id=ObjectId(id))
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo questionario.', field='_id', entity_model=model.Questionary))
+    def compile(self, _id, **kwargs):
+        questionary = model.Questionary.query.get(_id=ObjectId(_id))
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
 
     @expose('json')
     @decode_params('json')
     @validate({
-        'id': QuestionaryExistValidator(required=True),
+        '_id': QuestionaryExistValidator(required=True),
         'qa_id': QAExistValidator(required=True),
         'qa_response': StringLengthValidator(min=1),
     }, error_handler=validation_errors_response)
-    def responde(self, id=None,  qa_id=None, qa_response=None, **kwargs):
-        questionary = model.Questionary.query.get(_id=ObjectId(id))
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo questionario.', field='_id', entity_model=model.Questionary))
+    def responde(self, _id=None,  qa_id=None, qa_response=None, **kwargs):
+        questionary = model.Questionary.query.get(_id=ObjectId(_id))
         #  Check if the qa response is valid
         qa = model.Qa.query.get(_id=ObjectId(qa_id))
         # print qa.answers

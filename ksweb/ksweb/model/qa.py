@@ -48,5 +48,8 @@ class Qa(MappedClass):
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
+    @classmethod
+    def qa_available_for_user(cls, user_id):
+        return cls.query.find({'_owner': user_id}).sort('title')
 
 __all__ = ['Qa']

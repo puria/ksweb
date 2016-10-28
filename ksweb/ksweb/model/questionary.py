@@ -11,7 +11,7 @@ import tg
 
 
 def _compile_questionary(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(id=obj._id)), obj.title))
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id)), obj.title))
 
 
 class Questionary(MappedClass):
