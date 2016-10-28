@@ -9,7 +9,7 @@ from ksweb.model import DBSession
 
 
 def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(id=obj._id)), obj.title))
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(_id=obj._id)), obj.title))
 
 
 def _content_preview(obj):
@@ -69,5 +69,9 @@ class Document(MappedClass):
 
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
+
+    @classmethod
+    def document_available_for_user(cls, user_id):
+        return cls.query.find({'_owner': user_id}).sort('title')
 
 __all__ = ['Document']

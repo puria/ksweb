@@ -41,6 +41,10 @@ class Precondition(MappedClass):
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
+    @classmethod
+    def precondition_available_for_user(cls, user_id):
+        return cls.query.find({'_owner': user_id}).sort('title')
+
     @property
     def evaluate(self):
         if self.type == 'simple':

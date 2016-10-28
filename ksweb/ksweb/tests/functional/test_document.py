@@ -61,7 +61,7 @@ class TestDocument(TestController):
         doc1 = self._get_document_by_title('Titolo documento 1')
 
         resp = self.app.get('/document/edit', params={
-            'id': str(doc1._id)
+            '_id': str(doc1._id)
         })
         assert doc1._id in resp
 
