@@ -6,6 +6,7 @@ devdata.db
 *.pyo
 .idea
 venv
+env
 *.egg
 *.egg-info
 .coverage
