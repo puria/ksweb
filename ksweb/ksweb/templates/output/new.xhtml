@@ -62,16 +62,19 @@
           </div>
           <div class="form-group {{errors.content ? 'has-error' : ''}}">
             {{#create.content:i}}
-              <span class="editor-element">
-                  {{#if .type == 'text'}}
-                    <span class="editor-text" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
+               {{#if .type == 'text'}}
+              <span class="editor-element-text">
+                    <span class="editor-text-simple" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
+                   <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+              </span>
                   {{/if}}
 
                   {{#if .type == 'qa_response'}}
-                    <span on-click="showQaDetails:{{.}}">{{.title}}</span>
-                  {{/if}}
+              <span class="editor-element-answer">
+                  <span on-click="showQaDetails:{{.}}">{{.title}}</span>
                   <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
               </span>
+               {{/if}}
             {{/items}}
 
             {{#if errors.content}}
