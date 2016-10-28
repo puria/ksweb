@@ -163,3 +163,5 @@ plug(base_config, 'tgext.mailer')
 plug(base_config, 'registration', global_models=True)
 from ksweb.config.registration_hooks import RegistrationHooks
 RegistrationHooks.register(base_config)
+
+plug(base_config, 'resetpassword')
