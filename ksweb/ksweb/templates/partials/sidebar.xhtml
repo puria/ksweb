@@ -100,7 +100,17 @@
   <div py:if="getattr(tmpl_context, 'sidebar_document', '') == 'document-new'" id="output-ractive" class="row" style="padding-top: 50%;">
 
   </div>
-  <!-- Output -->
+
+
+    <div py:if="getattr(tmpl_context, 'sidebar_output', '') == 'output-new'" id="nested-output-ractive" class="row" style="padding-top: 50%;">
+
+       </div>
+
+    <div py:if="getattr(tmpl_context, 'sidebar_output', '') == 'output-edit'" id="nested-output-ractive" class="row" style="padding-top: 50%;">
+
+       </div>
+
+    <!-- Output -->
 
   <script id="OutputList" type="text/html">
     <![CDATA[
@@ -108,24 +118,29 @@
       Output
     </div>
     {{#each outputs}}
-    <div class="col-md-12 category-name">
-      {{.category_name}}
-      <hr class="category-name-separator">
-    </div>
+        <div class="col-md-12 category-name">
+          {{.category_name}}
+          <hr class="category-name-separator">
+        </div>
 
-    {{#each output}}
-    <div class="col-md-12">
-      {{.title}}
-      <span id="add_circle_outline" onclick="ractive_document.addOutput('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
-    </div>
-    {{/each}}
+        {{#each output}}
+        <div class="col-md-12">
+          {{.title}}
+            {{#if div == '#output-ractive'}}
+          <span id="add_circle_outline" onclick="ractive_document.addOutput('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+            {{else}}
+            <span id="add_circle_outline" onclick="ractive_output.addOutput('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+            {{/if}}
+        </div>
+        {{/each}}
     {{/each}}
     ]]>
   </script>
-  <script>
+
+    <script>
     var OutputList = Ractive.extend({
       template: '#OutputList',
-      onconstruct: function(options) {
+      onconstruct: function() {
         var self = this;
       },
       oninit: function() {
@@ -137,6 +152,8 @@
 
         self.loadOutputs();
         self.loadCategory();
+          self.set('div',self.el);
+
 
       },
       loadOutputs: function(callback) {
@@ -165,5 +182,7 @@
   <script>
     var ractive_precondition_simple_list = new PreconditionSimpleList({el: '#precondition-ractive'});
     var ractive_output_list = new OutputList({el: '#output-ractive'});
+    var ractive_nested_output_list = new OutputList({el: '#nested-output-ractive'});
   </script>
+
 </div>
