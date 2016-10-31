@@ -48,6 +48,7 @@ class OutputController(RestController):
     @expose('json')
     @expose('ksweb.templates.output.new')
     def new(self, **kw):
+        tmpl_context.sidebar_output = "output-new"
         return dict(output={}, errors=None)
 
     @decode_params('json')
@@ -107,6 +108,7 @@ class OutputController(RestController):
     @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
     def edit(self, _id, **kw):
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
+        tmpl_context.sidebar_output = "output-edit"
         return dict(output=output, errors=None)
 
     @expose('json')

@@ -75,6 +75,13 @@
                   <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
               </span>
                {{/if}}
+
+                {{#if .type == 'output'}}
+              <span class="editor-element-output">
+                  <span on-click="showQaDetails:{{.}}">{{.title}}</span>
+                  <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+              </span>
+               {{/if}}
             {{/items}}
 
             {{#if errors.content}}
@@ -184,6 +191,17 @@
       };
       self.get('create.content').push(elem);
     },
+      addOutput:function (id, title) {
+          console.log("add _id:" + id);
+          console.log("add title:" + title);
+          var self = this;
+         var elem = {
+        'type': 'output',
+        'content': id,
+        'title': title
+        };
+        self.get('create.content').push(elem);
+      },
     create_output: function(field) {
       var self = this;
       self.set('saving', true);
