@@ -82,7 +82,7 @@ class QuestionaryExistValidator(Validator):
 
 class OutputContentValidator(Validator):
     def _validate_python(self, value, state=None):
-        document_accepted_type = ['text', 'qa_response']
+        document_accepted_type = ['text', 'qa_response','output']
         for cond in value:
             if cond['type'] == 'text':
                 cond['content'] = HTMLParser.HTMLParser().unescape(cond['content'])
@@ -90,6 +90,10 @@ class OutputContentValidator(Validator):
                 qa = model.Qa.query.get(_id=ObjectId(cond['content']))
                 if not qa:
                     raise ValidationError(u'Domanda non trovata.', self)
+            elif cond['type'] == 'output':
+                out = model.Output.query.get(_id=ObjectId(cond['content']))
+                if not out:
+                    raise ValidationError(u'Output non trovato', self)
             else:
                 raise ValidationError(u'Condizione non valida.', self)
 
