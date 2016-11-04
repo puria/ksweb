@@ -113,4 +113,19 @@ class Precondition(MappedClass):
         """
         return self.type == "simple" and self.condition[1] == ""
 
+    @property
+    def multiple_choice_response(self):
+        if self.is_simple:
+            qa = self.get_qa()
+            return qa.is_multi
+        return False
+
+    @property
+    def single_choice_response(self):
+        if self.is_simple:
+            qa = self.get_qa()
+            return qa.is_single
+        return False
+
+
 __all__ = ['Precondition']

@@ -72,10 +72,12 @@ class QuestionaryController(BaseController):
     @validate({
         '_id': QuestionaryExistValidator(required=True),
         'qa_id': QAExistValidator(required=True),
-        'qa_response': StringLengthValidator(min=1),
+        'qa_response': StringLengthValidator(min=1, strip=False),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=u'Non puoi modificare questo questionario.', field='_id', entity_model=model.Questionary))
     def responde(self, _id=None,  qa_id=None, qa_response=None, **kwargs):
+
+        print 111
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         #  Check if the qa response is valid
         qa = model.Qa.query.get(_id=ObjectId(qa_id))
@@ -93,7 +95,13 @@ class QuestionaryController(BaseController):
                 if not elem in qa.answers:
                     response.status_code = 412
                     return dict(errors={'qa_response': 'Risposta non valida'})
+        print 222
+
+
 
         questionary.qa_values[qa_id] = qa_response
+
+        # Not sure about flush here
+        DBSession.flush(questionary)
 
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)

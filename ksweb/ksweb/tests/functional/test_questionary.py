@@ -246,6 +246,8 @@ class TestQuestionaryController(TestController):
             'qa_response': qa_response[rel_qa.title]['response']
         }, status=qa_response[rel_qa.title]['status']).json
 
+        print "=====", resp
+
         rel_qa = self._get_qa(resp['quest_compiled']['qa'])
 
         resp = self.app.post_json('/questionary/responde', params={
