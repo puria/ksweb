@@ -74,4 +74,5 @@ class Document(MappedClass):
     def document_available_for_user(cls, user_id):
         return cls.query.find({'_owner': user_id}).sort('title')
 
+
 __all__ = ['Document']

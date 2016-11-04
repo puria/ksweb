@@ -49,6 +49,8 @@ class Questionary(MappedClass):
     A list with a compiled document values
     """
 
+    expressions = FieldProperty(s.Anything, if_missing={})
+
     output_values = FieldProperty(s.Anything, if_missing={})
     """
     Is a nested dictionary with:
@@ -90,154 +92,148 @@ class Questionary(MappedClass):
 
         self.document_values = []
         self.output_values = {}
-        self.precond_values = {}
+        self.generate_expression()
+
+        print "========================================================================="
+        print "evaluate_questionary"
+        print "========================================================================="
+        print ""
 
         for elem in self.document.content:
             if elem['type'] == "text":
-                #  elem is like this: { "content" : "Simple text", "type" : "text", "title" : ""}
                 self.document_values.append(elem['content'])
             elif elem['type'] == "output":
-                #  elem is like this: {"content" : "575eb879c42d7518bb972256", "type" : "output", "title" : "ciao"}
-                output_res = self.evaluate_output(elem['content'])
-                #  If not yet completed, show the answer
+                output_id = elem['content']
+                output_res = self.evaluate_expression(output_id)
                 if not output_res['completed']:
+                    print "Output", output_id, 'is NOT completed'
                     output_res['document_generated'] = self.document_values
                     return output_res
-            else:
-                #  Insert for security evaluation
-                raise Exception("Invalid document element type: %s" % elem)
+                else:
+                    print "Output", output_id, 'is completed'
+                    if self.output_values[output_id].get('evaluation'):
+
+                        res = self.compile_output(output_id)
+                        if res:
+                            print "quiiiiiiiiiiiiiiiii"
+                            return res
+                    else:
+                        print "Output", output_id, 'precondition failed'
 
         return {
             'completed': True,
             'document_generated': self.document_values
         }
 
-    def evaluate_output(self, output_id):
-        """
-        Evaluated the related output
-        :param output_id: id of the output
-        :return:
-        """
-        from ksweb import model
-        #  Check if the output is already evaluated
-        #  If the output is already evaluated, simple getting the text of the evaluation
-        if self.output_values.has_key(output_id):
-            self.document_values.append(self.output_values[output_id]['evaluated_text'])
-            return {'completed': True}
+    def generate_expression(self):
+        from . import Output
 
-        #  We not have already evaluated the output, we must evaluate the related precondition
-        output = model.Output.query.get(_id=ObjectId(output_id))
-        precond = self.evaluate_precond(output.precondition)
-        if precond['completed']:
-            self._compile_output(output, self.precond_values[str(output._precondition)])
-            self.document_values.append(self.output_values[output_id]['evaluated_text'])
-            return {'completed': True}
+        for elem in self.document.content:
+            if elem['type'] == 'output':
+                output = Output.query.get(_id=ObjectId(elem['content']))
+                self.expressions[str(output._id)] = self._generate(output.precondition)
 
-        """
-        In this case the precond is not completed and the return value is like this:
-        {
-            'completed': False,
-            'qa': "575eb879c42d7518bb972256"
-        }
-        """
-        return precond
+    def _generate(self, precondition):
+        parent_expression, expression= '', ''
 
-    def _compile_output(self, output, precondition_value):
+        if precondition.is_simple:
+            qa = precondition.get_qa()
+
+            if qa._parent_precondition:
+                parent_expression = '(' + self._generate(qa.parent_precondition) + ') and '
+
+            if precondition.simple_text_response:
+                # TODO test
+                expression = "q_%s != ''" % str(precondition.condition[0])
+            elif precondition.single_choice_response:
+                expression = "q_%s == '%s'" % (str(precondition.condition[0]), precondition.condition[1])
+            elif precondition.multiple_choice_response:
+                expression = "'%s' in q_%s" % (str(precondition.condition[1]), precondition.condition[0])
+
+            return parent_expression + expression
+
+        else:
+            advanced_expression = ""
+            for item in precondition.condition:
+                if isinstance(item, basestring):
+                    advanced_expression += ' %s ' % item
+                elif isinstance(item, ObjectId):
+                    from . import Precondition
+                    p = Precondition.query.get(_id=item)
+                    advanced_expression += ' %s ' % self._generate(p)
+
+
+
+            print "END of PA",
+            print advanced_expression
+        return advanced_expression
+
+    def compile_output(self, output_id):
         """
         Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del questionario.
         :param output:
         :param precondition_value:
         """
-        #  If the precondition is not valid, therefore the output is empty
+        from . import Output
+        output = Output.query.get(_id=ObjectId(output_id))
+
         evaluated_text = ""
-        if precondition_value:
-            #  for each output content:
-            #  if is text, insert directly
-            #  if is a qa response, show the related response
-            for elem in output.content:
-                if elem['type'] == "text":
-                    #  elem like this { "content" : "Simple text", "type" : "text", "title" : "" }
-                    evaluated_text += elem['content']
-                elif elem['type'] == "qa_response":
-                    #  elem like this { "content" : "57723171c42d7513bb31e17d", "type" : "qa_response", "title" : "Colori" }
-                    #  Getting the response of the qa
-                    #  The user have already response to the answer oterwise is not possible evaluate the precondition
-                    if isinstance(self.qa_values[elem['content']], basestring):
+
+        for elem in output.content:
+            if elem['type'] == "text":
+                evaluated_text += elem['content']
+            elif elem['type'] == "qa_response":
+                # FIXME
+                content = self.qa_values.get(elem['content'])
+                if content:
+                    if isinstance(content, basestring):
                         evaluated_text += self.qa_values[elem['content']]
                     else:
                         evaluated_text += ', '.join(self.qa_values[elem['content']])
                 else:
-                    #  Insert for security evaluation
-                    raise Exception("Output elem type not valid: %s" % elem)
+                    return {'qa': elem['content']}
 
-        self.output_values[str(output._id)] = {
-            'evaluation': True,
-            'evaluated_text': evaluated_text
-        }
+        self.document_values.append(evaluated_text)
+        return None
 
-    def evaluate_precond(self, precondition):
-        """
-        Evaluate if the precondition is already evaluated or not.
-        :param precondition: Precondition Object
-        :return: completed: True if the precondition is already evaluated and in the precond field return the value of the precondition
-        :return: completed: False if the precondition or more qas related are not already evaluated and in the qa field the qa id of the missing qa
-        """
-        if self.precond_values.has_key(str(precondition._id)):
+    def evaluate_expression(self, output_id):
+
+        print "========================================================================="
+        print "output:", output_id
+
+        expression = self.expressions[output_id]
+
+        answers = dict()
+        for _id, resp in self.qa_values.items():
+            if isinstance(resp, basestring):
+                answers['q_' + _id] = resp
+            else:
+                # array
+                answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, resp))
+
+
+
+        try:
+            print expression
+            print "answers", answers
+
+            evaluation = eval(expression, answers)
+            print evaluation
+        except NameError as ne:
+            _id = ne.message.split("'")[1][2:]
+
             return {
-                'completed': True,
-                'precond': self.precond_values[str(precondition._id)]
+                'completed': False,
+                'qa': _id
             }
 
-        qa_involved = precondition.response_interested
-        #  Check if all qa involved have a response
-        for qa_id in qa_involved.keys():
-            if not qa_id in self.qa_values.keys():
-                print "QA: %s not already responded" % qa_id
-                return {'completed': False, 'qa': qa_id}
-
-        #  Now all qa have response, we are able to evaluate the precondition
-        prec_str = self._precondition_str_to_evaluate(precondition)
-        res_eval = eval(prec_str)
-        self.precond_values[str(precondition._id)] = res_eval
-
-        return {
-            'completed': True,
-            'precond': res_eval
+        self.output_values[output_id] = {
+            'evaluation': evaluation,
         }
 
-    def _precondition_str_to_evaluate(self, precondition):
-        """
-        Return an evaluation string for evaluate the precondition
-        :param precondition:
-        :return: string for process the evaluation
-        """
-        from ksweb import model
-
-        str_to_eval = ""
-        if precondition.type == 'simple':
-            if precondition.simple_text_response:
-                str_to_eval = "'%s' != ''" % self.qa_values[str(precondition.condition[0])]
-            else:
-                response_of_precondition = self.qa_values[str(precondition.condition[0])]
-                #  Check if response is only one as text for example 'red'
-                #  Cast this as list for uniform the string evaluation process
-                if isinstance(response_of_precondition, basestring):
-                    response_of_precondition = [response_of_precondition]
-
-                for i in response_of_precondition[:-1]:
-                    str_to_eval += "'%s' == '%s' or " % (precondition.condition[1], i)
-
-                str_to_eval += "'%s' == '%s'" % (precondition.condition[1], response_of_precondition[-1])
-
-        elif precondition.type == 'advanced':
-            for cond in precondition.condition:
-                if cond in model.Precondition.PRECONDITION_OPERATOR:
-                    str_to_eval += "%s " % cond
-                else:
-                    related_precondition = model.Precondition.query.find({'_id': ObjectId(cond)}).first()
-                    #  Getting the evaluation string of this precondition
-                    str_to_eval += self._precondition_str_to_evaluate(related_precondition)
-        return str_to_eval
+        return {
+            'completed': True
+        }
 
 
 __all__ = ['Questionary']

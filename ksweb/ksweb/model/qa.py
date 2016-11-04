@@ -55,4 +55,16 @@ class Qa(MappedClass):
     def qa_available_for_user(cls, user_id):
         return cls.query.find({'_owner': user_id}).sort('title')
 
+    @property
+    def is_text(self):
+        return self.type == self.QA_TYPE[0]
+
+    @property
+    def is_single(self):
+        return self.type == self.QA_TYPE[1]
+
+    @property
+    def is_multi(self):
+        return self.type == self.QA_TYPE[2]
+
 __all__ = ['Qa']
