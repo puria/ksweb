@@ -37,6 +37,9 @@ class Qa(MappedClass):
     _category = ForeignIdProperty('Category')
     category = RelationProperty('Category')
 
+    _parent_precondition = ForeignIdProperty('Precondition')
+    parent_precondition = RelationProperty('Precondition')
+
     title = FieldProperty(s.String, required=True)
     question = FieldProperty(s.String, required=True)
     tooltip = FieldProperty(s.String, required=False)
