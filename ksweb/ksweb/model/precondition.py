@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Precondition model module."""
+from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
@@ -55,6 +56,10 @@ class Precondition(MappedClass):
             return
 
     @property
+    def is_simple(self):
+        return self.type == 'simple'
+
+    @property
     def response_interested(self):
         """
         Example of the return value
@@ -81,6 +86,8 @@ class Precondition(MappedClass):
         if self.type == 'simple':
             qa = Qa.query.get(_id=self.condition[0])
             res_dict[str(qa._id)] = qa
+            if qa.parent_precondition:
+                res_dict.update(qa.parent_precondition.response_interested)
             return res_dict
 
         for cond in self.condition:
@@ -91,6 +98,12 @@ class Precondition(MappedClass):
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict
+
+    def get_qa(self):
+        from . import Qa
+        if not self.is_simple:
+            return None
+        return Qa.query.get(_id=ObjectId(self.condition[0]))
 
     @property
     def simple_text_response(self):

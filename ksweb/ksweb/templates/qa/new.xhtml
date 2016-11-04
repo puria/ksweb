@@ -69,6 +69,20 @@
           {{/if}}
         </div>
       </div>
+      <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
+        <div class="col-sm-3">
+          <select id="form-precondition" class="form-control" value="{{create.precondition}}">
+            <option value="" disabled selected>Seleziona una precondizione</option>
+            {{#each preconditions}}
+            <option value="{{._id}}">{{.title}}</option>
+            {{/each}}
+          </select>
+
+          {{#if errors.precondition}}
+          <span class="help-block">{{errors.precondition}}</span>
+          {{/if}}
+        </div>
+      </div>
       <div class="form-group {{errors.tooltip ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <input id="extra-fields-form-tooltip" type="text" class="form-control" placeholder="Tooltip" value="{{create.tooltip}}"/>
@@ -173,12 +187,22 @@
       });
 
       self.loadCategory();
+      self.loadPrecondition();
     },
     loadCategory: function(callback) {
       var self = this;
       jQuery.get("${tg.url('/category/get_all')}",
           function(data) {
             self.set('categories', data['categories']);
+            if (callback)
+              callback();
+          });
+    },
+    loadPrecondition: function(callback) {
+      var self = this;
+      jQuery.get("${tg.url('/precondition/available_preconditions')}",
+          function(data) {
+            self.set('preconditions', data['preconditions']);
             if (callback)
               callback();
           });
