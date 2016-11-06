@@ -94,11 +94,6 @@ class Questionary(MappedClass):
         self.output_values = {}
         self.generate_expression()
 
-        print "========================================================================="
-        print "evaluate_questionary"
-        print "========================================================================="
-        print ""
-
         for elem in self.document.content:
             if elem['type'] == "text":
                 self.document_values.append(elem['content'])
@@ -106,19 +101,15 @@ class Questionary(MappedClass):
                 output_id = elem['content']
                 output_res = self.evaluate_expression(output_id)
                 if not output_res['completed']:
-                    print "Output", output_id, 'is NOT completed'
                     output_res['document_generated'] = self.document_values
                     return output_res
                 else:
-                    print "Output", output_id, 'is completed'
                     if self.output_values[output_id].get('evaluation'):
-
                         res = self.compile_output(output_id)
+                        # this need for to show other questions though output is already evaluated, for example when
+                        # output uses some response to a certain questions
                         if res:
-                            print "quiiiiiiiiiiiiiiiii"
                             return res
-                    else:
-                        print "Output", output_id, 'precondition failed'
 
         return {
             'completed': True,
@@ -161,11 +152,9 @@ class Questionary(MappedClass):
                     from . import Precondition
                     p = Precondition.query.get(_id=item)
                     advanced_expression += ' %s ' % self._generate(p)
+                    # advanced_expression += '( %s )' % self._generate(p)
 
 
-
-            print "END of PA",
-            print advanced_expression
         return advanced_expression
 
     def compile_output(self, output_id):
@@ -183,7 +172,6 @@ class Questionary(MappedClass):
             if elem['type'] == "text":
                 evaluated_text += elem['content']
             elif elem['type'] == "qa_response":
-                # FIXME
                 content = self.qa_values.get(elem['content'])
                 if content:
                     if isinstance(content, basestring):
@@ -198,9 +186,6 @@ class Questionary(MappedClass):
 
     def evaluate_expression(self, output_id):
 
-        print "========================================================================="
-        print "output:", output_id
-
         expression = self.expressions[output_id]
 
         answers = dict()
@@ -211,14 +196,8 @@ class Questionary(MappedClass):
                 # array
                 answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, resp))
 
-
-
         try:
-            print expression
-            print "answers", answers
-
             evaluation = eval(expression, answers)
-            print evaluation
         except NameError as ne:
             _id = ne.message.split("'")[1][2:]
 
