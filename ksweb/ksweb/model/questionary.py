@@ -151,8 +151,7 @@ class Questionary(MappedClass):
                 elif isinstance(item, ObjectId):
                     from . import Precondition
                     p = Precondition.query.get(_id=item)
-                    advanced_expression += ' %s ' % self._generate(p)
-                    # advanced_expression += '( %s )' % self._generate(p)
+                    advanced_expression += '( %s )' % self._generate(p)
 
 
         return advanced_expression
