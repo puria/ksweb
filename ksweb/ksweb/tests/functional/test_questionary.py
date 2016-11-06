@@ -150,13 +150,8 @@ class TestQuestionaryController(TestController):
             'qa_response': qa_response[rel_qa.title]['response']
         }, status=qa_response[rel_qa.title]['status']).json
 
-        rel_qa = self._get_qa(resp['quest_compiled']['qa'])
+        assert resp['quest_compiled']['completed'] is True
 
-        resp = self.app.post_json('/questionary/responde', params={
-            '_id': str(questionary._id),
-            'qa_id': resp['quest_compiled']['qa'],
-            'qa_response': qa_response[rel_qa.title]['response']
-        }, status=qa_response[rel_qa.title]['status']).json
 
 
     def test_compile_advanced_questionary_not_showing_two_time_same_answer(self):
@@ -248,15 +243,17 @@ class TestQuestionaryController(TestController):
 
         print "=====", resp
 
-        rel_qa = self._get_qa(resp['quest_compiled']['qa'])
+        assert resp['quest_compiled']['completed'] is True, resp
 
-        resp = self.app.post_json('/questionary/responde', params={
-            '_id': str(questionary._id),
-            'qa_id': resp['quest_compiled']['qa'],
-            'qa_response': qa_response[rel_qa.title]['response']
-        }, status=qa_response[rel_qa.title]['status']).json
-
-        assert resp['quest_compiled']['completed'] == True, resp
+        # rel_qa = self._get_qa(resp['quest_compiled']['qa'])
+        #
+        # resp = self.app.post_json('/questionary/responde', params={
+        #     '_id': str(questionary._id),
+        #     'qa_id': resp['quest_compiled']['qa'],
+        #     'qa_response': qa_response[rel_qa.title]['response']
+        # }, status=qa_response[rel_qa.title]['status']).json
+        #
+        # assert resp['quest_compiled']['completed'] == True, resp
 
     #  TODO: Check/rewrite this test.
     """
