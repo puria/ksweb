@@ -159,8 +159,12 @@ class Questionary(MappedClass):
     def compile_output(self, output_id):
         """
         Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del questionario.
-        :param output:
-        :param precondition_value:
+
+        Questo metodo appende all'array di stringhe document_values i vari componenti trovati nel documento, che siano
+        testo semplice o risposte, un elemento per ogni cella dell'array
+
+        :param output_id:
+
         """
         from . import Output
         output = Output.query.get(_id=ObjectId(output_id))
@@ -169,18 +173,33 @@ class Questionary(MappedClass):
 
         for elem in output.content:
             if elem['type'] == "text":
-                evaluated_text += elem['content']
+                #evaluated_text += elem['content']
+                self.document_values.append(elem['content'])
             elif elem['type'] == "qa_response":
                 content = self.qa_values.get(elem['content'])
                 if content:
                     if isinstance(content, basestring):
-                        evaluated_text += self.qa_values[elem['content']]
+                        evaluated_text = self.qa_values[elem['content']]
                     else:
-                        evaluated_text += ', '.join(self.qa_values[elem['content']])
+                        evaluated_text = ', '.join(self.qa_values[elem['content']])
                 else:
                     return {'qa': elem['content']}
-
-        self.document_values.append(evaluated_text)
+                self.document_values.append(evaluated_text)
+            elif elem['type'] == 'output': #Ho trovato un output innestato nel mio output
+                output_nested_id = elem['content']
+                output_nested = Output.query.get(_id=ObjectId(output_nested_id))
+                self.expressions[str(output_nested_id)] = self._generate(output_nested.precondition)
+                output_res = self.evaluate_expression(output_nested_id)
+                if not output_res['completed']:
+                    output_res['document_generated'] = self.document_values
+                    return output_res
+                else:
+                    if self.output_values[output_nested_id].get('evaluation'):
+                        res = self.compile_output(output_nested_id)
+                        # this need for to show other questions though output is already evaluated, for example when
+                        # output uses some response to a certain questions
+                        if res:
+                            return res
         return None
 
     def evaluate_expression(self, output_id):

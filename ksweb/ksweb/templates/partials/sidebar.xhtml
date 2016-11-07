@@ -158,7 +158,7 @@
       },
       loadOutputs: function(callback) {
         var self = this;
-        jQuery.get("${tg.url('/output/sidebar_output')}",
+        jQuery.get("${tg.url('/output/sidebar_output',params=dict(_id=getattr(tmpl_context, 'id_obj', None)))}",
             function(data) {
               self.set('outputs', data['outputs']);
               if (callback)
