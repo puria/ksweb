@@ -29,6 +29,7 @@ class OutputController(RestController):
 
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "outputs"
+        tmpl_context.id_obj=kw.get('_id')
 
     allow_only = predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer'))
 
@@ -112,11 +113,12 @@ class OutputController(RestController):
         return dict(output=output, errors=None)
 
     @expose('json')
-    def sidebar_output(self):
+    def sidebar_output(self, _id=None):
         res = model.Output.query.aggregate([
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
+                    '_id': {'$ne': ObjectId(_id)},
                     'visible': True
                 }
             },
