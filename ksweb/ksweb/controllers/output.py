@@ -33,7 +33,7 @@ class OutputController(RestController):
 
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "outputs"
-        tmpl_context.id_obj=kw.get('_id')
+        tmpl_context.id_obj = kw.get('_id')
 
     allow_only = predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer'))
 
