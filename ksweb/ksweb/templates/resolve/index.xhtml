@@ -1,0 +1,52 @@
+<html py:extends="master.xhtml" py:strip="True">
+  <head py:block="head" py:strip="True">
+    <title py:block="master_title">KS | Resolve</title>
+  </head>
+
+  <body py:block="body" py:strip="True">
+
+    <script id="Resolve_template" type="text/html">
+    </script>
+
+    <div class="row" style="padding-top: 20px">
+      <div class="col-md-12 text-left ks-section-name">
+        L'entità che si vuole modificare è usata in altre entità.
+        <br/>
+        Come procediamo?
+      </div>
+
+    </div>
+
+    <div class="row" style="padding-top: 20px">
+      <div class="col-md-12">
+
+
+
+      <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
+        <button type="submit" class="btn btn-danger" formaction="${tg.url('/resolve/original_edit')}">Applica su tutti gli altri</button>
+        <p> l'edit si applica all'oggetto originario</p>
+        <br/>
+        <br/>
+        <button type="submit" class="btn btn-success" formaction="${tg.url('/resolve/clone_object')}">Non applicare su tutti gli altri</button>
+        <p>viene creata una copia dell'oggetto originario con le modifiche</p>
+        <br/>
+        <br/>
+        <button type="submit" class="btn btn-warning" formaction="${tg.url('/resolve/manually_resolve')}">Scegli manualmente</button>
+        <p>viene scelto caso per caso</p>
+        
+        <input name="_id" type="hidden" value="${_id}"/>
+        <input name="_category" type="hidden" value="${category}"/>
+        <input name="_precondition" type="hidden" value="${precondition}"/>
+        <input name="title" type="hidden" value="${title}"/>
+        <input name="content" type="hidden" value="${content}"/>
+        <input name="entity" type="hidden" value="${entity}"/>
+
+      </form>
+
+    </div>
+      <div id="resolve-ractive" style="padding-top: 20px"></div>
+
+    </div>
+
+  </body>
+</html>
