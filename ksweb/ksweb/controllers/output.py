@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
+import json
+
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 import tg
+from tg import redirect
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
@@ -12,6 +15,7 @@ from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
+from ksweb.controllers.resolve import ResolveController
 
 
 class OutputController(RestController):
@@ -88,11 +92,25 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
-    def put(self, _id, title, content, category, precondition,  **kw):
+    def put(self, _id, title, content, category, precondition, **kw):
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
         if error:
             return error
+
+        res = ResolveController().get_related_entities(_id)
+
+        if res.get("entities"):
+            params = dict(
+                _id=_id,
+                title=title,
+                content=json.dumps(content, ensure_ascii=False),
+                category=category,
+                precondition=precondition,
+                entity='output',
+                **kw
+            )
+            return dict(redirect_url=tg.url('/resolve', params=params))
 
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
@@ -100,7 +118,7 @@ class OutputController(RestController):
         output._precondition = ObjectId(precondition)
         output.content = content
 
-        return dict(errors=None)
+        return dict(errors=None, redirect_url=None)
 
     @expose('ksweb.templates.output.new')
     @validate({
@@ -109,8 +127,18 @@ class OutputController(RestController):
     @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
     def edit(self, _id, **kw):
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
+
+        # cercare su quali documenti o outout è utilizzato questo output
+
+        output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
+        documents_realted = model.Document.query.find({"content.type": "output", "content.content": _id})
+
+        print "output related", [o.title for o in output_related]
+        print "document related", [d.title for d in documents_realted]
+
         tmpl_context.sidebar_output = "output-edit"
         return dict(output=output, errors=None)
+
 
     @expose('json')
     def sidebar_output(self, _id=None):
@@ -141,7 +169,7 @@ class OutputController(RestController):
     @validate({
         'id': OutputExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def output_human_readable_details(self, id,  **kw):
+    def human_readable_details(self, id,  **kw):
         output = model.Output.query.get(_id=ObjectId(id))
 
         return dict(output={

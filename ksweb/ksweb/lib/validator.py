@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import HTMLParser
+import ast
+import json
 
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -97,6 +99,11 @@ class OutputContentValidator(Validator):
             else:
                 raise ValidationError(u'Condizione non valida.', self)
 
+    def _convert_to_python(self, value, state=None):
+        if isinstance(value, basestring):
+            # need transform from string to list
+            return ast.literal_eval(value)
+        return value
 
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):

@@ -217,11 +217,14 @@
         dataType: "json",
         processData: false,
         contentType: 'application/json'
-      }).done(function(data) {
+      }).done(function(resp) {
+        var redirect_to = "${tg.url('/output/')}";
         self.set('create', {});
         self.set('saving', false);
         self.set('editing', false);
-        window.location.replace("${tg.url('/output/')}");
+        if (resp.redirect_url)
+          redirect_to = resp.redirect_url;
+        window.location.replace(redirect_to);
       }).fail(function(jqXHR) {
         var data = jQuery.parseJSON(jqXHR.responseText);
         console.log("fail");

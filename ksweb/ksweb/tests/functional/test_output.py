@@ -196,11 +196,11 @@ class TestOutput(TestController):
         assert "Out1" in resp
         assert "Out2" in resp
 
-    def test_output_human_readable_details(self):
+    def test_human_readable_details(self):
         self._login_lavewr()
 
         out1 = self._create_fake_output("Out1")
 
-        resp = self.app.get('/output/output_human_readable_details', params={'id': out1._id})
+        resp = self.app.get('/output/human_readable_details', params={'id': out1._id})
         assert 'human_readbale_content' in resp
         assert out1._id in resp

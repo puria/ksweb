@@ -18,6 +18,7 @@ from ksweb.controllers.qa import QaController
 from ksweb.controllers.questionary import QuestionaryController
 from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
+from ksweb.controllers.resolve import ResolveController
 
 __all__ = ['RootController']
 
@@ -43,6 +44,7 @@ class RootController(BaseController):
     output = OutputController()
     document = DocumentController()
     questionary = QuestionaryController()
+    resolve = ResolveController()
 
     error = ErrorController()
 
