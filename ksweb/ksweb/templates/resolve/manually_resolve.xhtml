@@ -25,7 +25,7 @@
           {{#if related_entities.length > 0}}
           <div class="col-md-5">
             <div class="well">
-              <a href="#" on-click="showDetails:{{related_entities[0]._id}}">{{related_entities[0].title}}</a>
+              <a href="#" on-click="showDetails:{{related_entities[0].entity}},{{related_entities[0]._id}}">{{related_entities[0].title}}</a>
             </div>
             <div class="row">
               <div class="col-md-6">
@@ -106,9 +106,10 @@
           values: ${Markup(h.script_json_encode(values))}
         });
 
-        ractive_output.on('showDetails', function (event, _id) {
-          $.get("${tg.url('/'+entity+'/human_readable_details', qualified=True)}", {id: _id}, function (data) {
-            alert(JSON.stringify(data['${entity}'], null, 2));
+        ractive_output.on('showDetails', function (event, entity_, _id) {
+          var url = '/'+entity_+'/human_readable_details';
+          $.get(url,{id: _id}, function (data) {
+            alert(JSON.stringify(data[entity_], null, 2));
           });
          });
 
