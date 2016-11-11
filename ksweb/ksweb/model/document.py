@@ -74,5 +74,11 @@ class Document(MappedClass):
     def document_available_for_user(cls, user_id):
         return cls.query.find({'_owner': user_id}).sort('title')
 
+    def __json__(self):
+        from ksweb.lib.utils import to_dict
+        _dict = to_dict(self)
+        _dict['entity'] = 'document'
+        return _dict
+
 
 __all__ = ['Document']

@@ -82,3 +82,13 @@ class DocumentController(RestController):
         tmpl_context.sidebar_document = "document-new"
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
         return dict(document=document, errors=None)
+
+    @expose('json')
+    @decode_params('json')
+    @validate({
+        'id': DocumentExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def human_readable_details(self, id, **kw):
+        document = model.Document.query.find({'_id': ObjectId(id)}).first()
+
+        return dict(document=document)
