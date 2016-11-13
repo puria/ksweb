@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """Precondition/simple controller module"""
 from bson import ObjectId
+from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, RestController, decode_params, \
     validation_errors_response, request, response, tmpl_context
+from tg import require
 from tw2.core import LengthValidator, StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator
+from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator
 
 
 class PreconditionAdvancedController(RestController):
@@ -15,17 +17,9 @@ class PreconditionAdvancedController(RestController):
 
     @expose('ksweb.templates.precondition.advanced.new')
     def new(self, **kw):
-        return dict()
+        return dict(precondition={})
 
-    @decode_params('json')
-    @expose('json')
-    @validate({
-        'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
-        'conditions': LengthValidator(min=1, required=True),
-    }, error_handler=validation_errors_response)
-    def post(self, title, category, conditions, **kw):
-
+    def _validate_conditions(self, conditions):
         bool_str = ""
         condition = []
 
@@ -58,6 +52,25 @@ class PreconditionAdvancedController(RestController):
             response.status_code = 412
             return dict(errors={'conditions': 'Errore di sintassi.'})
 
+        return dict(errors=None, condition=condition)
+
+
+    @decode_params('json')
+    @expose('json')
+    @validate({
+        'title': StringLengthValidator(min=2),
+        'category': CategoryExistValidator(required=True),
+        'conditions': LengthValidator(min=1, required=True),
+    }, error_handler=validation_errors_response)
+    def post(self, title, category, conditions, **kw):
+
+        resp = self._validate_conditions(conditions)
+
+        if resp.get('errors'):
+            return response
+
+        condition = resp['condition']
+
         user = request.identity['user']
         model.Precondition(
             _owner=user._id,
@@ -68,3 +81,50 @@ class PreconditionAdvancedController(RestController):
         )
 
         return dict(errors=None)
+
+    # @decode_params('json')
+    # @expose('json')
+    # @validate({
+    #     '_id': PreconditionExistValidator(required=True),
+    #     'title': StringLengthValidator(min=2),
+    #     'category': CategoryExistValidator(required=True),
+    #     'conditions': LengthValidator(min=1, required=True),
+    # }, error_handler=validation_errors_response)
+    # @require(
+    #     CanManageEntityOwner(
+    #         msg=u'Non puoi modificare questa precondizione.',
+    #         field='_id',
+    #         entity_model=model.Precondition))
+    # def put(self, _id, title, category, conditions, **kw):
+    #
+    #     check = self.get_related_entities(_id)
+    #
+    #     if check.get("entities"):
+    #         params = dict(
+    #             _id=_id,
+    #             title=title,
+    #             content=json.dumps(dict(), ensure_ascii=False),
+    #             condition=json.dumps([question, interested_response], ensure_ascii=False),
+    #             category=category,
+    #             precondition='',
+    #             entity='precondition/simple',
+    #             **kw
+    #         )
+    #         return dict(redirect_url=tg.url('/resolve', params=params))
+    #
+    #     precondition = model.Precondition.query.get(_id=ObjectId(_id))
+    #     precondition.title = title
+    #     precondition.condition = [ObjectId(question), interested_response]
+    #     precondition._category = category
+    #
+    #     return dict(errors=None, redirect_url=None)
+
+    @expose('ksweb.templates.precondition.advanced.new')
+    @validate({
+        '_id': PreconditionExistValidator()
+    }, error_handler=validation_errors_response)
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questa precondizione.', field='_id',
+                                  entity_model=model.Precondition))
+    def edit(self, _id, **kw):
+        precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
+        return dict(precondition=precondition, errors=None)
