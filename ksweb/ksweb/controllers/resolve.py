@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
 from bson import ObjectId
+from bson.errors import InvalidId
 from formencode.validators import OneOf
 from ksweb.lib.base import BaseController
 from ksweb.lib.predicates import CanManageEntityOwner
@@ -69,9 +70,9 @@ class ResolveController(BaseController):
 
         kw['_category'] = to_object_id(kw.get('_category'))
         kw['_precondition'] = to_object_id(kw.get('_precondition'))
-        kw.pop('entity', None)
 
         entity = self._get_entity(kw['entity'], kw['_id'])
+        kw.pop('entity', None)
 
         for k, v in kw.items():
             setattr(entity, k, v)
@@ -94,10 +95,8 @@ class ResolveController(BaseController):
     def clone_object(self, **kw):
         self._clone_object(**kw)
         flash("%s creato correttamente!" % kw['entity'])
-        return redirect(base_url='/%s' % kw['entity'])
+        return redirect(base_url='/')
 
-    @expose('json')
-    @decode_params('json')
     @expose('json')
     @decode_params('json')
     @validate({
@@ -120,7 +119,6 @@ class ResolveController(BaseController):
 
         return new_obj
 
-
     @decode_params('json')
     @validate({
         #'_id': OutputExistValidator(mod=True),
@@ -142,7 +140,11 @@ class ResolveController(BaseController):
     @expose('json')
     def mark_resolved(self, obj=None, list_to_new=None, list_to_old=None, **kw):
 
-        entity = self._get_entity(obj['entity'], obj['_id'])
+        for index, c in enumerate(obj.get('condition', [])):
+            try:
+                obj['condition'][index] = ObjectId(c)
+            except InvalidId:
+                continue
 
         if len(list_to_new) >= 1:
             # modifico l'oggetto e lascio quelli della lista invariati
@@ -181,7 +183,7 @@ class ResolveController(BaseController):
                         elem['content'] = str(getattr(new_obj, '_id'))
                         elem['title'] = getattr(new_obj, 'title')
 
-            elif obj_to_clone['entity'] == 'precondition/simple':
+            elif obj_to_clone['entity'] in ['precondition/simple', 'precondition/advanced']:
                 # I have to search into:
                 #     qa._parent_precondition
                 #     output._precondition

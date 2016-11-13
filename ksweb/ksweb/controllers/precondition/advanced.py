@@ -129,7 +129,7 @@ class PreconditionAdvancedController(RestController):
                 _id=_id,
                 title=title,
                 content=json.dumps(dict(), ensure_ascii=False),
-                condition=json.dumps(condition, ensure_ascii=False),
+                condition=json.dumps(map(str, condition), ensure_ascii=False),
                 category=category,
                 precondition='',
                 entity='precondition/advanced',
