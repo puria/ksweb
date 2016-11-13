@@ -148,7 +148,6 @@ class PreconditionSimpleController(RestController):
             'len': len(entities)
         }
 
-
     @expose('ksweb.templates.precondition.simple.new')
     @validate({
         '_id': PreconditionExistValidator()

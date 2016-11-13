@@ -42,7 +42,7 @@ class PreconditionController(BaseController):
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
-                    'visible': True
+                    # 'visible': True
                 }
             },
             {
