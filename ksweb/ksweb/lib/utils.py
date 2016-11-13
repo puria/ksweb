@@ -28,6 +28,7 @@ def clone_obj(class_, original_obj, values):
         if k not in values:
             values[k] = v
 
+    values.pop('entity', None)
     values.pop('_id', None)
 
     return class_(**values)

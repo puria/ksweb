@@ -128,14 +128,6 @@ class OutputController(RestController):
     def edit(self, _id, **kw):
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
 
-        # cercare su quali documenti o outout è utilizzato questo output
-
-        output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
-        documents_realted = model.Document.query.find({"content.type": "output", "content.content": _id})
-
-        print "output related", [o.title for o in output_related]
-        print "document related", [d.title for d in documents_realted]
-
         tmpl_context.sidebar_output = "output-edit"
         return dict(output=output, errors=None)
 
@@ -167,10 +159,10 @@ class OutputController(RestController):
     @expose('json')
     @decode_params('json')
     @validate({
-        'id': OutputExistValidator(required=True),
+        '_id': OutputExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def human_readable_details(self, id,  **kw):
-        output = model.Output.query.get(_id=ObjectId(id))
+    def human_readable_details(self, _id,  **kw):
+        output = model.Output.query.get(_id=ObjectId(_id))
 
         return dict(output={
             '_id': output._id,
