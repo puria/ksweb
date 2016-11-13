@@ -98,13 +98,14 @@ class OutputController(RestController):
         if error:
             return error
 
-        res = ResolveController().get_related_entities(_id)
+        check = self.get_related_entities(_id)
 
-        if res.get("entities"):
+        if check.get("entities"):
             params = dict(
                 _id=_id,
                 title=title,
                 content=json.dumps(content, ensure_ascii=False),
+                condition=json.dumps(dict(), ensure_ascii=False),
                 category=category,
                 precondition=precondition,
                 entity='output',
@@ -179,3 +180,25 @@ class OutputController(RestController):
             'visible': output.visible,
             'created_at': output.created_at
         })
+
+    @decode_params('json')
+    @expose('json')
+    def get_related_entities(self, _id):
+        """
+        This method return ALL entities (Output, Document) that have inside a `content.content` the given _id
+        :param _id:
+        :return:
+        """
+        output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
+        documents_related = model.Document.query.find({"content.type": "output", "content.content": _id}).all()
+
+        print "get_related_entities"
+        print "output related", [o.title for o in output_related], len(output_related), type(output_related)
+        print "document related", [d.title for d in documents_related], len(documents_related), type(documents_related)
+
+        entities = list(output_related + documents_related)
+
+        return {
+            'entities': entities,
+            'len': len(entities)
+        }
