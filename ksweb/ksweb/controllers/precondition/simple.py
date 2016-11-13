@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 """Precondition/simple controller module"""
+import json
+
+import tg
 from bson import ObjectId
+from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, RestController, decode_params, request, \
     validation_errors_response,  response, tmpl_context
+from tg import require
 from tw2.core import OneOfValidator, StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import QAExistValidator, CategoryExistValidator
+from ksweb.lib.validator import QAExistValidator, CategoryExistValidator, PreconditionExistValidator
 
 
 class PreconditionSimpleController(RestController):
@@ -15,7 +20,7 @@ class PreconditionSimpleController(RestController):
 
     @expose('ksweb.templates.precondition.simple.new')
     def new(self, **kw):
-        return dict(page='precondition-new')
+        return dict(page='precondition-new', precondition={})
 
     @decode_params('json')
     @expose('json')
@@ -83,3 +88,82 @@ class PreconditionSimpleController(RestController):
             )
 
         return dict(errors=None)
+
+    @decode_params('json')
+    @expose('json')
+    @validate({
+        '_id': PreconditionExistValidator(required=True),
+        'title': StringLengthValidator(min=2),
+        'category': CategoryExistValidator(required=True),
+        'question': QAExistValidator(required=True),
+        'answer_type': OneOfValidator(values=[u'what_response'], required=True),
+    }, error_handler=validation_errors_response)
+    @require(
+        CanManageEntityOwner(
+            msg=u'Non puoi modificare questa precondizione.',
+            field='_id',
+            entity_model=model.Precondition))
+    def put(self, _id, title, category, question, answer_type, interested_response,  **kw):
+
+        check = self.get_related_entities(_id)
+
+        if check.get("entities"):
+            params = dict(
+                _id=_id,
+                title=title,
+                content=json.dumps(dict(), ensure_ascii=False),
+                condition=json.dumps([question, interested_response], ensure_ascii=False),
+                category=category,
+                precondition='',
+                entity='precondition/simple',
+                **kw
+            )
+            return dict(redirect_url=tg.url('/resolve', params=params))
+
+        precondition = model.Precondition.query.get(_id=ObjectId(_id))
+        precondition.title = title
+        precondition.condition = [ObjectId(question), interested_response]
+        precondition._category = category
+
+        return dict(errors=None, redirect_url=None)
+
+    @decode_params('json')
+    @expose('json')
+    def get_related_entities(self, _id):
+        """
+        This method return ALL entities (Output, Document) that have inside a `content.content` the given _id
+        :param _id:
+        :return:
+        """
+
+        # devo cercare nelle qa, nelle precondizioni avanzate, negli output
+        outputs_related = model.Output.query.find({'_precondition': ObjectId(_id)}).all()
+        preconditions_related = model.Precondition.query.find({'type': 'advanced', 'condition': ObjectId(_id)}).all()
+        qas_related = model.Qa.query.find({"_parent_precondition": ObjectId(_id)}).all()
+
+        entities = list(outputs_related + preconditions_related + qas_related)
+
+        return {
+            'entities': entities,
+            'len': len(entities)
+        }
+
+
+    @expose('ksweb.templates.precondition.simple.new')
+    @validate({
+        '_id': PreconditionExistValidator()
+    }, error_handler=validation_errors_response)
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questa precondizione.', field='_id', entity_model=model.Precondition))
+    def edit(self, _id, **kw):
+        precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
+        return dict(precondition=precondition, errors=None)
+
+
+    @expose('json')
+    @decode_params('json')
+    @validate({
+        '_id': PreconditionExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def human_readable_details(self, _id, **kw):
+        precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
+        return dict(precondition=precondition)

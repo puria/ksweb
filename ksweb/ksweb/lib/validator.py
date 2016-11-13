@@ -105,6 +105,26 @@ class OutputContentValidator(Validator):
             return ast.literal_eval(value)
         return value
 
+
+class ConditionValidator(Validator):
+
+    def _validate_python(self, value, state=None):
+        super(ConditionValidator, self)._validate_python(value, state)
+
+    def _convert_to_python(self, value, state=None):
+        try:
+            value = json.loads(value)
+        except Exception as e:
+            raise ValidationError(u'Condizione non valida.', self)
+
+        for index, v in enumerate(value):
+            try:
+                value[index] = ObjectId(v)
+            except InvalidId:
+                continue
+        return value
+
+
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):
         document_accepted_type = ['text', 'output']

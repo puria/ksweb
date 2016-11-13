@@ -56,6 +56,10 @@ class Qa(MappedClass):
         return cls.query.find({'_owner': user_id}).sort('title')
 
     @property
+    def entity(self):
+        return 'qa'
+
+    @property
     def is_text(self):
         return self.type == self.QA_TYPE[0]
 
@@ -66,5 +70,12 @@ class Qa(MappedClass):
     @property
     def is_multi(self):
         return self.type == self.QA_TYPE[2]
+
+    def __json__(self):
+        from ksweb.lib.utils import to_dict
+        _dict = to_dict(self)
+        _dict['entity'] = self.entity
+        return _dict
+
 
 __all__ = ['Qa']
