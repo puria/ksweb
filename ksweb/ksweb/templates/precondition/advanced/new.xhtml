@@ -108,6 +108,10 @@
         template: '#PreconditionSimpleForm_template',
         onconstruct: function (options) {
             var self = this;
+            self.precondition = options['precondition'];
+            self.edit_mode = false;
+            self.submit_url = "${tg.url('/precondition/advanced/post')}";
+            self.submit_type = 'POST';
         },
         oninit: function () {
             var self = this;
@@ -115,6 +119,43 @@
             self.set('saving', false);
             self.set('categories', []);
             self.set('conditions', []);
+
+            var load_conditions = function () {};
+
+            //  Check if document is provided
+            if (! jQuery.isEmptyObject(self.precondition)) {
+              self.submit_type = 'PUT';
+              self.submit_url = '${tg.url('/precondition/advanced/put')}';
+              self.set('edit_mode', true);
+              self.set('create.title', self.precondition['title']);
+              self.set('create.category', self.precondition['_category']);
+              self.set('create._id', self.precondition['_id']);
+
+              load_conditions = function () {
+                var _uri = {
+                  'and': '${tg.url("/img/and_dark.png")}',
+                  'or': '${tg.url("/img/or_dark.png")}',
+                  'not': '${tg.url("/img/not_dark.png")}',
+                  '(': '${tg.url("/img/bracket_open_dark.png")}',
+                  ')': '${tg.url("/img/bracket_close_dark.png")}'
+                };
+
+                for (var i=0; i < self.precondition['condition'].length; i++) {
+                  var elem = self.precondition['condition'][i];
+                  if (elem == 'and' || elem == 'or' || elem == 'not' || elem == '(' || elem == ')')
+                    self.addOperator(elem, _uri[elem]);
+                  else {
+                    for (var j=0; j < self.get('preconditions').length; j++){
+                      for (var k=0; k < self.get('preconditions')[j]['precondition'].length; k++){
+                        if (self.get('preconditions')[j]['precondition'][k]._id == elem)
+                          self.addPrecondition(elem, self.get('preconditions')[j]['precondition'][k].title);
+                      }
+                    }
+                  }
+                }
+              };
+            }
+
 
             self.on('submit-form', function (event) {
                 var all_var = self.get('create');
@@ -129,6 +170,7 @@
 
             self.loadCategory();
             self.loadQuestion();
+            self.loadPreconditions(load_conditions);
         },
         loadCategory: function (callback) {
             var self = this;
@@ -147,6 +189,16 @@
                         if (callback)
                             callback();
                     });
+        },
+        loadPreconditions: function(callback) {
+          var self = this;
+          jQuery.get("${tg.url('/precondition/sidebar_precondition')}",
+              function(data) {
+                self.set('preconditions', data['precond']);
+                console.log(self.get('preconditions'));
+                if (callback)
+                  callback();
+              });
         },
         addOperator: function (operator, img_uri) {
             var self = this;
@@ -179,8 +231,8 @@
 
             var api_params = JSON.stringify(field);
             $.ajax({
-                type: "post",
-                url: "${tg.url('/precondition/advanced/post')}",
+                type: self.submit_type,
+                url: self.submit_url,
                 data: api_params,
                 dataType: "json",
                 processData: false,
@@ -205,7 +257,10 @@
     ]]>
 </script>
 <script>
-    var ractive_precondition_simple = new PreconditionSimple({el: '#qa-ractive'});
+    var ractive_precondition_simple = new PreconditionSimple({
+      el: '#qa-ractive',
+      precondition: ${Markup(h.script_json_encode(precondition))}
+    });
 
     ractive_precondition_simple.on('selectElem', function (event, elem) {
         var self = this;
