@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
 from bson import ObjectId
+from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, validation_errors_response, response, RestController, \
     decode_params, request, tmpl_context
 import tg
-from tg.decorators import paginate
+from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
@@ -87,7 +88,7 @@ class QaController(RestController):
                 visible=True
             )
 
-        if answer_type == 'text':  # model.Qa.QA_TYPE[0]
+        if answer_type == 'text':   # model.Qa.QA_TYPE[0]
                         model.Precondition(
                             _owner=user._id,
                             _category=ObjectId(category),
@@ -96,3 +97,21 @@ class QaController(RestController):
                             condition=[qa._id, ''])
 
         return dict(errors=None)
+
+    @expose('ksweb.templates.qa.new')
+    @validate({
+        '_id': QAExistValidator(model=True)
+    }, error_handler=validation_errors_response)
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questa qa.', field='_id', entity_model=model.Qa))
+    def edit(self, _id, **kw):
+        qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
+        return dict(qa=qa, errors=None)
+
+    @expose('json')
+    @decode_params('json')
+    @validate({
+        '_id': QAExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def human_readable_details(self, _id, **kw):
+        qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
+        return dict(qa=qa)

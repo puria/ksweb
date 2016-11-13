@@ -60,13 +60,13 @@
         <div class="col-md-12">
           <div class="radio">
             <label>
-              <input type="radio" name="{{create.answer_type}}" value="have_response" />
+              <input type="radio" name="{{create.answer_type}}" value="have_response" disabled="{{edit_mode}}"/>
               Utente ha risposto alla domanda
             </label>
           </div>
           <div class="radio">
             <label>
-              <input type="radio" name="{{create.answer_type}}" value="what_response" />
+              <input type="radio" name="{{create.answer_type}}" value="what_response" checked=""/>
               L'utente ha selezionato uno dei seguenti valori
             </label>
           </div>
@@ -79,7 +79,15 @@
       <div id="interested_response" class="form-group {{errors.interested_response ? 'has-error' : ''}}" style="display: none">
         {{#each available_reponse}}
         <div class="col-md-12">
-          <input type="checkbox" name="{{create.interested_response}}" value="{{.}}" > {{.}}
+          {{#if !edit_mode}}
+            <input type="checkbox" name="{{create.interested_response}}" value="{{.}}"> {{.}}
+          {{else}}
+            {{#if create.interested_response == .}}
+              <input type="radio" name="{{create.interested_response}}" value="{{.}}" checked> {{.}}
+            {{else}}
+              <input type="radio" name="{{create.interested_response}}" value="{{.}}"> {{.}}
+            {{/if}}
+          {{/if}}
         </div>
         {{/each}}
 
@@ -105,9 +113,28 @@
     template: '#PreconditionSimpleForm_template',
     onconstruct: function(options) {
       var self = this;
+      self.precondition = options['precondition'];
+      self.edit_mode = false;
+      self.submit_url = "${tg.url('/precondition/simple/post')}";
+      self.submit_type = 'POST';
+
     },
     oninit: function() {
       var self = this;
+
+      //  Check if document is provided
+      if (! jQuery.isEmptyObject(self.precondition)) {
+        self.submit_type = 'PUT';
+        self.submit_url = '${tg.url('/precondition/simple/put')}';
+        self.set('edit_mode', true);
+        self.set('create.title', self.precondition['title']);
+        self.set('create.category', self.precondition['_category']);
+        self.set('create.question', self.precondition['condition'][0]);
+        self.set('create.interested_response', self.precondition['condition'][1]);
+        self.set('create._id', self.precondition['_id']);
+
+      }
+
       self.set('errors', {});
       self.set('saving', false);
       self.set('response_type', null);
@@ -153,18 +180,21 @@
       var api_params = JSON.stringify(field);
 
       $.ajax({
-        type: "post",
-        url: "${tg.url('/precondition/simple/post')}",
+        type: self.submit_type,
+        url: self.submit_url,
         data: api_params,
         dataType: "json",
         processData: false,
         contentType: 'application/json'
-      }).done(function(data) {
+      }).done(function(resp) {
+        var redirect_to = "${tg.url('/precondition/')}";
         self.set('create', {});
         self.set('saving', false);
         self.set('editing', false);
-        console.log(data);
-        window.location.replace("${tg.url('/precondition/')}");
+
+        if (resp.redirect_url)
+          redirect_to = resp.redirect_url;
+        window.location.replace(redirect_to);
 
       }).fail(function(jqXHR) {
         var data = jQuery.parseJSON(jqXHR.responseText);
@@ -179,7 +209,10 @@
   ]]>
 </script>
 <script>
-  var ractive_precondition_simple = new PreconditionSimple({el: '#qa-ractive'});
+  var ractive_precondition_simple = new PreconditionSimple({
+      el: '#qa-ractive',
+      precondition: ${Markup(h.script_json_encode(precondition))}
+  });
 
   ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {
     var self = this;

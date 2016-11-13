@@ -17,13 +17,16 @@ from tg import predicates
 from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
-    OutputExistValidator, OutputContentValidator
+    OutputExistValidator, OutputContentValidator, ConditionValidator
 
 
 class ResolveController(BaseController):
 
     related_models = {
-        'output': model.Output
+        'output': model.Output,
+        'precondition/simple': model.Precondition,
+        'precondition/advanced': model.Precondition,
+        'qa': model.Qa
     }
 
     @decode_params('json')
@@ -31,13 +34,15 @@ class ResolveController(BaseController):
     def index(self, **kw):
         return dict(**kw)
 
+    # TODO: custom validation....
     @decode_params('json')
     @validate({
-         '_id': OutputExistValidator(required=True),
+          #'_id': OutputExistValidator(required=True),
+         'condition': ConditionValidator(required=False),
          'title': StringLengthValidator(min=2),
-         'content': OutputContentValidator(),
+         'content': OutputContentValidator(required=False),
          '_category': CategoryExistValidator(required=True),
-         '_precondition': PreconditionExistValidator(required=True),
+         '_precondition': PreconditionExistValidator(required=False),
         }, error_handler=abort(404, error_handler=True))
     @expose()
     def original_edit(self, **kw):
@@ -45,9 +50,9 @@ class ResolveController(BaseController):
 
         self._original_edit(**kw)
 
-        flash("%s modificato correttamente!" % kw['entity'])
+        flash(u'Entità modificata correttamente!')
 
-        return redirect(base_url='/%s' % kw['entity'])
+        return redirect(base_url='/')
 
     @expose('json')
     @decode_params('json')
@@ -55,31 +60,35 @@ class ResolveController(BaseController):
          '_id': OutputExistValidator(required=True),
          'title': StringLengthValidator(min=2),
          'content': OutputContentValidator(),
+         'condition': ConditionValidator(required=False),
          '_category': CategoryExistValidator(required=True),
          '_precondition': PreconditionExistValidator(required=True),
         }, error_handler=validation_errors_response)
     def _original_edit(self, **kw):
-        print "_original_edit"
+        print "_original_edit", kw
 
         kw['_category'] = to_object_id(kw.get('_category'))
         kw['_precondition'] = to_object_id(kw.get('_precondition'))
+        kw.pop('entity', None)
 
         entity = self._get_entity(kw['entity'], kw['_id'])
 
         for k, v in kw.items():
             setattr(entity, k, v)
 
+        # TODO: update..
         self._find_and_modify(kw)
 
         return entity
 
     @decode_params('json')
     @validate({
-        '_id': OutputExistValidator(required=True),
+        #'_id': OutputExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'content': OutputContentValidator(),
+        'content': OutputContentValidator(required=False),
+        'condition': ConditionValidator(required=False),
         '_category': CategoryExistValidator(required=True),
-        '_precondition': PreconditionExistValidator(required=True),
+        '_precondition': PreconditionExistValidator(required=False),
     }, error_handler=abort(404, error_handler=True))
     @expose()
     def clone_object(self, **kw):
@@ -112,15 +121,14 @@ class ResolveController(BaseController):
         return new_obj
 
 
-
-
     @decode_params('json')
     @validate({
-        '_id': OutputExistValidator(required=True),
+        #'_id': OutputExistValidator(mod=True),
         'title': StringLengthValidator(min=2),
-        'content': OutputContentValidator(),
+        'content': OutputContentValidator(required=False),
+        'condition': ConditionValidator(required=False),
         '_category': CategoryExistValidator(required=True),
-        '_precondition': PreconditionExistValidator(required=True),
+        '_precondition': PreconditionExistValidator(required=False),
     }, error_handler=abort(404, error_handler=True))
     @expose('ksweb.templates.resolve.manually_resolve')
     def manually_resolve(self, **kw):
@@ -171,8 +179,7 @@ class ResolveController(BaseController):
 
         entities = list(output_related + documents_related)
 
-        print len(entities)
-        print type(entities)
+
 
         return {
             'entities': entities,
@@ -189,15 +196,35 @@ class ResolveController(BaseController):
         for obj in to_edit:
             entity = self._get_entity(obj['entity'], obj['_id'])
 
-            assert getattr(entity, 'content')
+            if obj_to_clone['entity'] == 'output':
+                # I have to search into:
+                #     output.content
+                #     document.content
+                for elem in entity.content:
+                    if elem['content'] == obj_to_clone['_id']:
+                        elem['content'] = str(getattr(new_obj, '_id'))
+                        elem['title'] = getattr(new_obj, 'title')
 
-            for elem in entity.content:
-                if elem['content'] == obj_to_clone['_id']:
-                    print "found", entity._id
-                    elem['content'] = str(getattr(new_obj, '_id'))
-                    elem['title'] = getattr(new_obj, 'title')
+            elif obj_to_clone['entity'] == 'precondition/simple':
+                # I have to search into:
+                #     qa._parent_precondition
+                #     output._precondition
+                #     precondition.condition
+                if entity.entity == 'qa' and entity._parent_precondition == ObjectId(obj_to_clone['_id']):
+                    entity._parent_precondition = new_obj._id
+                elif entity.entity == 'output' and entity._precondition == ObjectId(obj_to_clone['_id']):
+                    entity._precondition = new_obj._id
+                elif entity.entity == 'precondition/advanced':
+                    for index, elem in enumerate(entity.condition):
+                        if elem == ObjectId(obj_to_clone['_id']):
+                            entity.condition[index] = new_obj._id
+
+
+
+
 
     def _find_and_modify(self, obj_dict):
+
         """
         Update `title` inside of sub-document
         :param obj:

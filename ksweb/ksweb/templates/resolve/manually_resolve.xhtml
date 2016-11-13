@@ -90,7 +90,8 @@
         },
         loadRelatedEntities: function() {
           var self = this;
-          jQuery.get("${tg.url('/resolve/get_related_entities', params=dict(_id=values['_id']))}",
+          var url = '/'+self.values['entity']+'/get_related_entities';
+          jQuery.get(url, {_id: self.values['_id']},
               function(data) {
                 console.log("resp of loadCategories", data);
                 self.set('related_entities', data['entities']);
@@ -108,7 +109,7 @@
 
         ractive_output.on('showDetails', function (event, entity_, _id) {
           var url = '/'+entity_+'/human_readable_details';
-          $.get(url,{id: _id}, function (data) {
+          $.get(url,{_id: _id}, function (data) {
             alert(JSON.stringify(data[entity_], null, 2));
           });
          });
@@ -133,7 +134,7 @@
             processData: false,
             contentType: 'application/json'
           }).done(function(resp) {
-            var redirect_to = "${tg.url('/'+entity+'/')}";
+            var redirect_to = "${tg.url('/')}";
             //
             window.location.replace(redirect_to);
           }).fail(function(jqXHR) {

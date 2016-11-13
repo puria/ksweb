@@ -4,8 +4,22 @@ from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
-
+from markupsafe import Markup
 from ksweb.model import DBSession, Qa
+import tg
+
+
+def _custom_title(obj):
+    return Markup(
+        "<a href='%s'>%s</a>" % (
+            tg.url(
+                '/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
+                params=dict(_id=obj._id)),
+            obj.title))
+
+
+def _content_preview(obj):
+    return Markup("Little preview of: %s" % obj._id)
 
 
 class Precondition(MappedClass):
@@ -19,6 +33,11 @@ class Precondition(MappedClass):
         indexes = [
             ('_owner',),
         ]
+
+    __ROW_COLUM_CONVERTERS__ = {
+        'title': _custom_title,
+        'content': _content_preview
+    }
 
     _id = FieldProperty(s.ObjectId)
 
@@ -126,6 +145,17 @@ class Precondition(MappedClass):
             qa = self.get_qa()
             return qa.is_single
         return False
+
+    @property
+    def entity(self):
+        return 'precondition/simple' if self.is_simple else 'precondition/advanced'
+
+
+    def __json__(self):
+        from ksweb.lib.utils import to_dict
+        _dict = to_dict(self)
+        _dict['entity'] = self.entity
+        return _dict
 
 
 __all__ = ['Precondition']

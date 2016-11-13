@@ -87,10 +87,14 @@ class Output(MappedClass):
             # else mostra una stringa di dettaglio della precondizione
         return self.content
 
+    @property
+    def entity(self):
+        return 'output'
+
     def __json__(self):
         from ksweb.lib.utils import to_dict
         _dict = to_dict(self)
-        _dict['entity'] = 'output'
+        _dict['entity'] = self.entity
         return _dict
 
 
