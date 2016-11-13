@@ -162,30 +162,6 @@ class ResolveController(BaseController):
 
         return dict(errors=None)
 
-    @decode_params('json')
-    @expose('json')
-    def get_related_entities(self, _id):
-        """
-        This method return ALL entities (Output, Document) that have inside a `content.content` the given _id
-        :param _id:
-        :return:
-        """
-        output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
-        documents_related = model.Document.query.find({"content.type": "output", "content.content": _id}).all()
-
-        print "get_related_entities"
-        print "output related", [o.title for o in output_related], len(output_related), type(output_related)
-        print "document related", [d.title for d in documents_related], len(documents_related), type(documents_related)
-
-        entities = list(output_related + documents_related)
-
-
-
-        return {
-            'entities': entities,
-            'len': len(entities)
-        }
-
     def _get_entity(self, entity_name, _id):
         model_ = self.related_models[entity_name]
         return model_.query.get(_id=ObjectId(_id))
@@ -219,11 +195,8 @@ class ResolveController(BaseController):
                         if elem == ObjectId(obj_to_clone['_id']):
                             entity.condition[index] = new_obj._id
 
-
-
-
-
     def _find_and_modify(self, obj_dict):
+        pass
 
         """
         Update `title` inside of sub-document
@@ -232,8 +205,8 @@ class ResolveController(BaseController):
         :return:
         """
 
-        for entity in self.get_related_entities(obj_dict['_id'])['entities']:
-            for elem in entity.content:
-                if elem['content'] == obj_dict['_id']:
-                    elem['title'] = obj_dict['title']
+        # for entity in self.get_related_entities(obj_dict['_id'])['entities']:
+        #     for elem in entity.content:
+        #         if elem['content'] == obj_dict['_id']:
+        #             elem['title'] = obj_dict['title']
 
