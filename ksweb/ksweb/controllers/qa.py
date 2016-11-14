@@ -135,8 +135,8 @@ class QaController(RestController):
                 precondition='',
                 _parent_precondition=precondition or '',
                 question=question,
-                tooltip=tooltip,
-                link=link,
+                tooltip=tooltip or '',
+                link=link or '',
                 type=answer_type,
                 answers=json.dumps(answers, ensure_ascii=False)
                 )
