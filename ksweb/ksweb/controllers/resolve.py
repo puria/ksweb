@@ -18,7 +18,7 @@ from tg import predicates
 from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
-    OutputExistValidator, OutputContentValidator, ConditionValidator
+    OutputExistValidator, OutputContentValidator, ConditionValidator, AnswersValidator
 
 
 class ResolveController(BaseController):
@@ -35,15 +35,26 @@ class ResolveController(BaseController):
     def index(self, **kw):
         return dict(**kw)
 
+    @decode_params('json')
+    @expose('ksweb.templates.resolve.resolve')
+    def choices(self, **kw):
+        return dict(
+            _id=kw.pop('_id', None),
+            entity=kw.get('entity', None),
+            values=kw.get('values'),
+        )
+
     # TODO: custom validation....
     @decode_params('json')
     @validate({
           #'_id': OutputExistValidator(required=True),
          'condition': ConditionValidator(required=False),
+         'answers': AnswersValidator(required=False),
          'title': StringLengthValidator(min=2),
          'content': OutputContentValidator(required=False),
          '_category': CategoryExistValidator(required=True),
          '_precondition': PreconditionExistValidator(required=False),
+         '_parent_precondition': PreconditionExistValidator(required=False),
         }, error_handler=abort(404, error_handler=True))
     @expose()
     def original_edit(self, **kw):
@@ -87,6 +98,7 @@ class ResolveController(BaseController):
         #'_id': OutputExistValidator(required=True),
         'title': StringLengthValidator(min=2),
         'content': OutputContentValidator(required=False),
+        'answers': AnswersValidator(required=False),
         'condition': ConditionValidator(required=False),
         '_category': CategoryExistValidator(required=True),
         '_precondition': PreconditionExistValidator(required=False),
@@ -197,6 +209,14 @@ class ResolveController(BaseController):
                         if elem == ObjectId(obj_to_clone['_id']):
                             entity.condition[index] = new_obj._id
 
+            elif obj_to_clone['entity'] == 'qa':
+                # I have to search into:
+                #     precondition.condition
+                for index, elem in enumerate(entity.condition):
+                    if elem == ObjectId(obj_to_clone['_id']):
+                        entity.condition[index] = new_obj._id
+
+                        
     def _find_and_modify(self, obj_dict):
         pass
 

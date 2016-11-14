@@ -109,6 +109,13 @@ class OutputController(RestController):
                 category=category,
                 precondition=precondition,
                 entity='output',
+
+                _parent_precondition='',
+                question='',
+                tooltip='',
+                link='',
+                type='',
+                answers='',
                 **kw
             )
             return dict(redirect_url=tg.url('/resolve', params=params))
