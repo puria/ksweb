@@ -27,7 +27,8 @@ class ResolveController(BaseController):
         'output': model.Output,
         'precondition/simple': model.Precondition,
         'precondition/advanced': model.Precondition,
-        'qa': model.Qa
+        'qa': model.Qa,
+        'document': model.Document
     }
 
     @decode_params('json')
@@ -216,7 +217,7 @@ class ResolveController(BaseController):
                     if elem == ObjectId(obj_to_clone['_id']):
                         entity.condition[index] = new_obj._id
 
-                        
+
     def _find_and_modify(self, obj_dict):
         pass
 
