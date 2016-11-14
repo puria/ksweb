@@ -9,7 +9,7 @@ from tg.i18n import lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, QAExistValidator
+from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, PreconditionExistValidator
 
 
 class QaController(RestController):
@@ -24,10 +24,10 @@ class QaController(RestController):
         return dict(
             page='qa-index',
             fields={
-                'columns_name': ['Name', 'Category', 'Question', 'Type'],
-                'fields_name': ['title', 'category', 'question', 'type']
+                'columns_name': ['Name', 'Category', 'Precondition', 'Question', 'Type'],
+                'fields_name': ['title', 'category', 'parent_precondition', 'question', 'type']
             },
-            entities=model.Qa.query.find().sort('title'),
+            entities=model.Qa.qa_available_for_user(request.identity['user']._id),
             actions=True
         )
 
@@ -36,12 +36,15 @@ class QaController(RestController):
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def get_one(self, id,  **kw):
-        qa = model.Qa.query.get(_id=ObjectId(id))
+        qa = model.Qa.query.find({'_id': ObjectId(id), '_owner': request.identity['user']._id}).first()
         return dict(qa=qa)
 
     @expose('json')
     def get_single_or_multi_question(self):
-        questions = model.Qa.query.find({'type': {'$in': ['single', 'multi']}, 'public': True}).all()
+        questions = model.Qa.query.find({
+            'type': {'$in': ['single', 'multi']},
+            '_owner': request.identity['user']._id
+        }).all()
         return dict(questions=[{'_id': qa._id, 'title': qa.title} for qa in questions])
 
     @expose('json')
@@ -58,8 +61,9 @@ class QaController(RestController):
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
         'answer_type': OneOfValidator(values=model.Qa.QA_TYPE, required=True),
+        'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
-    def post(self, title, category, question, tooltip, link, answer_type, answers=None, **kw):
+    def post(self, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
 
         if answer_type == "single" or answer_type == "multi":
             if len(answers) < 2:
@@ -72,6 +76,7 @@ class QaController(RestController):
         qa = model.Qa(
                 _owner=user._id,
                 _category=ObjectId(category),
+                _parent_precondition=ObjectId(precondition) if precondition else None,
                 title=title,
                 question=question,
                 tooltip=tooltip,
