@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
+import json
+
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
@@ -121,6 +123,28 @@ class QaController(RestController):
 
         user = request.identity['user']
 
+        check = self.get_related_entities(_id)
+        if check.get("entities"):
+            params = dict(
+                _id=_id,
+                entity='qa',
+                title=title,
+                content=json.dumps(dict(), ensure_ascii=False),
+                condition=json.dumps(dict(), ensure_ascii=False),
+                category=category,
+                precondition='',
+                _parent_precondition=precondition or '',
+                question=question,
+                tooltip=tooltip,
+                link=link,
+                type=answer_type,
+                answers=json.dumps(answers, ensure_ascii=False)
+                )
+            print "params", params.get('_parent_precondition', 42)
+            print "==================================================================="
+            assert len(params.keys()) == 13
+            return dict(redirect_url=tg.url('/resolve', params=params))
+
         qa = model.Qa.query.get(_id=ObjectId(_id))
         qa._category = ObjectId(category)
         qa._parent_precondition = to_object_id(precondition)
@@ -159,3 +183,21 @@ class QaController(RestController):
     def human_readable_details(self, _id, **kw):
         qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
         return dict(qa=qa)
+
+    @decode_params('json')
+    @expose('json')
+    def get_related_entities(self, _id):
+        """
+        This method return ALL entities (Precondtion) that have inside the given _id
+        :param _id:
+        :return:
+        """
+
+        preconditions_related = model.Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)}).all()
+
+        entities = list(preconditions_related)
+
+        return {
+            'entities': entities,
+            'len': len(entities)
+        }

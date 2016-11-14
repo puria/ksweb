@@ -125,6 +125,19 @@ class ConditionValidator(Validator):
         return value
 
 
+class AnswersValidator(Validator):
+
+    def _validate_python(self, value, state=None):
+        super(AnswersValidator, self)._validate_python(value, state)
+
+    def _convert_to_python(self, value, state=None):
+        try:
+            value = json.loads(value)
+        except Exception as e:
+            raise ValidationError(u'Condizione non valida.', self)
+
+        return value
+
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):
         document_accepted_type = ['text', 'output']

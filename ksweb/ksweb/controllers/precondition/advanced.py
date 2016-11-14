@@ -133,6 +133,12 @@ class PreconditionAdvancedController(RestController):
                 category=category,
                 precondition='',
                 entity='precondition/advanced',
+                _parent_precondition='',
+                question='',
+                tooltip='',
+                link='',
+                type='',
+                answers='',
                 **kw
             )
             return dict(redirect_url=tg.url('/resolve', params=params))
