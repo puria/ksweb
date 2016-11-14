@@ -42,19 +42,22 @@
           </div>
           {{/if}}
           <div class="col-md-3">
-            Puntano al nuovo
-            <br/>
-            {{#each list_change_to_new}}
-             {{.entity}} - {{.title}}
-            {{/each}}
+             <ul class="list-group">
+              <li class="list-group-item list-group-item-success">Si riferiscono al nuovo</li>
+              {{#each list_change_to_new}}
+               <li class="list-group-item text-center">({{.entity}}) - {{.title}}</li>
+              {{/each}}
+             </ul>
           </div>
           <div class="col-md-3">
-            Puntano al vecchio
-            <br/>
+           <ul class="list-group">
+            <li class="list-group-item list-group-item-danger">Si riferiscono al vecchio</li>
             {{#each list_change_to_old}}
-             {{.entity}} - {{.title}}
+             <li class="list-group-item text-center">({{.entity}}) - {{.title}}</li>
             {{/each}}
-          </div>
+           </ul>
+        </div>
+
 
           {{#if related_entities.length == 0}}
           <button class="btn btn-success" on-click="apply:{{}}">Applica</button>
