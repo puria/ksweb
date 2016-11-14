@@ -62,16 +62,26 @@
           </div>
           <div class="form-group {{errors.content ? 'has-error' : ''}}">
             {{#create.content:i}}
-              <span class="editor-element">
-                  {{#if .type == 'text'}}
-                    <span class="editor-text" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
+               {{#if .type == 'text'}}
+              <span class="editor-element-text">
+                    <span class="editor-text-simple" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
+                   <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+              </span>
                   {{/if}}
 
                   {{#if .type == 'qa_response'}}
-                    <span on-click="showQaDetails:{{.}}">{{.title}}</span>
-                  {{/if}}
+              <span class="editor-element-answer">
+                  <span on-click="showQaDetails:{{.}}">{{.title}}</span>
                   <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
               </span>
+               {{/if}}
+
+                {{#if .type == 'output'}}
+              <span class="editor-element-output">
+                  <span on-click="showQaDetails:{{.}}">{{.title}}</span>
+                  <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+              </span>
+               {{/if}}
             {{/items}}
 
             {{#if errors.content}}
@@ -84,7 +94,7 @@
           {{#each qas}}
             <div class="row">
               <div class="col-md-6">
-                <span id="add_circle_outline" onclick="ractive_output.addResponseOf('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                <span id="add_circle_outline" onclick='ractive_output.addResponseOf("{{._id}}", "{{.title}}")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
 
                 {{.title}}
               </div>
@@ -181,6 +191,17 @@
       };
       self.get('create.content').push(elem);
     },
+      addOutput:function (id, title) {
+          console.log("add _id:" + id);
+          console.log("add title:" + title);
+          var self = this;
+         var elem = {
+        'type': 'output',
+        'content': id,
+        'title': title
+        };
+        self.get('create.content').push(elem);
+      },
     create_output: function(field) {
       var self = this;
       self.set('saving', true);

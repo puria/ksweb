@@ -16,7 +16,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
-          {{qa.title}}
+          {{qa.question}}
         </div>
         <div class="form-group {{errors.qa_response ? 'has-error' : ''}}">
           {{#if qa.type == 'text'}}
@@ -134,7 +134,7 @@
     console.log(self.get('qa_response'));
 
     var params = {
-      'id': self.get('questionary._id'),
+      '_id': self.get('questionary._id'),
       'qa_id': self.get('quest_compiled.qa'),
       'qa_response': self.get('qa_response')
     };

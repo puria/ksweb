@@ -156,7 +156,7 @@ class TestOutput(TestController):
         self.test_creation_output()
         out = self._get_output_by_title('Title of Output')
         resp = self.app.get(
-            '/output/edit', params={'id': str(out._id)}
+            '/output/edit', params={'_id': str(out._id)}
         )
         assert out._id in resp
 

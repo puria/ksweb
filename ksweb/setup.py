@@ -44,7 +44,11 @@ install_requires = [
     "tgext.admin >= 0.6.1",
     "WebHelpers2",
     "tgext.webassets==0.0.2",
-    "libsass==0.8.3"
+    "libsass==0.8.3",
+    "tgapp-registration==0.7.0",
+    "tgext.mailer==0.0.2",
+    "tgapp-resetpassword==0.1.10"
+
 ]
 
 if py_version != (3, 2):
