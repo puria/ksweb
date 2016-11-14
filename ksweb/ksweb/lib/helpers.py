@@ -82,7 +82,7 @@ def table_row_content(entity, fields):
 
             elif hasattr(entity, '__ROW_COLUM_CONVERTERS__'):
                 converters_map = entity.__ROW_COLUM_CONVERTERS__
-                convert = converters_map.get(field, lambda o: o)
+                convert = converters_map.get(field, lambda o: getattr(o, field))
                 converted_value = convert(entity)
 
         tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'table-row')))
