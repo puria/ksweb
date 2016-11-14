@@ -23,17 +23,29 @@
 
 
       <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
-        <button type="submit" class="btn btn-success" formaction="${tg.url('/resolve/original_edit')}">Applica su tutti gli altri</button>
-        <p> l'edit si applica all'oggetto originario</p>
+        <button type="submit"
+                class="btn btn-success"
+                formaction="${tg.url('/resolve/original_edit')}"
+                data-toggle="tooltip" title="Le modifiche si applicheranno all'oggetto originario">
+          Applica su tutti gli altri
+        </button>
         <br/>
         <br/>
-        <button type="submit" class="btn btn-danger" formaction="${tg.url('/resolve/clone_object')}">Non applicare su tutti gli altri</button>
-        <p>viene creata una copia dell'oggetto originario con le modifiche</p>
+        <button type="submit"
+                class="btn btn-danger"
+                formaction="${tg.url('/resolve/clone_object')}"
+                data-toggle="tooltip" title="Viene creata una copia dell'oggetto originario con le modifiche">
+        Non applicare su tutti gli altri
+        </button>
         <br/>
         <br/>
-        <button type="submit" class="btn btn-warning" formaction="${tg.url('/resolve/manually_resolve')}">Scegli manualmente</button>
-        <p>viene scelto caso per caso</p>
-        
+        <button type="submit"
+                class="btn btn-warning"
+                formaction="${tg.url('/resolve/manually_resolve')}"
+                data-toggle="tooltip" title="Viene scelto caso per caso">
+        Scegli manualmente
+        </button>
+
         <input name="_id" type="hidden" value="${_id}"/>
         <input name="_category" type="hidden" value="${category}"/>
         <input name="_precondition" type="hidden" value="${precondition}"/>

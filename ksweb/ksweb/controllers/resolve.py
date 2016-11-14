@@ -159,6 +159,10 @@ class ResolveController(BaseController):
             except InvalidId:
                 continue
 
+        # FIXME: both qa and precondition have `type` field but with different meaning
+        if 'precondition' in obj.get('entity'):
+            obj.pop('type', None)
+
         if len(list_to_new) >= 1:
             # modifico l'oggetto e lascio quelli della lista invariati
             if len(list_to_old) >= 1:
