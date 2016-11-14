@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa model module."""
+import tg
+from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
@@ -9,6 +11,11 @@ from ksweb.model import DBSession
 
 def _format_instrumented_list(l):
         return ', '.join(l)
+
+
+def _custom_title(obj):
+    return Markup(
+        "<a href='%s'>%s</a>" % (tg.url('/qa/edit', params=dict(_id=obj._id)), obj.title))
 
 
 class Qa(MappedClass):
@@ -24,9 +31,13 @@ class Qa(MappedClass):
             ('type', 'public',),
         ]
 
-    __ROW_TYPE_CONVERTERS__ = {
-        #InstrumentedObj: _format_instrumented_obj,
-        InstrumentedList: _format_instrumented_list,
+    # __ROW_TYPE_CONVERTERS__ = {
+    #     #InstrumentedObj: _format_instrumented_obj,
+    #     InstrumentedList: _format_instrumented_list,
+    # }
+
+    __ROW_COLUM_CONVERTERS__ = {
+        'title': _custom_title,
     }
 
     _id = FieldProperty(s.ObjectId)
