@@ -160,8 +160,18 @@ except ImportError:
 
 from tgext.pluggable import plug
 plug(base_config, 'tgext.mailer')
+
 plug(base_config, 'registration', global_models=True)
+
 from ksweb.config.registration_hooks import RegistrationHooks
 RegistrationHooks.register(base_config)
+plug(base_config,
+     'resetpassword',
+     reset_password_form='ksweb.lib.forms.ResetPasswordForm',
+     new_password_form='ksweb.lib.forms.NewPasswordForm')
 
-plug(base_config, 'resetpassword')
+from tgext.pluggable import replace_template
+replace_template(base_config,
+                 'resetpassword.templates.index',
+                 'ksweb.templates.resetpassword.index')
+
