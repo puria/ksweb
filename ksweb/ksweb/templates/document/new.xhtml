@@ -264,7 +264,7 @@
     });
 
     ractive_document.on('showOutputDetails', function (event, elem) {
-        $.get("${tg.url('/output/human_readable_details', qualified=True)}", {id: elem.content}, function (data) {
+        $.get("${tg.url('/output/human_readable_details', qualified=True)}", {_id: elem.content}, function (data) {
             alert(JSON.stringify(data['output'], null, 2));
         });
 
