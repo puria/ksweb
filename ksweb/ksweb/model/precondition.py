@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Precondition model module."""
+from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
@@ -41,6 +42,10 @@ class Precondition(MappedClass):
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
+    @classmethod
+    def precondition_available_for_user(cls, user_id):
+        return cls.query.find({'_owner': user_id}).sort('title')
+
     @property
     def evaluate(self):
         if self.type == 'simple':
@@ -49,6 +54,10 @@ class Precondition(MappedClass):
         if self.type == 'advanced':
             print "evaluate advanced precondition"
             return
+
+    @property
+    def is_simple(self):
+        return self.type == 'simple'
 
     @property
     def response_interested(self):
@@ -77,6 +86,8 @@ class Precondition(MappedClass):
         if self.type == 'simple':
             qa = Qa.query.get(_id=self.condition[0])
             res_dict[str(qa._id)] = qa
+            if qa.parent_precondition:
+                res_dict.update(qa.parent_precondition.response_interested)
             return res_dict
 
         for cond in self.condition:
@@ -88,6 +99,12 @@ class Precondition(MappedClass):
 
         return res_dict
 
+    def get_qa(self):
+        from . import Qa
+        if not self.is_simple:
+            return None
+        return Qa.query.get(_id=ObjectId(self.condition[0]))
+
     @property
     def simple_text_response(self):
         """
@@ -95,5 +112,20 @@ class Precondition(MappedClass):
         :return:
         """
         return self.type == "simple" and self.condition[1] == ""
+
+    @property
+    def multiple_choice_response(self):
+        if self.is_simple:
+            qa = self.get_qa()
+            return qa.is_multi
+        return False
+
+    @property
+    def single_choice_response(self):
+        if self.is_simple:
+            qa = self.get_qa()
+            return qa.is_single
+        return False
+
 
 __all__ = ['Precondition']

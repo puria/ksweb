@@ -37,6 +37,9 @@ class Qa(MappedClass):
     _category = ForeignIdProperty('Category')
     category = RelationProperty('Category')
 
+    _parent_precondition = ForeignIdProperty('Precondition')
+    parent_precondition = RelationProperty('Precondition')
+
     title = FieldProperty(s.String, required=True)
     question = FieldProperty(s.String, required=True)
     tooltip = FieldProperty(s.String, required=False)
@@ -48,5 +51,20 @@ class Qa(MappedClass):
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
+    @classmethod
+    def qa_available_for_user(cls, user_id):
+        return cls.query.find({'_owner': user_id}).sort('title')
+
+    @property
+    def is_text(self):
+        return self.type == self.QA_TYPE[0]
+
+    @property
+    def is_single(self):
+        return self.type == self.QA_TYPE[1]
+
+    @property
+    def is_multi(self):
+        return self.type == self.QA_TYPE[2]
 
 __all__ = ['Qa']

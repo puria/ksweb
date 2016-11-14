@@ -2,6 +2,7 @@
 """Precondition controller module"""
 import tg
 from bson import ObjectId
+from tg import request
 from tg.decorators import paginate, decode_params, validate
 from tg.i18n import lazy_ugettext as l_
 from tg import expose, predicates, tmpl_context, validation_errors_response
@@ -31,7 +32,7 @@ class PreconditionController(BaseController):
                 'columns_name': ['Nome', 'Tipo', 'Proprietario'],
                 'fields_name': ['title', 'type', 'owner']
             },
-            entities=model.Precondition.query.find({'visible': True}).sort('title'),
+            entities=model.Precondition.precondition_available_for_user(request.identity['user']._id),
             actions=True
         )
 
@@ -39,7 +40,10 @@ class PreconditionController(BaseController):
     def sidebar_precondition(self):
         res = model.Precondition.query.aggregate([
             {
-                '$match': {'visible': True}
+                '$match': {
+                    '_owner': request.identity['user']._id,
+                    'visible': True
+                }
             },
             {
                 '$group': {
@@ -57,7 +61,7 @@ class PreconditionController(BaseController):
 
     @expose('json')
     def available_preconditions(self):
-        preconditions = Precondition.query.find({'visible': True}).sort('title').all()
+        preconditions = Precondition.query.find({'_owner': request.identity['user']._id, 'visible': True}).sort('title').all()
         return dict(preconditions=preconditions)
 
     @expose('json')
