@@ -107,15 +107,15 @@
       <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
         <div class="col-sm-10">
           <label>
-            <input type="radio" name="answer_type" value="single" onclick="ractive_qa.switchResponseType('single');" />
+            <input id="single" type="radio" name="answer_type" value="single" onclick="ractive_qa.switchResponseType('single');" />
             <img src="${tg.url('/img/radio_single.png')}"  alt="Single"/>
           </label>
           <label>
-            <input type="radio" name="answer_type" value="multi" onclick="ractive_qa.switchResponseType('multi');" />
+            <input id="multi" type="radio" name="answer_type" value="multi" onclick="ractive_qa.switchResponseType('multi');" />
             <img src="${tg.url('/img/radio_multi.png')}"  alt="Multi"/>
           </label>
           <label>
-            <input type="radio" name="answer_type" value="text" onclick="ractive_qa.switchResponseType('text');" />
+            <input id="text" type="radio" name="answer_type" value="text" onclick="ractive_qa.switchResponseType('text');" />
             <img src="${tg.url('/img/radio_text.png')}"  alt="Text"/>
           </label>
         </div>
@@ -126,7 +126,7 @@
       {{#if answer_type == 'single' || answer_type == 'multi'}}
       <div class="form-group {{errors.answers ? 'has-error' : ''}}">
 
-        {{#each available_reponse}}
+        {{#each available_response}}
         <div class="col-md-12">
           <input type="{{input_type}}" name="example_response"> {{.}}
         </div>
@@ -165,7 +165,10 @@
     template: '#QAForm_template',
     onconstruct: function(options) {
       var self = this;
-      self.fieldset = options['fieldset'];
+      self.qa = options['qa'];
+      self.edit_mode = false;
+      self.submit_url = "${tg.url('/qa/post')}";
+      self.submit_type = 'POST';
     },
     oninit: function() {
       var self = this;
@@ -173,14 +176,30 @@
       self.set('saving', false);
       self.set('answer_type', null);
       self.set('input_type', null);
-      self.set('available_reponse',[]);
+      self.set('available_response',[]);
+
+      //  Check if document is provided
+      if (! jQuery.isEmptyObject(self.qa)) {
+        self.submit_type = 'PUT';
+        self.submit_url = '${tg.url('/qa/put')}';
+        self.set('edit_mode', true);
+        self.set('create.title', self.qa['title']);
+        self.set('create.question', self.qa['question']);
+        self.set('create.category', self.qa['_category']);
+        self.set('create.precondition', self.qa['_parent_precondition']);
+        self.set('create.link', self.qa['link']);
+        self.set('create.tooltip', self.qa['tooltip']);
+        self.set('create._id', self.qa['_id']);
+
+        self.switchResponseType(self.qa['type']);
+        self.set('available_response', self.qa['answers']);
+      }
 
       self.on('submit-form', function(event) {
         var all_var = self.get('create');
         // Now append answer_type and answers
         all_var['answer_type'] = self.get('answer_type');
-        console.log(self.get('available_reponse'));
-        all_var['answers'] = self.get('available_reponse');
+        all_var['answers'] = self.get('available_response');
         console.log(all_var);
         self.createQA(all_var);
         return false;
@@ -217,7 +236,7 @@
       jQuery("#insert_answer").empty();
 
       self.set('answer_type', section);
-      self.set('available_reponse', []);
+      self.set('available_response', []);
     },
     addResponse: function() {
       var self = this;
@@ -228,7 +247,7 @@
         return;
       }
       jQuery("#response_text").val("");
-      self.push('available_reponse', resp);
+      self.push('available_response', resp);
     },
     createQA: function(field) {
       var self = this;
@@ -239,8 +258,8 @@
       var api_params = JSON.stringify(field);
 
       $.ajax({
-        type: "post",
-        url: "${tg.url('/qa/post')}",
+        type: self.submit_type,
+        url:  self.submit_url,
         data: api_params,
         dataType: "json",
         processData: false,
@@ -262,7 +281,10 @@
   });
 </script>
 <script>
-  var ractive_qa = new QAEditor({fieldset: 'qa', el: '#qa-ractive'});
+  var ractive_qa = new QAEditor({
+    qa: ${Markup(h.script_json_encode(qa))},
+    el: '#qa-ractive'
+  });
 </script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 """Qa controller module"""
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
+from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
     decode_params, request, tmpl_context
 import tg
@@ -51,7 +52,7 @@ class QaController(RestController):
     @expose('json')
     @expose('ksweb.templates.qa.new')
     def new(self, **kw):
-        return dict(errors=None)
+        return dict(errors=None, qa={})
 
     @decode_params('json')
     @expose('json')
@@ -87,6 +88,49 @@ class QaController(RestController):
                 public=True,
                 visible=True
             )
+
+        if answer_type == 'text':   # model.Qa.QA_TYPE[0]
+                        model.Precondition(
+                            _owner=user._id,
+                            _category=ObjectId(category),
+                            title=title + ' compilata',
+                            type='simple',
+                            condition=[qa._id, ''])
+
+        return dict(errors=None)
+
+    @decode_params('json')
+    @expose('json')
+    @validate({
+        '_id': QAExistValidator(required=True),
+        'title': StringLengthValidator(min=2),
+        'category': CategoryExistValidator(required=True),
+        'question': StringLengthValidator(min=2),
+        'tooltip': StringLengthValidator(min=0, max=100),
+        'link': StringLengthValidator(min=0, max=100),
+        'answer_type': OneOfValidator(values=model.Qa.QA_TYPE, required=True),
+        'precondition': PreconditionExistValidator(required=False),
+    }, error_handler=validation_errors_response)
+    def put(self, _id, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
+
+        if answer_type == "single" or answer_type == "multi":
+            if len(answers) < 2:
+                response.status_code = 412
+                return dict(
+                    errors={'answers': 'Inserire almeno due risposte'})
+
+        user = request.identity['user']
+
+        qa = model.Qa.query.get(_id=ObjectId(_id))
+        qa._category = ObjectId(category)
+        qa._parent_precondition = to_object_id(precondition)
+        qa.title = title
+        qa.question = question
+        qa.tooltip = tooltip
+        qa.question = question
+        qa.link = link
+        qa.type = answer_type
+        qa.answers = answers
 
         if answer_type == 'text':   # model.Qa.QA_TYPE[0]
                         model.Precondition(
