@@ -110,6 +110,9 @@ class ResolveController(BaseController):
     }, error_handler=abort(404, error_handler=True))
     @expose()
     def clone_object(self, **kw):
+        if 'precondition' in kw.get('entity'):
+            kw.pop('type', None)
+
         self._clone_object(**kw)
         flash("%s creato correttamente!" % kw['entity'])
         return redirect(base_url='/')
