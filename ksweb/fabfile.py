@@ -141,6 +141,8 @@ def deploy_dev():
         print colors.yellow('USING GEVENT THE SERVER WILL TAKE UP TO 5 MINUTES TO RESTART')
         _wait(60*5)
 
+    _update_release('570f73205d37c93234b65304', 'ksweb', 'test')
+
 
 def deploy_axant():
     is_first_deploy = not exists(APP_PATH_AXANT)
@@ -168,6 +170,16 @@ def deploy_axant():
         _wait(60*5)
 
 
+def _update_release(project, repo, releasetype):
+    revision = local('hg id -i', capture=True)
+    branch = local('hg branch', capture=True)
+    local('curl https://projects.axantweb.com/api/release'
+          ' -d project="{}"'
+          ' -d repository="{}"'
+          ' -d revision="{}"'
+          ' -d branch="{}"'
+          ' -d releasetype="{}"'.format(project, repo, revision, branch, releasetype))
+
 
 def check_dev_log():
-    run(' tail -f -n 100 /var/log/circus/ksweb.test.axantweb.com.log ')
+    run(' tail -f -n 100 /var/log/apache2/ksweb.test.axantweb.com.error.log')
