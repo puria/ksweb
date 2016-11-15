@@ -61,7 +61,11 @@ class ResolveController(BaseController):
     def original_edit(self, **kw):
         print "original_edit ===========================================================", kw
 
+        if 'precondition' in kw.get('entity'):
+            kw.pop('type', None)
+
         self._original_edit(**kw)
+
 
         flash(u'Entità modificata correttamente!')
 
