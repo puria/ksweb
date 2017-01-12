@@ -2,20 +2,9 @@
 """Output controller module"""
 from bson import ObjectId
 from bson.errors import InvalidId
-from formencode.validators import OneOf
 from ksweb.lib.base import BaseController
-from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
-from tg import abort
-from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
-    response
-import tg
-from tg import flash
-from tg import redirect
-from tg import session
-from tg.decorators import paginate, require
-from tg.i18n import lazy_ugettext as l_
-from tg import predicates
+from tg import expose, validate, validation_errors_response, decode_params, flash, redirect, session, abort
 from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
@@ -50,12 +39,8 @@ class ResolveController(BaseController):
     @expose()
     @with_entity_session
     def original_edit(self, **kw):
-        print "original_edit ===========================================================", kw
-
-        self._original_edit(**kw)
-
-        flash(u'Entità modificata correttamente!')
-
+        entity = self._original_edit(**kw)
+        flash(u'Entità %s modificata correttamente!' % entity.title)
         return redirect(base_url='/')
 
     def _original_edit(self, **kw):
