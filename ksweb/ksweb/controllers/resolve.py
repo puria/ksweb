@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
 from bson import ObjectId
-from bson.errors import InvalidId
 from ksweb.lib.base import BaseController
 from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
-from tg import expose, validate, validation_errors_response, decode_params, flash, redirect, session, abort
-from tw2.core import StringLengthValidator
+from tg import expose, decode_params, flash, redirect, session
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
-    OutputExistValidator, OutputContentValidator, ConditionValidator, AnswersValidator
 
 
 class ResolveController(BaseController):
@@ -27,23 +23,63 @@ class ResolveController(BaseController):
     def index(self, **kw):
         return dict(**kw)
 
-    @decode_params('json')
-    @expose('ksweb.templates.resolve.resolve')
-    def choices(self, **kw):
-        return dict(
-            _id=kw.pop('_id', None),
-            entity=kw.get('entity', None),
-            values=kw.get('values'),
-        )
-
     @expose()
     @with_entity_session
     def original_edit(self, **kw):
-        entity = self._original_edit(**kw)
+        entity = self._original_edit()
         flash(u'Entità %s modificata correttamente!' % entity.title)
+        session.delete()
         return redirect(base_url='/')
 
-    def _original_edit(self, **kw):
+    @expose()
+    @with_entity_session
+    def clone_object(self, **kw):
+        entity = self._clone_object()
+        flash("%s creato correttamente!" % entity.title)
+        session.delete()
+        return redirect(base_url='/')
+
+    @expose('')
+    def discard_changes(self, **kw):
+        session.delete()
+        flash(u'Tutte le modifiche sono state scartate')
+        return redirect(base_url='/')
+
+    @expose('ksweb.templates.resolve.manually_resolve')
+    @with_entity_session
+    def manually_resolve(self, **kw):
+
+        # fetch params from session
+        entity = session.get('entity')
+
+        return dict(
+            entity=entity['entity'],
+            values=entity
+        )
+
+    @decode_params('json')
+    @expose('json')
+    @with_entity_session
+    def mark_resolved(self, list_to_new=None, list_to_old=None, **kw):
+
+        entity = session.get('entity')
+
+        if len(list_to_new) >= 1:
+            if len(list_to_old) >= 1:
+                # worst case, we have some objects that refer to new and other that refer ro old, need a clone
+                self._clone_and_modify_(entity, list_to_new)
+            else:
+                # we can just edit old object because no one refer more to old object
+                self._original_edit()
+        else:
+            # all objects refer to old, we can just edit old object
+            self._original_edit()
+
+        session.delete()
+        flash(u'Tutti i conflitti sono stati risolti correttamente')
+        return dict(errors=None)
+
+    def _original_edit(self):
 
         # fetch params from session
         params = session.get('entity')
@@ -63,112 +99,25 @@ class ResolveController(BaseController):
             setattr(entity, k, v)
 
         # TODO: update..
-        self._find_and_modify(kw)
-
-        session.delete()
-
+        # self._find_and_modify(kw)
         return entity
 
-    @decode_params('json')
-    @validate({
-        #'_id': OutputExistValidator(required=True),
-        'title': StringLengthValidator(min=2),
-        'content': OutputContentValidator(required=False),
-        'answers': AnswersValidator(required=False),
-        'condition': ConditionValidator(required=False),
-        '_category': CategoryExistValidator(required=True),
-        '_precondition': PreconditionExistValidator(required=False),
-    }, error_handler=abort(404, error_handler=True))
-    @expose()
-    def clone_object(self, **kw):
-        if 'precondition' in kw.get('entity'):
-            kw.pop('type', None)
-
-        self._clone_object(**kw)
-        flash("%s creato correttamente!" % kw['entity'])
-        return redirect(base_url='/')
-
-    @expose('json')
-    @decode_params('json')
-    @validate({
-         '_id': OutputExistValidator(required=True),
-         'title': StringLengthValidator(min=2),
-         'content': OutputContentValidator(),
-         '_category': CategoryExistValidator(required=True),
-         '_precondition': PreconditionExistValidator(required=True),
-        }, error_handler=validation_errors_response)
-    def _clone_object(self, **kw):
-
-        print "_clone_object", kw
-
-        entity = self._get_entity(kw['entity'], kw['_id'])
-
-        # TODO: REMOVE
-        kw['title'] += ' [NUOVO]'
-
-        new_obj = clone_obj(self.related_models[kw['entity']], entity, kw)
-
+    def _clone_object(self):
+        params = session.get('entity')
+        entity = self._get_entity(params['entity'], params['_id'])
+        params['title'] += ' [NUOVO]'
+        new_obj = clone_obj(self.related_models[params['entity']], entity, params)
         return new_obj
-
-    @decode_params('json')
-    @validate({
-        #'_id': OutputExistValidator(mod=True),
-        'title': StringLengthValidator(min=2),
-        'content': OutputContentValidator(required=False),
-        'condition': ConditionValidator(required=False),
-        '_category': CategoryExistValidator(required=True),
-        '_precondition': PreconditionExistValidator(required=False),
-    }, error_handler=abort(404, error_handler=True))
-    @expose('ksweb.templates.resolve.manually_resolve')
-    def manually_resolve(self, **kw):
-
-        return dict(
-            entity=kw['entity'],
-            values=kw
-        )
-
-    @decode_params('json')
-    @expose('json')
-    def mark_resolved(self, obj=None, list_to_new=None, list_to_old=None, **kw):
-
-        for index, c in enumerate(obj.get('condition', [])):
-            try:
-                obj['condition'][index] = ObjectId(c)
-            except InvalidId:
-                continue
-
-        # FIXME: both qa and precondition have `type` field but with different meaning
-        if 'precondition' in obj.get('entity'):
-            obj.pop('type', None)
-
-        if len(list_to_new) >= 1:
-            # modifico l'oggetto e lascio quelli della lista invariati
-            if len(list_to_old) >= 1:
-                # ho degli oggetti che puntano al vecchio, devo clonare
-                print "ho degli oggetti che puntano sia al vecchio che al nuovo, devo clonare"
-                self._clone_and_modify_(obj, list_to_new)
-            else:
-                # posso modificare semplicemente l'oggetto, tanto non ci sono + oggetti che puntano al vecchio
-                print "posso modificare semplicemente l'oggetto, tanto non ci sono + oggetti che puntano al vecchio"
-                self._original_edit(**obj)
-        else:
-            # tutti gli oggetti puntano al veccho
-
-            print "tutti gli oggetti puntano al veccho"
-            self._original_edit(**obj)
-
-        return dict(errors=None)
 
     def _get_entity(self, entity_name, _id):
         model_ = self.related_models[entity_name]
         return model_.query.get(_id=ObjectId(_id))
 
     def _clone_and_modify_(self, obj_to_clone, to_edit):
-        new_obj = self._clone_object(**obj_to_clone)
+        new_obj = self._clone_object()
 
         for obj in to_edit:
             entity = self._get_entity(obj['entity'], obj['_id'])
-
             if obj_to_clone['entity'] == 'output':
                 # I have to search into:
                 #     output.content
@@ -198,20 +147,3 @@ class ResolveController(BaseController):
                 for index, elem in enumerate(entity.condition):
                     if elem == ObjectId(obj_to_clone['_id']):
                         entity.condition[index] = new_obj._id
-
-
-    def _find_and_modify(self, obj_dict):
-        pass
-
-        """
-        Update `title` inside of sub-document
-        :param obj:
-        :param _id:
-        :return:
-        """
-
-        # for entity in self.get_related_entities(obj_dict['_id'])['entities']:
-        #     for elem in entity.content:
-        #         if elem['content'] == obj_dict['_id']:
-        #             elem['title'] = obj_dict['title']
-

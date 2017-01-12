@@ -21,10 +21,9 @@ def to_dict(obj):
     return props
 
 
-def clone_obj(class_, original_obj, values):
+def clone_obj(class_, original_obj, params):
 
-    print "old values", to_dict(original_obj)
-    print "values", values
+    values = params.copy()
 
     for k, v in to_dict(original_obj).items():
         if k not in values:
