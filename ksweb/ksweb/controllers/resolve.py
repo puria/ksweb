@@ -5,13 +5,14 @@ from bson.errors import InvalidId
 from formencode.validators import OneOf
 from ksweb.lib.base import BaseController
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import to_object_id, clone_obj
+from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
 from tg import abort
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 import tg
 from tg import flash
 from tg import redirect
+from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
@@ -33,6 +34,7 @@ class ResolveController(BaseController):
 
     @decode_params('json')
     @expose('ksweb.templates.resolve.index')
+    @with_entity_session
     def index(self, **kw):
         return dict(**kw)
 
@@ -45,56 +47,40 @@ class ResolveController(BaseController):
             values=kw.get('values'),
         )
 
-    # TODO: custom validation....
-    @decode_params('json')
-    @validate({
-          #'_id': OutputExistValidator(required=True),
-         'condition': ConditionValidator(required=False),
-         'answers': AnswersValidator(required=False),
-         'title': StringLengthValidator(min=2),
-         'content': OutputContentValidator(required=False),
-         '_category': CategoryExistValidator(required=True),
-         '_precondition': PreconditionExistValidator(required=False),
-         '_parent_precondition': PreconditionExistValidator(required=False),
-        }, error_handler=abort(404, error_handler=True))
     @expose()
+    @with_entity_session
     def original_edit(self, **kw):
         print "original_edit ===========================================================", kw
 
-        if 'precondition' in kw.get('entity'):
-            kw.pop('type', None)
-
         self._original_edit(**kw)
-
 
         flash(u'Entità modificata correttamente!')
 
         return redirect(base_url='/')
 
-    @expose('json')
-    @decode_params('json')
-    @validate({
-         '_id': OutputExistValidator(required=True),
-         'title': StringLengthValidator(min=2),
-         'content': OutputContentValidator(),
-         'condition': ConditionValidator(required=False),
-         '_category': CategoryExistValidator(required=True),
-         '_precondition': PreconditionExistValidator(required=True),
-        }, error_handler=validation_errors_response)
     def _original_edit(self, **kw):
-        print "_original_edit", kw
 
-        kw['_category'] = to_object_id(kw.get('_category'))
-        kw['_precondition'] = to_object_id(kw.get('_precondition'))
+        # fetch params from session
+        params = session.get('entity')
 
-        entity = self._get_entity(kw['entity'], kw['_id'])
-        kw.pop('entity', None)
+        # transform to ObjectId here because ObjectId is not JSON serializable
+        params['_category'] = to_object_id(params.get('_category'))
+        params['_precondition'] = to_object_id(params.get('_precondition'))
 
-        for k, v in kw.items():
+        # retrieve original object
+        entity = self._get_entity(params['entity'], params['_id'])
+
+        # popping non-related values
+        params.pop('entity', None)
+
+        # true edit
+        for k, v in params.items():
             setattr(entity, k, v)
 
         # TODO: update..
         self._find_and_modify(kw)
+
+        session.delete()
 
         return entity
 
