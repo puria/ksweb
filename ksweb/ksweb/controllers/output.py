@@ -8,6 +8,7 @@ from tg import expose, validate, validation_errors_response, RestController, dec
     response
 import tg
 from tg import redirect
+from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 from tg import predicates
@@ -101,24 +102,17 @@ class OutputController(RestController):
         check = self.get_related_entities(_id)
 
         if check.get("entities"):
-            params = dict(
+            entity = dict(
                 _id=_id,
                 title=title,
-                content=json.dumps(content, ensure_ascii=False),
-                condition=json.dumps(dict(), ensure_ascii=False),
-                category=category,
-                precondition=precondition,
+                content=content,
+                _category=category,
+                _precondition=precondition,
                 entity='output',
-
-                _parent_precondition='',
-                question='',
-                tooltip='',
-                link='',
-                type='',
-                answers='',
-                **kw
             )
-            return dict(redirect_url=tg.url('/resolve', params=params))
+            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session.save()
+            return dict(redirect_url=tg.url('/resolve'))
 
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
