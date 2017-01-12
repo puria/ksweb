@@ -8,6 +8,7 @@ from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, RestController, decode_params, \
     validation_errors_response, request, response, tmpl_context
 from tg import require
+from tg import session
 from tw2.core import LengthValidator, StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator
@@ -125,23 +126,17 @@ class PreconditionAdvancedController(RestController):
         check = self.get_related_entities(_id)
 
         if check.get("entities"):
-            params = dict(
+            print "condition", condition
+            entity = dict(
                 _id=_id,
                 title=title,
-                content=json.dumps(dict(), ensure_ascii=False),
-                condition=json.dumps(map(str, condition), ensure_ascii=False),
-                category=category,
-                precondition='',
+                condition=map(str, condition),
+                _category=category,
                 entity='precondition/advanced',
-                _parent_precondition='',
-                question='',
-                tooltip='',
-                link='',
-                type='',
-                answers='',
-                **kw
             )
-            return dict(redirect_url=tg.url('/resolve', params=params))
+            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session.save()
+            return dict(redirect_url=tg.url('/resolve'))
 
         precondition = model.Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
