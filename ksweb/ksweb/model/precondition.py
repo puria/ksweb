@@ -63,7 +63,7 @@ class Precondition(MappedClass):
 
     @classmethod
     def precondition_available_for_user(cls, user_id):
-        return cls.query.find({'_owner': user_id}).sort('title')
+        return cls.query.find({'_owner': user_id, 'visible': True}).sort('title')
 
     @property
     def evaluate(self):
