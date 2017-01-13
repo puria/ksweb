@@ -27,7 +27,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_text(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_text_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -53,7 +53,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_single_with_not_valid_answers(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_text_single_missing_answers = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -86,7 +86,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_single(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
 
         qa_text_single = {
             'title': 'Title of QA',
@@ -107,7 +107,7 @@ class TestQaController(TestController):
 
     def test_post_valid_qa_multi_with_not_valid_answers(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_text_multi_missing_answers = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -144,7 +144,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_multi(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
 
         qa_text_multi = {
             'title': 'Title of QA',
@@ -168,7 +168,7 @@ class TestQaController(TestController):
     def test_get_one(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
 
         qa_text_multi = {
             'title': 'Title of QA',
