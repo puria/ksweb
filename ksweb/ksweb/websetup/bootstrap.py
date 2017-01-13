@@ -46,13 +46,18 @@ def bootstrap(command, conf, vars):
     u2.email_address = 'user@somedomain.com'
     u2.password = 'userks'
 
+    c0 = model.Category(
+        name="Altro",
+        visible=True
+    )
+
     c1 = model.Category(
-        name="Category_1",
+        name="Categoria 1",
         visible=True
     )
 
     c2 = model.Category(
-        name="Category_2",
+        name="Categoria 2",
         visible=True
     )
 

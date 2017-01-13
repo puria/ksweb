@@ -67,10 +67,13 @@
             <div class="form-group {{errors.category ? 'has-error' : ''}}">
                 <div class="col-md-3">
                     <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                        <option value="" disabled selected>Seleziona una categoria</option>
-                        {{#each categories}}
-                        <option value="{{._id}}">{{.name}}</option>
-                        {{/each}}
+                      {{#each categories}}
+                        {{#if .name == 'Altro'}}
+                          <option value="{{._id}}" selected>{{.name}}</option>
+                        {{else}}
+                          <option value="{{._id}}">{{.name}}</option>
+                        {{/if}}
+                      {{/each}}
                     </select>
 
                     {{#if errors.category}}
