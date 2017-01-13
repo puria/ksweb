@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from bson import ObjectId
 import ming
 
@@ -19,10 +21,9 @@ def to_dict(obj):
     return props
 
 
-def clone_obj(class_, original_obj, values):
+def clone_obj(class_, original_obj, params):
 
-    print "old values", to_dict(original_obj)
-    print "values", values
+    values = params.copy()
 
     for k, v in to_dict(original_obj).items():
         if k not in values:
@@ -33,6 +34,16 @@ def clone_obj(class_, original_obj, values):
 
     return class_(**values)
 
+
+# use as decorator
+def with_entity_session(func):
+    def wrapper(*args, **kw):
+        from tg import session, flash, redirect
+        if not session.get('entity'):
+            flash(u'La sessione per la modifica dell\'oggetto è scaduta o non esiste', 'warning')
+            return redirect(base_url='/')
+        return func(*args, **kw)
+    return wrapper
 
 
 
