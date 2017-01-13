@@ -35,6 +35,8 @@ class PreconditionSimpleController(RestController):
     def post(self, title, category, question, answer_type, interested_response,  **kw):
         user = request.identity['user']
 
+        qa = model.Qa.query.get(_id=ObjectId(question))
+
         #  CASO BASE in cui risco a creare un filtro semplice per definizione e' quella di che venga solamente selezionata una risposta
         if len(interested_response) == 1:
             #  La risposta e' solo una creo un filtro semplice
@@ -50,7 +52,7 @@ class PreconditionSimpleController(RestController):
             if answer_type == "have_response":
                 #  Create one precondition simple for all possibility answer to question
                 #  After that create a complex precondition with previous simple precondition
-                interested_response = model.Qa.query.get(_id=ObjectId(question)).answers
+                interested_response = qa.answers
 
             if answer_type == "what_response":
                 #  Create one precondition simple for all selected answer to question
@@ -65,10 +67,9 @@ class PreconditionSimpleController(RestController):
                 prec = model.Precondition(
                     _owner=user._id,
                     _category=ObjectId(category),
-                    title="_base_for_%s" % title,
+                    title="%s_%s" % (qa.title.upper(), resp.upper()),
                     type='simple',
                     condition=[ObjectId(question), resp],
-
                     public=True,
                     visible=False
                 )
