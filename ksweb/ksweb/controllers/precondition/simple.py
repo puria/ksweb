@@ -35,9 +35,9 @@ class PreconditionSimpleController(RestController):
     def post(self, title, category, question, answer_type, interested_response,  **kw):
         user = request.identity['user']
 
-        #  CASO BASE in cui risco a creare una precondizione semplice per definizione e' quella di che venga solamente selezionata una risposta
+        #  CASO BASE in cui risco a creare un filtro semplice per definizione e' quella di che venga solamente selezionata una risposta
         if len(interested_response) == 1:
-            #  La risposta e' solo una creo una precondizione semplice
+            #  La risposta e' solo una creo un filtro semplice
             model.Precondition(
                 _owner=user._id,
                 _category=ObjectId(category),
@@ -46,7 +46,7 @@ class PreconditionSimpleController(RestController):
                 condition=[ObjectId(question), interested_response[0]]
             )
         else:
-            #  CASO AVANZATO sono state selezionate piu' risposte, devo prima creare tutte le precondizioni semplici e poi creare quella complessa
+            #  CASO AVANZATO sono state selezionate piu' risposte, devo prima creare tutte i filtri semplici e poi creare quella complessa
             if answer_type == "have_response":
                 #  Create one precondition simple for all possibility answer to question
                 #  After that create a complex precondition with previous simple precondition
@@ -102,7 +102,7 @@ class PreconditionSimpleController(RestController):
     }, error_handler=validation_errors_response)
     @require(
         CanManageEntityOwner(
-            msg=u'Non puoi modificare questa precondizione.',
+            msg=u'Non puoi modificare questo filtro.',
             field='_id',
             entity_model=model.Precondition))
     def put(self, _id, title, category, question, answer_type, interested_response,  **kw):
@@ -136,7 +136,7 @@ class PreconditionSimpleController(RestController):
         :return:
         """
 
-        # devo cercare nelle qa, nelle precondizioni avanzate, negli output
+        # devo cercare nelle qa, nei filtri avanzati, negli output
         outputs_related = model.Output.query.find({'_precondition': ObjectId(_id)}).all()
         preconditions_related = model.Precondition.query.find({'type': 'advanced', 'condition': ObjectId(_id)}).all()
         qas_related = model.Qa.query.find({"_parent_precondition": ObjectId(_id)}).all()
@@ -152,7 +152,7 @@ class PreconditionSimpleController(RestController):
     @validate({
         '_id': PreconditionExistValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questa precondizione.', field='_id', entity_model=model.Precondition))
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo filtro.', field='_id', entity_model=model.Precondition))
     def edit(self, _id, **kw):
         precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
         return dict(precondition=precondition, errors=None)

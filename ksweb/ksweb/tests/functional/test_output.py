@@ -183,7 +183,7 @@ class TestOutput(TestController):
         output = model.Output.query.get(title=output_params['title'])
 
         assert resp['category'] == 'Categoria non esistente', resp
-        assert resp['precondition'] == 'Precondizione non esistente', resp
+        assert resp['precondition'] == 'Filtro non esistente', resp
         assert resp['title'] == 'Must be at least 2 characters', resp
         assert output is None
 

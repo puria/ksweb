@@ -1,12 +1,12 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">KS | Precondizione</title>
+    <title py:block="master_title">KS | Filtri</title>
     <script id="PreconditionSimpleForm_template" type="text/html">
         <![CDATA[
         <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
             <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
-                    Precondizione Avanzata
+                    Filtri Avanzati
                 </div>
                 <div class="col-md-6 text-right">
                     {{#if saving}}
@@ -88,15 +88,15 @@
 </div>
 <script>
     /*
-        Ractive in `conditions` contiene la struttura dati delle precondizioni e degli operatori:
+        Ractive in `conditions` contiene la struttura dati dei filtri e degli operatori:
 
         Gli elementi che può contenere sono di due tipologie:
-        -  Precondizioni
+        -  Filtri
         -  Operatori logici
 
         Percio dovro differenziare i due casi tipo:
         type: [operator, precondition]
-        content: [AND, OR, NOT, ( , ) , ObjId('precondizione)
+        content: [AND, OR, NOT, ( , ) , ObjId('filtro')
         img_uri: uri of image
 
         Devo fare poi solo il template che deve visualizzare tutti i vari elementi del template

@@ -127,7 +127,7 @@ class Precondition(MappedClass):
     @property
     def simple_text_response(self):
         """
-        Usato per verificare le precondizioni di tipo testo che abbiano risposta
+        Usato per verificare i filtri di tipo testo che abbiano risposta
         :return:
         """
         return self.type == "simple" and self.condition[1] == ""

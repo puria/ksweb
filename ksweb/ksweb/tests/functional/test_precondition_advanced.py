@@ -73,7 +73,7 @@ class TestPreconditionAdvanced(TestController):
         precond1 = model.Precondition.query.get(title=precondition1_params['title'])
         precond2 = model.Precondition.query.get(title=precondition2_params['title'])
 
-        #  Ora che ho le due precondizioni posso creare quella composta
+        #  Ora che ho i 2 filtri semplici posso creare il filtro avanzato
         precond_advanced = {
             'title': 'Resp1 or Resp2',
             'category': str(category1._id),

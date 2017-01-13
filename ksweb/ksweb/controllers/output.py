@@ -29,7 +29,7 @@ class OutputController(RestController):
             if elem['type'] == 'qa_response':
                 if elem['content'] not in related_qa.keys():
                     response.status_code = 412
-                    return dict(errors={'content': 'Domanda %s non legata alla precondizione utilizzata' % elem['title']})
+                    return dict(errors={'content': 'Domanda %s non legata al filtro utilizzato' % elem['title']})
         return dict()
 
     def _before(self, *args, **kw):
@@ -44,7 +44,7 @@ class OutputController(RestController):
         return dict(
             page='output-index',
             fields={
-                'columns_name': ['Nome', 'Categoria', 'Precondizione', 'Testo'],
+                'columns_name': ['Nome', 'Categoria', 'Filtro', 'Testo'],
                 'fields_name': ['title', 'category', 'precondition', 'content']
             },
             entities=model.Output.output_available_for_user(request.identity['user']._id),

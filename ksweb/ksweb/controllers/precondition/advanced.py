@@ -42,7 +42,7 @@ class PreconditionAdvancedController(RestController):
                 precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
                 if not precond:
                     response.status_code = 412
-                    return dict(errors={'conditions': 'Precondizione non trovata.'})
+                    return dict(errors={'conditions': 'Filtro non trovato.'})
 
                 bool_str += "True "
                 condition.append(ObjectId(cond['content']))
@@ -86,7 +86,7 @@ class PreconditionAdvancedController(RestController):
     }, error_handler=validation_errors_response)
     @require(
         CanManageEntityOwner(
-            msg=u'Non puoi modificare questa precondizione.',
+            msg=u'Non puoi modificare questo filtro.',
             field='_id',
             entity_model=model.Precondition))
     def put(self, _id, title, category, conditions, **kw):
@@ -100,7 +100,7 @@ class PreconditionAdvancedController(RestController):
                 precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
                 if not precond:
                     response.status_code = 412
-                    return dict(errors={'conditions': 'Precondizione non trovata.'})
+                    return dict(errors={'conditions': 'Filtro non trovato.'})
 
                 bool_str += "True "
                 condition.append(ObjectId(cond['content']))
@@ -149,7 +149,7 @@ class PreconditionAdvancedController(RestController):
     @validate({
         '_id': PreconditionExistValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questa precondizione.', field='_id',
+    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo filtro.', field='_id',
                                   entity_model=model.Precondition))
     def edit(self, _id, **kw):
         precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()

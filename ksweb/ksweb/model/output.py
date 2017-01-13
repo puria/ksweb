@@ -84,7 +84,7 @@ class Output(MappedClass):
         #res = []
         #for elem in self.content:
             #if elem is testo ok
-            # else mostra una stringa di dettaglio della precondizione
+            # else mostra una stringa di dettaglio del filtro
         return self.content
 
     @property

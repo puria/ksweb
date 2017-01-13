@@ -242,7 +242,7 @@ class TestController(object):
         precond_red = self._get_precond_by_title(prec_red_color['title'])
         precond_pig_dog = model.Precondition.query.get(title=prec_animal_liked_pig_dog['title'])
 
-        #  Ora che ho le due precondizioni posso creare quella composta
+        #  Ora che ho i 2  filtri posso creare quelli composti
         precond_advanced = {
             'title': title,
             'category': str(category1._id),

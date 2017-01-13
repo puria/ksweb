@@ -45,7 +45,7 @@
           <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
             <div class="col-md-6">
               <select id="form-precondition" class="form-control" value="{{create.precondition}}">
-                <option value="" disabled selected>Seleziona una precondizione</option>
+                <option value="" disabled selected>Seleziona un filtro</option>
                 {{#each preconditions}}
                 <option value="{{._id}}">{{.title}}</option>
                 {{/each}}

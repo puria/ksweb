@@ -40,10 +40,10 @@ class PreconditionExistValidator(Validator):
         try:
             precondition = model.Precondition.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Precondizione non esistente', self)
+            raise ValidationError(u'Filtro non esistente', self)
 
         if precondition is None:
-            raise ValidationError(u'Precondizione non esistente', self)
+            raise ValidationError(u'Filtro non esistente', self)
 
 
 class OutputExistValidator(Validator):
