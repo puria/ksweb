@@ -5,9 +5,11 @@ import json
 import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
+from ksweb.lib.utils import to_object_id
 from tg import expose, validate, RestController, decode_params, request, \
     validation_errors_response,  response, tmpl_context
 from tg import require
+from tg import session
 from tw2.core import OneOfValidator, StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import QAExistValidator, CategoryExistValidator, PreconditionExistValidator
@@ -106,26 +108,17 @@ class PreconditionSimpleController(RestController):
     def put(self, _id, title, category, question, answer_type, interested_response,  **kw):
 
         check = self.get_related_entities(_id)
-
         if check.get("entities"):
-            params = dict(
+            entity = dict(
                 _id=_id,
                 title=title,
-                content=json.dumps(dict(), ensure_ascii=False),
-                condition=json.dumps([question, interested_response], ensure_ascii=False),
-                category=category,
-                precondition='',
-                entity='precondition/simple',
-
-                _parent_precondition='',
-                question='',
-                tooltip='',
-                link='',
-                type='',
-                answers='',
-                **kw
+                condition=[question, interested_response],
+                _category=category,
+                entity='precondition/simple'
             )
-            return dict(redirect_url=tg.url('/resolve', params=params))
+            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session.save()
+            return dict(redirect_url=tg.url('/resolve'))
 
         precondition = model.Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title

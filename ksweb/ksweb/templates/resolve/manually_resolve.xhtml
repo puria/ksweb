@@ -12,6 +12,17 @@
       <div class="row" style="padding-top: 20px">
         <div class="col-md-12 text-left ks-section-name">
           Risoluzione manuale
+
+          <a href="${tg.url('/resolve/discard_changes')}"
+           onclick="return confirm('Continuando verranno perse tutte le modifiche. Continuare?')">
+          <button
+              type="button"
+              class="pull-right btn btn-danger"
+              data-toggle="tooltip"
+              title="Cancella tutte le modifiche effettuate">
+            Termina risoluzione</button>
+          </a>
+
           <hr/>
           {{total - related_entities.length}} di {{total}}
           <div class="progress">
@@ -31,7 +42,7 @@
               <div class="col-md-6">
                 <button class="btn btn-warning" on-click="addToList:{{related_entities[0]}},'new'">Modifica con versione nuova</button>
                 <br/>
-                L'oggetto in questio modificato e lascia il vecchio riferimento
+                L'oggetto in questione viene modificato e lascia il vecchio riferimento
               </div>
               <div class="col-md-6">
                 <button class="btn btn-info" on-click="addToList:{{related_entities[0]}},'old'">Tieni versione vecchia</button>
@@ -132,7 +143,7 @@
           $.ajax({
             type: "POST",
             url: "${tg.url('/resolve/mark_resolved')}",
-            data: JSON.stringify({obj: self.values, list_to_new: self.get("list_change_to_new"), list_to_old: self.get("list_change_to_old")}),
+            data: JSON.stringify({list_to_new: self.get("list_change_to_new"), list_to_old: self.get("list_change_to_old")}),
             dataType: "json",
             processData: false,
             contentType: 'application/json'

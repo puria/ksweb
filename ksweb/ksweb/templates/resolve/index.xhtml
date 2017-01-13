@@ -18,51 +18,42 @@
     </div>
 
     <div class="row" style="padding-top: 20px">
-      <div class="col-md-12">
-
-
-
-      <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
-        <button type="submit"
-                class="btn btn-success"
-                formaction="${tg.url('/resolve/original_edit')}"
-                data-toggle="tooltip" title="Le modifiche si applicheranno all'oggetto originario">
-          Applica su tutti gli altri
-        </button>
-        <br/>
-        <br/>
-        <button type="submit"
-                class="btn btn-danger"
-                formaction="${tg.url('/resolve/clone_object')}"
-                data-toggle="tooltip" title="Viene creata una copia dell'oggetto originario con le modifiche">
-        Non applicare su tutti gli altri
-        </button>
-        <br/>
-        <br/>
-        <button type="submit"
-                class="btn btn-warning"
-                formaction="${tg.url('/resolve/manually_resolve')}"
-                data-toggle="tooltip" title="Viene scelto caso per caso">
-        Scegli manualmente
-        </button>
-
-        <input name="_id" type="hidden" value="${_id}"/>
-        <input name="_category" type="hidden" value="${category}"/>
-        <input name="_precondition" type="hidden" value="${precondition}"/>
-        <input name="title" type="hidden" value="${title}"/>
-        <input name="content" type="hidden" value="${content}"/>
-        <input name="condition" type="hidden" value="${condition}"/>
-        <input name="entity" type="hidden" value="${entity}"/>
-
-        <input name="_parent_precondition" type="hidden" value="${_parent_precondition}"/>
-        <input name="question" type="hidden" value="${question}"/>
-        <input name="tooltip" type="hidden" value="${tooltip}"/>
-        <input name="link" type="hidden" value="${link}"/>
-        <input name="type" type="hidden" value="${type}"/>
-        <input name="answers" type="hidden" value="${answers}"/>
-
-      </form>
-
+      <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
+          <button type="submit"
+                  class="btn btn-success"
+                  formaction="${tg.url('/resolve/original_edit')}"
+                  data-toggle="tooltip" title="Le modifiche si applicheranno all'oggetto originario">
+            Applica su tutti gli altri
+          </button>
+          <br/>
+          <br/>
+          <button type="submit"
+                  class="btn btn-default"
+                  formaction="${tg.url('/resolve/clone_object')}"
+                  data-toggle="tooltip" title="Viene creata una copia dell'oggetto originario con le modifiche">
+          Non applicare su tutti gli altri
+          </button>
+          <br/>
+          <br/>
+          <button type="submit"
+                  class="btn btn-warning"
+                  formaction="${tg.url('/resolve/manually_resolve')}"
+                  data-toggle="tooltip" title="Viene scelto caso per caso">
+          Scegli manualmente
+          </button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <a href="${tg.url('/resolve/discard_changes')}"
+           onclick="return confirm('Continuando verranno perse tutte le modifiche. Continuare?')">
+          <button
+              type="button"
+              class="btn btn-danger"
+              data-toggle="tooltip"
+              title="Cancella tutte le modifiche effettuate">
+            Termina risoluzione</button>
+        </a>
     </div>
       <div id="resolve-ractive" style="padding-top: 20px"></div>
 
