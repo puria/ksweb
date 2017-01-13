@@ -26,7 +26,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_simple_what_response(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -58,7 +58,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_what_response(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -90,7 +90,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_have_response(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -122,7 +122,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_what_response_error(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -151,22 +151,22 @@ class TestPreconditionSimple(TestController):
 
     def test_sidebar_precondition(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
-        category2 = self._get_category('Category_2')
+        category1 = self._get_category('Categoria 1')
+        category2 = self._get_category('Categoria 2')
 
         self._create_fake_simple_precondition('Precond1', category1._id)
         self._create_fake_simple_precondition('Precond2', category2._id)
 
         resp = self.app.get('/precondition/sidebar_precondition')
 
-        assert 'Category_1' in resp
-        assert 'Category_2' in resp
+        assert 'Categoria 1' in resp
+        assert 'Categoria 2' in resp
         assert 'Precond1' in resp
         assert 'Precond2' in resp
 
     def test_available_preconditions(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
