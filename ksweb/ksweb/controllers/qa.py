@@ -6,7 +6,7 @@ from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
-    decode_params, request, tmpl_context
+    decode_params, request, tmpl_context, session
 import tg
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
@@ -125,25 +125,21 @@ class QaController(RestController):
 
         check = self.get_related_entities(_id)
         if check.get("entities"):
-            params = dict(
+            entity = dict(
                 _id=_id,
-                entity='qa',
                 title=title,
-                content=json.dumps(dict(), ensure_ascii=False),
-                condition=json.dumps(dict(), ensure_ascii=False),
-                category=category,
-                precondition='',
-                _parent_precondition=precondition or '',
+                _category=category,
+                entity='qa',
                 question=question,
-                tooltip=tooltip or '',
-                link=link or '',
+                tooltip=tooltip,
+                link=link,
                 type=answer_type,
-                answers=json.dumps(answers, ensure_ascii=False)
-                )
-            print "params", params.get('_parent_precondition', 42)
-            print "==================================================================="
-            assert len(params.keys()) == 13
-            return dict(redirect_url=tg.url('/resolve', params=params))
+                _parent_precondition=precondition,
+                answers=answers
+            )
+            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session.save()
+            return dict(redirect_url=tg.url('/resolve'))
 
         qa = model.Qa.query.get(_id=ObjectId(_id))
         qa._category = ObjectId(category)
@@ -188,15 +184,12 @@ class QaController(RestController):
     @expose('json')
     def get_related_entities(self, _id):
         """
-        This method return ALL entities (Precondtion) that have inside the given _id
+        This method return ALL entities (Precondition simple) that have inside the given _id
         :param _id:
         :return:
         """
-
-        preconditions_related = model.Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)}).all()
-
+        preconditions_related = model.Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)})
         entities = list(preconditions_related)
-
         return {
             'entities': entities,
             'len': len(entities)
