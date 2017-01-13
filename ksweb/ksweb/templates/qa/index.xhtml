@@ -1,0 +1,21 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">KS | QA</title>
+</head>
+
+<body py:block="body" py:strip="True">
+<div class="row" style="padding-top: 20px">
+  <div class="col-md-6 text-left ks-section-name">
+    Q / A
+  </div>
+  <div class="col-md-6 text-right">
+    <a href="${tg.url('/qa/new')}">
+      <button class="btn btn-primary">${h.material_icon('save')} Crea</button>
+    </a>
+  </div>
+</div>
+<div class="row" style="padding-top: 20px">
+    ${h.partials.table(entities, fields, actions)}
+</div>
+</body>
+</html>
