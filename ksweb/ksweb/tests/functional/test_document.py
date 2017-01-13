@@ -27,7 +27,7 @@ class TestDocument(TestController):
     def test_creation_document(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
 
         output1 = self._create_fake_output('Output1')
 
@@ -67,7 +67,7 @@ class TestDocument(TestController):
 
     def test_document_put(self):
         self.test_creation_document()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         original_document = self._get_document_by_title('Titolo documento 1')
 
         document_params = {

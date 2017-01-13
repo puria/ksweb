@@ -192,7 +192,7 @@ class TestController(object):
         :return: the created precondition
         """
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         #  Devo creare almeno 1 qa con delle risposte
 
         qa_color_param = {

@@ -27,7 +27,7 @@ class TestOutput(TestController):
     def test_creation_output(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
 
         output_params = {
@@ -55,7 +55,7 @@ class TestOutput(TestController):
     def test_creation_output_with_fake_qa_related(self):
         self._login_lavewr()
 
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
         fake_qa = self._create_fake_qa('Fake name')
         output_params = {
@@ -85,7 +85,7 @@ class TestOutput(TestController):
 
     def test_put_output(self):
         self.test_creation_output()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         precondition = self._get_precond_by_title('Precondition 1')
 
         output1 = self._get_output_by_title('Title of Output')
@@ -120,7 +120,7 @@ class TestOutput(TestController):
 
     def test_put_output_with_fake_qa_related(self):
         self.test_creation_output()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         precondition = self._get_precond_by_title('Precondition 1')
 
         output1 = self._get_output_by_title('Title of Output')

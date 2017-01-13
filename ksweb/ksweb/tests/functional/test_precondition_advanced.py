@@ -21,7 +21,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_precondition_advanced(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         #  Devo creare almeno 1 qa con delle risposte
 
         qa_params = {
@@ -117,7 +117,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_precondition_with_not_valid_id(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
@@ -150,7 +150,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_operator_not_valid(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
@@ -179,7 +179,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_operator_and_condition_not_valid(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
@@ -208,7 +208,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_condition_syntax_error(self):
         self._login_lavewr()
-        category1 = self._get_category('Category_1')
+        category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
