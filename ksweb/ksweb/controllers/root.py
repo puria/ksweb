@@ -101,3 +101,20 @@ class RootController(BaseController):
         """
         flash(_('We hope to see you soon!'))
         return HTTPFound(location=came_from)
+
+
+    @expose('ksweb.templates.document.poc')
+    def add_document(self, **kw):
+        from ksweb.model import Document, Category
+
+        print "--->", kw.get('document_editor')
+
+        d = Document(
+            _owner=request.identity['user']._id,
+            _category=Category.query.find({}).all()[0]._id,
+            title='Documento dall \'editor',
+            content={},
+            text=kw.get('document_editor')
+        )
+
+        return dict(document=d)

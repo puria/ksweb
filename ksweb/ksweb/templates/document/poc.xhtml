@@ -1,0 +1,50 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">KS | POC</title>
+  <script src="${tg.url('/javascript/ckeditor/ckeditor.js')}"></script>
+
+</head>
+
+<body py:block="body" py:strip="True">
+<div class="row" style="padding-top: 20px">
+  <div class="col-md-6 text-left ks-section-name">
+    Documento salvato
+  </div>
+
+</div>
+
+
+
+  <textarea name="document_editor"></textarea>
+  <br/>
+  <br/>
+  <br/>
+
+  <form  action="#">
+    <div class="form-group">
+      <label for="output">Esempio di output</label>
+      <input class="form-control" id="output" placeholder="Esempio di output"/>
+    </div>
+    <button type="submit" class="btn btn-default" onclick="replace()">Sostituisci</button>
+  </form>
+
+  <script>
+
+    var replace = function () {
+
+      alert('replace');
+    };
+
+    CKEDITOR.replace( 'document_editor', {
+      extraPlugins: 'objplaceholder'
+    });
+
+    CKEDITOR.instances.document_editor.setData( ${Markup(h.script_json_encode(document.text))}, function(){});
+
+
+
+
+
+  </script>
+</body>
+</html>
