@@ -18,11 +18,10 @@ CKEDITOR.plugins.add( 'objplaceholder', {
             dialog: 'objplaceholder',
 
 
-            downcast: function(el) {
-                console.log("downcast", el);
-                alert(el);
-                return new CKEDITOR.htmlParser.text( '[[' + this.data.name + ']]' );
-            },
+            // downcast: function(el) {
+            //     console.log("downcast", el);
+            //     return new CKEDITOR.htmlParser.text( '{' + el.attributes.id + '}' );
+            // },
 
             upcast: function( element ) {
                 return element.name == 'p' && element.hasClass( 'objplaceholder' );
