@@ -1,6 +1,9 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
     <title py:block="master_title">KS | Documenti</title>
+
+    <script src="${tg.url('/javascript/ckeditor/ckeditor.js')}"></script>
+
     <script id="DocumentForm_template" type="text/html">
         <![CDATA[
         <form id="document-form" class="form-horizontal" on-submit="submit-form">
@@ -84,6 +87,12 @@
             <div class="form-group">
                 Azioni:
                 <span onclick="ractive_document.addText()">${h.material_icon('create')}</span>
+
+               <form method="post" action="${tg.url('/add_document')}">
+                 <button class="btn btn-primary">Salva doc</button>
+                 <textarea name="document_editor"></textarea>
+               </form>
+
             </div>
             <div class="form-group {{errors.content ? 'has-error' : ''}}">
                 {{#content:i}}
@@ -186,12 +195,22 @@
             var self = this;
             console.log("add _id:" + id);
             console.log("add title:" + title);
+
+            CKEDITOR.instances.document_editor.insertHtml( "<p class='objplaceholder' id=" + id + ">" + title + "</p>", function(){});
+
+            var element =  CKEDITOR.instances.document_editor.document.getById( id );
+            element.on( 'click', function( ev ) {
+              alert('click on ' + title);
+            });
+
+            /*
             var elem = {
                 'type': 'output',
                 'content': id,
                 'title': title
             };
             self.get('content').push(elem);
+            */
         },
         createDocument: function (field) {
             var self = this;
@@ -285,5 +304,11 @@
     });
 
 </script>
+
+  <script>
+    CKEDITOR.replace( 'document_editor', {
+      extraPlugins: 'objplaceholder'
+    });
+  </script>
 </body>
 </html>
