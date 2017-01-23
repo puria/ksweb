@@ -88,7 +88,7 @@
                 Azioni:
                 <span onclick="ractive_document.addText()">${h.material_icon('create')}</span>
 
-               <form method="post" action="${tg.url('/add_document')}">
+               <form method="post" action="${tg.url('/add_document', qualified=True)}">
                  <button class="btn btn-primary">Salva doc</button>
                  <textarea name="document_editor"></textarea>
                </form>
