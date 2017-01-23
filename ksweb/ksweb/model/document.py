@@ -43,6 +43,8 @@ class Document(MappedClass):
     title = FieldProperty(s.String, required=True)
 
     content = FieldProperty(s.Anything, required=True)
+
+    text = FieldProperty(s.String)
     """
     Possible content of the document is a list with two elements type:
         - text
