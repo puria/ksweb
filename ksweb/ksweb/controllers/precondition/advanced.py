@@ -9,7 +9,7 @@ from tg import expose, validate, RestController, decode_params, \
     validation_errors_response, request, response, tmpl_context, flash, lurl
 from tg import require
 from tg import session
-from tg.i18n import ugettext as _
+from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tw2.core import LengthValidator, StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator
@@ -43,7 +43,7 @@ class PreconditionAdvancedController(RestController):
                 precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
                 if not precond:
                     response.status_code = 412
-                    return dict(errors={'conditions': 'Filtro non trovato.'})
+                    return dict(errors={'conditions': _('Filter not found.')})
 
                 bool_str += "True "
                 condition.append(ObjectId(cond['content']))
@@ -51,20 +51,20 @@ class PreconditionAdvancedController(RestController):
             elif cond['type'] == 'operator':
                 if not cond['content'] in model.Precondition.PRECONDITION_OPERATOR:
                     response.status_code = 412
-                    return dict(errors={'conditions': 'Operatore logico non valido.'})
+                    return dict(errors={'conditions': _('Invalid logic operator.')})
 
                 bool_str += cond['content']+" "
                 condition.append(cond['content'])
 
             else:
                 response.status_code = 412
-                return dict(errors={'conditions': 'Operatore non valido'})
+                return dict(errors={'conditions': _('Invalid operator')})
 
         try:
             res_eval = eval(bool_str)
         except SyntaxError as e:
             response.status_code = 412
-            return dict(errors={'conditions': 'Errore di sintassi.'})
+            return dict(errors={'conditions': _('Syntax error.')})
 
         user = request.identity['user']
         model.Precondition(
@@ -88,7 +88,7 @@ class PreconditionAdvancedController(RestController):
     }, error_handler=validation_errors_response)
     @require(
         CanManageEntityOwner(
-            msg=u'Non puoi modificare questo filtro.',
+            msg=l_(u'Non puoi modificare questo filtro.'),
             field='_id',
             entity_model=model.Precondition))
     def put(self, _id, title, category, conditions, **kw):
@@ -102,7 +102,7 @@ class PreconditionAdvancedController(RestController):
                 precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
                 if not precond:
                     response.status_code = 412
-                    return dict(errors={'conditions': 'Filtro non trovato.'})
+                    return dict(errors={'conditions': _('Filter not found.')})
 
                 bool_str += "True "
                 condition.append(ObjectId(cond['content']))
@@ -110,20 +110,20 @@ class PreconditionAdvancedController(RestController):
             elif cond['type'] == 'operator':
                 if not cond['content'] in model.Precondition.PRECONDITION_OPERATOR:
                     response.status_code = 412
-                    return dict(errors={'conditions': 'Operatore logico non valido.'})
+                    return dict(errors={'conditions': _('Invalid logic operator.')})
 
                 bool_str += cond['content']+" "
                 condition.append(cond['content'])
 
             else:
                 response.status_code = 412
-                return dict(errors={'conditions': 'Operatore non valido'})
+                return dict(errors={'conditions': _('Invalid operator')})
 
         try:
             res_eval = eval(bool_str)
         except SyntaxError as e:
             response.status_code = 412
-            return dict(errors={'conditions': 'Errore di sintassi.'})
+            return dict(errors={'conditions': _('Syntax error')})
 
         check = self.get_related_entities(_id)
 
@@ -151,7 +151,7 @@ class PreconditionAdvancedController(RestController):
     @validate({
         '_id': PreconditionExistValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo filtro.', field='_id',
+    @require(CanManageEntityOwner(msg=l_(u'You can not edit this filter.'), field='_id',
                                   entity_model=model.Precondition))
     def edit(self, _id, **kw):
         precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
