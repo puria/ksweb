@@ -8,4 +8,5 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	 config.uiColor = '#f1f1f1';
      config.extraPlugins = 'widget,lineutils,clipboard,widgetselection';
+     config.allowedContent = true;
 };

@@ -104,6 +104,13 @@ def bootstrap_pager(paginator):
     ), class_="pagination")
 
 
+def editor_widget_template_for_output(**kw):
+    return'<span class="objplaceholder output-widget ks_id-output_{id_}">{title}</span>'.format(**kw)
+
+
+def editor_widget_template_for_qa(**kw):
+    return '<span class="objplaceholder qa-widget ks_id-qa_{id_}">{title}</span>'.format(**kw)
+
 # Import commonly used helpers from WebHelpers2 and TG
 from tg.util.html import script_json_encode
 

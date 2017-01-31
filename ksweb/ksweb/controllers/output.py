@@ -66,6 +66,7 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
+
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
         if error:
@@ -79,7 +80,8 @@ class OutputController(RestController):
             title=title,
             content=content,
             public=True,
-            visible=True
+            visible=True,
+            html=kw['editor_ks_1']
         )
         flash(l_("Scegli il documento per il tuo output <a href='%s'>QUI</a>" % lurl('/document')))
         return dict(errors=None)
@@ -110,6 +112,7 @@ class OutputController(RestController):
                 _category=category,
                 _precondition=precondition,
                 entity='output',
+                html=kw['editor_ks_1']
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
@@ -120,6 +123,7 @@ class OutputController(RestController):
         output._category = ObjectId(category)
         output._precondition = ObjectId(precondition)
         output.content = content
+        output.html = kw['editor_ks_1']
 
         return dict(errors=None, redirect_url=None)
 
