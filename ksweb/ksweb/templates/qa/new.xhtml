@@ -28,20 +28,20 @@
     <form class="form-horizontal" on-submit="submit-form">
       <div class="form-group" style="padding-top: 20px">
         <div class="col-md-6 text-left ks-section-name">
-          Crea Q / A
+          New Q/A
         </div>
         <div class="col-md-6 text-right">
           {{#if saving}}
           Saving...
           {{else}}
-          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
           {{/if}}
         </div>
       </div>
       <hr/>
         <div class="form-group {{errors.question ? 'has-error' : ''}}">
         <div class="col-sm-3">
-          <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Testo della domanda" value="{{create.question}}"/>
+          <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Text of the question" value="{{create.question}}"/>
           {{#if errors.question}}
           <span class="help-block">{{errors.question}}</span>
           {{/if}}
@@ -75,7 +75,7 @@
       <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <select id="form-precondition" class="form-control" value="{{create.precondition}}">
-            <option value="" disabled selected>Seleziona un filtro</option>
+            <option value="" disabled selected>Choose a filter</option>
             {{#each preconditions}}
             <option value="{{._id}}">{{.title}}</option>
             {{/each}}
@@ -104,7 +104,7 @@
       </div>
       <div class="form-group">
         <div class="col-md-12">
-          Tipo di risposta
+          Answer's type
         </div>
       </div>
       <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
@@ -150,7 +150,7 @@
       {{#if answer_type == 'text'}}
       <div class="form-group">
         <div class="col-md-12">
-          Risposta di tipo testo
+          Essay text answer
         </div>
       </div>
       {{/if}}
