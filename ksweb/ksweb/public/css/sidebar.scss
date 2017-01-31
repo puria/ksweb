@@ -5,6 +5,10 @@
   color: $blue;
 }
 
+.ks-sidebar {
+  height: 100%;
+}
+
 .sidebar-item {
   padding-bottom: 10px;
 }
@@ -29,7 +33,7 @@
 
 
 a:hover {
-  color: $white;
+  color: $light-blue;
 }
 a:link {
   text-decoration: none;
