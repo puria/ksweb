@@ -6,9 +6,10 @@ import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, RestController, decode_params, \
-    validation_errors_response, request, response, tmpl_context
+    validation_errors_response, request, response, tmpl_context, flash, lurl
 from tg import require
 from tg import session
+from tg.i18n import ugettext as _
 from tw2.core import LengthValidator, StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator
@@ -74,6 +75,7 @@ class PreconditionAdvancedController(RestController):
             condition=condition
         )
 
+        flash(_("Ora puoi creare un output <a href='%s'>QUI</a>" % lurl('/output')))
         return dict(errors=None)
 
     @decode_params('json')

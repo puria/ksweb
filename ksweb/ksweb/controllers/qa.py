@@ -6,10 +6,10 @@ from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
-    decode_params, request, tmpl_context, session
+    decode_params, request, tmpl_context, session, flash, lurl
 import tg
 from tg.decorators import paginate, require
-from tg.i18n import lazy_ugettext as l_
+from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
 from ksweb import model
@@ -98,6 +98,11 @@ class QaController(RestController):
                             title=title + ' compilata',
                             type='simple',
                             condition=[qa._id, ''])
+
+        if qa.is_text:
+            flash(_("Ora puoi creare un output <a href='%s'>QUI</a>" % lurl('/output')))
+        else:
+            flash(_("Ora crea un filtro semplice o avanzato <a href='%s'>QUI</a>" % lurl('/precondition')))
 
         return dict(errors=None)
 

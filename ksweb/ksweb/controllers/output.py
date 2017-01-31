@@ -5,7 +5,7 @@ import json
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
-    response
+    response, flash, lurl
 import tg
 from tg import redirect
 from tg import session
@@ -81,6 +81,7 @@ class OutputController(RestController):
             public=True,
             visible=True
         )
+        flash(l_("Scegli il documento per il tuo output <a href='%s'>QUI</a>" % lurl('/document')))
         return dict(errors=None)
 
     @decode_params('json')

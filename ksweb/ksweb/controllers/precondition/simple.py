@@ -7,7 +7,8 @@ from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, RestController, decode_params, request, \
-    validation_errors_response,  response, tmpl_context
+    validation_errors_response,  response, tmpl_context, flash, lurl
+from tg.i18n import ugettext as _
 from tg import require
 from tg import session
 from tw2.core import OneOfValidator, StringLengthValidator
@@ -89,6 +90,8 @@ class PreconditionSimpleController(RestController):
                 type='advanced',
                 condition=condition
             )
+
+        flash(_("Ora puoi creare un output <a href='%s'>QUI</a>" % lurl('/output')))
 
         return dict(errors=None)
 
