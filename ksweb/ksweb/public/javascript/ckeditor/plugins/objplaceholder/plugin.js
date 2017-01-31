@@ -11,20 +11,25 @@ CKEDITOR.plugins.add( 'objplaceholder', {
             button: 'Create a simple obj placeholder',
 
             template:
-                '<p class="objplaceholder ">output</p>',
+                '<span class="objplaceholder ">output</span>',
             allowedContent:
-                'p(objplaceholder)[id];',
+                'span(*)[id];',
 
             dialog: 'objplaceholder',
 
 
-            // downcast: function(el) {
-            //     console.log("downcast", el);
-            //     return new CKEDITOR.htmlParser.text( '{' + el.attributes.id + '}' );
-            // },
+            downcast: function(el) {
+                var classes = el.attributes.class.split(" ");
+                var downcast_value = '';
+                for (var i=0; i<classes.length; i++)
+                    if (classes[i].startsWith('ks_id-'))
+                        downcast_value = classes[i].slice('ks_id-'.length);
+
+                return new CKEDITOR.htmlParser.text( '${' + downcast_value + '}' );
+            },
 
             upcast: function( element ) {
-                return element.name == 'p' && element.hasClass( 'objplaceholder' );
+                return element.name == 'span' && element.hasClass( 'objplaceholder' );
             }
         });
     }

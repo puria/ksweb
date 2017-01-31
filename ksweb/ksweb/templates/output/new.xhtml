@@ -1,6 +1,7 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
   <title py:block="master_title">KS | Output</title>
+  <script src="${tg.url('/javascript/ckeditor/ckeditor.js')}"></script>
 
   <script id="OutputForm_template" type="text/html">
     <![CDATA[
@@ -19,7 +20,7 @@
       </div>
       <hr/>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="form-group {{errors.title ? 'has-error' : ''}}">
             <div class="col-md-6">
               <input id="form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
@@ -60,8 +61,7 @@
             </div>
           </div>
           <div class="form-group">
-            Azioni:
-            <span onclick="ractive_output.addText()">${h.material_icon('create')}</span>
+            <textarea name="editor_ks_1"></textarea>
           </div>
           <div class="form-group {{errors.content ? 'has-error' : ''}}">
             {{#create.content:i}}
@@ -115,6 +115,7 @@
 
 </div>
 <script>
+  <![CDATA[
   var OutputEditor = Ractive.extend({
     template: '#OutputForm_template',
     onconstruct: function(options) {
@@ -186,6 +187,15 @@
       self.get('create.content').push(elem);
     },
     addResponseOf: function(id, title) {
+
+      var ks_id = 'ks_id-qa_' + id;
+      var class_ = 'objplaceholder qa-widget ' + ks_id;
+      var template_ = "<span class='" + class_ + "'>" + title + "</span>";
+
+      CKEDITOR.instances.editor_ks_1.insertHtml(template_, function (){});
+      CKEDITOR.instances.editor_ks_1.getSelection().removeAllRanges();
+
+
       var self = this;
       var elem = {
         'type': 'qa_response',
@@ -195,9 +205,16 @@
       self.get('create.content').push(elem);
     },
       addOutput:function (id, title) {
-          console.log("add _id:" + id);
-          console.log("add title:" + title);
-          var self = this;
+         console.log("add _id:" + id);
+         console.log("add title:" + title);
+         var ks_id = 'ks_id-output_' + id;
+         var class_ = 'objplaceholder output-widget ' + ks_id;
+         var template_ = "<span class='" + class_ + "'>" + title + "</span>";
+
+        CKEDITOR.instances.editor_ks_1.insertHtml(template_, function (){});
+        CKEDITOR.instances.editor_ks_1.getSelection().removeAllRanges();
+
+         var self = this;
          var elem = {
         'type': 'output',
         'content': id,
@@ -210,6 +227,8 @@
       self.set('saving', true);
       console.log("JSON.stringify");
       console.log(JSON.stringify(field));
+
+      field['editor_ks_1'] = CKEDITOR.instances.editor_ks_1.getData();
 
       var api_params = JSON.stringify(field);
 
@@ -237,6 +256,8 @@
       });
     }
   });
+  ]]>
+
 </script>
 <script>
   var ractive_output = new OutputEditor({
@@ -269,6 +290,14 @@
     });
   });
 
+
+</script>
+<script>
+  CKEDITOR.replace( 'editor_ks_1', {
+    extraPlugins: 'objplaceholder'
+  });
+
+  CKEDITOR.instances.editor_ks_1.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))});
 
 </script>
 </body>
