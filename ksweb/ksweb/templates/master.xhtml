@@ -64,7 +64,7 @@
       <div class="col-md-2 ks-sidebar">
           ${h.partials.sidebar("sidebar")}
       </div>
-      <div class="col-md-10">
+      <div class="col-md-10" style="padding-bottom: 20px">
         <div py:if="flash" py:replace="Markup(flash)" />
         <!--  Main included content -->
         <py:block name="body"></py:block>
@@ -89,12 +89,12 @@
 
 
 <!-- Footer -->
-<!--
   <footer class="footer hidden-xs hidden-sm">
-    <a class="pull-right" href="http://www.turbogears.org"><img style="vertical-align:middle;" src="${tg.url('/img/under_the_hood_blue.png')}" alt="TurboGears 2" /></a>
-    <p>Copyright &copy; ${getattr(tmpl_context, 'project_name', 'TurboGears2')} ${h.current_year()}</p>
+      <div class="container">
+         <p>Made with <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> by <strong>AXANT</strong></p>
+      </div>
   </footer>
-  -->
+
 
 </body>
 </html>
