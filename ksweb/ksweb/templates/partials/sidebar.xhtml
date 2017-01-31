@@ -1,13 +1,13 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
   <div class="row sidebar-item">
     <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
-      <a href="${tg.url('/document')}">${h.material_icon('insert_drive_file')} DOCUMENTI</a>
+      <a href="${tg.url('/document')}">${h.material_icon('insert_drive_file')} DOCUMENTS</a>
     </div>
     <div class="col-md-1"></div>
   </div>
   <div class="row sidebar-item">
     <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'questionaries']}">
-      <a href="${tg.url('/questionary')}">${h.material_icon('content_paste')} QUESTIONARI</a>
+      <a href="${tg.url('/questionary')}">${h.material_icon('content_paste')} QUESTIONARIES</a>
     </div>
     <div class="col-md-1"></div>
   </div>
@@ -19,7 +19,7 @@
   </div>
   <div class="row sidebar-item">
     <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
-      <a href="${tg.url('/precondition')}">${h.material_icon('group_work')} FILTRI</a>
+      <a href="${tg.url('/precondition')}">${h.material_icon('group_work')} FILTERS</a>
     </div>
     <div class="col-md-2"></div>
   </div>

@@ -29,11 +29,11 @@ class PreconditionController(BaseController):
         return dict(
             page='precondition-index',
             fields={
-                'columns_name': ['Nome', 'Tipo', 'Proprietario'],
+                'columns_name': [l_('Label'), l_('Type'), l_('Owner')],
                 'fields_name': ['title', 'type', 'owner']
             },
             entities=model.Precondition.precondition_available_for_user(request.identity['user']._id),
-            actions=True
+            actions=False
         )
 
     @expose('json')

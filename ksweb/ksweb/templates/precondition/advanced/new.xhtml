@@ -1,25 +1,25 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">KS | Filtri</title>
+    <title py:block="master_title">KS | Filters</title>
     <script id="PreconditionSimpleForm_template" type="text/html">
         <![CDATA[
         <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
             <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
-                    Filtri Avanzati
+                    Advanced Filters
                 </div>
                 <div class="col-md-6 text-right">
                     {{#if saving}}
                     Saving...
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
                     {{/if}}
                 </div>
             </div>
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo"
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label"
                            value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
@@ -45,7 +45,7 @@
             </div>
 
             <div class="form-group">
-                Operatori:
+                Operators:
                 <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')"><img
                         class="cursor-pointer" src="${tg.url('/img/and.png')}"></span>
                 <span onclick="ractive_precondition_simple.addOperator('or','${tg.url("/img/or_dark.png")}')"><img
@@ -162,7 +162,7 @@
 
             self.on('submit-form', function (event) {
                 var all_var = self.get('create');
-                console.log("Sto inviando");
+                console.log("Sending...");
                 console.log(all_var);
                 all_var['conditions'] = self.get('conditions');
                 console.log("add the conditions");

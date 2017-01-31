@@ -28,7 +28,7 @@ class QaController(RestController):
         return dict(
             page='qa-index',
             fields={
-                'columns_name': [_('Name'), _('Question'), _('Filter'), _('Category')],
+                'columns_name': [_('Label'), _('Question'), _('Filter'), _('Category')],
                 'fields_name': ['title', 'question', 'parent_precondition', 'category']
             },
             entities=model.Qa.qa_available_for_user(request.identity['user']._id),
