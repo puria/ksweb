@@ -28,11 +28,11 @@ class QaController(RestController):
         return dict(
             page='qa-index',
             fields={
-                'columns_name': ['Name', 'Category', 'Precondition', 'Question', 'Type'],
-                'fields_name': ['title', 'category', 'parent_precondition', 'question', 'type']
+                'columns_name': [_('Name'), _('Question'), _('Filter'), _('Category')],
+                'fields_name': ['title', 'question', 'parent_precondition', 'category']
             },
             entities=model.Qa.qa_available_for_user(request.identity['user']._id),
-            actions=True
+            actions=False
         )
 
     @expose('json')
@@ -73,7 +73,7 @@ class QaController(RestController):
             if len(answers) < 2:
                 response.status_code = 412
                 return dict(
-                    errors={'answers': 'Inserire almeno due risposte'})
+                    errors={'answers': _('Please add at least one more answer')})
 
         user = request.identity['user']
 
@@ -124,7 +124,7 @@ class QaController(RestController):
             if len(answers) < 2:
                 response.status_code = 412
                 return dict(
-                    errors={'answers': 'Inserire almeno due risposte'})
+                    errors={'answers': _('Please add at least one more answer')})
 
         user = request.identity['user']
 
@@ -171,7 +171,7 @@ class QaController(RestController):
     @validate({
         '_id': QAExistValidator(model=True)
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questa qa.', field='_id', entity_model=model.Qa))
+    @require(CanManageEntityOwner(msg=l_(u'You can not edit this Q/A'), field='_id', entity_model=model.Qa))
     def edit(self, _id, **kw):
         qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
         return dict(qa=qa, errors=None)
