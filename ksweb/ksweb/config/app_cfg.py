@@ -147,7 +147,10 @@ webassets.plugme(base_config, bundles={
                                 webassets.Bundle('css/sidebar.scss', filters='libsass', output='assets_debug/sidebar.css'),
                                 webassets.Bundle('css/editor.scss', filters='libsass', output='assets_debug/editor.css'),
                                 webassets.Bundle('css/table.scss', filters='libsass', output='assets_debug/table.css'),
-                               filters='cssmin', output='assets/css_all.css')
+                                filters='cssmin', output='assets/css_all.css'),
+    'login': webassets.Bundle(webassets.Bundle('css/login.scss', filters='libsass', output='assets_debug/login.css'),
+                              filters='cssmin', output='assets/login.css'),
+
 })
 
 
@@ -161,7 +164,6 @@ except ImportError:
 
 from tgext.pluggable import plug
 plug(base_config, 'tgext.mailer')
-
 plug(base_config, 'registration', global_models=True)
 
 from ksweb.config.registration_hooks import RegistrationHooks
