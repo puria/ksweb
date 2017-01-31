@@ -1,25 +1,25 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-  <title py:block="master_title">KS | Filtri</title>
+  <title py:block="master_title">KS | Filters</title>
   <script id="PreconditionSimpleForm_template" type="text/html">
     <![CDATA[
     <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
       <div class="form-group" style="padding-top: 20px">
         <div class="col-md-6 text-left ks-section-name">
-          Filtro Semplice
+          Simple filter
         </div>
         <div class="col-md-6 text-right">
           {{#if saving}}
           Saving...
           {{else}}
-          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
           {{/if}}
         </div>
       </div>
       <hr/>
       <div class="form-group {{errors.title ? 'has-error' : ''}}">
         <div class="col-sm-3">
-          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo" value="{{create.title}}"/>
+          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label" value="{{create.title}}"/>
           {{#if errors.title}}
           <span class="help-block">{{errors.title}}</span>
           {{/if}}
@@ -47,7 +47,7 @@
       <div class="form-group {{errors.question ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <select id="selected_question" class="form-control" value="{{create.question}}">
-            <option value="" disabled selected>Seleziona una domanda</option>
+            <option value="" disabled selected>Select a question</option>
             {{#each questions}}
             <option value="{{._id}}">{{.title}}</option>
             {{/each}}
@@ -64,13 +64,13 @@
           <div class="radio">
             <label>
               <input type="radio" name="{{create.answer_type}}" value="have_response" disabled="{{edit_mode}}"/>
-              Utente ha risposto alla domanda
+              The question was just answered
             </label>
           </div>
           <div class="radio">
             <label>
               <input type="radio" name="{{create.answer_type}}" value="what_response" checked=""/>
-              L'utente ha selezionato uno dei seguenti valori
+                The user selects one of the following answers
             </label>
           </div>
         </div>
