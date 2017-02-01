@@ -100,9 +100,9 @@ class QaController(RestController):
                             condition=[qa._id, ''])
 
         if qa.is_text:
-            flash(_("Ora puoi creare un output <a href='%s'>QUI</a>" % lurl('/output')))
+            flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output')))
         else:
-            flash(_("Ora crea un filtro semplice o avanzato <a href='%s'>QUI</a>" % lurl('/precondition')))
+            flash(_("Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> " % lurl('/precondition')))
 
         return dict(errors=None)
 
