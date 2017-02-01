@@ -31,9 +31,6 @@ CKEDITOR.plugins.add( 'objplaceholder', {
                     return;
                 }
 
-                // clear array
-                ractive_instance.set('create.content', []);
-
                 var type_ = '';
                 var id_ = '';
                 var downcast_value = '';

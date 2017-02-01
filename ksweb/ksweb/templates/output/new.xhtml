@@ -147,9 +147,10 @@
         self.set('create.category', self.output['_category']);
         self.set('create.precondition', self.output['_precondition']);
         self.set('create._id', self.output['_id']);
-        self.set('create.content', self.output['content']);
       }
 
+      //clear array
+      self.set('create.content', []);
       self.set('errors', {});
       self.set('saving', false);
 
