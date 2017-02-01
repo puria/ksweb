@@ -47,8 +47,9 @@ install_requires = [
     "libsass==0.8.3",
     "tgapp-registration==0.7.0",
     "tgext.mailer==0.0.2",
-    "tgapp-resetpassword==0.1.10"
-
+    "tgapp-resetpassword==0.1.10",
+    "tgapp-userprofile",
+    "axf==0.0.19",
 ]
 
 if py_version != (3, 2):

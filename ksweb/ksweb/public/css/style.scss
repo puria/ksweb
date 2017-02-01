@@ -59,7 +59,7 @@ html, body,
 
 .ks-sidebar {
   background: $light-gray;
-  overflow: scroll;
+  overflow: auto;
   height: 100%;
 }
 
@@ -118,4 +118,8 @@ thead tr {
 
 .padding-30 {
   padding: 30px;
+}
+
+hr {
+  border-bottom: 2px solid $dark-blue;
 }

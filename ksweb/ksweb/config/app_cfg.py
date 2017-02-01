@@ -6,6 +6,7 @@ This file complements development/deployment.ini.
 
 """
 from tg.configuration import AppConfig
+from tg import milestones
 
 import ksweb
 from ksweb import model, lib
@@ -178,3 +179,16 @@ replace_template(base_config,
                  'resetpassword.templates.index',
                  'ksweb.templates.resetpassword.index')
 
+plug(base_config, 'userprofile')
+def replace_profile_form_layout():
+    from axf.bootstrap import BootstrapFormLayout
+    from userprofile.lib import UserForm
+    from userprofile.lib import ChangePasswordForm
+
+    UserForm.child = BootstrapFormLayout(children=UserForm.child.children)
+    UserForm.submit.css_class = 'btn-primary form-control'
+
+    ChangePasswordForm.child = BootstrapFormLayout(children=ChangePasswordForm.child.children)
+    ChangePasswordForm.submit.css_class = 'btn-primary form-control'
+
+milestones.config_ready.register(replace_profile_form_layout)

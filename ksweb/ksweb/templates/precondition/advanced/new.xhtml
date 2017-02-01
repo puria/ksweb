@@ -45,7 +45,8 @@
             </div>
 
             <div class="form-group">
-                Operators:
+                <div class="col-md-12">
+                    Operators:
                 <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')"><img
                         class="cursor-pointer" src="${tg.url('/img/and.png')}"></span>
                 <span onclick="ractive_precondition_simple.addOperator('or','${tg.url("/img/or_dark.png")}')"><img
@@ -56,9 +57,11 @@
                         class="cursor-pointer" src="${tg.url('/img/bracket_open.png')}"></span>
                 <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')"><img
                         class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}"></span>
+                </div>
+
             </div>
 
-            <div class="form-group {{errors.conditions ? 'has-error' : ''}}">
+            <div class="col-md-12 form-group {{errors.conditions ? 'has-error' : ''}}">
                 {{#conditions:i}}
                 {{#if .type == 'operator'}}
                     <span class="editor-element-operator">
