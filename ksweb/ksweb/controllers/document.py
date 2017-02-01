@@ -5,7 +5,7 @@ from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, tmpl_context, predicates, RestController, request, validate, validation_errors_response
 from tg.decorators import paginate, decode_params, require
-from tg.i18n import lazy_ugettext as l_
+from tg.i18n import lazy_ugettext as l_, ugettext as _
 from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, DocumentExistValidator, DocumentContentValidator
@@ -23,7 +23,7 @@ class DocumentController(RestController):
         return dict(
             page='document-index',
             fields={
-                'columns_name': ['Name', 'Category', 'Content'],
+                'columns_name': [_('Label'), _('Category'), _('Content')],
                 'fields_name': ['title', 'category', 'content']
             },
             entities=model.Document.document_available_for_user(request.identity['user']._id),
@@ -63,7 +63,7 @@ class DocumentController(RestController):
         'category': CategoryExistValidator(required=True),
         'content': DocumentContentValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo documento.', field='_id', entity_model=model.Document))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id', entity_model=model.Document))
     def put(self, _id, title, content, category,  **kw):
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
 
@@ -77,7 +77,7 @@ class DocumentController(RestController):
     @validate({
         '_id': DocumentExistValidator(required=True)
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo documento.', field='_id', entity_model=model.Document))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id', entity_model=model.Document))
     def edit(self, _id, **kw):
         tmpl_context.sidebar_document = "document-new"
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()

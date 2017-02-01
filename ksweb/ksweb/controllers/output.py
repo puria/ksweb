@@ -83,7 +83,7 @@ class OutputController(RestController):
             visible=True,
             html=kw['editor_ks_1']
         )
-        flash(l_("Scegli il documento per il tuo output <a href='%s'>QUI</a>" % lurl('/document')))
+        flash(l_("Select the document for you outputs <a href='%s'>HERE</a>" % lurl('/document')))
         return dict(errors=None)
 
     @decode_params('json')

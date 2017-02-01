@@ -1,46 +1,44 @@
 @import "palette.scss";
 
+$element_radius: 15px;
 
-.editor-element-operator{
-	border-radius: 20px;
+.editor-element {
+	border-radius: $element_radius;
 	background-color: $carbon;
 	font-size: 12px;
-	padding: 8px;
+	padding: 4px 0px 4px 8px;
 	color: white;
-	border: black solid 2px;
+	border: $carbon solid 2px;
+
+	.media-middle {
+		vertical-align: top;
+	}
 }
+
+.editor-element-operator {
+	@extend .editor-element;
+}
+
 .editor-element-precondition {
-	border-radius: 20px;
+	@extend .editor-element;
 	background-color: indianred;
-	font-size: 12px;
-	color: $white;
-	padding: 8px;
 	border: darkred solid 2px;
 }
 
 .editor-element-answer {
-	border-radius: 20px;
+	@extend .editor-element;
 	background-color: #14BC66;
-	font-size: 12px;
-	color: $white;
-	padding: 8px;
 	border: darkgreen solid 2px;
 }
 
 .editor-element-output{
-	border-radius: 20px;
+	@extend .editor-element;
 	background-color: #0072E5;
-	font-size: 12px;
-	color: $white;
-	padding: 8px;
 	border: #004C99 solid 2px;
 }
 
 .editor-element-text {
-	border-radius: 20px;
-	font-size: 12px;
-	padding: 8px;
-	border:$carbon solid 2px;
+	@extend .editor-element;
 	background-color: #F1F1F1;
 }
 

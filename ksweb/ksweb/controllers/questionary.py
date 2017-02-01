@@ -7,7 +7,7 @@ from tg import expose, response, validate, flash, url, predicates, validation_er
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 import tg
-# from tg.i18n import ugettext as _
+from tg.i18n import ugettext as _
 from tw2.core import StringLengthValidator
 
 from ksweb import model
@@ -30,7 +30,7 @@ class QuestionaryController(BaseController):
         return dict(
             page='questionary-index',
             fields={
-                'columns_name': ['Nome'],
+                'columns_name': [_('Title')],
                 'fields_name': ['title']
             },
             entities=model.Questionary.query.find({'$or': [
@@ -62,7 +62,7 @@ class QuestionaryController(BaseController):
     @validate({
         '_id': QuestionaryExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo questionario.', field='_id', entity_model=model.Questionary))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id', entity_model=model.Questionary))
     def compile(self, _id, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
@@ -74,7 +74,7 @@ class QuestionaryController(BaseController):
         'qa_id': QAExistValidator(required=True),
         'qa_response': StringLengthValidator(min=1, strip=False),
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo questionario.', field='_id', entity_model=model.Questionary))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id', entity_model=model.Questionary))
     def responde(self, _id=None,  qa_id=None, qa_response=None, **kwargs):
 
         print 111
@@ -84,7 +84,7 @@ class QuestionaryController(BaseController):
         # print qa.answers
         if qa.type == "single" and not qa_response in qa.answers:
             response.status_code = 412
-            return dict(errors={'qa_response': 'Risposta non valida'})
+            return dict(errors={'qa_response': _('Invalid answer')})
 
         if qa.type == "multi":
             #  check each qa_response if is in qa.answers
@@ -94,7 +94,7 @@ class QuestionaryController(BaseController):
             for elem in qa_response:
                 if not elem in qa.answers:
                     response.status_code = 412
-                    return dict(errors={'qa_response': 'Risposta non valida'})
+                    return dict(errors={'qa_response': _('Invalid answer')})
         print 222
 
 

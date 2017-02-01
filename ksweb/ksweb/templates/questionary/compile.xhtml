@@ -1,13 +1,13 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-  <title py:block="master_title">KS | Questionario</title>
+  <title py:block="master_title">KS | Questionary</title>
 
   <script id="compile_questionary_template" type="text/html">
   <![CDATA[
     {{#if !quest_compiled.completed }}
     <div class="form-group" style="padding-top: 20px">
       <div class="col-md-6 text-left ks-section-name">
-      Compila questionario: {{questionary.title}}
+      Complete the questionary: {{questionary.title}}
       </div>
       <div class="col-md-6 text-right">
       </div>
@@ -38,10 +38,10 @@
 
           {{#if saving}}
             <!--?<button type="button" class="btn btn-info questionary_control disabled">Indietro</button>-->
-            <button type="button" class="btn btn-default questionary_control disabled">Salvataggio in corso...</button>
+            <button type="button" class="btn btn-default questionary_control disabled">Saving...</button>
           {{else}}
             <!--?<button type="button" class="btn btn-info questionary_control">Indietro</button>-->
-            <button type="button" class="btn btn-default questionary_control" on-click="submit_response">Avanti</button>
+            <button type="button" class="btn btn-default questionary_control" on-click="submit_response">Next</button>
           {{/if}}
       </div>
     </div>
@@ -51,7 +51,7 @@
     {{/if}}
   <div class="form-group" style="padding-top: 20px">
       <div class="col-md-6 text-left ks-section-name">
-      Questionario: {{questionary.title}}
+      Questionary: {{questionary.title}}
       </div>
       <div class="col-md-6 text-right">
       </div>

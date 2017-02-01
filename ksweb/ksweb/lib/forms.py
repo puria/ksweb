@@ -18,7 +18,7 @@ class ResetPasswordForm(twf.Form):
                     <div  style="padding-top:20px">
 
                             <div class="col-md-12 ks-section-name">
-                                Recupera password
+                                Recover password
                                 <hr/>
                             </div>
                             <div class="form-group col-md-4">
@@ -28,7 +28,7 @@ class ResetPasswordForm(twf.Form):
                             </div>
                      </div>
                 '''
-        email_address = TextField(label=l_('Email address'), validator=RegisteredUserValidator(required=True), css_class="form-control",placeholder='Indirizzo e-mail')
+        email_address = TextField(label=l_('Email address'), validator=RegisteredUserValidator(required=True), css_class="form-control",placeholder=l_('Email address'))
 
     submit = SubmitButton(css_class="btn btn-primary", value=l_("Invia"))
 
@@ -44,7 +44,7 @@ class NewPasswordForm(twf.Form):
                 ${c.display()}
             </py:for>
                             <div class="col-md-12 ks-section-name">
-                                Recupera password
+                                Recover password
                                 <hr/>
                             </div>
         <div class="row">
@@ -63,10 +63,10 @@ class NewPasswordForm(twf.Form):
 
                 '''
         data = HiddenField()
-        password = PasswordField(label=l_('New password'), validator=Validator(required=True), css_class='form-control', placeholder='Nuova password')
-        password_confirm = PasswordField(label=l_('Confirm new password'), validator=Validator(required=True), css_class='form-control', placeholder='Conferma password')
+        password = PasswordField(label=l_('New password'), validator=Validator(required=True), css_class='form-control', placeholder=l_('Nuova password'))
+        password_confirm = PasswordField(label=l_('Confirm new password'), validator=Validator(required=True), css_class='form-control', placeholder=l_('Confirm password'))
         validator = FieldsMatch('password', 'password_confirm')
 
-    submit = SubmitButton(css_class="btn btn-primary", value=l_("Salva password"))
+    submit = SubmitButton(css_class="btn btn-primary", value=l_("Save password"))
 
     action = lurl('/reset_request')
