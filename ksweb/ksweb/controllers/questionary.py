@@ -37,7 +37,7 @@ class QuestionaryController(BaseController):
                     {'_user': ObjectId(user._id)},
                     {'_owner': ObjectId(user._id)}
                 ]}).sort('title'),
-            actions=True
+            actions=False
         )
 
     @decode_params('json')
