@@ -51,7 +51,9 @@ class DocumentController(RestController):
             title=title,
             content=content,
             public=True,
-            visible=True
+            visible=True,
+            html=kw['ks_editor']
+
         )
         return dict(errors=None)
 
@@ -70,6 +72,7 @@ class DocumentController(RestController):
         document.title = title
         document._category = ObjectId(category)
         document.content = content
+        document.html = kw['ks_editor']
 
         return dict(errors=None)
 
