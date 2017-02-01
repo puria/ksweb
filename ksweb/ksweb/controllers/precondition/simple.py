@@ -8,7 +8,7 @@ from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, RestController, decode_params, request, \
     validation_errors_response,  response, tmpl_context, flash, lurl
-from tg.i18n import ugettext as _
+from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg import require
 from tg import session
 from tw2.core import OneOfValidator, StringLengthValidator
@@ -61,7 +61,7 @@ class PreconditionSimpleController(RestController):
 
                 if len(interested_response) <= 1:
                     response.status_code = 412
-                    return dict(errors={'interested_response': 'Inserire almeno una risposta'})
+                    return dict(errors={'interested_response': _('Please select at least one answer')})
 
             base_precond = []
             for resp in interested_response:
@@ -106,7 +106,7 @@ class PreconditionSimpleController(RestController):
     }, error_handler=validation_errors_response)
     @require(
         CanManageEntityOwner(
-            msg=u'Non puoi modificare questo filtro.',
+            msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
             entity_model=model.Precondition))
     def put(self, _id, title, category, question, answer_type, interested_response,  **kw):
@@ -156,7 +156,7 @@ class PreconditionSimpleController(RestController):
     @validate({
         '_id': PreconditionExistValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo filtro.', field='_id', entity_model=model.Precondition))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id', entity_model=model.Precondition))
     def edit(self, _id, **kw):
         precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
         return dict(precondition=precondition, errors=None)

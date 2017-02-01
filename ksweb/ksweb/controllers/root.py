@@ -112,7 +112,7 @@ class RootController(BaseController):
         d = Document(
             _owner=request.identity['user']._id,
             _category=Category.query.find({}).all()[0]._id,
-            title='Documento dall \'editor',
+            title=_('Document from the editor'),
             content={},
             text=kw.get('document_editor')
         )

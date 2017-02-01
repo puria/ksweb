@@ -95,7 +95,7 @@ class QaController(RestController):
                         model.Precondition(
                             _owner=user._id,
                             _category=ObjectId(category),
-                            title=title + ' compilata',
+                            title=title + ' compilata', #FIXME: decide a understandable title
                             type='simple',
                             condition=[qa._id, ''])
 
@@ -161,7 +161,7 @@ class QaController(RestController):
                         model.Precondition(
                             _owner=user._id,
                             _category=ObjectId(category),
-                            title=title + ' compilata',
+                            title=title + ' compilata', #FIXME: decide a understandable title
                             type='simple',
                             condition=[qa._id, ''])
 
