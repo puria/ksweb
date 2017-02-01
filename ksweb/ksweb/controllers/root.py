@@ -54,8 +54,8 @@ class RootController(BaseController):
     @expose('ksweb.templates.index')
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def index(self):
-        """Handle the front-page."""
-        return dict(page='index')
+        user = request.identity['user']
+        return dict(page='index', user=user)
 
 
     @expose('ksweb.templates.login')

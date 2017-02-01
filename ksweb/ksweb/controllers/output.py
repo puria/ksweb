@@ -10,7 +10,7 @@ import tg
 from tg import redirect
 from tg import session
 from tg.decorators import paginate, require
-from tg.i18n import lazy_ugettext as l_
+from tg.i18n import lazy_ugettext as l_, ugettext as _
 from tg import predicates
 from tw2.core import StringLengthValidator
 from ksweb import model
@@ -44,11 +44,11 @@ class OutputController(RestController):
         return dict(
             page='output-index',
             fields={
-                'columns_name': ['Nome', 'Categoria', 'Filtro', 'Testo'],
-                'fields_name': ['title', 'category', 'precondition', 'content']
+                'columns_name': [_('Label'), _('Filter'), _('Category'), _('Content')],
+                'fields_name': ['title', 'precondition', 'category', 'content']
             },
             entities=model.Output.output_available_for_user(request.identity['user']._id),
-            actions=True
+            actions=False
         )
 
     @expose('json')
