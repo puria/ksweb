@@ -67,7 +67,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Inserire almeno due risposte"
+        assert resp['errors']['answers'] == "Please add at least one more answer"
 
         qa_text_single_missing_one_answers = {
             'title': 'Title of QA',
@@ -81,7 +81,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_one_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Inserire almeno due risposte"
+        assert resp['errors']['answers'] == "Please add at least one more answer"
 
     def test_post_valid_qa_single(self):
         self._login_lavewr()
