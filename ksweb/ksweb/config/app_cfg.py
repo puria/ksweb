@@ -180,6 +180,7 @@ replace_template(base_config,
                  'ksweb.templates.resetpassword.index')
 
 plug(base_config, 'userprofile')
+replace_template(base_config, 'userprofile.templates.index', 'ksweb.templates.userprofile.index')
 def replace_profile_form_layout():
     from axf.bootstrap import BootstrapFormLayout
     from userprofile.lib import UserForm
