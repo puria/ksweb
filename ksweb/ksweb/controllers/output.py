@@ -79,7 +79,7 @@ class OutputController(RestController):
             content=content,
             public=True,
             visible=True,
-            html=kw['editor_ks_1']
+            html=kw['ks_editor']
         )
         flash(l_("Select the document for you outputs <a href='%s'>HERE</a>" % lurl('/document')))
         return dict(errors=None)
@@ -110,7 +110,7 @@ class OutputController(RestController):
                 _category=category,
                 _precondition=precondition,
                 entity='output',
-                html=kw['editor_ks_1']
+                html=kw['ks_editor']
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
@@ -121,7 +121,7 @@ class OutputController(RestController):
         output._category = ObjectId(category)
         output._precondition = ObjectId(precondition)
         output.content = content
-        output.html = kw['editor_ks_1']
+        output.html = kw['ks_editor']
 
         return dict(errors=None, redirect_url=None)
 
@@ -199,8 +199,8 @@ class OutputController(RestController):
         import logging
         log = logging.getLogger(__name__)
         log.debug("get_related_entities")
-        log.debug("output related", [o.title for o in output_related], len(output_related), type(output_related))
-        log.debug("document related", [d.title for d in documents_related], len(documents_related), type(documents_related))
+        log.debug("output related: %s %s %s", [o.title for o in output_related], len(output_related), type(output_related))
+        log.debug("document related %s %s %s", [d.title for d in documents_related], len(documents_related), type(documents_related))
 
         entities = list(output_related + documents_related)
 

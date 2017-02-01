@@ -274,7 +274,7 @@ class TestController(object):
     def _get_output_by_title(self, title):
         return model.Output.query.get(title=title)
 
-    def _create_output(self, title, category_id, precondition_id, content):
+    def _create_output(self, title, category_id, precondition_id, content, html=''):
         if isinstance(content, (str, unicode)):
             content = [{
                 'type': "text",
@@ -287,7 +287,8 @@ class TestController(object):
                 'title': title,
                 'content': content,
                 'category': str(category_id),
-                'precondition': str(precondition_id)
+                'precondition': str(precondition_id),
+                'ks_editor': html
             }
         )
         return self._get_output_by_title(title)

@@ -74,38 +74,8 @@
             </div>
           </div>
           <div class="form-group">
-            <textarea name="editor_ks_1"></textarea>
+            <textarea name="ks_editor"></textarea>
           </div>
-
-          <!--?<div class="form-group {{errors.content ? 'has-error' : ''}}">-->
-            <!--?{{#create.content:i}}-->
-               <!--?{{#if .type == 'text'}}-->
-              <!--?<span class="editor-element-text">-->
-                    <!--?<span class="editor-text-simple" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>-->
-                   <!--?<span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>-->
-              <!--?</span>-->
-                  <!--?{{/if}}-->
-
-                  <!--?{{#if .type == 'qa_response'}}-->
-              <!--?<span class="editor-element-answer">-->
-                  <!--?<span on-click="showQaDetails:{{.}}">{{.title}}</span>-->
-                  <!--?<span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>-->
-              <!--?</span>-->
-               <!--?{{/if}}-->
-
-                <!--?{{#if .type == 'output'}}-->
-              <!--?<span class="editor-element-output">-->
-                  <!--?<span on-click="showQaDetails:{{.}}">{{.title}}</span>-->
-                  <!--?<span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>-->
-              <!--?</span>-->
-               <!--?{{/if}}-->
-            <!--?{{/items}}-->
-
-            <!--?{{#if errors.content}}-->
-            <!--?<span class="help-block">{{errors.content}}</span>-->
-            <!--?{{/if}}-->
-          <!--?</div>-->
-
         </div>
       </div>
     </form>
@@ -187,8 +157,8 @@
       var class_ = 'objplaceholder qa-widget ' + ks_id;
       var template_ = "<span class='" + class_ + "'>" + title + "</span>";
 
-      CKEDITOR.instances.editor_ks_1.insertHtml(template_, function (){});
-      CKEDITOR.instances.editor_ks_1.getSelection().removeAllRanges();
+      CKEDITOR.instances.ks_editor.insertHtml(template_, function (){});
+      CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
 
     },
       addOutput:function (id, title) {
@@ -198,8 +168,8 @@
          var class_ = 'objplaceholder output-widget ' + ks_id;
          var template_ = "<span class='" + class_ + "'>" + title + "</span>";
 
-        CKEDITOR.instances.editor_ks_1.insertHtml(template_, function (){});
-        CKEDITOR.instances.editor_ks_1.getSelection().removeAllRanges();
+        CKEDITOR.instances.ks_editor.insertHtml(template_, function (){});
+        CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
       },
     create_output: function(field) {
       var self = this;
@@ -207,7 +177,7 @@
       console.log("JSON.stringify");
       console.log(JSON.stringify(field));
 
-      field['editor_ks_1'] = CKEDITOR.instances.editor_ks_1.getData();
+      field['ks_editor'] = CKEDITOR.instances.ks_editor.getData();
 
       var api_params = JSON.stringify(field);
 
@@ -243,11 +213,6 @@
     el: '#output-ractive',
     output: ${Markup(h.script_json_encode(output))},
   });
-  ractive_output.on('deleteElem', function ( event, elem ) {
-    var self = this;
-    console.log("Element to remove: "+ elem);
-    self.splice('create.content', elem, 1)
-  });
 
   ractive_output.on('showQaDetails', function(event, elem) {
     var self = this;
@@ -266,7 +231,7 @@
 
 </script>
 <script>
-  CKEDITOR.replace( 'editor_ks_1', {
+  CKEDITOR.replace( 'ks_editor', {
     extraPlugins: 'objplaceholder'
   });
 
