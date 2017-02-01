@@ -34,6 +34,7 @@ class TestOutput(TestController):
             'title': 'Title of Output',
             'category': str(category1._id),
             'precondition': str(precondition._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
                 {
                     'type': "text",
@@ -94,6 +95,7 @@ class TestOutput(TestController):
             'title': 'Title of Output edited',
             'category': str(category1._id),
             'precondition': str(precondition._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
                 {
                     'type': 'text',
@@ -111,6 +113,8 @@ class TestOutput(TestController):
         resp = self.app.put_json(
             '/output/put', params=output_params
         ).json
+
+        print resp
 
         output_updated = self._get_output_by_title('Title of Output edited')
         assert output_updated, output_updated
@@ -131,6 +135,7 @@ class TestOutput(TestController):
             'title': 'Title of Output edited',
             'category': str(category1._id),
             'precondition': str(precondition._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
                 {
                     'type': 'text',
@@ -167,6 +172,7 @@ class TestOutput(TestController):
             'title': '1',
             'category': '56c59ab417928003321d5a55',
             'precondition': '56c59ab417928003321d5a55',
+            'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
                 {
                     'type': "text",
