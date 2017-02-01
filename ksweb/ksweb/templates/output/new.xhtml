@@ -61,48 +61,51 @@
             </div>
           </div>
           <div class="form-group">
+            <div class="col-md-6">
+              Available answers
+                {{#each qas}}
+                <div class="row">
+                  <div class="col-md-6">
+                    <span id="add_circle_outline" onclick='ractive_output.addResponseOf("{{._id}}", "{{.title}}")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    {{.title}}
+                  </div>
+                </div>
+                {{/each}}
+            </div>
+          </div>
+          <div class="form-group">
             <textarea name="editor_ks_1"></textarea>
           </div>
-          <div class="form-group {{errors.content ? 'has-error' : ''}}">
-            {{#create.content:i}}
-               {{#if .type == 'text'}}
-              <span class="editor-element-text">
-                    <span class="editor-text-simple" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>
-                   <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-              </span>
-                  {{/if}}
 
-                  {{#if .type == 'qa_response'}}
-              <span class="editor-element-answer">
-                  <span on-click="showQaDetails:{{.}}">{{.title}}</span>
-                  <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-              </span>
-               {{/if}}
+          <!--?<div class="form-group {{errors.content ? 'has-error' : ''}}">-->
+            <!--?{{#create.content:i}}-->
+               <!--?{{#if .type == 'text'}}-->
+              <!--?<span class="editor-element-text">-->
+                    <!--?<span class="editor-text-simple" contenteditable="true" value="{{.content}}" on-click="selectElem:{{.}}"></span>-->
+                   <!--?<span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>-->
+              <!--?</span>-->
+                  <!--?{{/if}}-->
 
-                {{#if .type == 'output'}}
-              <span class="editor-element-output">
-                  <span on-click="showQaDetails:{{.}}">{{.title}}</span>
-                  <span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-              </span>
-               {{/if}}
-            {{/items}}
+                  <!--?{{#if .type == 'qa_response'}}-->
+              <!--?<span class="editor-element-answer">-->
+                  <!--?<span on-click="showQaDetails:{{.}}">{{.title}}</span>-->
+                  <!--?<span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>-->
+              <!--?</span>-->
+               <!--?{{/if}}-->
 
-            {{#if errors.content}}
-            <span class="help-block">{{errors.content}}</span>
-            {{/if}}
-          </div>
-        </div>
-        <div class="col-md-6">
-          Available answers
-          {{#each qas}}
-            <div class="row">
-              <div class="col-md-6">
-                <span id="add_circle_outline" onclick='ractive_output.addResponseOf("{{._id}}", "{{.title}}")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                <!--?{{#if .type == 'output'}}-->
+              <!--?<span class="editor-element-output">-->
+                  <!--?<span on-click="showQaDetails:{{.}}">{{.title}}</span>-->
+                  <!--?<span id="delete_elem" class="cursor-pointer" on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>-->
+              <!--?</span>-->
+               <!--?{{/if}}-->
+            <!--?{{/items}}-->
 
-                {{.title}}
-              </div>
-            </div>
-          {{/each}}
+            <!--?{{#if errors.content}}-->
+            <!--?<span class="help-block">{{errors.content}}</span>-->
+            <!--?{{/if}}-->
+          <!--?</div>-->
+
         </div>
       </div>
     </form>
