@@ -34,12 +34,8 @@ class TestDocument(TestController):
         document_params = {
             'title': 'Titolo documento 1',
             'category': str(category1._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
-                {
-                    'type': "text",
-                    'content': "Buongiorno",
-                    'title': ""
-                },
                 {
                     'type': "output",
                     'content': str(output1._id),
@@ -74,6 +70,7 @@ class TestDocument(TestController):
             '_id': str(original_document._id),
             'title': 'Aggiornato',
             'category': str(category1._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
                 {
                     'type': "text",
