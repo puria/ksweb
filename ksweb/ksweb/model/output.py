@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """Output model module."""
-from string import Template
-
 import tg
 from markupsafe import Markup
 from ming import schema as s
@@ -98,6 +96,8 @@ class Output(MappedClass):
 
     @property
     def upcast(self):
+        from ksweb.lib.utils import _upcast
+
         """
         This property replace widget placeholder into html widget
 
@@ -105,20 +105,8 @@ class Output(MappedClass):
             ->
         <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
         """
+        return _upcast(self)
 
-        from ksweb.lib.helpers import editor_widget_template_for_output, editor_widget_template_for_qa
-
-        values = dict()
-
-        # qa_response and output only
-        for c in self.content:
-            if c['type'] == 'output':
-                values['output_'+c['content']] = editor_widget_template_for_output(id_=c['content'], title=c['title'])
-            else:
-                # qa_response
-                values['qa_'+c['content']] = editor_widget_template_for_qa(id_=c['content'], title=c['title'])
-
-        return Template(self.html).safe_substitute(**values)
 
     def __json__(self):
         from ksweb.lib.utils import to_dict
