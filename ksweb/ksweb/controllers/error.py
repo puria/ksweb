@@ -2,6 +2,8 @@
 """Error controller"""
 from tg import request, expose
 from ksweb.lib.base import BaseController
+from tg.i18n import lazy_ugettext as l_
+
 
 __all__ = ['ErrorController']
 
@@ -29,8 +31,8 @@ class ErrorController(BaseController):
             message = None
 
         if not message:
-            message = ("<p>We're sorry but we weren't able to process "
-                       " this request.</p>")
+            message = l_("<p>We're sorry but we weren't able to process "
+                         " this request.</p>")
 
         values = dict(prefix=request.environ.get('SCRIPT_NAME', ''),
                       code=request.params.get('code', resp.status_int),

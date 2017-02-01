@@ -27,7 +27,7 @@ class ResolveController(BaseController):
     @with_entity_session
     def original_edit(self, **kw):
         entity = self._original_edit()
-        flash(u'Entità %s modificata correttamente!' % entity.title)
+        flash(_(u'Entity %s successfully edited!') % entity.title)
         session.delete()
         return redirect(base_url='/')
 
@@ -35,14 +35,14 @@ class ResolveController(BaseController):
     @with_entity_session
     def clone_object(self, **kw):
         entity = self._clone_object()
-        flash("%s creato correttamente!" % entity.title)
+        flash(_("%s successfully created!") % entity.title)
         session.delete()
         return redirect(base_url='/')
 
     @expose('')
     def discard_changes(self, **kw):
         session.delete()
-        flash(u'Tutte le modifiche sono state scartate')
+        flash(_(u'All the edits are discarded'))
         return redirect(base_url='/')
 
     @expose('ksweb.templates.resolve.manually_resolve')
@@ -76,7 +76,7 @@ class ResolveController(BaseController):
             self._original_edit()
 
         session.delete()
-        flash(u'Tutti i conflitti sono stati risolti correttamente')
+        flash(_(u'All the conflicts are successfully resolved'))
         return dict(errors=None)
 
     def _original_edit(self):
