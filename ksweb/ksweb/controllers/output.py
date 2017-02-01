@@ -7,7 +7,6 @@ from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response, flash, lurl
 import tg
-from tg import redirect
 from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
@@ -16,7 +15,6 @@ from tw2.core import StringLengthValidator
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
-from ksweb.controllers.resolve import ResolveController
 
 
 class OutputController(RestController):
@@ -29,7 +27,7 @@ class OutputController(RestController):
             if elem['type'] == 'qa_response':
                 if elem['content'] not in related_qa.keys():
                     response.status_code = 412
-                    return dict(errors={'content': _('Domanda %s non legata al filtro utilizzato' % elem['title'])})
+                    return dict(errors={'content': _('Domanda %s non legata al filtro utilizzato') % elem['title']})
         return dict()
 
     def _before(self, *args, **kw):
@@ -95,7 +93,7 @@ class OutputController(RestController):
         'category': CategoryExistValidator(required=True),
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
     def put(self, _id, title, content, category, precondition, **kw):
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
@@ -131,7 +129,7 @@ class OutputController(RestController):
     @validate({
         '_id': OutputExistValidator(required=True)
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=u'Non puoi modificare questo output.', field='_id', entity_model=model.Output))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
     def edit(self, _id, **kw):
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
 
@@ -198,9 +196,11 @@ class OutputController(RestController):
         output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
         documents_related = model.Document.query.find({"content.type": "output", "content.content": _id}).all()
 
-        print "get_related_entities"
-        print "output related", [o.title for o in output_related], len(output_related), type(output_related)
-        print "document related", [d.title for d in documents_related], len(documents_related), type(documents_related)
+        import logging
+        log = logging.getLogger(__name__)
+        log.debug("get_related_entities")
+        log.debug("output related", [o.title for o in output_related], len(output_related), type(output_related))
+        log.debug("document related", [d.title for d in documents_related], len(documents_related), type(documents_related))
 
         entities = list(output_related + documents_related)
 
