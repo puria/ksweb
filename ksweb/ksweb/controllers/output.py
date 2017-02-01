@@ -29,7 +29,7 @@ class OutputController(RestController):
             if elem['type'] == 'qa_response':
                 if elem['content'] not in related_qa.keys():
                     response.status_code = 412
-                    return dict(errors={'content': 'Domanda %s non legata al filtro utilizzato' % elem['title']})
+                    return dict(errors={'content': _('Domanda %s non legata al filtro utilizzato' % elem['title'])})
         return dict()
 
     def _before(self, *args, **kw):

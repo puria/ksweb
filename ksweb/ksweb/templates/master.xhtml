@@ -7,11 +7,9 @@
 
   <title py:block="master_title">KS Web</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link py:for="asset_url in g.webassets['css_all'].urls()" rel="stylesheet" type="text/css"
         media="all" href="$asset_url"/>
-
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-
   <script py:for="asset_url in g.webassets['js_all'].urls()" src="$asset_url"></script>
   <script src="${tg.url('/javascript/axel.js')}"></script>
   <script type="text/javascript">
