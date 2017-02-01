@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from string import Template
 
 from bson import ObjectId
 import ming
@@ -46,6 +47,20 @@ def with_entity_session(func):
     return wrapper
 
 
+def _upcast(obj):
+    from ksweb.lib.helpers import editor_widget_template_for_output, editor_widget_template_for_qa
+
+    values = dict()
+
+    # qa_response and output only
+    for c in obj.content:
+        if c['type'] == 'output':
+            values['output_' + c['content']] = editor_widget_template_for_output(id_=c['content'], title=c['title'])
+        else:
+            # qa_response
+            values['qa_' + c['content']] = editor_widget_template_for_qa(id_=c['content'], title=c['title'])
+
+    return Template(obj.html).safe_substitute(**values)
 
 
 

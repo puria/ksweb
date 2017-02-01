@@ -42,9 +42,10 @@ class Document(MappedClass):
 
     title = FieldProperty(s.String, required=True)
 
+    html = FieldProperty(s.String, required=True, if_missing='')
+
     content = FieldProperty(s.Anything, required=True)
 
-    text = FieldProperty(s.String)
     """
     Possible content of the document is a list with two elements type:
         - text
@@ -61,11 +62,6 @@ class Document(MappedClass):
                 "type" : "output",
                 "title" : "ciao"
             },
-            {
-                "content" : "Simple text",
-                "type" : "text",
-                "title" : ""
-            }
         ]
     """
 
@@ -79,6 +75,19 @@ class Document(MappedClass):
     @property
     def entity(self):
         return 'document'
+
+    @property
+    def upcast(self):
+        from ksweb.lib.utils import _upcast
+
+        """
+        This property replace widget placeholder into html widget
+
+        {output_589066e6179280afa788035e}
+            ->
+        <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
+        """
+        return _upcast(self)
 
     def __json__(self):
         from ksweb.lib.utils import to_dict
