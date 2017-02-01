@@ -180,15 +180,6 @@
               callback();
           });
     },
-    addText: function() {
-      var self = this;
-      var elem = {
-        'type':"text",
-        'content': "Testo",
-        'title': ""
-      };
-      self.get('create.content').push(elem);
-    },
     addResponseOf: function(id, title) {
 
       var ks_id = 'ks_id-qa_' + id;
