@@ -1,0 +1,47 @@
+@import "palette.scss";
+
+$element_radius: 15px;
+
+.editor-element {border-radius: $element_radius;
+  background-color: $carbon;
+  font-size: 12px;
+  padding: 4px 0px 4px 8px;
+  color: white;
+  border: $carbon solid 2px;
+  margin: 10px 2px;
+
+  .media-middle {
+    vertical-align: top;
+  }
+}
+
+.editor-element-operator {
+  @extend .editor-element;
+  background-color: $blue;
+  border: $blue solid 2px;
+}
+
+.editor-element-precondition {
+  @extend .editor-element;
+}
+
+.editor-element-answer {
+  @extend .editor-element;
+  background-color: $green;
+  border: darkgreen solid 2px;
+}
+
+.editor-element-output{
+  @extend .editor-element;
+  background-color: #0072E5;
+  border: $dark-blue solid 2px;
+}
+
+.editor-element-text {@extend .editor-element;
+  background-color: #F1F1F1;
+}
+
+.editor-text {border-radius: 5px;
+  font-size: 12px;
+  padding: 2px 3px;
+}
