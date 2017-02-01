@@ -75,7 +75,7 @@ class PreconditionAdvancedController(RestController):
             condition=condition
         )
 
-        flash(_("Ora puoi creare un output <a href='%s'>QUI</a>" % lurl('/output')))
+        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output')))
         return dict(errors=None)
 
     @decode_params('json')
@@ -88,7 +88,7 @@ class PreconditionAdvancedController(RestController):
     }, error_handler=validation_errors_response)
     @require(
         CanManageEntityOwner(
-            msg=l_(u'Non puoi modificare questo filtro.'),
+            msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
             entity_model=model.Precondition))
     def put(self, _id, title, category, conditions, **kw):
@@ -151,7 +151,7 @@ class PreconditionAdvancedController(RestController):
     @validate({
         '_id': PreconditionExistValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You can not edit this filter.'), field='_id',
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id',
                                   entity_model=model.Precondition))
     def edit(self, _id, **kw):
         precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()

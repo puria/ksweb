@@ -40,7 +40,7 @@ def with_entity_session(func):
     def wrapper(*args, **kw):
         from tg import session, flash, redirect
         if not session.get('entity'):
-            flash(u'La sessione per la modifica dell\'oggetto è scaduta o non esiste', 'warning')
+            flash(u'Editing Session expired or invalid', 'warning')
             return redirect(base_url='/')
         return func(*args, **kw)
     return wrapper

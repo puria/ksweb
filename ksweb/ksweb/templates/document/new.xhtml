@@ -9,20 +9,20 @@
         <form id="document-form" class="form-horizontal" on-submit="submit-form">
             <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
-                    Documento
+                    Document
                 </div>
                 <div class="col-md-6 text-right">
                     {{#if create._id}}
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createQuestionary">
-                    ${h.material_icon('create')} Crea Questionario
+                    ${h.material_icon('create')} New questionary
                     </button>
                     {{/if}}
 
                     {{#if saving}}
                     Saving...
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Salva</button>
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
                     {{/if}}
                 </div>
             </div>
@@ -35,21 +35,21 @@
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Crea un nuovo Questionario</h4>
+                                <h4 class="modal-title" id="myModalLabel">Create a new questionary</h4>
                             </div>
                             <div class="modal-body">
-                                Inserisci il titolo:
-                                <input id="form-title" type="text" class="form-control" placeholder="Titolo"
+                                Insert the title:
+                                <input id="form-title" type="text" class="form-control" placeholder="Title"
                                        value="{{questionary_title}}"/>
                                 {{#if errors.questionary_title}}
                                 <span class="help-block">{{errors.questionary_title}}</span>
                                 {{/if}}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button type="button"
                                         onclick="ractive_document.new_questionary('{{questionary_title}}')"
-                                        class="btn btn-primary">Crea
+                                        class="btn btn-primary">New questionary
                                 </button>
                             </div>
                         </div>

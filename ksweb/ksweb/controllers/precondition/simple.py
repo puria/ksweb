@@ -91,7 +91,7 @@ class PreconditionSimpleController(RestController):
                 condition=condition
             )
 
-        flash(_("Ora puoi creare un output <a href='%s'>QUI</a>" % lurl('/output')))
+        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output')))
 
         return dict(errors=None)
 

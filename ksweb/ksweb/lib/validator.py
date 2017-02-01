@@ -6,6 +6,7 @@ import json
 from bson import ObjectId
 from bson.errors import InvalidId
 from tw2.core import Validator, ValidationError
+from tg.i18n import lazy_ugettext as l_
 
 from ksweb import model
 
@@ -16,10 +17,10 @@ class QAExistValidator(Validator):
         try:
             qa = model.Qa.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Domanda non esistente', self)
+            raise ValidationError(l_(u'Domanda non esistente'), self)
 
         if qa is None:
-            raise ValidationError(u'Domanda non esistente', self)
+            raise ValidationError(l_(u'Domanda non esistente'), self)
 
 
 class CategoryExistValidator(Validator):
@@ -28,10 +29,10 @@ class CategoryExistValidator(Validator):
         try:
             category = model.Category.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Categoria non esistente', self)
+            raise ValidationError(l_(u'Categoria non esistente'), self)
 
         if category is None:
-            raise ValidationError(u'Categoria non esistente', self)
+            raise ValidationError(l_(u'Categoria non esistente'), self)
 
 
 class PreconditionExistValidator(Validator):
@@ -40,10 +41,10 @@ class PreconditionExistValidator(Validator):
         try:
             precondition = model.Precondition.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Filtro non esistente', self)
+            raise ValidationError(l_(u'Filtro non esistente'), self)
 
         if precondition is None:
-            raise ValidationError(u'Filtro non esistente', self)
+            raise ValidationError(l_(u'Filtro non esistente'), self)
 
 
 class OutputExistValidator(Validator):
@@ -52,10 +53,10 @@ class OutputExistValidator(Validator):
         try:
             output = model.Output.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Output non esistente', self)
+            raise ValidationError(l_(u'Output non esistente'), self)
 
         if output is None:
-            raise ValidationError(u'Output non esistente', self)
+            raise ValidationError(l_(u'Output non esistente'), self)
 
 
 class DocumentExistValidator(Validator):
@@ -64,10 +65,10 @@ class DocumentExistValidator(Validator):
         try:
             document = model.Document.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Documento non esistente', self)
+            raise ValidationError(l_(u'Documento non esistente'), self)
 
         if document is None:
-            raise ValidationError(u'Documento non esistente', self)
+            raise ValidationError(l_(u'Documento non esistente'), self)
 
 
 class QuestionaryExistValidator(Validator):
@@ -76,10 +77,10 @@ class QuestionaryExistValidator(Validator):
         try:
             questionary = model.Questionary.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(u'Questionario non esistente', self)
+            raise ValidationError(l_(u'Questionario non esistente'), self)
 
         if questionary is None:
-            raise ValidationError(u'Questionario non esistente', self)
+            raise ValidationError(l_(u'Questionario non esistente'), self)
 
 
 class OutputContentValidator(Validator):
@@ -91,13 +92,13 @@ class OutputContentValidator(Validator):
             elif cond['type'] == 'qa_response':
                 qa = model.Qa.query.get(_id=ObjectId(cond['content']))
                 if not qa:
-                    raise ValidationError(u'Domanda non trovata.', self)
+                    raise ValidationError(l_(u'Domanda non trovata.'), self)
             elif cond['type'] == 'output':
                 out = model.Output.query.get(_id=ObjectId(cond['content']))
                 if not out:
-                    raise ValidationError(u'Output non trovato', self)
+                    raise ValidationError(l_(u'Output non trovato'), self)
             else:
-                raise ValidationError(u'Condizione non valida.', self)
+                raise ValidationError(l_(u'Condizione non valida.'), self)
 
     def _convert_to_python(self, value, state=None):
         if isinstance(value, basestring):
@@ -115,7 +116,7 @@ class ConditionValidator(Validator):
         try:
             value = json.loads(value)
         except Exception as e:
-            raise ValidationError(u'Condizione non valida.', self)
+            raise ValidationError(l_(u'Condizione non valida.'), self)
 
         for index, v in enumerate(value):
             try:
@@ -134,7 +135,7 @@ class AnswersValidator(Validator):
         try:
             value = json.loads(value)
         except Exception as e:
-            raise ValidationError(u'Condizione non valida.', self)
+            raise ValidationError(l_(u'Condizione non valida.'), self)
 
         return value
 
@@ -147,6 +148,6 @@ class DocumentContentValidator(Validator):
             elif cond['type'] == 'output':
                 output = model.Output.query.get(_id=ObjectId(cond['content']))
                 if not output:
-                    raise ValidationError(u'Output non trovato.', self)
+                    raise ValidationError(l_(u'Output non trovato.'), self)
             else:
-                raise ValidationError(u'Condizione non valida.', self)
+                raise ValidationError(l_(u'Condizione non valida.'), self)
