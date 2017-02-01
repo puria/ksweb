@@ -85,40 +85,7 @@
                 </div>
             </div>
             <div class="form-group">
-                Azioni:
-                <span onclick="ractive_document.addText()">${h.material_icon('create')}</span>
-
-               <form method="post" action="${tg.url('/add_document', qualified=True)}">
-                 <button class="btn btn-primary">Salva doc</button>
-                 <textarea name="document_editor"></textarea>
-               </form>
-
-            </div>
-            <div class="form-group {{errors.content ? 'has-error' : ''}}">
-                {{#content:i}}
-                {{#if .type == 'text'}}
-                <span class="editor-element-text">
-                    <span class="editor-text-simple" contenteditable="true" value="{{.content}}"
-                          on-click="selectElem:{{.}}"></span>
-                   <span id="delete_elem" class="cursor-pointer"
-                         on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-              </span>
-                {{/if}}
-
-                {{#if .type == 'output'}}
-                <span class="editor-element-output">
-                  <span on-click="showOutputDetails:{{.}}">{{.title}}</span>
-                  <span id="delete_elem" class="cursor-pointer"
-                        on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
-              </span>
-                {{/if}}
-
-
-                {{/items}}
-
-                {{#if errors.content}}
-                <span class="help-block">{{errors.content}}</span>
-                {{/if}}
+                 <textarea name="ks_editor"></textarea>
             </div>
         </form>
         ]]>
@@ -145,7 +112,6 @@
         },
         oninit: function () {
             var self = this;
-            self.set('content', []);
 
             //  Check if document is provided
             if (!jQuery.isEmptyObject(self.document)) {
@@ -157,8 +123,10 @@
                 self.set('create.title', self.document['title']);
                 self.set('create.category', self.document['_category']);
                 self.set('create._id', self.document['_id']);
-                self.set('content', self.document['content']);
             }
+
+            //clear array
+            self.set('create.content', []);
             self.set('errors', {});
             self.set('saving', false);
             self.set('categories', []);
@@ -166,7 +134,7 @@
             self.loadCategory();
             self.on('submit-form', function (event) {
                 var all_var = self.get('create');
-                all_var['content'] = self.get('content');
+                all_var['content'] = self.get('create.content');
                 console.log(all_var)
                 self.createDocument(all_var);
                 return false;
@@ -182,41 +150,30 @@
                             callback();
                     });
         },
-        addText: function () {
-            var self = this;
-            var elem = {
-                'type': "text",
-                'content': "Testo",
-                'title': ""
-            };
-            self.get('content').push(elem);
-        },
         addOutput: function (id, title) {
             var self = this;
             console.log("add _id:" + id);
             console.log("add title:" + title);
 
-            CKEDITOR.instances.document_editor.insertHtml( "<p class='objplaceholder' id=" + id + ">" + title + "</p>", function(){});
+            var ks_id = 'ks_id-output_' + id;
+            var class_ = 'objplaceholder output-widget ' + ks_id;
+            var template_ = "<span class='" + class_ + "'>" + title + "</span>";
 
-            var element =  CKEDITOR.instances.document_editor.document.getById( id );
-            element.on( 'click', function( ev ) {
-              alert('click on ' + title);
-            });
+            CKEDITOR.instances.ks_editor.insertHtml(template_, function (){});
+            CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
 
-            /*
-            var elem = {
-                'type': 'output',
-                'content': id,
-                'title': title
-            };
-            self.get('content').push(elem);
-            */
+//            var element =  CKEDITOR.instances.ks_editor.document.getById( id );
+//            element.on( 'click', function( ev ) {
+//              alert('click on ' + title);
+//            });
         },
         createDocument: function (field) {
             var self = this;
             self.set('saving', true);
             console.log("Sending:");
             console.log(JSON.stringify(field));
+
+            field['ks_editor'] = CKEDITOR.instances.ks_editor.getData();
 
             var api_params = JSON.stringify(field);
             $.ajax({
@@ -292,23 +249,14 @@
 
     });
 
-    ractive_document.on('selectElem', function (event, elem) {
-        var self = this;
-        console.log("Selected element: " + elem.content);
-    });
-
-    ractive_document.on('deleteElem', function (event, elem) {
-        var self = this;
-        console.log("Element to remove: " + elem);
-        self.splice('content', elem, 1)
-    });
-
 </script>
 
   <script>
-    CKEDITOR.replace( 'document_editor', {
+    CKEDITOR.replace( 'ks_editor', {
       extraPlugins: 'objplaceholder'
     });
+    CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(document.upcast if document else '' ))});
+
   </script>
 </body>
 </html>
