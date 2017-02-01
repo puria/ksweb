@@ -111,6 +111,13 @@ def editor_widget_template_for_output(**kw):
 def editor_widget_template_for_qa(**kw):
     return '<span class="objplaceholder qa-widget ks_id-qa_{id_}">{title}</span>'.format(**kw)
 
+
+def gravatar(email_address, size=24):
+    from hashlib import md5
+    from tg import url
+    mhash = md5(email_address).hexdigest()
+    return url('http://www.gravatar.com/avatar/'+mhash, params=dict(s=size))
+
 # Import commonly used helpers from WebHelpers2 and TG
 from tg.util.html import script_json_encode
 
