@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+"""{{target.capitalize()}} model module."""
+from ming import schema as s
+from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
+from ming.odm.declarative import MappedClass
+
+from ksweb.model import DBSession
+
+
+class {{target.capitalize()}}(MappedClass):
+    class __mongometa__:
+        session = DBSession
+        name = '{{target.lower()}}s'
+        indexes = [
+            ('_user',),
+        ]
+
+    _id = FieldProperty(s.ObjectId)
+
+    name = FieldProperty(s.String, required=False)
+
+    _user = ForeignIdProperty('User')
+    user = RelationProperty('User')
+
+
+__all__ = ['{{target.capitalize()}}']
