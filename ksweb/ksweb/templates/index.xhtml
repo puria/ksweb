@@ -1,13 +1,43 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-  <title py:block="master_title">Welcome to KS Web</title>
+    <title py:block="master_title">Welcome to KS Web</title>
+    <style>
+        h4 {
+            margin-top: 100px;
+            margin-bottom: 0;
+            font-size: 17.2px;
+            font-weight: 900;
+            color: #14bc66;
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 43.4px;
+            font-weight: 900;
+            color: #14bc66;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .welcome {
+            margin-top: 20px;
+            font-size: 20.5px;
+            font-weight: bold;
+            color: #004c99;
+        }
+        .usage {
+            color: #004c99;
+        }
+    </style>
 </head>
 
 <body py:block="body" py:strip="True">
 <div class="row">
-  <div class="col-md-12" >
-      <p class="padding-30">Per iniziare a usare il Knoledge Shaper prova a creare una domanda <a href="${tg.url('/qa')}">QUI</a> </p>
-  </div>
+    <div class="col-md-10 col-md-offset-2" >
+
+        <h4>Hello!</h4>
+        <h1>${user.user_name}</h1>
+        <span class="welcome">Welcome to KNOWLEDGE SHAPER</span>
+        <p class="usage">Per iniziare a usare il Knoledge Shaper prova a creare una domanda <a href="${tg.url('/qa')}">QUI</a> </p>
+    </div>
 </div>
 
 </body>

@@ -34,10 +34,8 @@ $footer_height: 10vh;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   height: $footer_height;
+  width: 100%;
   background-color: $dark-blue;
 
   p {
@@ -50,19 +48,9 @@ $footer_height: 10vh;
 }
 
 /* Layout style for sidebar and content */
-
-html {
-  position: relative;
-  min-height: 100%;
-  height: 10vh;
-}
-
-body {
-  height: 90vh;
-}
-
+html, body,
 .ks-container {
-  height:100%;
+  height: 100%;
 }
 
 .ks-row {
