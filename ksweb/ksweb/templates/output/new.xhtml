@@ -198,14 +198,6 @@
       CKEDITOR.instances.editor_ks_1.insertHtml(template_, function (){});
       CKEDITOR.instances.editor_ks_1.getSelection().removeAllRanges();
 
-
-      var self = this;
-      var elem = {
-        'type': 'qa_response',
-        'content': id,
-        'title': title
-      };
-      self.get('create.content').push(elem);
     },
       addOutput:function (id, title) {
          console.log("add _id:" + id);
@@ -216,14 +208,6 @@
 
         CKEDITOR.instances.editor_ks_1.insertHtml(template_, function (){});
         CKEDITOR.instances.editor_ks_1.getSelection().removeAllRanges();
-
-         var self = this;
-         var elem = {
-        'type': 'output',
-        'content': id,
-        'title': title
-        };
-        self.get('create.content').push(elem);
       },
     create_output: function(field) {
       var self = this;
@@ -267,12 +251,6 @@
     el: '#output-ractive',
     output: ${Markup(h.script_json_encode(output))},
   });
-
-//  ractive_output.on('selectElem', function ( event, elem ) {
-//    var self = this;
-//    console.log("Selected element: "+ elem.content);
-//  });
-
   ractive_output.on('deleteElem', function ( event, elem ) {
     var self = this;
     console.log("Element to remove: "+ elem);
