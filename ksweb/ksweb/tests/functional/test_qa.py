@@ -122,7 +122,7 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_multi_missing_answers, status=412
         )
         errors = resp.json['errors']
-        assert errors['answers'] == "Inserire almeno due risposte"
+        assert errors['answers'] == "Please add at least one more answer", errors
 
 
         qa_text_multi_missing_one_answers = {
@@ -139,7 +139,7 @@ class TestQaController(TestController):
         )
         errors = resp.json['errors']
 
-        assert errors['answers'] == "Inserire almeno due risposte"
+        assert errors['answers'] == "Please add at least one more answer", errors
 
     def test_post_valid_qa_multi(self):
         self._login_lavewr()
