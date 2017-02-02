@@ -85,11 +85,6 @@ class TestQuestionaryController(TestController):
         qa_animal = self._get_qa_by_title('Favourite color')
         animal_content = [
             {
-                "content": "Ti piacciono gli animali: ",
-                "type": "text",
-                "title": ""
-            },
-            {
                 "content": str(qa_animal._id),
                 "type": "qa_response",
                 "title": "Favourite Animals"
@@ -99,19 +94,9 @@ class TestQuestionaryController(TestController):
 
         content = [
             {
-                'type': "text",
-                'content': "Hey! ",
-                'title': ""
-            },
-            {
                 'type': "output",
                 'content': str(out_1._id),
                 'title': out_1.title
-            },
-            {
-                'type': "text",
-                'content': "Other stuff",
-                'title': ""
             },
             {
                 'type': "output",
@@ -119,7 +104,9 @@ class TestQuestionaryController(TestController):
                 'title': out_2.title
             },
         ]
-        document = self._create_document("Advanced_document", category1._id, content)
+        html = ''
+
+        document = self._create_document("Advanced_document", category1._id, content, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
@@ -156,11 +143,6 @@ class TestQuestionaryController(TestController):
         qa_color = self._get_qa_by_title('Favourite color')
         color_content = [
             {
-                "content": "Il tuo colore preferito",
-                "type": "text",
-                "title": ""
-            },
-            {
                 "content": str(qa_color._id),
                 "type": "qa_response",
                 "title": "Favourite Color"
@@ -171,11 +153,6 @@ class TestQuestionaryController(TestController):
         qa_animal = self._get_qa_by_title('Favourite color')
         animal_content = [
             {
-                "content": "Ti piacciono gli animali: ",
-                "type": "text",
-                "title": ""
-            },
-            {
                 "content": str(qa_animal._id),
                 "type": "qa_response",
                 "title": "Favourite Animals"
@@ -185,19 +162,9 @@ class TestQuestionaryController(TestController):
 
         content = [
             {
-                'type': "text",
-                'content': "Hey! ",
-                'title': ""
-            },
-            {
                 'type': "output",
                 'content': str(out_1._id),
                 'title': out_1.title
-            },
-            {
-                'type': "text",
-                'content': "Other stuff",
-                'title': ""
             },
             {
                 'type': "output",
@@ -210,7 +177,9 @@ class TestQuestionaryController(TestController):
                 'title': out_1.title
             },
         ]
-        document = self._create_document("Advanced_document", category1._id, content)
+        html = ''
+
+        document = self._create_document("Advanced_document", category1._id, content, html) 
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
