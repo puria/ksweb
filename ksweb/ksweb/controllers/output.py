@@ -65,6 +65,9 @@ class OutputController(RestController):
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
 
+        if not content:
+            content = []
+
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
         if error:
