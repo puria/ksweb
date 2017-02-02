@@ -138,13 +138,12 @@ class AnswersValidator(Validator):
 
         return value
 
+
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):
-        document_accepted_type = ['text', 'output']
+        document_accepted_type = ['output']
         for cond in value:
-            if cond['type'] == 'text':
-                cond['content'] = HTMLParser.HTMLParser().unescape(cond['content'])
-            elif cond['type'] == 'output':
+            if cond['type'] == 'output':
                 output = model.Output.query.get(_id=ObjectId(cond['content']))
                 if not output:
                     raise ValidationError(l_(u'Output non trovato.'), self)

@@ -44,6 +44,9 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     def post(self, title, content, category,  **kw):
 
+        if not content:
+            content = []
+
         user = request.identity['user']
         model.Document(
             _owner=user._id,
@@ -67,6 +70,10 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id', entity_model=model.Document))
     def put(self, _id, title, content, category,  **kw):
+
+        if not content:
+            content = []
+
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
 
         document.title = title
