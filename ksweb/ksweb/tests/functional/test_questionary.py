@@ -75,11 +75,6 @@ class TestQuestionaryController(TestController):
         qa_color = self._get_qa_by_title('Favourite color')
         color_content = [
             {
-                "content": "Il tuo colore preferito",
-                "type": "text",
-                "title": ""
-            },
-            {
                 "content": str(qa_color._id),
                 "type": "qa_response",
                 "title": "Favourite Color"

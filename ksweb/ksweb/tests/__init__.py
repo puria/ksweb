@@ -276,11 +276,7 @@ class TestController(object):
 
     def _create_output(self, title, category_id, precondition_id, content, html=''):
         if isinstance(content, (str, unicode)):
-            content = [{
-                'type': "text",
-                'content': content,
-                'title': ""
-                }]
+            content = []
 
         self.app.post_json(
             '/output/post', params={

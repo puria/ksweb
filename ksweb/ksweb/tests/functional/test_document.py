@@ -71,13 +71,7 @@ class TestDocument(TestController):
             'title': 'Aggiornato',
             'category': str(category1._id),
             'ks_editor': '<p>Io sono il tuo editor</p>',
-            'content': [
-                {
-                    'type': "text",
-                    'content': "Buongiorno Aggiornato",
-                    'title': ""
-                }
-            ]
+            'content': []
         }
         resp = self.app.put_json(
             '/document/put', params=document_params

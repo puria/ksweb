@@ -35,13 +35,7 @@ class TestOutput(TestController):
             'category': str(category1._id),
             'precondition': str(precondition._id),
             'ks_editor': '<p>Io sono il tuo editor</p>',
-            'content': [
-                {
-                    'type': "text",
-                    'content': "content",
-                    'title': ""
-                }
-            ]
+            'content': []
         }
 
         resp = self.app.post_json(
@@ -96,18 +90,7 @@ class TestOutput(TestController):
             'category': str(category1._id),
             'precondition': str(precondition._id),
             'ks_editor': '<p>Io sono il tuo editor</p>',
-            'content': [
-                {
-                    'type': 'text',
-                    'content': "content",
-                    'title': ""
-                },
-                {
-                    'type': 'text',
-                    'content': "Ciao a tutti",
-                    'title': ""
-                }
-            ]
+            'content': []
         }
 
         resp = self.app.put_json(
@@ -137,11 +120,6 @@ class TestOutput(TestController):
             'precondition': str(precondition._id),
             'ks_editor': '<p>Io sono il tuo editor</p>',
             'content': [
-                {
-                    'type': 'text',
-                    'content': "content",
-                    'title': ""
-                },
                 {
                     "content": str(fake_qa._id),
                     "type": "qa_response",
@@ -173,13 +151,7 @@ class TestOutput(TestController):
             'category': '56c59ab417928003321d5a55',
             'precondition': '56c59ab417928003321d5a55',
             'ks_editor': '<p>Io sono il tuo editor</p>',
-            'content': [
-                {
-                    'type': "text",
-                    'content': "content",
-                    'title': ""
-                }
-            ]
+            'content': []
         }
 
         resp = self.app.post_json(
