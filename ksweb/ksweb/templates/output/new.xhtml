@@ -161,16 +161,21 @@
       CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
 
     },
-      addOutput:function (id, title) {
-         console.log("add _id:" + id);
-         console.log("add title:" + title);
-         var ks_id = 'ks_id-output_' + id;
-         var class_ = 'objplaceholder output-widget ' + ks_id;
-         var template_ = "<span class='" + class_ + "'>" + title + "</span>";
-
-        CKEDITOR.instances.ks_editor.insertHtml(template_, function (){});
-        CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
-      },
+    addOutput:function (id, title) {
+      console.log("add _id:" + id);
+      console.log("add title:" + title);
+      var ks_id = 'ks_id-output_' + id;
+      var class_ = 'objplaceholder output-widget ' + ks_id;
+      var template_ = "<span class='" + class_ + "'>" + title + "</span>";
+      var element = CKEDITOR.dom.element.createFromHtml(template_);
+      element.on("click", function(){
+        var url = "${tg.url('/output/edit')}"+"?_id="+id;
+        var win = window.open(url, '_blank');
+        win.focus();
+      });
+      CKEDITOR.instances.ks_editor.insertElement(element);
+      CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
+    },
     create_output: function(field) {
       var self = this;
       self.set('saving', true);
@@ -232,7 +237,8 @@
 </script>
 <script>
   CKEDITOR.replace( 'ks_editor', {
-    extraPlugins: 'objplaceholder'
+    extraPlugins: 'objplaceholder',
+
   });
 
   CKEDITOR.instances.editor_ks_1.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))});

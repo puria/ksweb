@@ -158,9 +158,15 @@
             var ks_id = 'ks_id-output_' + id;
             var class_ = 'objplaceholder output-widget ' + ks_id;
             var template_ = "<span class='" + class_ + "'>" + title + "</span>";
-
-            CKEDITOR.instances.ks_editor.insertHtml(template_, function (){});
+            var element = CKEDITOR.dom.element.createFromHtml(template_);
+            element.on("click", function(){
+                var url = "${tg.url('/output/edit')}"+"?_id="+id;
+                var win = window.open(url, '_blank');
+                win.focus();
+            });
+            CKEDITOR.instances.ks_editor.insertElement(element);
             CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
+
 
 //            var element =  CKEDITOR.instances.ks_editor.document.getById( id );
 //            element.on( 'click', function( ev ) {
