@@ -5,6 +5,7 @@ from ksweb.lib.base import BaseController
 from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
 from tg import expose, decode_params, flash, redirect, session
 from ksweb import model
+from tg.i18n import ugettext as _, lazy_ugettext as l_
 
 
 class ResolveController(BaseController):
