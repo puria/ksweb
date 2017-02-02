@@ -238,7 +238,6 @@
 <script>
   CKEDITOR.replace( 'ks_editor', {
     extraPlugins: 'objplaceholder',
-
   });
 
   CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))});

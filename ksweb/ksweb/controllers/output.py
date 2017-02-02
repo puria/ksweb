@@ -84,8 +84,8 @@ class OutputController(RestController):
         flash(l_("Select the document for you outputs <a href='%s'>HERE</a>" % lurl('/document')))
         return dict(errors=None)
 
-    @decode_params('json')
     @expose('json')
+    @decode_params('json')
     @validate({
         '_id': OutputExistValidator(required=True),
         'title': StringLengthValidator(min=2),
@@ -95,6 +95,10 @@ class OutputController(RestController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
     def put(self, _id, title, content, category, precondition, **kw):
+
+        if not content:
+            content = []
+
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
         if error:
