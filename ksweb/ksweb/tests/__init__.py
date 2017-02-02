@@ -299,7 +299,7 @@ class TestController(object):
     def _get_document_by_title(self, title):
         return model.Document.query.get(title=title)
 
-    def _create_document(self, title, category_id, content):
+    def _create_document(self, title, category_id, content, html):
         if not category_id:
             category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
 
@@ -314,33 +314,24 @@ class TestController(object):
             '/document/post', params={
                 'title': title,
                 'category': str(category_id),
-                'content': content
+                'content': content,
+                'ks_editor': html
             }
         ).json
 
         return self._get_document_by_title(title)
 
-    def _create_fake_document(self, title, category_id=None):
+    def _create_fake_document(self, title, html='', category_id=None):
         output1 = self._create_fake_output(title)
 
         content = [
-            {
-                'type': "text",
-                'content': "Buongiorno",
-                'title': ""
-            },
             {
                 'type': "output",
                 'content': str(output1._id),
                 'title': output1.title
             },
-            {
-                'type': "text",
-                'content': "Pippo",
-                'title': ""
-            },
         ]
-        return self._create_document(title, category_id, content)
+        return self._create_document(title, category_id, content, html)
 
     #  Questionary Utility
     def _get_questionary(self, id):
