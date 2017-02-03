@@ -42,7 +42,7 @@ class DocumentController(RestController):
         'category': CategoryExistValidator(required=True),
         'content': DocumentContentValidator()
     }, error_handler=validation_errors_response)
-    def post(self, title, content, category,  **kw):
+    def post(self, title, category, content=[], **kw):
 
         if not content:
             content = []
