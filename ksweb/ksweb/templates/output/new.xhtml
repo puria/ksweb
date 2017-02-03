@@ -66,7 +66,7 @@
                 {{#each qas}}
                 <div class="row">
                   <div class="col-md-6">
-                    <span id="add_circle_outline" onclick='ractive_output.addResponseOf("{{._id}}", "{{.title}}")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    <span id="add_circle_outline" onclick='ractive_output.add_widget_to_editor("{{._id}}", "{{.title}}", "qa")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                     {{.title}}
                   </div>
                 </div>
@@ -151,31 +151,6 @@
               callback();
           });
     },
-    addResponseOf: function(id, title) {
-
-      var ks_id = 'ks_id-qa_' + id;
-      var class_ = 'objplaceholder qa-widget ' + ks_id;
-      var template_ = "<span class='" + class_ + "'>" + title + "</span>";
-
-      CKEDITOR.instances.ks_editor.insertHtml(template_, function (){});
-      CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
-
-    },
-    addOutput:function (id, title) {
-      console.log("add _id:" + id);
-      console.log("add title:" + title);
-      var ks_id = 'ks_id-output_' + id;
-      var class_ = 'objplaceholder output-widget ' + ks_id;
-      var template_ = "<span class='" + class_ + "'>" + title + "</span>";
-      var element = CKEDITOR.dom.element.createFromHtml(template_);
-      element.on("click", function(){
-        var url = "${tg.url('/output/edit')}"+"?_id="+id;
-        var win = window.open(url, '_blank');
-        win.focus();
-      });
-      CKEDITOR.instances.ks_editor.insertElement(element);
-      CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
-    },
     create_output: function(field) {
       var self = this;
       self.set('saving', true);
@@ -207,7 +182,31 @@
         console.log(data);
         self.set('errors', data.errors);
         self.set('saving', false);
+        self.set('create.content', []);
+
       });
+    },
+    add_widget_to_editor: function(id, title, type){
+      console.log('add_widget_to_editor:', id, title, type);
+
+      var editor = CKEDITOR.instances.ks_editor;
+      var ks_id = 'ks_id-' + type + '_' + id;
+      var class_ = 'objplaceholder ' + type + ' ' + type + '-widget ' + ks_id;
+
+      var element =  editor.document.createElement( 'span', {attributes: {'class': class_}});
+      element.setText(title);
+
+      if (type == 'output'){
+        element.on("click", function(){
+          var url = "${tg.url('/output/edit')}"+"?_id="+id;
+          var win = window.open(url, '_blank');
+          win.focus();
+        });
+      }
+
+      editor.insertElement(element);
+      var widget = editor.widgets.initOn( element, 'objplaceholder' );
+
     }
   });
   ]]>
@@ -230,6 +229,12 @@
     //Load precondition elements
     $.get( "${tg.url('/precondition/qa_precondition', qualified=True)}",{ id: precond_value}, function(data) {
       self.set('qas', data['qas']);
+
+      var w_instances = CKEDITOR.instances.ks_editor.widgets.instances;
+      for (var i in w_instances){
+        if (w_instances[i].element.hasClass('qa'))
+            w_instances[i].element.remove();
+        }
     });
   });
 

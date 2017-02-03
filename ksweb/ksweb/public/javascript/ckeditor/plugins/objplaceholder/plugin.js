@@ -13,7 +13,7 @@ CKEDITOR.plugins.add( 'objplaceholder', {
             template:
                 '<span class="objplaceholder ">output</span>',
             allowedContent:
-                'span(*)[id];',
+                'span(*)[*];',
 
             dialog: 'objplaceholder',
 

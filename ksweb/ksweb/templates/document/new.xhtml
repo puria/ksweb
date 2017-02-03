@@ -150,28 +150,26 @@
                             callback();
                     });
         },
-        addOutput: function (id, title) {
-            var self = this;
-            console.log("add _id:" + id);
-            console.log("add title:" + title);
+        add_widget_to_editor: function(id, title, type){
+          console.log('add_widget_to_editor:', id, title, type);
+          var editor = CKEDITOR.instances.ks_editor;
+          var ks_id = 'ks_id-' + type + '_' + id;
+          var class_ = 'objplaceholder ' + type + ' ' + type + '-widget ' + ks_id;
 
-            var ks_id = 'ks_id-output_' + id;
-            var class_ = 'objplaceholder output-widget ' + ks_id;
-            var template_ = "<span class='" + class_ + "'>" + title + "</span>";
-            var element = CKEDITOR.dom.element.createFromHtml(template_);
+          var element =  editor.document.createElement( 'span', {attributes: {'class': class_}});
+          element.setText(title);
+
+          if (type == 'output'){
             element.on("click", function(){
-                var url = "${tg.url('/output/edit')}"+"?_id="+id;
-                var win = window.open(url, '_blank');
-                win.focus();
+              var url = "${tg.url('/output/edit')}"+"?_id="+id;
+              var win = window.open(url, '_blank');
+              win.focus();
             });
-            CKEDITOR.instances.ks_editor.insertElement(element);
-            CKEDITOR.instances.ks_editor.getSelection().removeAllRanges();
+          }
 
+          editor.insertElement(element);
+          var widget = editor.widgets.initOn( element, 'objplaceholder' );
 
-//            var element =  CKEDITOR.instances.ks_editor.document.getById( id );
-//            element.on( 'click', function( ev ) {
-//              alert('click on ' + title);
-//            });
         },
         createDocument: function (field) {
             var self = this;
@@ -202,6 +200,7 @@
                 console.log(data);
                 self.set('errors', data.errors);
                 self.set('saving', false);
+                self.set('create.content', []);
             });
         },
         new_questionary: function (title) {
