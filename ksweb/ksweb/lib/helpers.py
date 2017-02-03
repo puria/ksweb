@@ -105,11 +105,21 @@ def bootstrap_pager(paginator):
 
 
 def editor_widget_template_for_output(**kw):
-    return'<span class="objplaceholder output-widget ks_id-output_{id_}">{title}</span>'.format(**kw)
+    # Classes explanation:
+    #   objplaceholder: used by CKEDITOR for widget definition
+    #   output: used for easily identify widget -> widget.hasClass('output')
+    #   output-widget: used by KS for stylize (CSS) widget
+    #   ks_id-output_{id_}: used for to generate unique placeholder
+    return'<span class="objplaceholder output output-widget ks_id-output_{id_}">{title}</span>'.format(**kw)
 
 
 def editor_widget_template_for_qa(**kw):
-    return '<span class="objplaceholder qa-widget ks_id-qa_{id_}">{title}</span>'.format(**kw)
+    # Classes explanation:
+    #   objplaceholder: used by CKEDITOR for widget definition
+    #   qa: used for easily identify widget -> widget.hasClass('qa')
+    #   qa-widget: used by KS for stylize (CSS) widget
+    #   ks_id-qa{id_}: used for to generate unique placeholder
+    return '<span class="objplaceholder qa qa-widget ks_id-qa_{id_}">{title}</span>'.format(**kw)
 
 
 def gravatar(email_address, size=24):
