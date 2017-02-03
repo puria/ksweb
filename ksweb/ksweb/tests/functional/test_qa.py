@@ -138,7 +138,6 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_multi_missing_one_answers, status=412
         )
         errors = resp.json['errors']
-
         assert errors['answers'] == "Please add at least one more answer", errors
 
     def test_post_valid_qa_multi(self):

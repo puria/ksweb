@@ -17,33 +17,6 @@
         </div>
       </div>
       <hr/>
-      <div class="form-group {{errors.title ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label" value="{{create.title}}"/>
-          {{#if errors.title}}
-          <span class="help-block">{{errors.title}}</span>
-          {{/if}}
-        </div>
-      </div>
-
-      <div class="form-group {{errors.category ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-            {{#each categories}}
-              {{#if .name == 'Altro'}}
-                <option value="{{._id}}" selected>{{.name}}</option>
-              {{else}}
-                <option value="{{._id}}">{{.name}}</option>
-              {{/if}}
-            {{/each}}
-          </select>
-
-          {{#if errors.category}}
-          <span class="help-block">{{errors.category}}</span>
-          {{/if}}
-        </div>
-      </div>
-
       <div class="form-group {{errors.question ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <select id="selected_question" class="form-control" value="{{create.question}}">
@@ -99,6 +72,32 @@
         {{/if}}
       </div>
 
+      <div class="form-group {{errors.title ? 'has-error' : ''}}">
+        <div class="col-sm-3">
+          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label" value="{{create.title}}"/>
+          {{#if errors.title}}
+          <span class="help-block">{{errors.title}}</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="form-group {{errors.category ? 'has-error' : ''}}">
+        <div class="col-sm-3">
+          <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
+            {{#each categories}}
+              {{#if .name == 'Altro'}}
+                <option value="{{._id}}" selected>{{.name}}</option>
+              {{else}}
+                <option value="{{._id}}">{{.name}}</option>
+              {{/if}}
+            {{/each}}
+          </select>
+
+          {{#if errors.category}}
+          <span class="help-block">{{errors.category}}</span>
+          {{/if}}
+        </div>
+      </div>
 
 
     </form>
@@ -232,6 +231,17 @@
       jQuery("#interested_response").hide();
     if(int_resp == 'what_response')
       jQuery("#interested_response").show();
+  });
+
+  ractive_precondition_simple.observe('create.interested_response', function (value) {
+      var questions = ractive_precondition_simple.get('questions');
+      if (typeof questions === "undefined") return;
+      var by_id = function(v) { return v._id == ractive_precondition_simple.get('create.question'); };
+      var question = questions.filter(by_id);
+      if (!question.length) return;
+      var q_title = question[0].title;
+      var suffix = (value.length) ? " -> "+value : " ANSWERED";
+      ractive_precondition_simple.set('create.title', q_title+suffix);
   });
 </script>
 </body>

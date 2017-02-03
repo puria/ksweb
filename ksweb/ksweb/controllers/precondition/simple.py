@@ -33,7 +33,7 @@ class PreconditionSimpleController(RestController):
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
     }, error_handler=validation_errors_response)
-    def post(self, title, category, question, answer_type, interested_response,  **kw):
+    def post(self, title, category, question, answer_type, interested_response, **kw):
         user = request.identity['user']
 
         qa = model.Qa.query.get(_id=ObjectId(question))
@@ -109,7 +109,7 @@ class PreconditionSimpleController(RestController):
             msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
             entity_model=model.Precondition))
-    def put(self, _id, title, category, question, answer_type, interested_response,  **kw):
+    def put(self, _id, title, category, question, answer_type, interested_response, **kw):
 
         check = self.get_related_entities(_id)
         if check.get("entities"):
