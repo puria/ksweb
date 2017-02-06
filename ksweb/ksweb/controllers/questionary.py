@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """Questionary controller module"""
+from string import Template
+
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
+from markupsafe import Markup
 from tg import expose, response, validate, flash, url, predicates, validation_errors_response, decode_params, request, \
     tmpl_context
+from tg import redirect
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 import tg
@@ -65,6 +69,12 @@ class QuestionaryController(BaseController):
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id', entity_model=model.Questionary))
     def compile(self, _id, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
+
+        quest_compiled = questionary.evaluate_questionary
+        print "quest_compiled", quest_compiled
+        if quest_compiled['completed']:
+            return redirect('/questionary/completed', params=dict(_id=str(questionary._id)))
+
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
 
     @expose('json')
@@ -77,7 +87,6 @@ class QuestionaryController(BaseController):
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id', entity_model=model.Questionary))
     def responde(self, _id=None,  qa_id=None, qa_response=None, **kwargs):
 
-        print 111
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         #  Check if the qa response is valid
         qa = model.Qa.query.get(_id=ObjectId(qa_id))
@@ -95,13 +104,50 @@ class QuestionaryController(BaseController):
                 if not elem in qa.answers:
                     response.status_code = 412
                     return dict(errors={'qa_response': _('Invalid answer')})
-        print 222
-
-
 
         questionary.qa_values[qa_id] = qa_response
 
         # Not sure about flush here
         DBSession.flush(questionary)
 
-        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
+        quest_compiled = questionary.evaluate_questionary
+
+        print "quest_compiled", quest_compiled
+
+        if quest_compiled['completed']:
+            return redirect('/questionary/completed', params=dict(_id=str(questionary._id)))
+
+        return dict(questionary=questionary, quest_compiled=quest_compiled)
+
+    @expose('ksweb.templates.questionary.completed')
+    @validate({
+        '_id': QuestionaryExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    def completed(self, _id=None):
+
+        questionary = model.Questionary.query.get(_id=ObjectId(_id))
+
+        completed = questionary.evaluate_questionary
+        if not completed:
+            return redirect('/questionary/compile', params=dict(quest_complited=completed))
+
+        # documento ha tanti mini template output
+
+        questionary_compiled = Template(questionary.document.html)
+
+        output_values, qa_values = dict(), dict()
+
+        for output_dict in questionary.document.content:
+            output = model.Output.query.get(_id=ObjectId(output_dict['content']))
+            output_values['output_' + output_dict['content']] = output.render
+
+        questionary_compiled = questionary_compiled.safe_substitute(**output_values)
+        questionary_compiled = Template(questionary_compiled)
+
+        for qa_id, resp in questionary.qa_values.items():
+            qa_values['qa_' + qa_id] = resp
+
+        questionary_compiled = questionary_compiled.safe_substitute(**qa_values)
+        print "questionary_compiled", questionary_compiled
+
+        return dict(questionary_compiled=Markup(questionary_compiled))

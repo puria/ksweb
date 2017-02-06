@@ -44,7 +44,7 @@ class Questionary(MappedClass):
     _document = ForeignIdProperty('Document')
     document = RelationProperty('Document')
 
-    document_values = FieldProperty(s.Anything, if_missing=[])
+    # document_values = FieldProperty(s.Anything, if_missing=[])
     """
     A list with a compiled document values
     """
@@ -81,6 +81,7 @@ class Questionary(MappedClass):
 
     @property
     def evaluate_questionary(self):
+        print "evaluate_questionary"
         """
         Valutazione del questionario, ogni volta svuoto i valori delle valutazioni di documenti, output e precond,
         così nel caso venga riaperto il questionario dopo che è stata inserita una nuova domanda,
@@ -90,42 +91,39 @@ class Questionary(MappedClass):
         :return: Se invece non sono stati ancora valutati degli output restituisce come stato completed: False e la qa alla quale bisogna rispondere
         """
 
-        self.document_values = []
+        # self.document_values = []
         self.output_values = {}
         self.generate_expression()
 
-        for elem in self.document.content:
-            if elem['type'] == "text":
-                self.document_values.append(elem['content'])
-            elif elem['type'] == "output":
-                output_id = elem['content']
-                output_res = self.evaluate_expression(output_id)
-                if not output_res['completed']:
-                    output_res['document_generated'] = self.document_values
-                    return output_res
-                else:
-                    if self.output_values[output_id].get('evaluation'):
-                        res = self.compile_output(output_id)
-                        # this need for to show other questions though output is already evaluated, for example when
-                        # output uses some response to a certain questions
-                        if res:
-                            return res
+        # document contains outputs only
+        for output in self.document.content:
+            output_id = output['content']
+            output_res = self.evaluate_expression(output_id)
+            if not output_res['completed']:
+                return output_res
+            else:
+                if self.output_values[output_id].get('evaluation'):
+                    res = self.compile_output(output_id)
+                    # this need for to show other questions though output is already evaluated, for example when
+                    # output uses some response to a certain questions
+                    if res:
+                        return res
 
         return {
-            'completed': True,
-            'document_generated': self.document_values
+            'completed': True
         }
 
     def generate_expression(self):
+        print "generate_expression"
         from . import Output
-
-        for elem in self.document.content:
-            if elem['type'] == 'output':
-                output = Output.query.get(_id=ObjectId(elem['content']))
-                self.expressions[str(output._id)] = self._generate(output.precondition)
+        for o in self.document.content:
+            output = Output.query.get(_id=ObjectId(o['content']))
+            self.expressions[str(output._id)] = self._generate(output.precondition)
 
     def _generate(self, precondition):
-        parent_expression, expression= '', ''
+        print "_generate"
+
+        parent_expression, expression = '', ''
 
         if precondition.is_simple:
             qa = precondition.get_qa()
@@ -134,7 +132,6 @@ class Questionary(MappedClass):
                 parent_expression = '(' + self._generate(qa.parent_precondition) + ') and '
 
             if precondition.simple_text_response:
-                # TODO test
                 expression = "q_%s != ''" % str(precondition.condition[0])
             elif precondition.single_choice_response:
                 expression = "q_%s == '%s'" % (str(precondition.condition[0]), precondition.condition[1])
@@ -157,6 +154,8 @@ class Questionary(MappedClass):
         return advanced_expression
 
     def compile_output(self, output_id):
+        print "compile_output"
+
         """
         Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del questionario.
 
@@ -172,26 +171,17 @@ class Questionary(MappedClass):
         evaluated_text = ""
 
         for elem in output.content:
-            if elem['type'] == "text":
-                #evaluated_text += elem['content']
-                self.document_values.append(elem['content'])
-            elif elem['type'] == "qa_response":
+            if elem['type'] == "qa_response":
                 content = self.qa_values.get(elem['content'])
-                if content:
-                    if isinstance(content, basestring):
-                        evaluated_text = self.qa_values[elem['content']]
-                    else:
-                        evaluated_text = ', '.join(self.qa_values[elem['content']])
-                else:
+                if not content:
+                    # no answer found for this question
                     return {'qa': elem['content']}
-                self.document_values.append(evaluated_text)
-            elif elem['type'] == 'output': #Ho trovato un output innestato nel mio output
+            elif elem['type'] == 'output':  # nested output
                 output_nested_id = elem['content']
                 output_nested = Output.query.get(_id=ObjectId(output_nested_id))
                 self.expressions[str(output_nested_id)] = self._generate(output_nested.precondition)
                 output_res = self.evaluate_expression(output_nested_id)
                 if not output_res['completed']:
-                    output_res['document_generated'] = self.document_values
                     return output_res
                 else:
                     if self.output_values[output_nested_id].get('evaluation'):
@@ -203,6 +193,7 @@ class Questionary(MappedClass):
         return None
 
     def evaluate_expression(self, output_id):
+        print "evaluate_expression"
 
         expression = self.expressions[output_id]
 
@@ -218,7 +209,6 @@ class Questionary(MappedClass):
             evaluation = eval(expression, answers)
         except NameError as ne:
             _id = ne.message.split("'")[1][2:]
-
             return {
                 'completed': False,
                 'qa': _id
