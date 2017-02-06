@@ -12,7 +12,6 @@
       <div class="col-md-6 text-right">
       </div>
     </div>
-    <hr/>
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
@@ -54,14 +53,6 @@
       Questionary: {{questionary.title}}
       </div>
       <div class="col-md-6 text-right">
-      </div>
-    </div>
-    <hr/>
-    <div class="row">
-      <div class="col-md-12">
-        {{#each questionary.document_values}}
-          {{.}}
-        {{/each}}
       </div>
     </div>
   ]]>
@@ -111,7 +102,6 @@
       }
       else{
         console.log("questionario completato");
-        console.log(self.get('questionary.document_values'));
         self.questionary_completed();
       }
     },
