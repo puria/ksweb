@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Output model module."""
+from string import Template
+
 import tg
+from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -107,6 +110,15 @@ class Output(MappedClass):
         """
         return _upcast(self)
 
+    @property
+    def render(self):
+        html = Template(self.html)
+        nested_output_html = dict()
+        for elem in self.content:
+            if elem['type'] == 'output':
+                nested_output = Output.query.get(_id=ObjectId(elem['content']))
+                nested_output_html['output_' + elem['content']] = nested_output.render
+        return html.safe_substitute(**nested_output_html)
 
     def __json__(self):
         from ksweb.lib.utils import to_dict
