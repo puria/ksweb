@@ -114,6 +114,7 @@ class Output(MappedClass):
     def render(self):
         html = Template(self.html)
         nested_output_html = dict()
+
         for elem in self.content:
             if elem['type'] == 'output':
                 nested_output = Output.query.get(_id=ObjectId(elem['content']))
