@@ -69,12 +69,6 @@ class QuestionaryController(BaseController):
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id', entity_model=model.Questionary))
     def compile(self, _id, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-
-        quest_compiled = questionary.evaluate_questionary
-        print "quest_compiled", quest_compiled
-        if quest_compiled['completed']:
-            return redirect('/questionary/completed', params=dict(_id=str(questionary._id)))
-
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
 
     @expose('json')
@@ -90,7 +84,6 @@ class QuestionaryController(BaseController):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         #  Check if the qa response is valid
         qa = model.Qa.query.get(_id=ObjectId(qa_id))
-        # print qa.answers
         if qa.type == "single" and not qa_response in qa.answers:
             response.status_code = 412
             return dict(errors={'qa_response': _('Invalid answer')})
@@ -112,11 +105,6 @@ class QuestionaryController(BaseController):
 
         quest_compiled = questionary.evaluate_questionary
 
-        print "quest_compiled", quest_compiled
-
-        if quest_compiled['completed']:
-            return redirect('/questionary/completed', params=dict(_id=str(questionary._id)))
-
         return dict(questionary=questionary, quest_compiled=quest_compiled)
 
     @expose('ksweb.templates.questionary.completed')
@@ -137,17 +125,20 @@ class QuestionaryController(BaseController):
 
         output_values, qa_values = dict(), dict()
 
-        for output_dict in questionary.document.content:
-            output = model.Output.query.get(_id=ObjectId(output_dict['content']))
-            output_values['output_' + output_dict['content']] = output.render
+        for _id, obj in questionary.output_values.items():
+            if obj["evaluation"]:
+                output = model.Output.query.get(_id=ObjectId(_id))
+                output_values['output_' + _id] = output.render
+            else:
+                # this clear useless output placeholder
+                output_values['output_' + _id] = ''
 
         questionary_compiled = questionary_compiled.safe_substitute(**output_values)
         questionary_compiled = Template(questionary_compiled)
 
         for qa_id, resp in questionary.qa_values.items():
-            qa_values['qa_' + qa_id] = resp
+            qa_values['qa_' + qa_id] = Markup.escape(resp)
 
         questionary_compiled = questionary_compiled.safe_substitute(**qa_values)
-        print "questionary_compiled", questionary_compiled
 
         return dict(questionary_compiled=Markup(questionary_compiled))
