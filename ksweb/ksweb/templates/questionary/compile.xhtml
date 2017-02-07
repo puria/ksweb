@@ -106,8 +106,8 @@
       }
     },
     questionary_completed: function() {
-      var self = this;
-      //alert("Complimenti hai finito il questionario");
+      var _url = '${tg.url('/questionary/completed', params=dict(_id=questionary._id))}';
+      window.location.replace(_url);
     }
   });
 </script>
