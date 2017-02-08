@@ -17,7 +17,7 @@ def _custom_title(obj):
 
 
 def _content_preview(obj):
-    return Markup("Little preview of: %s" % obj._id)
+    return " ".join(Markup(obj.html).striptags().split()[:5])
 
 
 class Output(MappedClass):
