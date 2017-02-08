@@ -51,15 +51,16 @@ class GnosinoController(RestController):
             })
 
 
+        title = u'Output ' + first_5_worlds
         output = model.Output(
             _owner=user._id,
             _category=category._id,
             _precondition=precondition._id,
-            title=u'Output ' + first_5_worlds,
+            title=title,
             content=content,
             public=True,
             visible=True,
             html=highlighted_text
         )
-        return dict()
+        return dict(_id=str(output._id), title=title)
 
