@@ -126,10 +126,10 @@
     var params = {
       '_id': self.get('questionary._id'),
       'qa_id': self.get('quest_compiled.qa'),
-      'qa_response': self.get('qa_response')
+      'qa_response': self.get('qa_response') || ['']
     };
     self.set('saving', true);
-    console.log("Chiamo api con parametri:")
+    console.log("Chiamo api con parametri:");
     console.log(JSON.stringify(params));
 
     var api_params = JSON.stringify(params);

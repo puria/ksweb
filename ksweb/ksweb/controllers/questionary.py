@@ -93,10 +93,13 @@ class QuestionaryController(BaseController):
             if isinstance(qa_response, basestring):
                 qa_response = [qa_response]
 
-            for elem in qa_response:
-                if not elem in qa.answers:
-                    response.status_code = 412
-                    return dict(errors={'qa_response': _('Invalid answer')})
+            # This comment is needed for to allow users to 'not response' a question
+            # For disable this, just uncomment followings rows
+
+            # for elem in qa_response:
+            #     if not elem in qa.answers:
+            #         response.status_code = 412
+            #         return dict(errors={'qa_response': _('Invalid answer')})
 
         questionary.qa_values[qa_id] = qa_response
 

@@ -11,6 +11,9 @@
           Output
         </div>
         <div class="col-md-6 text-right">
+          {{#if edit_mode }}
+          <button type="button" class="btn btn-warning" onclick='ractive_output.create_gnosino();'>${h.material_icon('create')} Create Gnosino</button>
+          {{/if}}
           {{#if saving}}
           Saving...
           {{else}}
@@ -88,7 +91,7 @@
 
 </div>
 <script>
-  <![CDATA[
+//<![CDATA[
   var OutputEditor = Ractive.extend({
     template: '#OutputForm_template',
     onconstruct: function(options) {
@@ -96,19 +99,19 @@
       //  Default settings
       self.submit_type = 'POST';
       self.submit_url = '${tg.url('/output/post')}';
-      self.edit_mode=false;
       self.output = options['output'];
+
 
     },
     oninit: function() {
       var self = this;
-
+      self.set('edit_mode', false);
       self.set('qas', []);
       self.set('create.content', []);
 
       //  Check if document is provided
       if (! jQuery.isEmptyObject(self.output)) {
-        self.edit_mode = true;
+        self.set('edit_mode', true);
         self.submit_type = 'PUT';
         self.submit_url = '${tg.url('/output/put')}';
 
@@ -207,9 +210,54 @@
       editor.insertElement(element);
       var widget = editor.widgets.initOn( element, 'objplaceholder' );
 
+    },
+    parse_selected: function(html) {
+      var _html = jQuery(jQuery.parseHTML(html));
+      var placeholders_ids = [];
+      var spans = _html.find(".objplaceholder").replaceWith(function() {
+        var class_name = $.grep(this.className.split(" "), function(v, i){
+          return v.indexOf('ks_id-') === 0;
+        }).join();
+        placeholders_ids.push(class_name.split("ks_id-")[1]);
+        return "$${" + class_name.split("ks_id-")[1] + "}";
+      });
+      return {
+        'text': _html.text(),
+        'list': placeholders_ids
+      };
+    },
+    create_gnosino: function () {
+      var highlighted_text = CKEDITOR.instances.ks_editor.getSelection().getSelectedText();
+
+      if(highlighted_text == ''){
+        alert("ATTENTION: you don't have highlighted any text.");
+        return;
+      }
+
+      var res = this.parse_selected(CKEDITOR.instances.ks_editor.getSelectedHtml().getHtml());
+      var api_params = JSON.stringify({
+        'highlighted_text': res['text'],
+        'list_': res['list']
+      });
+
+      $.ajax({
+        type: 'POST',
+        url: "${tg.url('/gnosino/')}",
+        data: api_params,
+        dataType: "json",
+        processData: false,
+        contentType: 'application/json'
+      }).done(function(resp) {
+        alert('Gnosino created');
+        location.reload();
+      }).fail(function(jqXHR) {
+        var data = jQuery.parseJSON(jqXHR.responseText);
+        console.log("fail");
+        console.log(data);
+      });
     }
   });
-  ]]>
+  //]]>
 
 </script>
 <script>
