@@ -256,7 +256,9 @@
       };
     },
     create_gnosino: function () {
-      var highlighted_text = CKEDITOR.instances.ks_editor.getSelection().getSelectedText();
+      var self = this;
+      var selector = CKEDITOR.instances.ks_editor.getSelection();
+      var highlighted_text = selector.getSelectedText();
 
       if(highlighted_text == ''){
         alert("ATTENTION: you don't have highlighted any text.");
@@ -277,8 +279,13 @@
         processData: false,
         contentType: 'application/json'
       }).done(function(resp) {
+        console.log("DONE", resp);
         alert('Gnosino created');
-        location.reload();
+        var range = selector.getRanges()[0];
+        range.deleteContents();
+        range.select();
+        self.add_widget_to_editor(resp['_id'], resp['title'], 'output');
+        //location.reload();
       }).fail(function(jqXHR) {
         var data = jQuery.parseJSON(jqXHR.responseText);
         console.log("fail");
