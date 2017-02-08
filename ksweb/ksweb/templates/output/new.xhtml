@@ -157,7 +157,7 @@
       console.log("JSON.stringify");
       console.log(JSON.stringify(field));
 
-      field['ks_editor'] = CKEDITOR.instances.ks_editor.getData().slice(3, -4); // remove p element: <p>a</p> -> a
+      field['ks_editor'] = CKEDITOR.instances.ks_editor.getData().slice(3, -5); // remove p element: <p>text</p> -> text
 
       var api_params = JSON.stringify(field);
 
