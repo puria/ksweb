@@ -25,13 +25,15 @@ $element_radius: 15px;
   @extend .editor-element;
 }
 
-.editor-element-answer {
+.editor-element-answer,
+.objplaceholder.qa.qa-widget.cke_widget_element,
+.qa-widget {
   @extend .editor-element;
   background-color: $green;
   border: darkgreen solid 2px;
 }
 
-.editor-element-output{
+.editor-element-output, .output-widget {
   @extend .editor-element;
   background-color: #0072E5;
   border: $dark-blue solid 2px;
@@ -44,4 +46,12 @@ $element_radius: 15px;
 .editor-text {border-radius: 5px;
   font-size: 12px;
   padding: 2px 3px;
+}
+
+.output-widget, .qa-widget{
+	border-radius: 20px;
+	font-size: 14px;
+	width: 50px;
+	color: white;
+	padding: 8px;
 }

@@ -3,22 +3,19 @@ Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 
-.output-widget, .qa-widget{
-	border-radius: 20px;
-	font-size: 14px;
-	width: 50px;
-	color: white;
-	padding: 8px;
+.qa-widget, .output-widget{
+	border-radius: 1em;
+	padding: 0.36em;
+	color:white;
+	margin:10px 2px;
+	vertical-align:top;
+	background-color:#14bc66;
+	border: darkgreen solid 2px;
 }
 
-.output-widget{
+.output-widget {
 	background-color: #0072E5;
 	border: #004C99 solid 2px;
-}
-
-.qa-widget{
-	background-color: #14BC66;
-	border: darkgreen solid 2px;
 }
 
 
