@@ -9,7 +9,7 @@ CKEDITOR.plugins.add( 'objplaceholder', {
         editor.widgets.add( 'objplaceholder', {
 
             button: 'Create a simple obj placeholder',
-
+            draggable: false,
             template:
                 '<span class="objplaceholder ">output</span>',
             allowedContent:

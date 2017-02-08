@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
 import tg
+from ksweb.controllers.gnosino import GnosinoController
 from tg import expose, flash, require, url, lurl
 from tg import request, redirect, tmpl_context
 from tg.i18n import ugettext as _, lazy_ugettext as l_
@@ -45,6 +46,7 @@ class RootController(BaseController):
     document = DocumentController()
     questionary = QuestionaryController()
     resolve = ResolveController()
+    gnosino = GnosinoController()
 
     error = ErrorController()
 
