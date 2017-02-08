@@ -15,9 +15,6 @@ CKEDITOR.plugins.add( 'objplaceholder', {
             allowedContent:
                 'span(*)[*];',
 
-            dialog: 'objplaceholder',
-
-
             downcast: function(el) {
 
                 var ractive_instance;
