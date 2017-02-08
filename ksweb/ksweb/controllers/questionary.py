@@ -112,17 +112,12 @@ class QuestionaryController(BaseController):
         '_id': QuestionaryExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def completed(self, _id=None):
-
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-
         completed = questionary.evaluate_questionary
         if not completed:
             return redirect('/questionary/compile', params=dict(quest_complited=completed))
 
-        # documento ha tanti mini template output
-
         questionary_compiled = Template(questionary.document.html)
-
         output_values, qa_values = dict(), dict()
 
         for _id, obj in questionary.output_values.items():
@@ -140,5 +135,6 @@ class QuestionaryController(BaseController):
             qa_values['qa_' + qa_id] = Markup.escape(resp)
 
         questionary_compiled = questionary_compiled.safe_substitute(**qa_values)
+        print questionary_compiled
 
         return dict(questionary_compiled=Markup(questionary_compiled))
