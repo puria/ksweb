@@ -110,15 +110,20 @@ class Output(MappedClass):
         """
         return _upcast(self)
 
-    @property
-    def render(self):
+    def render(self, evaluations_dict):
         html = Template(self.html)
         nested_output_html = dict()
+
+        if str(self._id) not in evaluations_dict:
+            return ''
+        if evaluations_dict[str(self._id)]['evaluation'] is False:
+            return ''
 
         for elem in self.content:
             if elem['type'] == 'output':
                 nested_output = Output.query.get(_id=ObjectId(elem['content']))
-                nested_output_html['output_' + elem['content']] = nested_output.render
+                nested_output_html['output_' + elem['content']] = nested_output.render(evaluations_dict)
+
         return html.safe_substitute(**nested_output_html)
 
     def __json__(self):
