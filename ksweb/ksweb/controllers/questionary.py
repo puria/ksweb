@@ -123,13 +123,14 @@ class QuestionaryController(BaseController):
         questionary_compiled = Template(questionary.document.html)
         output_values, qa_values = dict(), dict()
 
-        for _id, obj in questionary.output_values.items():
-            if obj["evaluation"]:
-                output = model.Output.query.get(_id=ObjectId(_id))
-                output_values['output_' + _id] = output.render
+        for output_dict in questionary.document.content:
+            _id = ObjectId(output_dict['content'])
+            if questionary.output_values[output_dict['content']]:
+                output = model.Output.query.get(_id=_id)
+                output_values['output_' + str(_id)] = output.render(questionary.output_values)
             else:
                 # this clear useless output placeholder
-                output_values['output_' + _id] = ''
+                output_values['output_' + str(_id)] = ''
 
         questionary_compiled = questionary_compiled.safe_substitute(**output_values)
         questionary_compiled = Template(questionary_compiled)
@@ -138,6 +139,5 @@ class QuestionaryController(BaseController):
             qa_values['qa_' + qa_id] = Markup.escape(resp)
 
         questionary_compiled = questionary_compiled.safe_substitute(**qa_values)
-        print questionary_compiled
 
         return dict(questionary_compiled=Markup(questionary_compiled))
