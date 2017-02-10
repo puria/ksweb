@@ -137,6 +137,7 @@
 
             self.loadCategory();
             self.on('submit-form', function (event) {
+                jQuery(window).unbind('beforeunload');
                 var all_var = self.get('create');
                 all_var['content'] = self.get('create.content');
                 console.log(all_var)
@@ -315,7 +316,11 @@
       extraPlugins: 'objplaceholder'
     });
     CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(document.upcast if document else '' ))});
-
+    CKEDITOR.instances.ks_editor.on('change', function(){
+        jQuery(window).bind('beforeunload', function(){
+            return 'Unsaved data! Are you sure you want to leave?';
+        });
+    });
   </script>
 </body>
 </html>

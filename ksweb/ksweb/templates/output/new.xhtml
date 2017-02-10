@@ -128,6 +128,7 @@
       self.set('saving', false);
 
       self.on('submit-form', function(event) {
+        jQuery(window).unbind('beforeunload');
         console.log(self.get('create'));
         self.create_output(self.get('create'));
         return false;
@@ -301,6 +302,11 @@
   });
 
   CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))});
+  CKEDITOR.instances.ks_editor.on('change', function(){
+      jQuery(window).bind('beforeunload', function(){
+        return 'Unsaved data! Are you sure you want to leave?';
+      });
+  });
 
 </script>
 </body>
