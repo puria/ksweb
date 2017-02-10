@@ -41,14 +41,14 @@ class TestQuestionaryController(TestController):
         assert resp['quest_compiled']['completed'] is False, resp
 
     def test_responde_questionary(self):
-        SkipTest("TODO")
 
-        '''
         self._login_lavewr()
         questionary = self._create_fake_questionary('FakeQuestionary')
+
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id)
         }).json
+
         assert resp['quest_compiled']['completed'] is False, resp
 
         resp = self.app.post_json('/questionary/responde', params={
@@ -58,7 +58,6 @@ class TestQuestionaryController(TestController):
         }).json
 
         assert resp['quest_compiled']['completed'] is True, resp
-        '''
 
     def test_hack_response(self):
         self._login_lavewr()
