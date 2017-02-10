@@ -18,33 +18,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
+
 #: ksweb/controllers/document.py:18 ksweb/controllers/output.py:37
 #: ksweb/controllers/precondition/precondition.py:18 ksweb/controllers/qa.py:23
 #: ksweb/controllers/questionary.py:27 ksweb/controllers/root.py:57
 msgid "Only for admin or lawyer"
-msgstr ""
+msgstr "Solo per amministratori e avvocati"
 
 #: ksweb/controllers/document.py:26 ksweb/controllers/output.py:45
 #: ksweb/controllers/precondition/precondition.py:32 ksweb/controllers/qa.py:31
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #: ksweb/controllers/document.py:26 ksweb/controllers/output.py:45
 #: ksweb/controllers/qa.py:31
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #: ksweb/controllers/document.py:26 ksweb/controllers/output.py:45
 msgid "Content"
-msgstr ""
+msgstr "Contenuto"
 
 #: ksweb/controllers/document.py:71 ksweb/controllers/document.py:90
 msgid "You are not allowed to edit this document."
-msgstr ""
+msgstr "Non sei abilitato a modificare questo documento"
 
 #: ksweb/controllers/error.py:34
 msgid "<p>We're sorry but we weren't able to process  this request.</p>"
-msgstr ""
+msgstr "<p>Siamo spiacenti ma non posssiamo processare questa richiesta.</p>"
 
 #: ksweb/controllers/output.py:30
 #, python-format
@@ -53,138 +54,136 @@ msgstr ""
 
 #: ksweb/controllers/output.py:45 ksweb/controllers/qa.py:31
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #: ksweb/controllers/output.py:87
 #, python-format
 msgid "Select the document for you outputs <a href='%s'>HERE</a>"
-msgstr ""
+msgstr "Seleziona un documento per il tuo output <a href='%s'>QUI</a>"
 
 #: ksweb/controllers/output.py:99 ksweb/controllers/output.py:139
 msgid "You are not allowed to edit this output."
-msgstr ""
+msgstr "Non sei abilitato a modificare questo output"
 
 #: ksweb/controllers/qa.py:31
 msgid "Question"
-msgstr ""
+msgstr "Domanda"
 
 #: ksweb/controllers/qa.py:76 ksweb/controllers/qa.py:127
 msgid "Please add at least one more answer"
-msgstr ""
+msgstr "Aggiungere almeno un'altra risposta"
 
 #: ksweb/controllers/precondition/advanced.py:78
 #: ksweb/controllers/precondition/simple.py:94 ksweb/controllers/qa.py:103
 #, python-format
 msgid "Now you can create an output <a href='%s'>HERE</a>"
-msgstr ""
+msgstr "Adesso puoi creare un output <a href='%s'>QUI</a>"
 
 #: ksweb/controllers/qa.py:105
 #, python-format
-msgid ""
-"Now you can create a simple filter or an advanced one <a "
-"href='%s'>HERE</a> "
-msgstr ""
+msgid "Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> "
+msgstr "Adesso puoi creare un filtro semplice o avanzato <a href='%s'>QUI</a>"
 
 #: ksweb/controllers/qa.py:174
 msgid "You can not edit this Q/A"
-msgstr ""
+msgstr "Non puoi editare questa Q/A"
 
 #: ksweb/controllers/questionary.py:37
 msgid "Title"
-msgstr ""
+msgstr "Titolo"
 
 #: ksweb/controllers/questionary.py:69 ksweb/controllers/questionary.py:81
 msgid "You are not allowed to edit this questionary."
-msgstr ""
+msgstr "Non sei abilitato a modificare questo questionario"
 
 #: ksweb/controllers/questionary.py:89
 msgid "Invalid answer"
-msgstr ""
+msgstr "Risposta invalida"
 
 #: ksweb/controllers/resolve.py:31
 #, python-format
 msgid "Entity %s successfully edited!"
-msgstr ""
+msgstr "Entità %s modificata correttamente!"
 
 #: ksweb/controllers/resolve.py:39
 #, python-format
 msgid "%s successfully created!"
-msgstr ""
+msgstr "%s create correttamente!"
 
 #: ksweb/controllers/resolve.py:46
 msgid "All the edits are discarded"
-msgstr ""
+msgstr "Tutte le modifiche annullate"
 
 #: ksweb/controllers/resolve.py:80
 msgid "All the conflicts are successfully resolved"
-msgstr ""
+msgstr "Tutti i conflitti sono stati correttamente risolti"
 
 #: ksweb/controllers/root.py:68
 msgid "User not found"
-msgstr ""
+msgstr "Utente non trovato"
 
 #: ksweb/controllers/root.py:70
 msgid "Invalid Password"
-msgstr ""
+msgstr "Password non valida"
 
 #: ksweb/controllers/root.py:74
 msgid "Wrong credentials"
-msgstr ""
+msgstr "Credenziali non corrette"
 
 #: ksweb/controllers/root.py:91
 #, python-format
 msgid "Welcome back, %s!"
-msgstr ""
+msgstr "Bentornato %s!"
 
 #: ksweb/controllers/root.py:104
 msgid "We hope to see you soon!"
-msgstr ""
+msgstr "Arrivederci!"
 
 #: ksweb/controllers/precondition/advanced.py:46
 #: ksweb/controllers/precondition/advanced.py:105
 msgid "Filter not found."
-msgstr ""
+msgstr "Filtro non trovato."
 
 #: ksweb/controllers/precondition/advanced.py:54
 #: ksweb/controllers/precondition/advanced.py:113
 msgid "Invalid logic operator."
-msgstr ""
+msgstr "Operatore logico non valido."
 
 #: ksweb/controllers/precondition/advanced.py:61
 #: ksweb/controllers/precondition/advanced.py:120
 msgid "Invalid operator"
-msgstr ""
+msgstr "Operatore non valido"
 
 #: ksweb/controllers/precondition/advanced.py:67
 msgid "Syntax error."
-msgstr ""
+msgstr "Errore di sintassi."
 
 #: ksweb/controllers/precondition/advanced.py:91
 #: ksweb/controllers/precondition/advanced.py:154
 #: ksweb/controllers/precondition/simple.py:109
 #: ksweb/controllers/precondition/simple.py:159
 msgid "You are not allowed to edit this filter."
-msgstr ""
+msgstr "Non sei abilitato a modificare questo filtro."
 
 #: ksweb/controllers/precondition/advanced.py:126
 msgid "Syntax error"
-msgstr ""
+msgstr "Errore di sintassi"
 
 #: ksweb/controllers/precondition/precondition.py:32
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: ksweb/controllers/precondition/precondition.py:32
 msgid "Owner"
-msgstr ""
+msgstr "Propietario"
 
 #: ksweb/controllers/precondition/simple.py:64
 msgid "Please select at least one answer"
-msgstr ""
+msgstr "Selezionare almeno una risposta"
 
 #: ksweb/lib/forms.py:31
 msgid "Email address"
-msgstr ""
+msgstr "Indirizzo email"
 
 #: ksweb/lib/forms.py:33
 msgid "Invia"
@@ -192,7 +191,7 @@ msgstr ""
 
 #: ksweb/lib/forms.py:66
 msgid "New password"
-msgstr ""
+msgstr "Nuova password"
 
 #: ksweb/lib/forms.py:66
 msgid "Nuova password"
@@ -200,15 +199,15 @@ msgstr ""
 
 #: ksweb/lib/forms.py:67
 msgid "Confirm new password"
-msgstr ""
+msgstr "Conferma la nuova password"
 
 #: ksweb/lib/forms.py:67
 msgid "Confirm password"
-msgstr ""
+msgstr "Conferma password"
 
 #: ksweb/lib/forms.py:70
 msgid "Save password"
-msgstr ""
+msgstr "Salva password"
 
 #: ksweb/lib/validator.py:21 ksweb/lib/validator.py:24
 msgid "Domanda non esistente"
@@ -242,8 +241,8 @@ msgstr ""
 msgid "Output non trovato"
 msgstr ""
 
-#: ksweb/lib/validator.py:100 ksweb/lib/validator.py:118
-#: ksweb/lib/validator.py:137 ksweb/lib/validator.py:151
+#: ksweb/lib/validator.py:100 ksweb/lib/validator.py:118 ksweb/lib/validator.py:137
+#: ksweb/lib/validator.py:151
 msgid "Condizione non valida."
 msgstr ""
 
@@ -257,39 +256,39 @@ msgstr ""
 
 #: ksweb/templates/error.xhtml:3
 msgid " error has Occurred"
-msgstr ""
+msgstr " è capitato un errore"
 
 #: ksweb/templates/error.xhtml:7
 msgid "Error "
-msgstr ""
+msgstr "Errore "
 
 #: ksweb/templates/index.xhtml:3
 msgid "Welcome to KS Web"
-msgstr ""
+msgstr "Benvenuto su KS Web"
 
 #: ksweb/templates/index.xhtml:36
 msgid "Hello!"
-msgstr ""
+msgstr "Ciao!"
 
 #: ksweb/templates/index.xhtml:38
 msgid "Welcome to KNOWLEDGE SHAPER"
-msgstr ""
+msgstr "Benvenuto su KNOWLEDGE SHAPER"
 
 #: ksweb/templates/index.xhtml:39
 msgid "Start using Knowledge Shaper by creating your first question "
-msgstr ""
+msgstr "Inizia a usare Knowledge Shaper creando la tua prima domanda/risposta "
 
 #: ksweb/templates/index.xhtml:39
 msgid "HERE"
-msgstr ""
+msgstr "QUI"
 
 #: ksweb/templates/login.xhtml:3 ksweb/templates/login.xhtml:29
 msgid "Login"
-msgstr ""
+msgstr "Login"
 
 #: ksweb/templates/login.xhtml:11 ksweb/templates/master.html:47
 msgid "KS"
-msgstr ""
+msgstr "KS"
 
 #: ksweb/templates/login.xhtml:12
 msgid "Knowledge Shaper"
@@ -309,11 +308,11 @@ msgstr ""
 
 #: ksweb/templates/login.xhtml:40
 msgid "Made with "
-msgstr ""
+msgstr "Fatto con "
 
 #: ksweb/templates/login.xhtml:40
 msgid " by "
-msgstr ""
+msgstr " da "
 
 #: ksweb/templates/login.xhtml:40
 msgid "AXANT"
@@ -325,11 +324,11 @@ msgstr ""
 
 #: ksweb/templates/master.html:41 ksweb/templates/master.xhtml:31
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Aziona navigazione"
 
 #: ksweb/templates/master.html:58
 msgid "Profile"
-msgstr ""
+msgstr "Profilo"
 
 #: ksweb/templates/master.xhtml:8
 msgid "KS Web"
@@ -337,7 +336,7 @@ msgstr ""
 
 #: ksweb/templates/document/index.xhtml:3
 msgid "KS | Documents"
-msgstr ""
+msgstr "KS | Documenti"
 
 #: ksweb/templates/document/index.xhtml:8
 msgid ""
@@ -345,10 +344,13 @@ msgid ""
 "    Documents\n"
 "  "
 msgstr ""
+"\n"
+"    Documenti\n"
+"  "
 
 #: ksweb/templates/document/index.xhtml:13
 msgid " New document"
-msgstr ""
+msgstr " Nuovo documento"
 
 #: ksweb/templates/document/new.xhtml:3
 msgid "KS | Documenti"
@@ -367,19 +369,23 @@ msgstr ""
 
 #: ksweb/templates/output/index.xhtml:13
 msgid " New output"
-msgstr ""
+msgstr " Nuovo output"
 
 #: ksweb/templates/partials/sidebar.xhtml:5
 msgid ""
 " DOCUMENTS\n"
 "            "
 msgstr ""
+" DOCUMENTI\n"
+"            "
 
 #: ksweb/templates/partials/sidebar.xhtml:13
 msgid ""
 " QUESTIONARIES\n"
 "            "
 msgstr ""
+" QUESTIONARI\n"
+"            "
 
 #: ksweb/templates/partials/sidebar.xhtml:21
 msgid ""
@@ -392,6 +398,8 @@ msgid ""
 " FILTERS\n"
 "            "
 msgstr ""
+" FILTRI\n"
+"            "
 
 #: ksweb/templates/partials/sidebar.xhtml:37
 msgid ""
@@ -432,7 +440,7 @@ msgstr ""
 #: ksweb/templates/precondition/index.xhtml:3
 #: ksweb/templates/precondition/simple/new.xhtml:3
 msgid "KS | Filters"
-msgstr ""
+msgstr "KS | Filtri"
 
 #: ksweb/templates/precondition/index.xhtml:8
 msgid ""
@@ -440,14 +448,17 @@ msgid ""
 "    Filters\n"
 "  "
 msgstr ""
+"\n"
+"    Filtri\n"
+"  "
 
 #: ksweb/templates/precondition/index.xhtml:13
 msgid " New simple filter"
-msgstr ""
+msgstr " Nuovo filtro semplice"
 
 #: ksweb/templates/precondition/index.xhtml:16
 msgid " New advanced filter"
-msgstr ""
+msgstr " Nuovo filtro avanzato"
 
 #: ksweb/templates/qa/index.xhtml:3
 msgid "KS | QA"
@@ -462,7 +473,7 @@ msgstr ""
 
 #: ksweb/templates/qa/index.xhtml:13
 msgid " New Q/A"
-msgstr ""
+msgstr " Nuova Q/A"
 
 #: ksweb/templates/qa/new.xhtml:3
 msgid "KS | Nuova QA"
@@ -470,15 +481,15 @@ msgstr ""
 
 #: ksweb/templates/questionary/compile.xhtml:3
 msgid "KS | Questionary"
-msgstr ""
+msgstr "KS | Questionari"
 
 #: ksweb/templates/questionary/completed.xhtml:3
 msgid "KS | Questionary completed"
-msgstr ""
+msgstr "KS | Questionari completate"
 
 #: ksweb/templates/questionary/index.xhtml:3
 msgid "KS | Questionaries"
-msgstr ""
+msgstr "KS | Questionari"
 
 #: ksweb/templates/questionary/index.xhtml:8
 msgid ""
@@ -486,10 +497,13 @@ msgid ""
 "    Questionaries\n"
 "  "
 msgstr ""
+"\n"
+"    Questionari\n"
+"  "
 
 #: ksweb/templates/resetpassword/index.xhtml:3
 msgid "Request Password Reset"
-msgstr ""
+msgstr "Richiedi il reset della password"
 
 #: ksweb/templates/resolve/index.xhtml:3
 msgid "KS | Resolve"
@@ -546,17 +560,17 @@ msgstr ""
 
 #: ksweb/templates/userprofile/index.xhtml:53
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: ksweb/templates/userprofile/index.xhtml:69
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 #: ksweb/templates/userprofile/index.xhtml:71
 msgid "Change password"
-msgstr ""
+msgstr "Cambia password"
 
 #: ksweb/templates/userprofile/index.xhtml:8
 msgid " Profile"
-msgstr ""
+msgstr "Profilo"
 
