@@ -1,0 +1,25 @@
+- name: Get code from repository
+  hg: repo={{repository}} dest=/var/www/{{testuser}}/app/{{app_clone_path}} revision=default
+
+- name: Give Ownership of Public Directory to www-data
+  file:
+    path: /var/www/{{testuser}}/app/{{public_rel_path}}
+    owner: aw{{testuser}}
+    group: awtest.axantweb.com
+
+- name: Install Python Dependencies
+  pip: virtualenv=/var/www/{{testuser}}/penv name='file:///var/www/{{testuser}}/app/{{app_package}}' extra_args='-e' virtualenv_site_packages=no
+
+- name: Configure WSGI
+  template: src=wsgi_application.py.j2 dest=/var/www/{{testuser}}/app/wsgi_application.py
+
+- name: Configure staging.ini
+  template: src=staging.ini.j2 dest=/var/www/{{testuser}}/app/{{app_package}}/staging.ini
+
+- name: Notify Release to Projects
+  local_action: shell curl https://projects.axantweb.com/api/release
+                -d project={{project_id}}
+                -d repository={{repository_id}}
+                -d revision=`hg id -i`
+                -d branch=`hg branch`
+                -d releasetype=test
