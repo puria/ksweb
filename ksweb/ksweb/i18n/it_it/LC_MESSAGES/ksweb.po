@@ -1,0 +1,562 @@
+# Italian (Italy) translations for ksweb.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the ksweb project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ksweb 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-02-10 14:17+0100\n"
+"PO-Revision-Date: 2017-02-10 14:17+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: it_IT\n"
+"Language-Team: it_IT <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+
+#: ksweb/controllers/document.py:18 ksweb/controllers/output.py:37
+#: ksweb/controllers/precondition/precondition.py:18 ksweb/controllers/qa.py:23
+#: ksweb/controllers/questionary.py:27 ksweb/controllers/root.py:57
+msgid "Only for admin or lawyer"
+msgstr ""
+
+#: ksweb/controllers/document.py:26 ksweb/controllers/output.py:45
+#: ksweb/controllers/precondition/precondition.py:32 ksweb/controllers/qa.py:31
+msgid "Label"
+msgstr ""
+
+#: ksweb/controllers/document.py:26 ksweb/controllers/output.py:45
+#: ksweb/controllers/qa.py:31
+msgid "Category"
+msgstr ""
+
+#: ksweb/controllers/document.py:26 ksweb/controllers/output.py:45
+msgid "Content"
+msgstr ""
+
+#: ksweb/controllers/document.py:71 ksweb/controllers/document.py:90
+msgid "You are not allowed to edit this document."
+msgstr ""
+
+#: ksweb/controllers/error.py:34
+msgid "<p>We're sorry but we weren't able to process  this request.</p>"
+msgstr ""
+
+#: ksweb/controllers/output.py:30
+#, python-format
+msgid "Domanda %s non legata al filtro utilizzato"
+msgstr ""
+
+#: ksweb/controllers/output.py:45 ksweb/controllers/qa.py:31
+msgid "Filter"
+msgstr ""
+
+#: ksweb/controllers/output.py:87
+#, python-format
+msgid "Select the document for you outputs <a href='%s'>HERE</a>"
+msgstr ""
+
+#: ksweb/controllers/output.py:99 ksweb/controllers/output.py:139
+msgid "You are not allowed to edit this output."
+msgstr ""
+
+#: ksweb/controllers/qa.py:31
+msgid "Question"
+msgstr ""
+
+#: ksweb/controllers/qa.py:76 ksweb/controllers/qa.py:127
+msgid "Please add at least one more answer"
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:78
+#: ksweb/controllers/precondition/simple.py:94 ksweb/controllers/qa.py:103
+#, python-format
+msgid "Now you can create an output <a href='%s'>HERE</a>"
+msgstr ""
+
+#: ksweb/controllers/qa.py:105
+#, python-format
+msgid ""
+"Now you can create a simple filter or an advanced one <a "
+"href='%s'>HERE</a> "
+msgstr ""
+
+#: ksweb/controllers/qa.py:174
+msgid "You can not edit this Q/A"
+msgstr ""
+
+#: ksweb/controllers/questionary.py:37
+msgid "Title"
+msgstr ""
+
+#: ksweb/controllers/questionary.py:69 ksweb/controllers/questionary.py:81
+msgid "You are not allowed to edit this questionary."
+msgstr ""
+
+#: ksweb/controllers/questionary.py:89
+msgid "Invalid answer"
+msgstr ""
+
+#: ksweb/controllers/resolve.py:31
+#, python-format
+msgid "Entity %s successfully edited!"
+msgstr ""
+
+#: ksweb/controllers/resolve.py:39
+#, python-format
+msgid "%s successfully created!"
+msgstr ""
+
+#: ksweb/controllers/resolve.py:46
+msgid "All the edits are discarded"
+msgstr ""
+
+#: ksweb/controllers/resolve.py:80
+msgid "All the conflicts are successfully resolved"
+msgstr ""
+
+#: ksweb/controllers/root.py:68
+msgid "User not found"
+msgstr ""
+
+#: ksweb/controllers/root.py:70
+msgid "Invalid Password"
+msgstr ""
+
+#: ksweb/controllers/root.py:74
+msgid "Wrong credentials"
+msgstr ""
+
+#: ksweb/controllers/root.py:91
+#, python-format
+msgid "Welcome back, %s!"
+msgstr ""
+
+#: ksweb/controllers/root.py:104
+msgid "We hope to see you soon!"
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:46
+#: ksweb/controllers/precondition/advanced.py:105
+msgid "Filter not found."
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:54
+#: ksweb/controllers/precondition/advanced.py:113
+msgid "Invalid logic operator."
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:61
+#: ksweb/controllers/precondition/advanced.py:120
+msgid "Invalid operator"
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:67
+msgid "Syntax error."
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:91
+#: ksweb/controllers/precondition/advanced.py:154
+#: ksweb/controllers/precondition/simple.py:109
+#: ksweb/controllers/precondition/simple.py:159
+msgid "You are not allowed to edit this filter."
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:126
+msgid "Syntax error"
+msgstr ""
+
+#: ksweb/controllers/precondition/precondition.py:32
+msgid "Type"
+msgstr ""
+
+#: ksweb/controllers/precondition/precondition.py:32
+msgid "Owner"
+msgstr ""
+
+#: ksweb/controllers/precondition/simple.py:64
+msgid "Please select at least one answer"
+msgstr ""
+
+#: ksweb/lib/forms.py:31
+msgid "Email address"
+msgstr ""
+
+#: ksweb/lib/forms.py:33
+msgid "Invia"
+msgstr ""
+
+#: ksweb/lib/forms.py:66
+msgid "New password"
+msgstr ""
+
+#: ksweb/lib/forms.py:66
+msgid "Nuova password"
+msgstr ""
+
+#: ksweb/lib/forms.py:67
+msgid "Confirm new password"
+msgstr ""
+
+#: ksweb/lib/forms.py:67
+msgid "Confirm password"
+msgstr ""
+
+#: ksweb/lib/forms.py:70
+msgid "Save password"
+msgstr ""
+
+#: ksweb/lib/validator.py:21 ksweb/lib/validator.py:24
+msgid "Domanda non esistente"
+msgstr ""
+
+#: ksweb/lib/validator.py:33 ksweb/lib/validator.py:36
+msgid "Categoria non esistente"
+msgstr ""
+
+#: ksweb/lib/validator.py:45 ksweb/lib/validator.py:48
+msgid "Filtro non esistente"
+msgstr ""
+
+#: ksweb/lib/validator.py:57 ksweb/lib/validator.py:60
+msgid "Output non esistente"
+msgstr ""
+
+#: ksweb/lib/validator.py:69 ksweb/lib/validator.py:72
+msgid "Documento non esistente"
+msgstr ""
+
+#: ksweb/lib/validator.py:81 ksweb/lib/validator.py:84
+msgid "Questionario non esistente"
+msgstr ""
+
+#: ksweb/lib/validator.py:94
+msgid "Domanda non trovata."
+msgstr ""
+
+#: ksweb/lib/validator.py:98
+msgid "Output non trovato"
+msgstr ""
+
+#: ksweb/lib/validator.py:100 ksweb/lib/validator.py:118
+#: ksweb/lib/validator.py:137 ksweb/lib/validator.py:151
+msgid "Condizione non valida."
+msgstr ""
+
+#: ksweb/lib/validator.py:149
+msgid "Output non trovato."
+msgstr ""
+
+#: ksweb/templates/error.xhtml:3
+msgid "A "
+msgstr ""
+
+#: ksweb/templates/error.xhtml:3
+msgid " error has Occurred"
+msgstr ""
+
+#: ksweb/templates/error.xhtml:7
+msgid "Error "
+msgstr ""
+
+#: ksweb/templates/index.xhtml:3
+msgid "Welcome to KS Web"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:36
+msgid "Hello!"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:38
+msgid "Welcome to KNOWLEDGE SHAPER"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:39
+msgid "Start using Knowledge Shaper by creating your first question "
+msgstr ""
+
+#: ksweb/templates/index.xhtml:39
+msgid "HERE"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:3 ksweb/templates/login.xhtml:29
+msgid "Login"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:11 ksweb/templates/master.html:47
+msgid "KS"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:12
+msgid "Knowledge Shaper"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:30
+msgid "Password dimenticata?"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:30
+msgid " oppure  "
+msgstr ""
+
+#: ksweb/templates/login.xhtml:30
+msgid "Registrati"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:40
+msgid "Made with "
+msgstr ""
+
+#: ksweb/templates/login.xhtml:40
+msgid " by "
+msgstr ""
+
+#: ksweb/templates/login.xhtml:40
+msgid "AXANT"
+msgstr ""
+
+#: ksweb/templates/master.html:13
+msgid "Ks web"
+msgstr ""
+
+#: ksweb/templates/master.html:41 ksweb/templates/master.xhtml:31
+msgid "Toggle navigation"
+msgstr ""
+
+#: ksweb/templates/master.html:58
+msgid "Profile"
+msgstr ""
+
+#: ksweb/templates/master.xhtml:8
+msgid "KS Web"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:3
+msgid "KS | Documents"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:8
+msgid ""
+"\n"
+"    Documents\n"
+"  "
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:13
+msgid " New document"
+msgstr ""
+
+#: ksweb/templates/document/new.xhtml:3
+msgid "KS | Documenti"
+msgstr ""
+
+#: ksweb/templates/output/index.xhtml:3 ksweb/templates/output/new.xhtml:3
+msgid "KS | Output"
+msgstr ""
+
+#: ksweb/templates/output/index.xhtml:8
+msgid ""
+"\n"
+"    Output\n"
+"  "
+msgstr ""
+
+#: ksweb/templates/output/index.xhtml:13
+msgid " New output"
+msgstr ""
+
+#: ksweb/templates/partials/sidebar.xhtml:5
+msgid ""
+" DOCUMENTS\n"
+"            "
+msgstr ""
+
+#: ksweb/templates/partials/sidebar.xhtml:13
+msgid ""
+" QUESTIONARIES\n"
+"            "
+msgstr ""
+
+#: ksweb/templates/partials/sidebar.xhtml:21
+msgid ""
+" OUTPUT\n"
+"            "
+msgstr ""
+
+#: ksweb/templates/partials/sidebar.xhtml:29
+msgid ""
+" FILTERS\n"
+"            "
+msgstr ""
+
+#: ksweb/templates/partials/sidebar.xhtml:37
+msgid ""
+" Q/A\n"
+"            "
+msgstr ""
+
+#: ksweb/templates/partials/table.xhtml:31
+msgid ""
+"\n"
+"    Condividi\n"
+"    "
+msgstr ""
+
+#: ksweb/templates/partials/table.xhtml:33
+msgid ""
+"\n"
+"    Scarica\n"
+"    "
+msgstr ""
+
+#: ksweb/templates/partials/table.xhtml:35
+msgid ""
+"\n"
+"    Lorem Ipsum\n"
+"  "
+msgstr ""
+
+#: ksweb/templates/partials/user_menu.xhtml:5
+msgid " Account"
+msgstr ""
+
+#: ksweb/templates/partials/user_menu.xhtml:11
+msgid " Logout"
+msgstr ""
+
+#: ksweb/templates/precondition/advanced/new.xhtml:3
+#: ksweb/templates/precondition/index.xhtml:3
+#: ksweb/templates/precondition/simple/new.xhtml:3
+msgid "KS | Filters"
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:8
+msgid ""
+"\n"
+"    Filters\n"
+"  "
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:13
+msgid " New simple filter"
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:16
+msgid " New advanced filter"
+msgstr ""
+
+#: ksweb/templates/qa/index.xhtml:3
+msgid "KS | QA"
+msgstr ""
+
+#: ksweb/templates/qa/index.xhtml:8
+msgid ""
+"\n"
+"    Q / A\n"
+"  "
+msgstr ""
+
+#: ksweb/templates/qa/index.xhtml:13
+msgid " New Q/A"
+msgstr ""
+
+#: ksweb/templates/qa/new.xhtml:3
+msgid "KS | Nuova QA"
+msgstr ""
+
+#: ksweb/templates/questionary/compile.xhtml:3
+msgid "KS | Questionary"
+msgstr ""
+
+#: ksweb/templates/questionary/completed.xhtml:3
+msgid "KS | Questionary completed"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:3
+msgid "KS | Questionaries"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:8
+msgid ""
+"\n"
+"    Questionaries\n"
+"  "
+msgstr ""
+
+#: ksweb/templates/resetpassword/index.xhtml:3
+msgid "Request Password Reset"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:3
+msgid "KS | Resolve"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:12
+msgid ""
+"\n"
+"        L'entità che si vuole modificare è usata in altre entità.\n"
+"        "
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:14
+msgid ""
+"\n"
+"        Come procediamo?\n"
+"      "
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:26
+msgid ""
+"\n"
+"            Applica su tutti gli altri\n"
+"          "
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:34
+msgid ""
+"\n"
+"          Non applicare su tutti gli altri\n"
+"          "
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:42
+msgid ""
+"\n"
+"          Scegli manualmente\n"
+"          "
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:54
+msgid ""
+"\n"
+"            Termina risoluzione"
+msgstr ""
+
+#: ksweb/templates/resolve/manually_resolve.xhtml:8
+msgid "KS | Manually Resolve"
+msgstr ""
+
+#: ksweb/templates/userprofile/index.xhtml:46
+msgid "Account"
+msgstr ""
+
+#: ksweb/templates/userprofile/index.xhtml:53
+msgid "Name"
+msgstr ""
+
+#: ksweb/templates/userprofile/index.xhtml:69
+msgid "Edit"
+msgstr ""
+
+#: ksweb/templates/userprofile/index.xhtml:71
+msgid "Change password"
+msgstr ""
+
+#: ksweb/templates/userprofile/index.xhtml:8
+msgid " Profile"
+msgstr ""
+

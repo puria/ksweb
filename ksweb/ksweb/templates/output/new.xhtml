@@ -1,0 +1,336 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+  <title py:block="master_title">KS | Output</title>
+  <script src="${tg.url('/javascript/ckeditor/ckeditor.js')}"></script>
+
+  <script id="OutputForm_template" type="text/html">
+    <![CDATA[
+    <form class="form-horizontal" on-submit="submit-form">
+      <div class="form-group" style="padding-top: 20px">
+        <div class="col-md-6 text-left ks-section-name">
+          Output
+        </div>
+        <div class="col-md-6 text-right">
+          {{#if edit_mode }}
+          <button type="button" class="btn btn-warning" onclick='ractive_output.create_gnosino();'>${h.material_icon('create')} Create Gnosino</button>
+          {{/if}}
+          {{#if saving}}
+          Saving...
+          {{else}}
+          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
+          {{/if}}
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group {{errors.title ? 'has-error' : ''}}">
+            <div class="col-md-6">
+              <input id="form-title" type="text" class="form-control" placeholder="Label" value="{{create.title}}"/>
+              {{#if errors.title}}
+              <span class="help-block">{{errors.title}}</span>
+              {{/if}}
+            </div>
+          </div>
+          <div class="form-group {{errors.category ? 'has-error' : ''}}">
+            <div class="col-md-6">
+              <select id="form-category" class="form-control" value="{{create.category}}">
+              {{#each categories}}
+                {{#if .name == 'Altro'}}
+                  <option value="{{._id}}" selected>{{.name}}</option>
+                {{else}}
+                  <option value="{{._id}}">{{.name}}</option>
+                {{/if}}
+              {{/each}}
+              </select>
+
+              {{#if errors.category}}
+              <span class="help-block">{{errors.category}}</span>
+              {{/if}}
+            </div>
+          </div>
+          <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
+            <div class="col-md-6">
+              <select id="form-precondition" class="form-control" value="{{create.precondition}}">
+                <option value="" disabled selected>Choose a filter</option>
+                {{#each preconditions}}
+                <option value="{{._id}}">{{.title}}</option>
+                {{/each}}
+              </select>
+
+              {{#if errors.precondition}}
+              <span class="help-block">{{errors.precondition}}</span>
+              {{/if}}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-6">
+              Available answers
+                {{#each qas}}
+                <div class="row">
+                  <div class="col-md-6">
+                    <span id="add_circle_outline" onclick='ractive_output.add_widget_to_editor("{{._id}}", "{{.title}}", "qa")' class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    {{.title}}
+                  </div>
+                </div>
+                {{/each}}
+            </div>
+          </div>
+          <div class="form-group">
+            <textarea name="ks_editor"></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+    ]]>
+  </script>
+</head>
+
+<body py:block="body" py:strip="True">
+<div id="output-ractive" style="padding-top: 20px">
+
+</div>
+<script>
+//<![CDATA[
+  var OutputEditor = Ractive.extend({
+    template: '#OutputForm_template',
+    onconstruct: function(options) {
+      var self = this;
+      //  Default settings
+      self.submit_type = 'POST';
+      self.submit_url = '${tg.url('/output/post')}';
+      self.output = options['output'];
+
+
+    },
+    oninit: function() {
+      var self = this;
+      self.set('edit_mode', false);
+      self.set('qas', []);
+      self.set('create.content', []);
+
+      //  Check if document is provided
+      if (! jQuery.isEmptyObject(self.output)) {
+        self.set('edit_mode', true);
+        self.submit_type = 'PUT';
+        self.submit_url = '${tg.url('/output/put')}';
+
+        //Set the output value as default
+        self.set('create.title', self.output['title']);
+        self.set('create.category', self.output['_category']);
+        self.set('create.precondition', self.output['_precondition']);
+        self.set('create._id', self.output['_id']);
+      }
+
+      //clear array
+      self.set('create.content', []);
+      self.set('errors', {});
+      self.set('saving', false);
+
+      self.on('submit-form', function(event) {
+        jQuery(window).unbind('beforeunload');
+        console.log(self.get('create'));
+        self.create_output(self.get('create'));
+        return false;
+      });
+
+      self.loadCategories();
+      self.loadPrecondition();
+    },
+    loadCategories: function(callback) {
+      var self = this;
+      jQuery.get("${tg.url('/category/get_all')}",
+          function(data) {
+            self.set('categories', data['categories']);
+            if (callback)
+              callback();
+          });
+    },
+    loadPrecondition: function(callback) {
+      var self = this;
+      jQuery.get("${tg.url('/precondition/available_preconditions')}",
+          function(data) {
+            self.set('preconditions', data['preconditions']);
+            if (callback)
+              callback();
+          });
+    },
+    create_output: function(field) {
+      var self = this;
+      self.set('saving', true);
+      console.log("JSON.stringify");
+      console.log(JSON.stringify(field));
+
+      field['ks_editor'] = CKEDITOR.instances.ks_editor.getData().slice(3, -5); // remove p element: <p>text</p> -> text
+
+      var api_params = JSON.stringify(field);
+
+      $.ajax({
+        type: self.submit_type,
+        url: self.submit_url,
+        data: api_params,
+        dataType: "json",
+        processData: false,
+        contentType: 'application/json'
+      }).done(function(resp) {
+        var redirect_to = "${tg.url('/output/')}";
+        self.set('create', {});
+        self.set('saving', false);
+        self.set('editing', false);
+        if (resp.redirect_url)
+          redirect_to = resp.redirect_url;
+        window.location.replace(redirect_to);
+      }).fail(function(jqXHR) {
+        var data = jQuery.parseJSON(jqXHR.responseText);
+        console.log("fail");
+        console.log(data);
+        self.set('errors', data.errors);
+        self.set('saving', false);
+        self.set('create.content', []);
+
+      });
+    },
+    add_widget_to_editor: function(id, title, type){
+      console.log('add_widget_to_editor:', id, title, type);
+
+      var editor = CKEDITOR.instances.ks_editor;
+      var ks_id = 'ks_id-' + type + '_' + id;
+      var class_ = 'objplaceholder ' + type + ' ' + type + '-widget ' + ks_id;
+
+      var element =  editor.document.createElement( 'span', {attributes: {'class': class_}});
+      element.setText(title);
+
+      if (type == 'output'){
+        element.on("click", function(){
+          var url = "${tg.url('/output/edit')}"+"?_id="+id;
+          var win = window.open(url, '_blank');
+          win.focus();
+        });
+      }
+
+      editor.insertElement(element);
+      var widget = editor.widgets.initOn( element, 'objplaceholder' );
+
+    },
+    parse_selected: function(html) {
+      var _html = jQuery(jQuery.parseHTML(html));
+      var placeholders_ids = [];
+      var spans = _html.find(".objplaceholder").replaceWith(function() {
+        var class_name = $.grep(this.className.split(" "), function(v, i){
+          return v.indexOf('ks_id-') === 0;
+        }).join();
+        placeholders_ids.push(class_name.split("ks_id-")[1]);
+        return "$${" + class_name.split("ks_id-")[1] + "}";
+      });
+      return {
+        'text': _html.text(),
+        'list': placeholders_ids
+      };
+    },
+    create_gnosino: function () {
+      var self = this;
+      var selector = CKEDITOR.instances.ks_editor.getSelection();
+      var highlighted_text = selector.getSelectedText();
+
+      if(highlighted_text == ''){
+        alert("ATTENTION: you don't have highlighted any text.");
+        return;
+      }
+
+      var res = this.parse_selected(CKEDITOR.instances.ks_editor.getSelectedHtml().getHtml());
+      var api_params = JSON.stringify({
+        'highlighted_text': res['text'],
+        'list_': res['list']
+      });
+
+      $.ajax({
+        type: 'POST',
+        url: "${tg.url('/gnosino/')}",
+        data: api_params,
+        dataType: "json",
+        processData: false,
+        contentType: 'application/json'
+      }).done(function(resp) {
+        console.log("DONE", resp);
+        alert('Gnosino created');
+        var range = selector.getRanges()[0];
+        range.deleteContents();
+        range.select();
+        self.add_widget_to_editor(resp['_id'], resp['title'], 'output');
+        //location.reload();
+      }).fail(function(jqXHR) {
+        var data = jQuery.parseJSON(jqXHR.responseText);
+        console.log("fail");
+        console.log(data);
+      });
+    }
+  });
+  //]]>
+
+</script>
+<script>
+  var ractive_output = new OutputEditor({
+    el: '#output-ractive',
+    output: ${Markup(h.script_json_encode(output))},
+  });
+
+  ractive_output.on('showQaDetails', function(event, elem) {
+    var self = this;
+    var qas = self.get('qas');
+    alert(JSON.stringify(qas[elem['content']], null, 2));
+  });
+
+  ractive_output.observe('create.precondition', function ( precond_value ) {
+    var self = this;
+    //Load precondition elements
+    $.get( "${tg.url('/precondition/qa_precondition', qualified=True)}",{ id: precond_value}, function(data) {
+      self.set('qas', data['qas']);
+
+      var w_instances = CKEDITOR.instances.ks_editor.widgets.instances;
+      for (var i in w_instances){
+        if (w_instances[i].element.hasClass('qa'))
+            w_instances[i].element.remove();
+        }
+    });
+  });
+
+
+</script>
+<script>
+//<![CDATA[
+
+  CKEDITOR.replace( 'ks_editor', {
+    extraPlugins: 'objplaceholder'
+  });
+
+  CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))},
+  {
+    callback: function() {
+      jQuery( CKEDITOR.instances.ks_editor.window.getFrame().$ ).contents().find( '.objplaceholder' ).each(function( index ) {
+        var class_name = $.grep(this.className.split(" "), function(v, i){
+          return v.indexOf('ks_id-') === 0;
+        }).join();
+
+        var placeholder = class_name.slice('ks_id-'.length);
+
+        if (placeholder.startsWith('output_')){
+          var _id = placeholder.split('_')[1];
+          this.onclick =  function(){
+            var url = "${tg.url('/output/edit')}"+"?_id="+_id;
+            var win = window.open(url, '_blank');
+            win.focus();
+          };
+        }
+      });
+    }
+  });
+
+  CKEDITOR.instances.ks_editor.on('change', function(){
+      jQuery(window).bind('beforeunload', function(){
+        return 'Unsaved data! Are you sure you want to leave?';
+      })
+  });
+//]]>
+</script>
+</body>
+</html>
