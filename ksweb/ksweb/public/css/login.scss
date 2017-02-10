@@ -1,0 +1,29 @@
+@import "palette.scss";
+
+.login {
+  .ks {
+    font-size: 133px;
+    font-weight: 900;
+    color: $green;
+    line-height: 80%;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 900;
+    color: $dark-blue;
+    margin: 0 0 0 9px;
+  }
+
+  .padding-top-217 {
+    padding-top: 217px;
+  }
+
+  form {
+    margin-top: 10px;
+  }
+
+  input {
+    background-color: $very-light-blue;
+  }
+}
