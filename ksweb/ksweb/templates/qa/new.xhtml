@@ -88,7 +88,7 @@
       </div>
       <div class="form-group {{errors.tooltip ? 'has-error' : ''}}">
         <div class="col-sm-3">
-          <input id="extra-fields-form-tooltip" type="text" class="form-control" placeholder="Tooltip" value="{{create.tooltip}}"/>
+          <input id="extra-fields-form-tooltip" disabled="disabled" type="text" class="form-control" placeholder="Tooltip" value="{{create.tooltip}}"/>
           {{#if errors.tooltip}}
           <span class="help-block">{{errors.tooltip}}</span>
           {{/if}}
@@ -96,7 +96,7 @@
       </div>
       <div class="form-group {{errors.link ? 'has-error' : ''}}">
         <div class="col-sm-3">
-          <input id="extra-fields-form-link" type="text" class="form-control" placeholder="Link" value="{{create.link}}"/>
+          <input id="extra-fields-form-link" type="text" class="form-control" placeholder="Link" disabled="disabled" value="{{create.link}}"/>
           {{#if errors.link}}
           <span class="help-block">{{errors.link}}</span>
           {{/if}}
