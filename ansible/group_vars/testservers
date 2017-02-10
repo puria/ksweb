@@ -1,0 +1,4 @@
+testuser: 598
+app_package: ksweb/ksweb
+app_clone_path: ksweb
+public_rel_path: ksweb/ksweb/ksweb/public
