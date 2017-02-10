@@ -296,11 +296,34 @@
 
 </script>
 <script>
+//<![CDATA[
+
   CKEDITOR.replace( 'ks_editor', {
-    extraPlugins: 'objplaceholder',
+    extraPlugins: 'objplaceholder'
   });
 
-  CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))});
+  CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))},
+  {
+    callback: function() {
+      jQuery( CKEDITOR.instances.ks_editor.window.getFrame().$ ).contents().find( '.objplaceholder' ).each(function( index ) {
+        var class_name = $.grep(this.className.split(" "), function(v, i){
+          return v.indexOf('ks_id-') === 0;
+        }).join();
+
+        var placeholder = class_name.slice('ks_id-'.length);
+
+        if (placeholder.startsWith('output_')){
+          var _id = placeholder.split('_')[1];
+          this.onclick =  function(){
+            var url = "${tg.url('/output/edit')}"+"?_id="+_id;
+            var win = window.open(url, '_blank');
+            win.focus();
+          };
+        }
+      });
+    }
+  });
+//]]>
 
 </script>
 </body>
