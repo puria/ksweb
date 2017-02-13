@@ -162,7 +162,7 @@ class TestOutput(TestController):
 
         assert resp['category'] == 'Categoria non esistente', resp
         assert resp['precondition'] == 'Filtro non esistente', resp
-        assert resp['title'] == 'Must be at least 2 characters', resp
+        assert resp['title'] == 'Deve essere di almeno 2 caratteri', resp
         assert output is None
 
     def test_sidebar_output(self):
