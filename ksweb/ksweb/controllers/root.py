@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
-import tg
 from ksweb.controllers.gnosino import GnosinoController
 from tg import expose, flash, require, url, lurl
 from tg import request, redirect, tmpl_context

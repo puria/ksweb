@@ -73,8 +73,7 @@ class TestQuestionaryController(TestController):
             'qa_response': "Fake response"
         }, status=412).json
 
-    #  TODO: Check/rewrite these test.
-    """
+
     def test_compile_advanced_questionary(self):
         self._login_lavewr()
         category1 = self._get_category('Categoria 1')
@@ -225,7 +224,7 @@ class TestQuestionaryController(TestController):
         #
         # assert resp['quest_compiled']['completed'] == True, resp
 
-
+""" FIXME:
     def test_hack_response_multi(self):
         self._login_lavewr()
         category1 = self._get_category('Categoria 1')
@@ -315,4 +314,4 @@ class TestQuestionaryController(TestController):
             'qa_id': resp['quest_compiled']['qa'],
             'qa_response': qa_response[rel_qa.title]['response']
         }, status=qa_response[rel_qa.title]['status']).json
-    """
+"""
