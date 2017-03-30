@@ -8,6 +8,8 @@ from ming.odm.declarative import MappedClass
 
 from ksweb.model import DBSession
 import tg
+import logging
+log = logging.getLogger(__name__)
 
 
 def _compile_questionary(obj):
@@ -81,7 +83,7 @@ class Questionary(MappedClass):
 
     @property
     def evaluate_questionary(self):
-        print "evaluate_questionary"
+        log.debug("evaluate_questionary")
         """
         Valutazione del questionario, ogni volta svuoto i valori delle valutazioni di documenti, output e precond,
         così nel caso venga riaperto il questionario dopo che è stata inserita una nuova domanda,
@@ -99,6 +101,7 @@ class Questionary(MappedClass):
         for output in self.document.content:
             output_id = output['content']
             output_res = self.evaluate_expression(output_id)
+
             if not output_res['completed']:
                 return output_res
             else:
@@ -114,14 +117,14 @@ class Questionary(MappedClass):
         }
 
     def generate_expression(self):
-        print "generate_expression"
+        log.debug("generate_expression")
         from . import Output
         for o in self.document.content:
             output = Output.query.get(_id=ObjectId(o['content']))
             self.expressions[str(output._id)] = self._generate(output.precondition)
 
     def _generate(self, precondition):
-        print "_generate"
+        log.debug("_generate")
 
         parent_expression, expression = '', ''
 
@@ -134,9 +137,9 @@ class Questionary(MappedClass):
             if precondition.simple_text_response:
                 expression = "q_%s != ''" % str(precondition.condition[0])
             elif precondition.single_choice_response:
-                expression = "q_%s == '%s'" % (str(precondition.condition[0]), precondition.condition[1])
+                expression = "q_%s == %s" % (str(precondition.condition[0]), repr(precondition.condition[1]))
             elif precondition.multiple_choice_response:
-                expression = "'%s' in q_%s" % (str(precondition.condition[1]), precondition.condition[0])
+                expression = "%s in q_%s" % (str(repr(precondition.condition[1])), precondition.condition[0])
 
             return parent_expression + expression
 
@@ -154,7 +157,7 @@ class Questionary(MappedClass):
         return advanced_expression
 
     def compile_output(self, output_id):
-        print "compile_output"
+        log.debug("compile_output")
 
         """
         Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del questionario.
@@ -193,7 +196,7 @@ class Questionary(MappedClass):
         return None
 
     def evaluate_expression(self, output_id):
-        print "evaluate_expression"
+        log.debug("evaluate_expression")
 
         expression = self.expressions[output_id]
 
@@ -204,7 +207,6 @@ class Questionary(MappedClass):
             else:
                 # array
                 answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, resp))
-
         try:
             evaluation = eval(expression, answers)
         except NameError as ne:
