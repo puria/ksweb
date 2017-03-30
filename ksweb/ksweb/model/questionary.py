@@ -9,11 +9,13 @@ from ming.odm.declarative import MappedClass
 from ksweb.model import DBSession
 import tg
 import logging
+
 log = logging.getLogger(__name__)
 
 
 def _compile_questionary(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id)), obj.title))
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id))
+                                           , obj.title))
 
 
 class Questionary(MappedClass):
@@ -58,7 +60,8 @@ class Questionary(MappedClass):
     Is a nested dictionary with:
     key: Obj(id) of the related output
     value:
-        evaluation: Boolean evaluation of the related precondition, for determinate if show, or hide the related output text
+        evaluation: Boolean evaluation of the related precondition, for determinate if show,
+                    or hide the related output text
         evaluated_text: Text of the related output when is evaluated
     """
 
@@ -85,12 +88,14 @@ class Questionary(MappedClass):
     def evaluate_questionary(self):
         log.debug("evaluate_questionary")
         """
-        Valutazione del questionario, ogni volta svuoto i valori delle valutazioni di documenti, output e precond,
-        così nel caso venga riaperto il questionario dopo che è stata inserita una nuova domanda,
-        viene ricalcolato tutto e sarà aggiornato.
+        Valutazione del questionario, ogni volta svuoto i valori delle valutazioni di documenti,
+        output e precond, così nel caso venga riaperto il questionario dopo che è stata inserita
+        una nuova domanda, viene ricalcolato tutto e sarà aggiornato.
         Va a recuperare il documento collegato e ne analizza tutto il content
-        :return: Se a tutti gli output del content sono stati valutati restituisce come stato completed: True
-        :return: Se invece non sono stati ancora valutati degli output restituisce come stato completed: False e la qa alla quale bisogna rispondere
+        :return: Se a tutti gli output del content sono stati valutati restituisce come stato
+                 completed: True
+        :return: Se invece non sono stati ancora valutati degli output restituisce come stato
+                 completed: False e la qa alla quale bisogna rispondere
         """
 
         # self.document_values = []
@@ -107,8 +112,8 @@ class Questionary(MappedClass):
             else:
                 if self.output_values[output_id].get('evaluation'):
                     res = self.compile_output(output_id)
-                    # this need for to show other questions though output is already evaluated, for example when
-                    # output uses some response to a certain questions
+                    # this need for to show other questions though output is already evaluated,
+                    # for example when output uses some response to a certain questions
                     if res:
                         return res
 
@@ -125,7 +130,6 @@ class Questionary(MappedClass):
 
     def _generate(self, precondition):
         log.debug("_generate")
-
         parent_expression, expression = '', ''
 
         if precondition.is_simple:
@@ -133,16 +137,15 @@ class Questionary(MappedClass):
 
             if qa._parent_precondition:
                 parent_expression = '(' + self._generate(qa.parent_precondition) + ') and '
-
             if precondition.simple_text_response:
                 expression = "q_%s != ''" % str(precondition.condition[0])
             elif precondition.single_choice_response:
-                expression = "q_%s == %s" % (str(precondition.condition[0]), repr(precondition.condition[1]))
+                expression = "q_%s == %s" % (str(precondition.condition[0]),
+                                             repr(precondition.condition[1]))
             elif precondition.multiple_choice_response:
-                expression = "%s in q_%s" % (str(repr(precondition.condition[1])), precondition.condition[0])
-
+                expression = "%s in q_%s" % (str(repr(precondition.condition[1])),
+                                             precondition.condition[0])
             return parent_expression + expression
-
         else:
             advanced_expression = ""
             for item in precondition.condition:
@@ -153,25 +156,23 @@ class Questionary(MappedClass):
                     p = Precondition.query.get(_id=item)
                     advanced_expression += '( %s )' % self._generate(p)
 
-
         return advanced_expression
 
     def compile_output(self, output_id):
         log.debug("compile_output")
 
         """
-        Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del questionario.
+        Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del
+        questionario.
 
-        Questo metodo appende all'array di stringhe document_values i vari componenti trovati nel documento, che siano
-        testo semplice o risposte, un elemento per ogni cella dell'array
+        Questo metodo appende all'array di stringhe document_values i vari componenti trovati nel
+        documento, che siano testo semplice o risposte, un elemento per ogni cella dell'array
 
         :param output_id:
 
         """
         from . import Output
         output = Output.query.get(_id=ObjectId(output_id))
-
-        evaluated_text = ""
 
         for elem in output.content:
             if elem['type'] == "qa_response":
@@ -189,8 +190,8 @@ class Questionary(MappedClass):
                 else:
                     if self.output_values[output_nested_id].get('evaluation'):
                         res = self.compile_output(output_nested_id)
-                        # this need for to show other questions though output is already evaluated, for example when
-                        # output uses some response to a certain questions
+                        # this need for to show other questions though output is already evaluated,
+                        # for example when output uses some response to a certain questions
                         if res:
                             return res
         return None
