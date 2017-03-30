@@ -1,5 +1,29 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
     <div class="row sidebar-item">
+        <a href="${tg.url('/qa')}">
+            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
+            ${h.material_icon('view_list')} Q/A
+            </div>
+        </a>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row sidebar-item">
+        <a href="${tg.url('/output')}">
+            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
+            ${h.material_icon('flip_to_front')} OUTPUTS
+            </div>
+        </a>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row sidebar-item">
+        <a href="${tg.url('/precondition')}">
+            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
+            ${h.material_icon('group_work')} FILTERS
+            </div>
+        </a>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row sidebar-item">
         <a href="${tg.url('/document')}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
             ${h.material_icon('insert_drive_file')} DOCUMENTS
@@ -15,30 +39,8 @@
         </a>
         <div class="col-md-1"></div>
     </div>
-    <div class="row sidebar-item">
-        <a href="${tg.url('/output')}">
-            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
-            ${h.material_icon('flip_to_front')} OUTPUT
-            </div>
-        </a>
-        <div class="col-md-1"></div>
-    </div>
-    <div class="row sidebar-item">
-        <a href="${tg.url('/precondition')}">
-            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
-            ${h.material_icon('group_work')} FILTERS
-            </div>
-        </a>
-        <div class="col-md-2"></div>
-    </div>
-    <div class="row sidebar-item">
-        <a href="${tg.url('/qa')}">
-            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
-            ${h.material_icon('view_list')} Q/A
-            </div>
-        </a>
-        <div class="col-md-1"></div>
-    </div>
+
+
 
     <div py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'" id="precondition-ractive" class="row" style="padding-top: 50%;">
 
@@ -58,7 +60,7 @@
         {{#each precondition}}
         <div class="col-md-12">
             {{.title}}
-            <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._id}}', '{{.title}}')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+            <span id="add_circle_outline" onclick="ractive_precondition_simple.addPrecondition('{{._id}}', {{JSON.stringify(.title)}})" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
         </div>
         {{/each}}
         {{/each}}
@@ -85,7 +87,7 @@
                 var self = this;
                 jQuery.get("${tg.url('/precondition/sidebar_precondition')}",
                         function(data) {
-                            console.log(data)
+                            console.log('load_precoditions', data)
                             self.set('preconditions', data['precond']);
                             console.log(self.get('preconditions'));
                             if (callback)
@@ -137,9 +139,9 @@
         <div class="col-md-12">
             {{.title}}
             {{#if div == '#output-ractive'}}
-            <span id="add_circle_outline" onclick="ractive_document.add_widget_to_editor('{{._id}}', '{{.title}}', 'output')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+            <span id="add_circle_outline" onclick="ractive_document.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
             {{else}}
-            <span id="add_circle_outline" onclick="ractive_output.add_widget_to_editor('{{._id}}', '{{.title}}', 'output')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+            <span id="add_circle_outline" onclick="ractive_output.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')" class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
             {{/if}}
         </div>
         {{/each}}
