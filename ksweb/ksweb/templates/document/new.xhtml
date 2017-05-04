@@ -20,7 +20,7 @@
                     {{/if}}
 
                     {{#if edit_mode}}
-                    <button type="button" class="btn btn-warning" onclick='ractive_document.create_gnosino();'>${h.material_icon('create')} Create Gnosino</button>
+                    <button type="button" class="btn btn-warning" onclick='ractive_document.create_output_plus();'>${h.material_icon('create')} Create OutputPlus</button>
                     {{/if}}
 
                     {{#if saving}}
@@ -256,7 +256,7 @@
         'list': placeholders_ids
       };
     },
-    create_gnosino: function () {
+    create_output_plus: function () {
       var self = this;
       var selector = CKEDITOR.instances.ks_editor.getSelection();
       var highlighted_text = selector.getSelectedText();
@@ -274,14 +274,14 @@
 
       $.ajax({
         type: 'POST',
-        url: "${tg.url('/gnosino/')}",
+        url: "${tg.url('/output_plus/')}",
         data: api_params,
         dataType: "json",
         processData: false,
         contentType: 'application/json'
       }).done(function(resp) {
         console.log("DONE", resp);
-        alert('Gnosino created');
+        alert('OutputPlus created');
         var range = selector.getRanges()[0];
         range.deleteContents();
         range.select();
