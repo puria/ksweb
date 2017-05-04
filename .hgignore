@@ -14,3 +14,5 @@ env
 *.DS_Store
 *.orig
 ksweb/ksweb/public/.webassets-cache/*
+mail
+assets
