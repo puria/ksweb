@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Gnosino controller module"""
+"""OutputPlus controller module"""
 from bson import ObjectId
 from ksweb.controllers.resolve import ResolveController
 from tg import expose, RestController, predicates, request, decode_params
 from ksweb import model
 
 
-class GnosinoController(RestController):
+class OutputPlusController(RestController):
     # Uncomment this line if your controller requires an authenticated user
     allow_only = predicates.not_anonymous()
 
