@@ -124,3 +124,10 @@ thead tr {
 hr {
   border-bottom: 2px solid $dark-blue;
 }
+
+.table-row{
+    white-space: nowrap;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
