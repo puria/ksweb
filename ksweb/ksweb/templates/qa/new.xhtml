@@ -41,7 +41,8 @@
       <hr/>
         <div class="form-group {{errors.question ? 'has-error' : ''}}">
         <div class="col-sm-3">
-          <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Content of the question" value="{{create.question}}"/>
+            <textarea id="extra-fields-form-question" type="text" class="form-control" placeholder="Content of the question" value="{{create.question}}">
+            </textarea>
           {{#if errors.question}}
           <span class="help-block">{{errors.question}}</span>
           {{/if}}
