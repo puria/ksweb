@@ -129,6 +129,7 @@ class QaController(RestController):
         user = request.identity['user']
 
         check = self.get_related_entities(_id)
+
         if check.get("entities"):
             entity = dict(
                 _id=_id,
@@ -142,11 +143,15 @@ class QaController(RestController):
                 _parent_precondition=precondition,
                 answers=answers
             )
+
+            session.data_serializer = 'pickle'
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
+
             return dict(redirect_url=tg.url('/resolve'))
 
         qa = model.Qa.query.get(_id=ObjectId(_id))
+
         qa._category = ObjectId(category)
         qa._parent_precondition = to_object_id(precondition)
         qa.title = title
@@ -193,6 +198,7 @@ class QaController(RestController):
         :param _id:
         :return:
         """
+
         preconditions_related = model.Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)})
         entities = list(preconditions_related)
         return {
