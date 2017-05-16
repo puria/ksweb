@@ -19,21 +19,24 @@ class DocumentController(RestController):
 
     @expose('ksweb.templates.document.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    def get_all(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def get_all(self, workspace, **kw):
         return dict(
             page='document-index',
             fields={
-                'columns_name': [_('Label'), _('Category'), _('Content')],
+                'columns_name': [_('Label'), _('Workspace'), _('Content')],
                 'fields_name': ['title', 'category', 'content']
             },
-            entities=model.Document.document_available_for_user(request.identity['user']._id),
-            actions=True
+            entities=model.Document.document_available_for_user(request.identity['user']._id, workspace=workspace),
+            actions=True,
+            workspace=workspace
         )
 
     @expose('ksweb.templates.document.new')
-    def new(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def new(self, workspace, **kw):
         tmpl_context.sidebar_document = "document-new"
-        return dict(document={}, errors=None)
+        return dict(document={}, workspace=workspace,errors=None)
 
     @decode_params('json')
     @expose('json')
@@ -85,18 +88,20 @@ class DocumentController(RestController):
 
     @expose('ksweb.templates.document.new')
     @validate({
-        '_id': DocumentExistValidator(required=True)
+        '_id': DocumentExistValidator(required=True),
+        'workspace': CategoryExistValidator(required=True)
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id', entity_model=model.Document))
-    def edit(self, _id, **kw):
+    def edit(self, _id, workspace, **kw):
         tmpl_context.sidebar_document = "document-new"
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
-        return dict(document=document, errors=None)
+        return dict(document=document, workspace=workspace, errors=None)
 
     @expose('json')
     @decode_params('json')
     @validate({
         '_id': DocumentExistValidator(required=True),
+
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id, **kw):
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()

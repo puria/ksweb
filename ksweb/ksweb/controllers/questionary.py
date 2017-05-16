@@ -16,7 +16,8 @@ from tw2.core import StringLengthValidator
 
 from ksweb import model
 from ksweb.lib.base import BaseController
-from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator
+from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator, \
+    CategoryExistValidator
 from ksweb.model import DBSession
 
 
@@ -28,20 +29,24 @@ class QuestionaryController(BaseController):
     
     @expose('ksweb.templates.questionary.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    def index(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def index(self, workspace, **kw):
         user = request.identity['user']
-
+        documents_id = [ObjectId(documents._id) for documents in
+                        model.Document.document_available_for_user(user_id=user._id, workspace=workspace).all()]
+        entities = model.Questionary.query.find({'$or': [
+                    {'_user': ObjectId(user._id)},
+                    {'_owner': ObjectId(user._id)}
+                ], '_document': {'$in': documents_id}}).sort('title')
         return dict(
             page='questionary-index',
             fields={
                 'columns_name': [_('Title')],
                 'fields_name': ['title']
             },
-            entities=model.Questionary.query.find({'$or': [
-                    {'_user': ObjectId(user._id)},
-                    {'_owner': ObjectId(user._id)}
-                ]}).sort('title'),
-            actions=False
+            entities=entities,
+            actions=False,
+            workspace=workspace
         )
 
     @decode_params('json')
@@ -65,11 +70,12 @@ class QuestionaryController(BaseController):
     @expose('json')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
+        'workspace': CategoryExistValidator(required=True),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id', entity_model=model.Questionary))
-    def compile(self, _id, **kwargs):
+    def compile(self, _id, workspace, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary)
+        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary, workspace=workspace)
 
     @expose('json')
     @decode_params('json')
@@ -113,12 +119,13 @@ class QuestionaryController(BaseController):
     @expose('ksweb.templates.questionary.completed')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
+        'workspace': CategoryExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def completed(self, _id=None):
+    def completed(self, _id=None, workspace=None):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         completed = questionary.evaluate_questionary
         if not completed:
-            return redirect('/questionary/compile', params=dict(quest_complited=completed))
+            return redirect('/questionary/compile', params=dict(quest_complited=completed, workspace=workspace))
 
         questionary_compiled = Template(questionary.document.html)
         output_values, qa_values = dict(), dict()
@@ -140,4 +147,4 @@ class QuestionaryController(BaseController):
 
         questionary_compiled = questionary_compiled.safe_substitute(**qa_values)
 
-        return dict(questionary_compiled=Markup(questionary_compiled))
+        return dict(questionary_compiled=Markup(questionary_compiled), workspace=workspace)

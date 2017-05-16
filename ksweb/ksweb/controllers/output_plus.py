@@ -12,16 +12,16 @@ class OutputPlusController(RestController):
 
     @expose('json')
     @decode_params('json')
-    def post(self, highlighted_text=u'', list_=None):
+    def post(self, highlighted_text=u'', workspace=None, list_=None):
         first_5_worlds = u' '.join(highlighted_text.split())
         first_5_worlds = u' '.join(first_5_worlds.split(" ")[:5])
 
         user = request.identity['user']
-        category = model.Category.query.find({'name': 'Altro'}).first()
+        #category = model.Category.query.find({'name': 'Altro'}).first()
 
         qa = model.Qa(
                 _owner=user._id,
-                _category=category._id,
+                _category=workspace,
                 _parent_precondition=None,
                 title=u'Domanda per l\'Output ' + first_5_worlds,
                 question=u'Inserisci ' + first_5_worlds,
@@ -34,7 +34,7 @@ class OutputPlusController(RestController):
 
         precondition = model.Precondition(
             _owner=user._id,
-            _category=category._id,
+            _category=workspace,
             title=u'Filtro per l\'Output ' + first_5_worlds,
             type='simple',
             condition=[qa._id, u'Attiva ' + first_5_worlds])
@@ -54,7 +54,7 @@ class OutputPlusController(RestController):
         title = u'Output ' + first_5_worlds
         output = model.Output(
             _owner=user._id,
-            _category=category._id,
+            _category=workspace,
             _precondition=precondition._id,
             title=title,
             content=content,

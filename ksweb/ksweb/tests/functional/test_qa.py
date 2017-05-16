@@ -6,22 +6,26 @@ from ksweb import model
 class TestQaController(TestController):
     application_under_test = 'main'
 
+    def setUp(self):
+        TestController.setUp(self)
+        self.category = self._get_category('Categoria 1')
+
     def test_access_permission_not_garanted(self):
         self.app.get('/qa/get_all', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/qa/get_all')
+        resp_admin = self.app.get('/qa/get_all', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lavewr()
-        resp_lawyer = self.app.get('/qa/get_all')
+        resp_lawyer = self.app.get('/qa/get_all', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_new_qua(self):
         self._login_admin()
-        resp_admin = self.app.get('/qa/new')
+        resp_admin = self.app.get('/qa/new', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_post_valid_qa_text(self):
@@ -203,5 +207,5 @@ class TestQaController(TestController):
         self.test_post_valid_qa_multi()
         self.test_post_valid_qa_single()
 
-        resp = self.app.get('/qa/get_single_or_multi_question').json
+        resp = self.app.get('/qa/get_single_or_multi_question', params=dict(workspace=self.category._id)).json
         assert len(resp['questions']) == 2
