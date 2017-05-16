@@ -6,15 +6,16 @@ def user_menu(section=None, **kw):
     return render_template(dict(), template_name='ksweb.templates.partials.user_menu')
 
 
-def sidebar(section=None, **kw):
-    return render_template(dict(), template_name='ksweb.templates.partials.sidebar')
+def sidebar(section=None, workspace=None, **kw):
+    return render_template(dict(workspace=workspace), template_name='ksweb.templates.partials.sidebar')
 
 
-def table(entities, fields, actions, **kw):
+def table(entities, fields, actions, workspace, **kw):
     return render_template(
         dict(
             fields=fields,
             entities=entities,
-            actions=actions
+            actions=actions,
+            workspace=workspace
         ),
         template_name='ksweb.templates.partials.table')

@@ -1,6 +1,6 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
     <div class="row sidebar-item">
-        <a href="${tg.url('/qa')}">
+        <a href="${tg.url('/qa', params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
             ${h.material_icon('view_list')} Q/A
             </div>
@@ -8,7 +8,7 @@
         <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
-        <a href="${tg.url('/output')}">
+        <a href="${tg.url('/output', params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
             ${h.material_icon('flip_to_front')} OUTPUTS
             </div>
@@ -16,7 +16,7 @@
         <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
-        <a href="${tg.url('/precondition')}">
+        <a href="${tg.url('/precondition',params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
             ${h.material_icon('group_work')} FILTERS
             </div>
@@ -24,7 +24,7 @@
         <div class="col-md-2"></div>
     </div>
     <div class="row sidebar-item">
-        <a href="${tg.url('/document')}">
+        <a href="${tg.url('/document', params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'documents']}">
             ${h.material_icon('insert_drive_file')} DOCUMENTS
             </div>
@@ -32,7 +32,7 @@
         <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
-        <a href="${tg.url('/questionary')}">
+        <a href="${tg.url('/questionary',params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'questionaries']}">
             ${h.material_icon('content_paste')} QUESTIONARIES
             </div>
@@ -85,7 +85,7 @@
             },
             loadPreconditions: function(callback) {
                 var self = this;
-                jQuery.get("${tg.url('/precondition/sidebar_precondition')}",
+                jQuery.get("${tg.url('/precondition/sidebar_precondition', params=dict(workspace=workspace))}",
                         function(data) {
                             console.log('load_precoditions', data)
                             self.set('preconditions', data['precond']);
@@ -123,7 +123,6 @@
     </div>
 
     <!-- Output -->
-
     <script id="OutputList" type="text/html">
         <![CDATA[
         <div class="col-md-12">
@@ -170,7 +169,7 @@
             },
             loadOutputs: function(callback) {
                 var self = this;
-                jQuery.get("${tg.url('/output/sidebar_output',params=dict(_id=getattr(tmpl_context, 'id_obj', None)))}",
+                jQuery.get("${tg.url('/output/sidebar_output',params=dict(_id=getattr(tmpl_context, 'id_obj', None), workspace=workspace))}",
                         function(data) {
                             self.set('outputs', data['outputs']);
                             if (callback)

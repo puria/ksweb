@@ -71,7 +71,7 @@
                     {{/if}}
                 </div>
             </div>
-            <div class="form-group {{errors.category ? 'has-error' : ''}}">
+            <!--<div class="form-group {{errors.category ? 'has-error' : ''}}">
                 <div class="col-md-3">
                     <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
                       {{#each categories}}
@@ -87,7 +87,7 @@
                     <span class="help-block">{{errors.category}}</span>
                     {{/if}}
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                  <textarea name="ks_editor"></textarea>
             </div>
@@ -112,11 +112,14 @@
             self.submit_type = 'POST';
             self.submit_url = '${tg.url('/document/post')}';
             self.document = options['document'];
+            self.workspace = options['workspace'];
+
         },
         oninit: function () {
             var self = this;
 
             self.set("edit_mode", false);
+            self.set('create.category', self.workspace);
 
             //  Check if document is provided
             if (!jQuery.isEmptyObject(self.document)) {
@@ -125,7 +128,7 @@
                 self.set("edit_mode", true);
                 //Set the document value as default
                 self.set('create.title', self.document['title']);
-                self.set('create.category', self.document['_category']);
+
                 self.set('create._id', self.document['_id']);
             }
 
@@ -135,7 +138,7 @@
             self.set('saving', false);
             self.set('categories', []);
 
-            self.loadCategory();
+            //self.loadCategory();
             self.on('submit-form', function (event) {
                 jQuery(window).unbind('beforeunload');
                 var all_var = self.get('create');
@@ -146,7 +149,7 @@
             });
 
         },
-        loadCategory: function (callback) {
+        /*loadCategory: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/category/get_all')}",
                     function (data) {
@@ -154,7 +157,7 @@
                         if (callback)
                             callback();
                     });
-        },
+        },*/
         add_widget_to_editor: function(id, title, type){
           console.log('add_widget_to_editor:', id, title, type);
           var editor = CKEDITOR.instances.ks_editor;
@@ -197,7 +200,7 @@
                 self.set('saving', false);
                 self.set('editing', false);
                 console.log(data);
-                window.location.replace("${tg.url('/document/')}");
+                window.location.replace("${tg.url('/document/', params=dict(workspace=workspace))}");
 
             }).fail(function (jqXHR) {
                 var data = jQuery.parseJSON(jqXHR.responseText);
@@ -231,7 +234,7 @@
                 self.set('saving', false);
                 self.set('editing', false);
                 console.log(data);
-                window.location.replace("${tg.url('/questionary/')}");
+                window.location.replace("${tg.url('/questionary/', params=dict(workspace=workspace))}");
 
             }).fail(function (jqXHR) {
                 var data = jQuery.parseJSON(jqXHR.responseText);
@@ -269,12 +272,13 @@
       var res = this.parse_selected(CKEDITOR.instances.ks_editor.getSelectedHtml().getHtml());
       var api_params = JSON.stringify({
         'highlighted_text': res['text'],
-        'list_': res['list']
+        'list_': res['list'],
+          'workspace': self.workspace
       });
 
       $.ajax({
         type: 'POST',
-        url: "${tg.url('/output_plus/')}",
+        url: "${tg.url('/output_plus')}",
         data: api_params,
         dataType: "json",
         processData: false,
@@ -300,6 +304,7 @@
     var ractive_document = new Document({
         el: '#document-ractive',
         document: ${Markup(h.script_json_encode(document))},
+        workspace: '${workspace}'
     });
 
     ractive_document.on('showOutputDetails', function (event, elem) {

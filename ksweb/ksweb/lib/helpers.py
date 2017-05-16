@@ -44,6 +44,7 @@ def material_icon(icon_name):
 
         # Mix
         'add_circle_outline': '&#xE148;',
+        'add': '&#xE145;',
         'add_circle_outline_rotate': '&#xE148;',
         'add_circle': '&#xE147;',
         'remove_circle_outline': '&#xE15D;',
@@ -52,7 +53,10 @@ def material_icon(icon_name):
         # Table
         'done': '&#xE876;',
         'clear': '&#xE14C;',
-        'more_horiz': '&#xE5D3;'
+        'more_horiz': '&#xE5D3;',
+
+        #Workarea
+        'delete': '&#xE872;'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))

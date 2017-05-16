@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Questionary model module."""
 from bson import ObjectId
+from ksweb.model import Document
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -14,7 +15,8 @@ log = logging.getLogger(__name__)
 
 
 def _compile_questionary(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id)),
+    workspace = Document.query.find({'_id': ObjectId(obj._document)}).first()._category
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id, workspace=workspace)),
                                            obj.title))
 
 

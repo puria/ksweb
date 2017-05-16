@@ -347,8 +347,8 @@ class TestController(object):
         })
         return self._get_questionary_by_title(title)
 
-    def _create_fake_questionary(self, title):
-        fake_doc = self._create_fake_document(title)
+    def _create_fake_questionary(self, title, category_id=None):
+        fake_doc = self._create_fake_document(title, category_id=None)
         self._create_questionary(title, fake_doc._id)
 
         return self._get_questionary_by_title(title)

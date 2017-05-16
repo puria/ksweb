@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """Output controller module"""
+import tg
 from bson import ObjectId
 from ksweb.lib.base import BaseController
 from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
+from ksweb.lib.validator import CategoryExistValidator
 from tg import expose, decode_params, flash, redirect, session
 from ksweb import model
+from tg import validate
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 
 
@@ -21,41 +24,48 @@ class ResolveController(BaseController):
     @decode_params('json')
     @expose('ksweb.templates.resolve.index')
     @with_entity_session
-    def index(self, **kw):
-        return dict(**kw)
+    @validate({'workspace': CategoryExistValidator(required=True),})
+    def index(self, workspace, **kw):
+        return dict(workspace=workspace,**kw)
 
     @expose()
     @with_entity_session
-    def original_edit(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def original_edit(self, workspace, **kw):
         entity = self._original_edit()
         flash(_(u'Entity %s successfully edited!') % entity.title)
         session.delete()
-        return redirect(base_url='/')
+        return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
 
     @expose()
     @with_entity_session
-    def clone_object(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def clone_object(self, workspace, **kw):
         entity = self._clone_object()
         flash(_("%s successfully created!") % entity.title)
         session.delete()
-        return redirect(base_url='/')
+        return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
 
     @expose('')
-    def discard_changes(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def discard_changes(self, workspace, **kw):
         session.delete()
         flash(_(u'All the edits are discarded'))
-        return redirect(base_url='/')
+        return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
+
 
     @expose('ksweb.templates.resolve.manually_resolve')
     @with_entity_session
-    def manually_resolve(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def manually_resolve(self, workspace, **kw):
 
         # fetch params from session
         entity = session.get('entity')
 
         return dict(
             entity=entity['entity'],
-            values=entity
+            values=entity,
+            workspace=workspace
         )
 
     @decode_params('json')

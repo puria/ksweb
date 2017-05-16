@@ -24,15 +24,18 @@ class QaController(RestController):
 
     @expose('ksweb.templates.qa.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    def get_all(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True),},
+              error_handler=validation_errors_response)
+    def get_all(self, workspace=None, **kw):
         return dict(
             page='qa-index',
             fields={
-                'columns_name': [_('Label'), _('Question'), _('Filter'), _('Category')],
+                'columns_name': [_('Label'), _('Question'), _('Filter'), _('Workspace')],
                 'fields_name': ['title', 'question', 'parent_precondition', 'category']
             },
-            entities=model.Qa.qa_available_for_user(request.identity['user']._id),
-            actions=False
+            entities=model.Qa.qa_available_for_user(request.identity['user']._id, workspace),
+            actions=False,
+            workspace=workspace
         )
 
     @expose('json')
@@ -44,17 +47,20 @@ class QaController(RestController):
         return dict(qa=qa)
 
     @expose('json')
-    def get_single_or_multi_question(self):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def get_single_or_multi_question(self, workspace):
         questions = model.Qa.query.find({
             'type': {'$in': ['single', 'multi']},
-            '_owner': request.identity['user']._id
+            '_owner': request.identity['user']._id,
+            '_category': ObjectId(workspace)
         }).all()
         return dict(questions=[{'_id': qa._id, 'title': qa.title} for qa in questions])
 
     @expose('json')
     @expose('ksweb.templates.qa.new')
-    def new(self, **kw):
-        return dict(errors=None, qa={})
+    @validate({'workspace': CategoryExistValidator(required=True),})
+    def new(self, workspace, **kw):
+        return dict(errors=None, workspace=workspace, qa={})
 
     @decode_params('json')
     @expose('json')
@@ -100,9 +106,9 @@ class QaController(RestController):
                             condition=[qa._id, ''])
 
         if qa.is_text:
-            flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output')))
+            flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
         else:
-            flash(_("Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> " % lurl('/precondition')))
+            flash(_("Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> " % lurl('/precondition?workspace='+ str(category))))
 
         return dict(errors=None)
 
@@ -148,7 +154,7 @@ class QaController(RestController):
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
 
-            return dict(redirect_url=tg.url('/resolve'))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
         qa = model.Qa.query.get(_id=ObjectId(_id))
 
@@ -177,9 +183,12 @@ class QaController(RestController):
         '_id': QAExistValidator(model=True)
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You can not edit this Q/A'), field='_id', entity_model=model.Qa))
-    def edit(self, _id, **kw):
+    def edit(self, _id, workspace=None, **kw):
+        ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()
+        if not ws:
+            return tg.abort(404)
         qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
-        return dict(qa=qa, errors=None)
+        return dict(qa=qa, workspace=ws._id, errors=None)
 
     @expose('json')
     @decode_params('json')

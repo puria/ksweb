@@ -9,17 +9,17 @@
     Filters
   </div>
   <div class="col-md-6 text-right">
-    <a href="${tg.url('/precondition/simple/new')}">
+    <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}">
       <button class="btn btn-primary">${h.material_icon('save')} New simple filter</button>
     </a>
-    <a href="${tg.url('/precondition/advanced/new')}">
+    <a href="${tg.url('/precondition/advanced/new', params=dict(workspace=workspace))}">
       <button class="btn btn-primary">${h.material_icon('save')} New advanced filter</button>
     </a>
 
   </div>
 </div>
 <div class="row" style="padding-top: 20px">
-    ${h.partials.table(entities, fields, actions)}
+    ${h.partials.table(entities, fields, actions, workspace)}
 </div>
 </body>
 </html>
