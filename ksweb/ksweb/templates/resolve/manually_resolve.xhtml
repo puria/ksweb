@@ -13,7 +13,7 @@
         <div class="col-md-12 text-left ks-section-name">
           Risoluzione manuale
 
-          <a href="${tg.url('/resolve/discard_changes')}"
+          <a href="${tg.url('/resolve/discard_changes', params=dict(workspace=workspace))}"
            onclick="return confirm('Continuando verranno perse tutte le modifiche. Continuare?')">
           <button
               type="button"
@@ -148,7 +148,7 @@
             processData: false,
             contentType: 'application/json'
           }).done(function(resp) {
-            var redirect_to = "${tg.url('/')}";
+            var redirect_to = "${tg.url('/qa', params=dict(workspace=workspace))}";
             //
             window.location.replace(redirect_to);
           }).fail(function(jqXHR) {

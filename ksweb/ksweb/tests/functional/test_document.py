@@ -6,22 +6,26 @@ from ksweb import model
 class TestDocument(TestController):
     application_under_test = 'main'
 
+    def setUp(self):
+        TestController.setUp(self)
+        self.category = self._get_category('Categoria 1')
+
     def test_access_permission_not_garanted(self):
         self.app.get('/document/', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/document')
+        resp_admin = self.app.get('/document', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lavewr()
-        resp_lawyer = self.app.get('/document')
+        resp_lawyer = self.app.get('/document', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_new_document(self):
         self._login_admin()
-        resp_admin = self.app.get('/document/new')
+        resp_admin = self.app.get('/document/new', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_creation_document(self):
@@ -57,7 +61,8 @@ class TestDocument(TestController):
         doc1 = self._get_document_by_title('Titolo documento 1')
 
         resp = self.app.get('/document/edit', params={
-            '_id': str(doc1._id)
+            '_id': str(doc1._id),
+            'workspace': doc1._category
         })
         assert doc1._id in resp
 

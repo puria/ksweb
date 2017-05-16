@@ -9,17 +9,21 @@ class TestQuestionaryController(TestController):
 
     application_under_test = 'main'
 
+    def setUp(self):
+        TestController.setUp(self)
+        self.category = self._get_category('Categoria 1')
+
     def test_access_permission_not_garanted(self):
         self.app.get('/questionary', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/questionary')
+        resp_admin = self.app.get('/questionary', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lavewr()
-        resp_lawyer = self.app.get('/questionary')
+        resp_lawyer = self.app.get('/questionary', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_questionary_create(self):
@@ -27,15 +31,17 @@ class TestQuestionaryController(TestController):
         doc = self._create_fake_document('Fake1')
         resp = self.app.post_json('/questionary/create', params={
             'questionary_title': 'TestQuestionary',
-            'document_id': str(doc._id)
+            'document_id': str(doc._id),
+            'workspace':  str(self.category._id)
         })
         assert resp
 
     def test_compile_questionary(self):
         self._login_lavewr()
-        questionary = self._create_fake_questionary('FakeQuestionary')
+        questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
         resp = self.app.get('/questionary/compile.json', params={
-            '_id': str(questionary._id)
+            '_id': str(questionary._id),
+            'workspace': self.category._id
         }).json
         assert resp['quest_compiled'] is not None, resp
         assert resp['quest_compiled']['completed'] is False, resp
@@ -43,10 +49,11 @@ class TestQuestionaryController(TestController):
     def test_responde_questionary(self):
 
         self._login_lavewr()
-        questionary = self._create_fake_questionary('FakeQuestionary')
+        questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
 
         resp = self.app.get('/questionary/compile.json', params={
-            '_id': str(questionary._id)
+            '_id': str(questionary._id),
+            'workspace': self.category._id
         }).json
 
         assert resp['quest_compiled']['completed'] is False, resp
@@ -61,9 +68,10 @@ class TestQuestionaryController(TestController):
 
     def test_hack_response(self):
         self._login_lavewr()
-        questionary = self._create_fake_questionary('FakeQuestionary')
+        questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
         resp = self.app.get('/questionary/compile.json', params={
-            '_id': str(questionary._id)
+            '_id': str(questionary._id),
+            'workspace': self.category._id
         }).json
         assert resp['quest_compiled']['completed'] is False, resp
 
@@ -116,7 +124,8 @@ class TestQuestionaryController(TestController):
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
-            '_id': str(questionary._id)
+            '_id': str(questionary._id),
+            'workspace': document._category
         }).json
         assert resp['quest_compiled']['completed'] is False, resp
 
@@ -188,7 +197,9 @@ class TestQuestionaryController(TestController):
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
-            '_id': str(questionary._id)
+            '_id': str(questionary._id),
+            'workspace': document._category
+
         }).json
         assert resp['quest_compiled']['completed'] is False, resp
 

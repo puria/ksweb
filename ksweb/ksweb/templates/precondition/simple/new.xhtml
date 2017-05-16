@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <div class="form-group {{errors.category ? 'has-error' : ''}}">
+     <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
             {{#each categories}}
@@ -98,7 +98,7 @@
           {{/if}}
         </div>
       </div>
-
+        -->
 
     </form>
     ]]>
@@ -119,18 +119,21 @@
       self.edit_mode = false;
       self.submit_url = "${tg.url('/precondition/simple/post')}";
       self.submit_type = 'POST';
+      self.workspace=options['workspace'];
+
+
 
     },
     oninit: function() {
       var self = this;
-
+         self.set('create.category', self.workspace);
       //  Check if document is provided
       if (! jQuery.isEmptyObject(self.precondition)) {
         self.submit_type = 'PUT';
         self.submit_url = '${tg.url('/precondition/simple/put')}';
         self.set('edit_mode', true);
         self.set('create.title', self.precondition['title']);
-        self.set('create.category', self.precondition['_category']);
+
         self.set('create.question', self.precondition['condition'][0]);
         self.set('create.interested_response', self.precondition['condition'][1]);
         self.set('create._id', self.precondition['_id']);
@@ -164,7 +167,7 @@
     },
     loadQuestion: function(callback) {
       var self = this;
-      jQuery.get("${tg.url('/qa/get_single_or_multi_question')}",
+      jQuery.get("${tg.url('/qa/get_single_or_multi_question', params=dict(workspace=workspace))}",
           function(data) {
             self.set('questions', data['questions']);
             if (callback)
@@ -188,7 +191,7 @@
         processData: false,
         contentType: 'application/json'
       }).done(function(resp) {
-        var redirect_to = "${tg.url('/precondition/')}";
+        var redirect_to = "${tg.url('/precondition/', params=dict(workspace=workspace))}";
         self.set('create', {});
         self.set('saving', false);
         self.set('editing', false);
@@ -212,7 +215,8 @@
 <script>
   var ractive_precondition_simple = new PreconditionSimple({
       el: '#qa-ractive',
-      precondition: ${Markup(h.script_json_encode(precondition))}
+      precondition: ${Markup(h.script_json_encode(precondition))},
+      workspace: '${workspace}'
   });
 
   ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {

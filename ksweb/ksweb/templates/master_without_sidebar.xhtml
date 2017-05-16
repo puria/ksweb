@@ -44,30 +44,25 @@
       <li class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">
           <span class="submenu">
               ${request.identity['user'].display_name}
-
                 <span>
                   <img src="${tg.url('/img/expand-more.png')}" alt="Profile"/>
                     ${h.partials.user_menu("user_menu")}
               </span>
-
           </span>
-
       </li>
-
     </ul>
   </div>
-
 </nav>
 
 <!-- Logged User -->
 <div py:if="request.identity" class="container-fluid ks-container">
   <!-- Flash messages -->
   <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
-    <div class="row ks-row">
-        <div py:if="value_of('show_sidebar', True)" class="col-md-2 ks-sidebar">
+   <div class="row ks-row">
+         <!--<div py:if="value_of('show_sidebar', True)" class="col-md-2 ks-sidebar">
           ${h.partials.sidebar("sidebar", workspace=value_of("workspace"))}
-      </div>
-      <div class="col-md-10" style="padding-bottom: 20px">
+      </div>-->
+      <div class="col-md-12" style="padding-bottom: 20px">
         <div py:if="flash" py:replace="Markup(flash)" />
         <!--  Main included content -->
         <py:block name="body"></py:block>

@@ -9,13 +9,13 @@
     Documents
   </div>
   <div class="col-md-6 text-right">
-    <a href="${tg.url('/document/new')}">
+    <a href="${tg.url('/document/new', params=dict(workspace=workspace))}">
       <button class="btn btn-primary">${h.material_icon('save')} New document</button>
     </a>
   </div>
 </div>
 <div class="row" style="padding-top: 20px">
-    ${h.partials.table(entities, fields, actions)}
+    ${h.partials.table(entities, fields, actions, workspace)}
 </div>
 </body>
 </html>
