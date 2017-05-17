@@ -195,7 +195,7 @@
             self.on('delete_workspace', function (event, workspace_id) {
                 jQuery(".box").blur();
                 var r = confirm("WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover. " +
-                        "Are you sure you want to procede?");
+                        "Are you sure you want to proceed?");
                 if (r == true) {
                     var params = {
                     'workspace_id': workspace_id
