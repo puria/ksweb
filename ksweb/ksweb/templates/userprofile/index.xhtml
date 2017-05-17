@@ -1,0 +1,78 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+<py:extends href="master_without_sidebar.xhtml" />
+
+<head py:block="head" py:strip="True">
+    <title>${user_displayname[1]} Profile</title>
+    <style>
+        #userprofile_avatar {
+            height: 200px;
+            width: auto;
+        }
+
+        .actions {
+            padding-top: 67px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #004c99;
+            font-weight: bolder;
+            margin-bottom: 52px;
+        }
+
+        span.label {
+            padding-left: 0;
+            font-size: 12px;
+            color: #0072e5;
+        }
+
+        p.value {
+            padding-left: 0;
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+            padding-bottom: 22px;
+        }
+    </style>
+</head>
+
+<body py:block="body" py:strip="True">
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Account</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <span class="label">Name</span><br/>
+                <p class="value">${user_displayname[1]}</p>
+            </div>
+        </div>
+        <div class="row userprofile_user_attr" py:for="attr_name, attr_value in user_data.items()"
+             id="userprofile_user_attr_${attr_name}">
+            <div class="col-md-12">
+                <span class="label">${attr_value[0]}</span><br/>
+                <p class="value">${attr_value[1]}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <img id="userprofile_avatar" src="${user_avatar}" />
+        <div class="row">
+            <div class="col-md-12 actions">
+                <a href="${h.plug_url('userprofile', '/edit')}" class="btn btn-primary">Edit</a>
+                &nbsp;
+                <a href="${h.plug_url('userprofile', '/chpasswd')}" class="btn btn-default">Change password</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

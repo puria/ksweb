@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="${response.charset}" />
+
+  <title py:block="master_title">KS Web</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link py:for="asset_url in g.webassets['css_all'].urls()" rel="stylesheet" type="text/css"
+        media="all" href="$asset_url"/>
+  <script py:for="asset_url in g.webassets['js_all'].urls()" src="$asset_url"></script>
+  <script src="${tg.url('/javascript/axel.js')}"></script>
+  <script type="text/javascript">
+    <![CDATA[
+    if (typeof jQuery === 'undefined')
+      axel.register('jquery', 'https://code.jquery.com/jquery.js');
+    else
+      axel.register('jquery', axel.Preloaded);
+    ]]>
+  </script>
+  <py:block name="head"></py:block>
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-default">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-content">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="${tg.url('/')}">
+      <img src="${tg.url('/img/logo.png')}"  alt="KS"/>
+    </a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="navbar-content">
+    <ul py:if="request.identity" class="nav navbar-nav">
+      <li><a href="${tg.url('/')}" class=""><img class="img-circle" src="${h.gravatar(request.identity['user'].email_address)}"/></a></li>
+      <li class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">
+          <span class="submenu">
+              ${request.identity['user'].display_name}
+                <span>
+                  <img src="${tg.url('/img/expand-more.png')}" alt="Profile"/>
+                    ${h.partials.user_menu("user_menu")}
+              </span>
+          </span>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Logged User -->
+<div py:if="request.identity" class="container-fluid ks-container">
+  <!-- Flash messages -->
+  <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
+   <div class="row ks-row">
+         <!--<div py:if="value_of('show_sidebar', True)" class="col-md-2 ks-sidebar">
+          ${h.partials.sidebar("sidebar", workspace=value_of("workspace"))}
+      </div>-->
+      <div class="col-md-12" style="padding-bottom: 20px">
+        <div py:if="flash" py:replace="Markup(flash)" />
+        <!--  Main included content -->
+        <py:block name="body"></py:block>
+      </div>
+    </div>
+  </py:with>
+</div>
+
+<!-- Not Logged User -->
+<div py:if="not request.identity" class="container-fluid">
+  <!-- Flash messages -->
+  <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
+    <div class="row">
+      <div class="col-md-12">
+        <div py:if="flash" py:replace="Markup(flash)" />
+        <!--  Main included content -->
+        <py:block name="body"></py:block>
+      </div>
+    </div>
+  </py:with>
+</div>
+</body>
+</html>
