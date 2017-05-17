@@ -60,23 +60,7 @@
                     {{/if}}
                 </div>
             </div>
-           <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
-                <div class="col-sm-3">
-                    <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                        {{#each categories}}
-                        {{#if .name == 'Altro'}}
-                        <option value="{{._id}}" selected>{{.name}}</option>
-                        {{else}}
-                        <option value="{{._id}}">{{.name}}</option>
-                        {{/if}}
-                        {{/each}}
-                    </select>
 
-                    {{#if errors.category}}
-                    <span class="help-block">{{errors.category}}</span>
-                    {{/if}}
-                </div>
-            </div>-->
             <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
                 <div class="col-sm-3">
                     <select id="form-precondition" class="form-control" value="{{create.precondition}}">
@@ -93,24 +77,6 @@
                 <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}" type="button" id="create-filter"
                    class="btn btn-primary">${h.material_icon('save')} New Simple Filter</a>
 
-            </div>
-            <div class="form-group {{errors.tooltip ? 'has-error' : ''}}">
-                <div class="col-sm-3">
-                    <input id="extra-fields-form-tooltip" disabled="disabled" type="text" class="form-control"
-                           placeholder="Tooltip" value="{{create.tooltip}}"/>
-                    {{#if errors.tooltip}}
-                    <span class="help-block">{{errors.tooltip}}</span>
-                    {{/if}}
-                </div>
-            </div>
-            <div class="form-group {{errors.link ? 'has-error' : ''}}">
-                <div class="col-sm-3">
-                    <input id="extra-fields-form-link" type="text" class="form-control" placeholder="Link"
-                           disabled="disabled" value="{{create.link}}"/>
-                    {{#if errors.link}}
-                    <span class="help-block">{{errors.link}}</span>
-                    {{/if}}
-                </div>
             </div>
             <div class="form-group">
                 <div class="col-md-12">
