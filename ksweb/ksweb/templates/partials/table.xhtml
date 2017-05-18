@@ -1,49 +1,58 @@
-
 <div class="col-md-12">
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <th py:for="idx, field in enumerate(fields['columns_name'])">
-          <!--<a href="${tg.url('/pikablink_admin/' + entity_name, params=dict(order_by=fields[0][idx], desc= not desc and order_by==fields[0][idx]))}">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th py:for="idx, field in enumerate(fields['columns_name'])">
+                    <!--<a href="${tg.url('/pikablink_admin/' + entity_name, params=dict(order_by=fields[0][idx], desc= not desc and order_by==fields[0][idx]))}">
                     ${field} ${h.icon('arrow-up' if not desc else 'arrow-down') if order_by==fields[0][idx] else '' }
                     </a>-->
-            ${field}
-        </th>
-        <th py:if="actions">
-          <!-- nameless column -->
-        </th>
+                        ${field}
+                </th>
+                <th py:if="actions">
+                    <!-- nameless column -->
+                </th>
+                <!--<th py:if="actions">
 
-      </tr>
-      </thead>
-      <tbody>
-      <tr py:for="entity in entities">
-      ${h.table_row_content(entity, fields['fields_name'])}
-        <td py:if="actions">
-          <a class="actions" href="#">${h.material_icon('more_horiz')}</a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
+                </th> -->
 
-  <div id="actions-popover-content" class="hidden">
-    Condividi
-    <br/>
-    Scarica
-    <br/>
-    Lorem Ipsum
-  </div>
-  <script>
-    $(document).ready(function(){
-      $('.actions').popover({
-        html : true,
-        content: function() {
-          return $("#actions-popover-content").html();
-        },
-        placement: 'bottom'
-      });
-    });
-  </script>
+            </tr>
+            </thead>
+            <tbody>
+            <tr py:for="entity in entities">
+            ${h.table_row_content(entity, fields['fields_name'])}
+                <td py:if="value_of('download', False)">
+                    <a class="btn btn-primary export"
+                            href='${tg.url("/document/export", params={"_id": entity._id})}'>${h.material_icon('download')}</a>
+                </td>
+                <!--<td py:if="actions">
+                    <a class="actions" data-export-id="${entity._id}" href="#">${h.material_icon('more_horiz')}</a>
+                </td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
+
+    <div py:if="value_of('actions_content', False)" id="actions-popover-content" class="hidden">
+        <div py:for="action in actions_content" class="${action}">${action}</div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.actions').popover({
+                html: true,
+                content: function () {
+                    console.log($(this).data("export-id"));
+                    return $("#actions-popover-content").html();
+                },
+                placement: 'bottom'
+            });
+
+            $(document).on('click', '.export', function (event) {
+                var self = this;
+                console.log(self.id);
+            });
+        });
+
+    </script>
 </div>
