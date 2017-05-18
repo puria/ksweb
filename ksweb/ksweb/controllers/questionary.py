@@ -45,7 +45,8 @@ class QuestionaryController(BaseController):
                 'fields_name': ['title']
             },
             entities=entities,
-            actions=False,
+            actions=True,
+            actions_content=['Esporta'],
             workspace=workspace
         )
 

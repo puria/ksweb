@@ -110,12 +110,12 @@ class Precondition(MappedClass):
             if qa.parent_precondition:
                 res_dict.update(qa.parent_precondition.response_interested)
             return res_dict
-
         for cond in self.condition:
             if cond in Precondition.PRECONDITION_OPERATOR:
                 continue
             else:
-                rel_ent = Precondition.query.get(_id=cond)
+                rel_ent = Precondition.query.get(_id=ObjectId(cond))
+                print cond
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict

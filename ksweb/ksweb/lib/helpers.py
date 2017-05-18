@@ -56,7 +56,10 @@ def material_icon(icon_name):
         'more_horiz': '&#xE5D3;',
 
         #Workarea
-        'delete': '&#xE872;'
+        'delete': '&#xE872;',
+
+        'download': '&#xE2C4;',
+        'upload': '&#xE2C6;'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
