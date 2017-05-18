@@ -147,8 +147,8 @@
                     {{#if .display}}
                     <input type="{{input_type}}" name="example_response">
                     {{#if .editable}}
-                    <input id="{{.answer}}" type="text" class="form-control response response-text" autofocus
-                           value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"/>
+                    <textarea id="{{.answer}}" class="form-control response response-text" autofocus
+                              value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
                     {{else}}
                     <div id={{.answer}} class="response" onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
                     {{/if}}
@@ -162,7 +162,7 @@
                 <div class="col-md-3">
                     <div class="form-inline">
 
-                        <input id="response_text" type="text" class="form-control" placeholder="Answer"/>
+                        <textarea id="response_text" class="form-control" placeholder="Answer"> </textarea>
                         <label for="response_text"
                                onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
                     </div>

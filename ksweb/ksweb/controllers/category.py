@@ -37,7 +37,7 @@ class CategoryController(RestController):
             visible=True,
             name=str(workspace_name)
         )
-        flash("Category succesfylly created!")
+        flash("Category successfully created!")
         return dict(workspaces=self.get_all())
 
     @decode_params('json')
