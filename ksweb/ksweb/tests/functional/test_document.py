@@ -2,7 +2,6 @@
 from ksweb.tests import TestController
 from ksweb import model
 
-
 class TestDocument(TestController):
     application_under_test = 'main'
 
@@ -88,3 +87,4 @@ class TestDocument(TestController):
         assert updated_document
         assert updated_document._id == original_document._id
         assert resp['errors'] is None, resp
+
