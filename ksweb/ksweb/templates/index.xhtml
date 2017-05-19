@@ -180,7 +180,6 @@
                     processData: false,
                     contentType: 'application/json'
                 }).done(function (data) {
-
                     window.location.replace("${tg.url('/')}");
                 }).fail(function (jqXHR) {
                     var data = jQuery.parseJSON(jqXHR.responseText);

@@ -74,8 +74,11 @@
             </div>
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
             <div class="col-md-3">
+                {{#if edit_mode}}
+                 <label for="extra-fields-form-description">Description</label>
+                {{/if}}
                     <textarea id="extra-fields-form-description" class="form-control" placeholder="Descrizione"
-                              > {{create.description}} </textarea>
+                             value="{{create.description}}" > {{create.description}} </textarea>
                     {{#if errors.description}}
                     <span class="help-block">{{errors.description}}</span>
                     {{/if}}
@@ -83,6 +86,9 @@
              </div>
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
+                     {{#if edit_mode}}
+                 <label for="extra-fields-form-licence">Licence</label>
+                {{/if}}
                     <input id="extra-fields-form-licence" type="text" class="form-control" placeholder="Licenza"
                            value="{{create.licence}}"/>
                     {{#if errors.licence}}
@@ -93,6 +99,9 @@
             </div>
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
+                     {{#if edit_mode}}
+                 <label for="extra-fields-form-version">Version</label>
+                {{/if}}
                     <input id="extra-fields-form-version" type="text" class="form-control" placeholder="Versione"
                            value="{{create.version}}"/>
                     {{#if errors.version}}
@@ -103,6 +112,9 @@
             </div>
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
+                     {{#if edit_mode}}
+                 <label for="extra-fields-form-tags">Tags</label>
+                {{/if}}
                     <input id="extra-fields-form-tags" type="text" class="form-control" placeholder="Tags"
                            value="{{create.tags}}"/>
                     {{#if errors.tags}}
@@ -168,6 +180,10 @@
                 self.set("edit_mode", true);
                 //Set the document value as default
                 self.set('create.title', self.document['title']);
+                self.set('create.licence', self.document['licence']);
+                self.set('create.version', self.document['version']);
+                self.set('create.description', self.document['description']);
+                self.set('create.tags', self.document['tags'].toString());
 
                 self.set('create._id', self.document['_id']);
             }
@@ -183,7 +199,6 @@
                 jQuery(window).unbind('beforeunload');
                 var all_var = self.get('create');
                 all_var['content'] = self.get('create.content');
-                console.log(all_var)
                 self.createDocument(all_var);
                 return false;
             });

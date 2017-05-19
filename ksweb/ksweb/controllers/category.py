@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """Category controller module"""
 from bson import ObjectId
+from pymongo.errors import DuplicateKeyError
 from tg import decode_params
 from tg import expose, validate, RestController, validation_errors_response
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator
 from tg import flash
 from tg import request
+from tg import response
 from tw2.core import StringLengthValidator
 
 
@@ -24,7 +26,7 @@ class CategoryController(RestController):
 
     @expose('json')
     def get_all(self):
-        categories = model.Category.query.find({'visible': True}).all()
+        categories = model.Category.query.find({'visible': True}).sort('_id').all()
         return dict(categories=categories)
 
     @decode_params('json')
@@ -33,12 +35,19 @@ class CategoryController(RestController):
         'workspace_name': StringLengthValidator(min=2),
     }, error_handler=validation_errors_response)
     def create(self, workspace_name=None, **kw):
+
+        ws = model.Category.query.find({'name': str(workspace_name)}).first()
+        if ws:
+            response.status_code = 412
+            return dict(errors={'workspace_name': 'This category already exists'})
+
         workspace = model.Category(
             visible=True,
             name=str(workspace_name)
         )
         flash("Category successfully created!")
         return dict(workspaces=self.get_all())
+
 
     @decode_params('json')
     @expose('json')
