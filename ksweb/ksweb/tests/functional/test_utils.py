@@ -20,9 +20,9 @@ class TestUtils(TestController):
                             'type': u'single', 'public': True}
          }
         self.qa_multi = self._create_qa('title1', self.ws._id, 'question1', 'tooltip1', 'link1', 'multi', ['a', 'b'])
-        self.qa_multi_struct = {str(self.qa_multi._id): {'_parent_precondition': None, 'title': u'title', 'question': u'question',
-                                  'tooltip': u'tooltip',
-                                  'visible': True, 'link': u'link', 'answers': [u'a', u'b'], '_id': ObjectId(self.qa_multi._id),
+        self.qa_multi_struct = {str(self.qa_multi._id): {'_parent_precondition': None, 'title': u'title1', 'question': u'question1',
+                                  'tooltip': u'tooltip1',
+                                  'visible': True, 'link': u'link1', 'answers': [u'a', u'b'], '_id': ObjectId(self.qa_multi._id),
                                   'type': u'multi', 'public': True}
                     }
         self.prec = self._create_simple_precondition('title', self.ws._id, self.qa._id, interested_response=['a'])
@@ -41,11 +41,11 @@ class TestUtils(TestController):
 
     def test_export_qa_text(self):
         self._login_admin()
-        qa = self._create_qa('title', self.ws._id, 'question', 'tooltip', 'link', 'text', None)
+        qa = self._create_qa('title2', self.ws._id, 'question2', 'tooltip2', 'link2', 'text', None)
         export_qa(qa._id, self.document)
-        expected = {str(qa._id): {'_parent_precondition': None, 'title': u'title', 'question': u'question',
-                                  'tooltip': u'tooltip',
-                                  'visible': True, 'link': u'link', 'answers': None, '_id': ObjectId(qa._id),
+        expected = {str(qa._id): {'_parent_precondition': None, 'title': u'title2', 'question': u'question2',
+                                  'tooltip': u'tooltip2',
+                                  'visible': True, 'link': u'link2', 'answers': None, '_id': ObjectId(qa._id),
                                   'type': u'text', 'public': True}
                     }
         assert self.document['qa'] == expected, self.document['qa']
