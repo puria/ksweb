@@ -47,6 +47,10 @@ class Document(MappedClass):
 
     content = FieldProperty(s.Anything, required=True)
 
+    description = FieldProperty(s.String, required=False)
+    licence = FieldProperty(s.String, required=False)
+    version = FieldProperty(s.String, required=False)
+    tags = FieldProperty(s.Anything, required=False)
     """
     Possible content of the document is a list with two elements type:
         - text

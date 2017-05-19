@@ -6,6 +6,7 @@ from string import Template
 import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
+from ksweb.lib.utils import import_output, export_outputs
 from tg import expose, tmpl_context, predicates, RestController, request, validate, validation_errors_response
 from tg import redirect
 from tg import response
@@ -30,8 +31,8 @@ class DocumentController(RestController):
         return dict(
             page='document-index',
             fields={
-                'columns_name': [_('Label'), _('Workspace'), _('Content')],
-                'fields_name': ['title', 'category', 'content']
+                'columns_name': [_('Title'), _('Description'),_('Version'), _('License')],
+                'fields_name': ['title', 'description', 'version', 'licence']
             },
             entities=model.Document.document_available_for_user(request.identity['user']._id, workspace=workspace),
             actions=True,
@@ -50,14 +51,21 @@ class DocumentController(RestController):
     @validate({
         'title': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
-        'content': DocumentContentValidator()
+        'content': DocumentContentValidator(),
+        'description': StringLengthValidator(min=0),
+        'licence': StringLengthValidator(min=0, max=100),
+        'version': StringLengthValidator(min=0, max=100),
+        'tags': StringLengthValidator(min=0, max=100)
     }, error_handler=validation_errors_response)
-    def post(self, title, category, content=[], **kw):
+    def post(self, title, category, description, licence, version, tags, content=[],   **kw):
 
         if not content:
             content = []
-
+        print description, licence, version, tags
         user = request.identity['user']
+
+        tags = tags.strip().split(',') if tags else []
+
         model.Document(
             _owner=user._id,
             _category=ObjectId(category),
@@ -65,8 +73,11 @@ class DocumentController(RestController):
             content=content,
             public=True,
             visible=True,
-            html=kw['ks_editor']
-
+            html=kw['ks_editor'],
+            description=description,
+            licence=licence,
+            version=version,
+            tags=tags
         )
         return dict(errors=None)
 
@@ -76,21 +87,29 @@ class DocumentController(RestController):
         '_id': DocumentExistValidator(required=True),
         'title': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
-        'content': DocumentContentValidator()
+        'content': DocumentContentValidator(),
+        'description': StringLengthValidator(min=0),
+        'licence': StringLengthValidator(min=0, max=100),
+        'version': StringLengthValidator(min=0, max=100),
+        'tags': StringLengthValidator(min=0),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id',
                                   entity_model=model.Document))
-    def put(self, _id, title, content, category, **kw):
+    def put(self, _id, title, content, category, description, licence, version, tags, **kw):
 
         if not content:
             content = []
-
+        tags = tags.strip().split(',') if tags else []
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
 
         document.title = title
         document._category = ObjectId(category)
         document.content = content
         document.html = kw['ks_editor']
+        document.tags = tags
+        document.description = description
+        document.licence = licence
+        document.version = version
 
         return dict(errors=None)
 
@@ -114,7 +133,6 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id, **kw):
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
-
         return dict(document=document)
 
     @expose("json", content_type='application/json')
@@ -127,10 +145,8 @@ class DocumentController(RestController):
         document.pop('_category', None)
         document.pop('_id', None)
         document.pop('entity', None)
-        document['outputs'] = {}
-        document['advanced_preconditions'] = {}
-        document['simple_preconditions'] = {}
-        document['qa'] = {}
+        document['outputs'],  document['advanced_preconditions'], document['simple_preconditions'], document['qa'] = \
+            dict(), dict(), dict(), dict()
         for output in document['content']:
             export_outputs(output['content'], document)
         return document
@@ -156,137 +172,13 @@ class DocumentController(RestController):
             content=content,
             public=imported_document['public'],
             visible=imported_document['visible'],
-            html=html
+            html=html,
+            version=imported_document['version'],
+            description=imported_document['description'],
+            licence=imported_document['licence'],
+            tags=imported_document['tags']
+
         )
         model.DBSession.flush_all()
         tg.flash('Document successfully imported!')
         return redirect(tg.url('/document', params=dict(workspace=workspace)))
-
-
-def import_qa(imported_document, qa_id, owner, workspace_id):
-    qa = imported_document['qa'][qa_id]
-
-    prec_id = import_precondition(imported_document, qa['_parent_precondition'], owner, workspace_id) \
-        if qa['_parent_precondition'] else None
-
-    if qa:
-        inserted = upsert_document(model_class=model.Qa, _owner=ObjectId(owner),
-                             _category=ObjectId(workspace_id),
-                             _parent_precondition=prec_id,
-                             title=qa['title'],
-                             question=qa['question'],
-                             tooltip=qa['tooltip'],
-                             link=qa['link'],
-                             type=qa['type'],
-                             answers=qa['answers'],
-                             public=qa['public'],
-                             visible=qa['visible'])
-        return inserted._id
-
-
-def import_precondition(imported_document, precondition_id, owner, workspace_id):
-    if precondition_id in ['and', 'or', '(', ')', 'not']:
-        return precondition_id
-
-    s_preconditions, a_preconditions = imported_document['simple_preconditions'], imported_document[
-        'advanced_preconditions']
-
-    if precondition_id in s_preconditions:
-        precondition = s_preconditions[str(precondition_id)]
-        qa_id = import_qa(imported_document, precondition['condition'][0], owner, workspace_id)
-        condition = [ObjectId(qa_id), precondition['condition'][1]]
-    elif precondition_id in a_preconditions:
-        precondition = a_preconditions[str(precondition_id)]
-        condition = [import_precondition(imported_document, condition, owner, workspace_id) for condition in
-                     precondition['condition']]
-
-    prec = upsert_document(model_class=model.Precondition, _owner=ObjectId(owner),
-                           _category=ObjectId(workspace_id),
-                           title=precondition['title'],
-                           type=precondition['type'],
-                           condition=condition)
-    return prec._id
-
-
-def upsert_document(model_class, **body):
-    fetched = model_class.query.find(body).first()
-    if fetched:
-        return fetched
-    inserted = model_class(**body)
-    model.DBSession.flush_all()
-    return inserted
-
-
-def import_output(imported_document, output_id, owner, workspace_id):
-    output = imported_document['outputs'][output_id]
-    prec_id = import_precondition(imported_document, output['_precondition'], owner, workspace_id)
-    content = []
-    values ={}
-    for element in output['content']:
-        c = {'type': element['type'], 'title': element['title']}
-        if element['type'] == 'output':
-            c['content'] = str(import_output(imported_document, element['content'], owner, workspace_id))
-            values['output_' + element['content']] = '${output_' + c['content'] + '}'
-        elif element['type'] == 'qa_response':
-            c['content'] = str(import_qa(imported_document, element['content'], owner, workspace_id))
-            values['qa_' + element['content']] = '${qa_' + c['content']+'}'
-        content.append(c)
-
-    html = Template(output['html']).safe_substitute(**values)
-
-    output_inserted = upsert_document(model_class=model.Output,
-                                      title=output['title'],
-                                      _category=ObjectId(workspace_id),
-                                      _owner=ObjectId(owner),
-                                      html=html,
-                                      _precondition=ObjectId(prec_id),
-                                      public=output['public'],
-                                      visible=output['visible'],
-                                      content=content)
-    return output_inserted._id
-
-
-def export_outputs(output_id, document):
-    o = model.Output.query.get(_id=ObjectId(output_id)).__json__()
-    o.pop('created_at', None)
-    o.pop('_category', None)
-    o.pop('_owner', None)
-    o.pop('entity', None)
-    if o['_id'] not in document['outputs']:
-        document['outputs'][str(o['_id'])] = o
-        export_preconditions(o['_precondition'], document)
-    for content in o['content']:
-        if content['type'] == 'output':
-            export_outputs(content['content'], document)
-        elif content['type'] == 'qa_response':
-            export_qa(content['content'], document)
-
-
-def export_qa(qa_id, document):
-    qa = model.Qa.query.get(_id=ObjectId(qa_id)).__json__()
-    qa.pop('_category', None)
-    qa.pop('_owner', None)
-    qa.pop('entity', None)
-    if qa['_id'] not in document['qa']:
-        document['qa'][str(qa['_id'])] = qa
-        if qa['_parent_precondition']:
-            export_preconditions(qa['_parent_precondition'], document)
-
-
-def export_preconditions(precondition_id, document):
-    if precondition_id in ['and', 'or', '(', ')', 'not']:
-        return
-    precondition = model.Precondition.query.get(_id=ObjectId(precondition_id)).__json__()
-    precondition.pop('_owner', None)
-    precondition.pop('_category', None)
-    precondition.pop('entity', None)
-
-    if precondition['type'] == 'simple':
-        if precondition['_id'] not in document['simple_preconditions']:
-            document['simple_preconditions'][str(precondition['_id'])] = precondition
-            export_qa(precondition['condition'][0], document)
-    elif precondition['type'] == 'advanced':
-        for condition in precondition['condition']:
-            export_preconditions(condition, document)
-        if precondition['_id'] not in document['advanced_preconditions']:
-            document['advanced_preconditions'][str(precondition['_id'])] = precondition

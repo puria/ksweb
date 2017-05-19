@@ -56,7 +56,7 @@ class RootController(BaseController):
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def index(self):
         user = request.identity['user']
-        categories = model.Category.query.find({'visible': True}).all()
+        categories = model.Category.query.find({'visible': True}).sort('_id').all()
         return dict(page='index', user=user, workspaces=categories, show_sidebar=False)
 
 
