@@ -20,9 +20,23 @@ def _compile_questionary(obj):
                                            obj.title))
 
 
+def _owner_name(o):
+    from ksweb.model import User
+    owner = User.query.find({'_id': o._owner}).first()
+    return owner.display_name
+
+
+def _shared_with(o):
+    from ksweb.model import User
+    shared_with = User.query.find({'_id': o._user}).first()
+    return shared_with.email_address
+
+
 class Questionary(MappedClass):
     __ROW_COLUM_CONVERTERS__ = {
         'title': _compile_questionary,
+        '_owner': _owner_name,
+        '_user': _shared_with,
     }
 
     class __mongometa__:
@@ -85,6 +99,16 @@ class Questionary(MappedClass):
         In case of text or single response of the qa, the response are simply text.
         In case of multiple response of the qa, the response is a list with ['Res1', 'Resp4']
     """
+
+    @property
+    def creation_date(self):
+        return self._id.generation_time
+
+    @property
+    def completion(self):
+        if not len(self.expressions):
+            return 0
+        return "%d %%" % int(len(self.output_values)*1.0/len(self.expressions)*100)
 
     @property
     def evaluate_questionary(self):
