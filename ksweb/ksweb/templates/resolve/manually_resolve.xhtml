@@ -1,0 +1,163 @@
+<html py:extends="master.xhtml" py:strip="True">
+  <head py:block="head" py:strip="True">
+    <style>
+      .btn:focus{
+        outline: none;
+      }
+    </style>
+    <title py:block="master_title">KS | Manually Resolve</title>
+    <script id="Manually_resolve_template" type="text/html">
+    <![CDATA[
+
+      <div class="row" style="padding-top: 20px">
+        <div class="col-md-12 text-left ks-section-name">
+          Risoluzione manuale
+
+          <a href="${tg.url('/resolve/discard_changes', params=dict(workspace=workspace))}"
+           onclick="return confirm('Continuando verranno perse tutte le modifiche. Continuare?')">
+          <button
+              type="button"
+              class="pull-right btn btn-danger"
+              data-toggle="tooltip"
+              title="Cancella tutte le modifiche effettuate">
+            Termina risoluzione</button>
+          </a>
+
+          <hr/>
+          {{total - related_entities.length}} di {{total}}
+          <div class="progress">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{related_entities.length}}" aria-valuemin="0" aria-valuemax="{{total}}" style="width: {{(total - related_entities.length)/total*100}}%;">
+                <span class="sr-only">60% Complete</span>
+              </div>
+          </div>
+        </div>
+      </div>
+        <div class="row">
+          {{#if related_entities.length > 0}}
+          <div class="col-md-5">
+            <div class="well">
+              <a href="#" on-click="showDetails:{{related_entities[0].entity}},{{related_entities[0]._id}}">{{related_entities[0].title}}</a>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <button class="btn btn-warning" on-click="addToList:{{related_entities[0]}},'new'">Modifica con versione nuova</button>
+                <br/>
+                L'oggetto in questione viene modificato e lascia il vecchio riferimento
+              </div>
+              <div class="col-md-6">
+                <button class="btn btn-info" on-click="addToList:{{related_entities[0]}},'old'">Tieni versione vecchia</button>
+                <br/>
+                Crea un nuovo oggetto moodificato e lascia il vecchio riferimento
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          <div class="col-md-3">
+             <ul class="list-group">
+              <li class="list-group-item list-group-item-success">Si riferiscono al nuovo</li>
+              {{#each list_change_to_new}}
+               <li class="list-group-item text-center">({{.entity}}) - {{.title}}</li>
+              {{/each}}
+             </ul>
+          </div>
+          <div class="col-md-3">
+           <ul class="list-group">
+            <li class="list-group-item list-group-item-danger">Si riferiscono al vecchio</li>
+            {{#each list_change_to_old}}
+             <li class="list-group-item text-center">({{.entity}}) - {{.title}}</li>
+            {{/each}}
+           </ul>
+        </div>
+
+
+          {{#if related_entities.length == 0}}
+          <button class="btn btn-success" on-click="apply:{{}}">Applica</button>
+          {{/if}}
+
+        </div>
+
+    ]]>
+    </script>
+  </head>
+
+  <body py:block="body" py:strip="True">
+    <div id="output-ractive" style="padding-top: 20px"></div>
+    <script>
+      var ManuallyResolve = Ractive.extend({
+        template: '#Manually_resolve_template',
+        onconstruct: function(options) {
+          var self = this;
+          console.log("onconstruct", options);
+          self.values = options['values'];
+        },
+        oninit: function() {
+          var self = this;
+
+          self.set('errors', {});
+          self.set('saving', false);
+          self.set('list_change_to_new', []);
+          self.set('list_change_to_old', []);
+          self.set('related_entities', []);
+          self.set('total', 0);
+
+          self.loadRelatedEntities();
+        },
+        loadRelatedEntities: function() {
+          var self = this;
+          var url = '/'+self.values['entity']+'/get_related_entities';
+          jQuery.get(url, {_id: self.values['_id']},
+              function(data) {
+                console.log("resp of loadCategories", data);
+                self.set('related_entities', data['entities']);
+                self.set('total', data['len']);
+                console.log("related_entities", self.get("related_entities"))
+              });
+        }
+        });
+      </script>
+      <script>
+        var ractive_output = new ManuallyResolve({
+          el: '#output-ractive',
+          values: ${Markup(h.script_json_encode(values))}
+        });
+
+        ractive_output.on('showDetails', function (event, entity_, _id) {
+          var url = '/'+entity_+'/human_readable_details';
+          $.get(url,{_id: _id}, function (data) {
+            alert(JSON.stringify(data[entity_], null, 2));
+          });
+         });
+
+        ractive_output.on('addToList', function (event, obj, list) {
+          var self = this;
+          if (list == "new"){
+            self.get("list_change_to_new").push(obj);
+          } else {
+            self.get("list_change_to_old").push(obj);
+          }
+          self.get("related_entities").shift();
+        });
+
+        ractive_output.on('apply', function (event) {
+          var self = this;
+          $.ajax({
+            type: "POST",
+            url: "${tg.url('/resolve/mark_resolved')}",
+            data: JSON.stringify({list_to_new: self.get("list_change_to_new"), list_to_old: self.get("list_change_to_old")}),
+            dataType: "json",
+            processData: false,
+            contentType: 'application/json'
+          }).done(function(resp) {
+            var redirect_to = "${tg.url('/qa', params=dict(workspace=workspace))}";
+            //
+            window.location.replace(redirect_to);
+          }).fail(function(jqXHR) {
+            var data = jQuery.parseJSON(jqXHR.responseText);
+            console.log("fail");
+            console.log(data);
+          });
+
+        });
+      </script>
+  </body>
+</html>
