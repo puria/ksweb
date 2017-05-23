@@ -195,9 +195,10 @@ class QuestionaryController(BaseController):
             last_order_number = max([questionary.qa_values[qa_val]['order_number'] for qa_val in questionary.qa_values])
             last_question_answered = [qa_val for qa_val in questionary.qa_values
                                       if questionary.qa_values[qa_val]['order_number'] == last_order_number][0]
+            previous_response = questionary.qa_values[last_question_answered]['qa_response']
 
             questionary.qa_values.pop(last_question_answered, None)
             DBSession.flush_all()
 
-        print questionary.evaluate_questionary
-        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary, html=self.get_questionary_html(_id))
+        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary, html=self.get_questionary_html(_id),
+                    previous_response=previous_response)
