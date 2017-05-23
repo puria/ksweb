@@ -204,12 +204,15 @@ class Questionary(MappedClass):
         expression = self.expressions[output_id]
 
         answers = dict()
+
         for _id, resp in self.qa_values.items():
-            if isinstance(resp, basestring):
-                answers['q_' + _id] = resp
+            answer = resp['qa_response']
+            if isinstance(answer, basestring):
+                answers['q_' + _id] = answer
             else:
                 # array
-                answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, resp))
+                answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, answer))
+
         try:
             evaluation = eval(expression, answers)
         except NameError as ne:
@@ -220,8 +223,10 @@ class Questionary(MappedClass):
             }
 
         self.output_values[output_id] = {
-            'evaluation': evaluation,
+            'evaluation': evaluation
         }
+
+        DBSession.flush_all()
 
         return {
             'completed': True
