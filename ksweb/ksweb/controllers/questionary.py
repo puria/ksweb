@@ -41,8 +41,8 @@ class QuestionaryController(BaseController):
         return dict(
             page='questionary-index',
             fields={
-                'columns_name': [_('Title')],
-                'fields_name': ['title']
+                'columns_name': [_('Title'), _('Owner'), _('Shared with'), _('Created on'), _('Completion %')],
+                'fields_name': ['title', '_owner', '_user', 'creation_date', 'completion']
             },
             entities=entities,
             actions=True,
