@@ -23,10 +23,10 @@
                     {{else}}
                     {{#each qa.answers}}
                     {{#if qa.type == 'single'}}
-                    <input type="radio" name="{{qa_response}}" value="{{.}}"/> {{.}}
+                    <input type="radio" name="{{qa_response}}" value="{{.}}"/> {{.}} <br/>
                     {{/if}}
                     {{#if qa.type == 'multi'}}
-                    <input type="checkbox" name="{{qa_response}}" value="{{.}}"> {{.}}
+                    <input type="checkbox" name="{{qa_response}}" value="{{.}}"> {{.}} <br/>
                     {{/if}}
                     {{/each}}
                     {{/if}}
@@ -78,6 +78,7 @@
             console.log("onconstruct");
             self.questionary = options['questionary'];
             self.quest_compiled = options['quest_compiled'];
+
             console.log(self.questionary);
             console.log(self.quest_compiled);
             self.html = options['html'];
@@ -92,6 +93,7 @@
             self.checkButtons();
              self.set('errors', {});
             self.next_qa();
+
 
         },
         loadQa: function (qa_id) {
@@ -146,7 +148,6 @@
         quest_compiled: ${Markup(h.script_json_encode(quest_compiled))},
         questionary: ${Markup(h.script_json_encode(questionary))},
         html: ${Markup(h.script_json_encode(html))},
-
     });
     compile_questionary.on('previous_question', function (event) {
         var self = this;
@@ -172,9 +173,13 @@
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
             self.set('html', data['html']);
+            self.set('qa_response', data['previous_response']);
+            console.log(data);
             self.html = data['html'];
             self.questionary = data['questionary'];
             self.quest_compiled = data['quest_compiled'];
+            self.previous_response = data['previous_response'];
+
             self.set('errors', {});
             self.checkButtons();
             self.next_qa();
