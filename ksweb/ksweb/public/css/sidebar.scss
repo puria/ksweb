@@ -1,0 +1,55 @@
+@import "palette.scss";
+
+
+.ks-sidebar {
+  height: 100%;
+
+  .sidebar-default {
+    color: $blue;
+    padding-top: 20px;
+
+    .sidebar-item {
+      .col-md-11 {
+        padding-bottom: 5px;
+        padding-top: 5px;
+        &:hover {
+          background-color: $light-blue;
+          border-radius: 0px 7px 7px 0px;
+        }
+      }
+
+      .sidebar_active {
+        color: $white;
+        background-color: $dark-blue;
+        border-radius: 0px 7px 7px 0px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+
+        a {
+          color: $white;
+        }
+      }
+    }
+
+    .category-name {
+      color: $dark-blue;
+      font-weight: bold;
+      padding-top: 10px;
+      padding-bottom: 5px;
+    }
+    .category-name-separator {
+      margin: 0px !important;
+    }
+
+    a:hover {
+      color: $white;
+    }
+    a:link {
+      text-decoration: none;
+    }
+
+    #add_circle_outline:hover {
+      color: #2a6496;
+    }
+  }
+}

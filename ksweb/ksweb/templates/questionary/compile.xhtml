@@ -1,0 +1,230 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">KS | Questionary</title>
+
+    <script id="compile_questionary_template" type="text/html">
+        <![CDATA[
+        <div class="form-group" style="padding-top: 20px">
+            <div class="col-md-6 ks-section-name">
+                Complete the questionary: {{questionary.title}}
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{#if !quest_compiled.completed}}
+                <div class="form-group">
+                    {{qa.question}}
+                </div>
+
+                <div class="form-group {{errors.qa_response ? 'has-error' : ''}}">
+                    {{#if qa.type == 'text'}}
+                    <input type="text" class="form-control" placeholder="" value="{{qa_response}}"/>
+                    {{else}}
+                    {{#each qa.answers}}
+                    {{#if qa.type == 'single'}}
+                    <input type="radio" name="{{qa_response}}" value="{{.}}"/> {{.}}
+                    {{/if}}
+                    {{#if qa.type == 'multi'}}
+                    <input type="checkbox" name="{{qa_response}}" value="{{.}}"> {{.}}
+                    {{/if}}
+                    {{/each}}
+                    {{/if}}
+                    {{#if errors.qa_response}}
+                    <span class="help-block">{{errors.qa_response}}</span>
+                    {{/if}}
+                </div>
+                {{else}}
+                    <div style="margin: 20px 0">Questionary completed</div>
+                {{/if}}
+                {{#if saving}}
+                <!--?<button type="button" class="btn btn-info questionary_control disabled">Indietro</button>-->
+                <button type="button" class="btn btn-default questionary_control disabled">Saving...</button>
+                {{else}}
+
+                <button type="button" class="btn btn-{{previous_class}} questionary_control {{previous}}"
+                        on-click="previous_question" {{previous}}>Prev
+                </button>
+                <button type="button" class="btn btn-{{next_class}} questionary_control {{next}}" on-click="submit_response" {{next}}>Next
+                </button>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="form-group" style="padding-top: 40px;">
+            <div class="col-md-6 text-left ks-section-name">
+                Questionary: {{questionary.title}}
+            </div>
+            <div class="col-md-12 text-box">
+                {{{html}}}
+            </div>
+        </div>
+        ]]>
+    </script>
+
+</head>
+
+<body py:block="body" py:strip="True">
+<div id="compile_questionary" style="padding-top: 20px">
+
+</div>
+
+
+<script>
+    var CompileQuestionary = Ractive.extend({
+        template: '#compile_questionary_template',
+        onconstruct: function (options) {
+            var self = this;
+            console.log("onconstruct");
+            self.questionary = options['questionary'];
+            self.quest_compiled = options['quest_compiled'];
+            console.log(self.questionary);
+            console.log(self.quest_compiled);
+            self.html = options['html'];
+        },
+        oninit: function () {
+            var self = this;
+            self.set('qa_response', null);
+            console.log("oninit");
+            self.set('questionary', self.questionary);
+            self.set('quest_compiled', self.quest_compiled);
+            self.set('html', self.html);
+            self.checkButtons();
+             self.set('errors', {});
+            self.next_qa();
+
+        },
+        loadQa: function (qa_id) {
+            var self = this;
+            jQuery.get("${tg.url('/qa/get_one')}", {'id': qa_id}, function (data) {
+
+                self.set('qa', data['qa']);
+
+            });
+        },
+        next_qa: function () {
+            var self = this;
+
+            if (!self.get('quest_compiled.completed')) {
+                self.loadQa(self.get('quest_compiled.qa'));
+            }
+        },
+        questionary_completed: function () {
+            var _url = '${tg.url('/questionary/completed', params=dict(_id=questionary._id, workspace=workspace))}';
+            window.location.replace(_url);
+        },
+        isEmpty: function (obj) {
+            return Object.keys(obj).length == 0;
+        },
+        checkButtons: function () {
+            var self = this;
+            <![CDATA[
+            if (self.isEmpty(self.questionary.qa_values) && !self.quest_compiled.completed) {
+                self.set('previous', 'disabled');
+                self.set('previous_class', 'info');
+            }
+            else {
+                self.set('previous', '');
+                self.set('previous_class', 'default');
+            }
+            if (self.quest_compiled.completed) {
+                self.set('next', 'disabled');
+                self.set('next_class', 'info');
+            }
+            else {
+                self.set('next', '');
+                self.set('next_class', 'default');
+            }
+            ]]>
+        }
+    });
+</script>
+
+<script>
+    var compile_questionary = new CompileQuestionary({
+        el: '#compile_questionary',
+        quest_compiled: ${Markup(h.script_json_encode(quest_compiled))},
+        questionary: ${Markup(h.script_json_encode(questionary))},
+        html: ${Markup(h.script_json_encode(html))},
+
+    });
+    compile_questionary.on('previous_question', function (event) {
+        var self = this;
+        var params = {
+            '_id': self.get('questionary._id')
+        };
+        self.set('saving', true);
+
+        var api_params = JSON.stringify(params);
+
+        $.ajax({
+            type: "POST",
+            url: '${tg.url('/questionary/previous_question')}',
+            data: api_params,
+            dataType: "json",
+            processData: false,
+            contentType: 'application/json'
+        }).done(function (data) {
+            self.set('qa_response', null);
+            self.set('saving', false);
+            // In data ora ho i parametri, e li aggiorno
+
+            self.set('questionary', data['questionary']);
+            self.set('quest_compiled', data['quest_compiled']);
+            self.set('html', data['html']);
+            self.html = data['html'];
+            self.questionary = data['questionary'];
+            self.quest_compiled = data['quest_compiled'];
+            self.set('errors', {});
+            self.checkButtons();
+            self.next_qa();
+
+        }).fail(function (jqXHR) {
+            var data = jQuery.parseJSON(jqXHR.responseText);
+            self.set('errors', data.errors);
+            self.set('saving', false);
+        });
+
+    });
+    compile_questionary.on('submit_response', function (event) {
+        var self = this;
+        var params = {
+            '_id': self.get('questionary._id'),
+            'qa_id': self.get('quest_compiled.qa'),
+            'qa_response': self.get('qa_response') || ['']
+        };
+        self.set('saving', true);
+
+        var api_params = JSON.stringify(params);
+
+        $.ajax({
+            type: "POST",
+            url: '${tg.url('/questionary/responde')}',
+            data: api_params,
+            dataType: "json",
+            processData: false,
+            contentType: 'application/json'
+        }).done(function (data) {
+            self.set('qa_response', null);
+            self.set('saving', false);
+            // In data ora ho i parametri, e li aggiorno
+            self.set('questionary', data['questionary']);
+            self.set('quest_compiled', data['quest_compiled']);
+            self.set('html', data['html']);
+            self.html = data['html'];
+            self.questionary = data['questionary'];
+            self.quest_compiled = data['quest_compiled'];
+            self.set('errors', {});
+            self.checkButtons();
+            self.next_qa();
+
+        }).fail(function (jqXHR) {
+            var data = jQuery.parseJSON(jqXHR.responseText);
+            self.set('errors', data.errors);
+            self.set('saving', false);
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">KS | Documents</title>
+</head>
+
+<body py:block="body" py:strip="True">
+<div class="row" style="padding-top: 20px">
+    <div class="col-md-6 text-left ks-section-name">
+        Documents
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="#">
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadFile">
+            ${h.material_icon('upload')} Import Document
+            </button>
+        </a>
+        <a href="${tg.url('/document/new', params=dict(workspace=workspace))}">
+            <button class="btn btn-primary">${h.material_icon('save')} New document</button>
+        </a>
+    </div>
+</div>
+<div class="row" style="padding-top: 20px">
+        ${h.partials.table(entities, fields, actions, workspace, download=download)}
+</div>
+
+<!-- Modal -->
+        <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <form action="${tg.url('/document/import_document')}" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="workspace" value="${workspace}"/>
+           <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Import a new Document</h4>
+                        </div>
+                        <div class="modal-body">
+                             <input type="file" name="file_import"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <input type="submit"
+                                    class="btn btn-primary" value="Import">
+                            </input>
+                        </div>
+                    </div>
+                </div>
+                  </form>
+        </div>
+
+</body>
+</html>
