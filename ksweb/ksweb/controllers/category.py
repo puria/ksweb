@@ -10,6 +10,7 @@ from tg import flash
 from tg import request
 from tg import response
 from tw2.core import StringLengthValidator
+from tg.i18n import ugettext as _, lazy_ugettext as l_
 
 
 class CategoryController(RestController):
@@ -45,7 +46,7 @@ class CategoryController(RestController):
             visible=True,
             name=str(workspace_name)
         )
-        flash("Category successfully created!")
+        flash(_("Category successfully created!"))
         return dict(workspaces=self.get_all())
 
 
@@ -62,5 +63,5 @@ class CategoryController(RestController):
         q = model.Questionary.query.remove({'_document': {'$in': doc}})
         q = model.Document.query.remove({'_id': {'$in': doc}})
         ws = model.Category.query.remove({'_id': ObjectId(workspace_id)})
-        flash("Category and all entities associated deleted")
+        flash(_("Category and all entities associated deleted"))
         return dict(workspaces=self.get_all())

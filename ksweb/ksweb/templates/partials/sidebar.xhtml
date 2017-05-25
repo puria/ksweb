@@ -1,5 +1,14 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
-    <div class="row sidebar-item">
+    <div class="row">
+        <a class="category-name" href="${tg.url('/')}">
+            <div class="col-md-11 ws">
+             ${h.get_workspace_name(workspace)}
+                 <hr class="category-name-separator"/>
+            </div>
+        </a>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row sidebar-item" style="padding-top: 31px">
         <a href="${tg.url('/qa', params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'qas']}">
             ${h.material_icon('view_list')} Q/A
