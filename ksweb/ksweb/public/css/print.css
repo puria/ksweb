@@ -1,0 +1,35 @@
+body {margin:0; padding:0; line-height: 1.4em; word-spacing:1px; letter-spacing:0.2px; font: 13px Arial, Helvetica,"Lucida Grande", serif; color: #000;}
+
+/*Header*/
+h2 {color:#000; font-size:25px;}
+.post .entry h2 {font-size:20px;}
+
+/* Links */
+a:link, a:visited {background: transparent; color:#333; text-decoration:none;}
+a:link[href^="http://"]:after, a[href^="http://"]:visited:after {content: " (" attr(href) ") "; font-size: 11px;}
+a[href^="http://"] {color:#000;}
+
+/*Image*/
+img, img a, .more-link a {border:none;}
+
+/*Remove Element*/
+#logo, #catnavi, .topnavi, .more-link, .navigation, #sidebartop, #related, #social, #sponsors, .tabs, #allpost, .toolbar, .splitbox, #commentform, #commentabs .idTabs, .postmeta-content .comments, #respond h3, .tag, .footerlinks {display:none;}
+
+/*Post*/
+.post {border-bottom:1px solid #000;}
+.postmeta {font-size:10pt; margin-top:10px;}
+.postfooter {font-size:10pt; margin-bottom:20px;}
+
+/*Comment Section*/
+.commentlist .avatar {float:left; margin-right:10px;}
+.commentlist .children {margin-top:10px;}
+#comments {page-break-before: always;}
+
+/*Footer*/
+#footer {margin-top:10px;}
+
+.ks-section-name {
+  font-size: 18px;
+  color: darkblue;
+  font-weight: bold;
+}
