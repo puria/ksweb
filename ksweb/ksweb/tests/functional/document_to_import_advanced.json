@@ -1,0 +1,110 @@
+{
+	"version": "v1.0",
+	"description": "Prova",
+	"tags": ["tag1", "tag2", "tag3"],
+	"outputs": {
+		"5922aa07c42d753c2d93266a": {
+			"title": "Output numero soci",
+			"content": [{
+				"content": "5922a9bec42d753c2d932658",
+				"type": "qa_response",
+				"title": "nsoci"
+			}],
+			"visible": true,
+			"html": "Wow hai&nbsp;${qa_5922a9bec42d753c2d932658}!&nbsp;",
+			"_precondition": "5922a9d8c42d753c2d932663",
+			"_id": "5922aa07c42d753c2d93266a",
+			"public": true
+		},
+		"5926ad64c42d75ff9668f290": {
+			"title": "Sas or Spa",
+			"content": [{
+				"content": "5922aa07c42d753c2d93266a",
+				"type": "output",
+				"title": "Output numero soci"
+			}, {
+				"content": "5922a961c42d753c2d93263f",
+				"type": "qa_response",
+				"title": "Ragione sociale"
+			}],
+			"visible": true,
+			"html": "${output_5922aa07c42d753c2d93266a}Hai risposto:&nbsp;${qa_5922a961c42d753c2d93263f}!",
+			"_precondition": "5926ad39c42d75ff9668f281",
+			"_id": "5926ad64c42d75ff9668f290",
+			"public": true
+		}
+	},
+	"title": "Documento di prova",
+	"advanced_preconditions": {
+		"5926ad39c42d75ff9668f281": {
+			"title": "Sas or Spa",
+			"visible": true,
+			"_id": "5926ad39c42d75ff9668f281",
+			"type": "advanced",
+			"public": true,
+			"condition": ["5922a97bc42d753c2d93264b", "or", "5922a971c42d753c2d932646"]
+		}
+	},
+	"qa": {
+		"5922a9bec42d753c2d932658": {
+			"_parent_precondition": "5922a97bc42d753c2d93264b",
+			"title": "nsoci",
+			"question": "Numero di soci",
+			"tooltip": null,
+			"visible": true,
+			"link": null,
+			"answers": ["da 1 a 10", "da 10 a 500"],
+			"_id": "5922a9bec42d753c2d932658",
+			"type": "single",
+			"public": true
+		},
+		"5922a961c42d753c2d93263f": {
+			"_parent_precondition": null,
+			"title": "Ragione sociale",
+			"question": "Ragione Sociale",
+			"tooltip": null,
+			"visible": true,
+			"link": null,
+			"answers": ["Sas", "Spa"],
+			"_id": "5922a961c42d753c2d93263f",
+			"type": "single",
+			"public": true
+		}
+	},
+	"content": [{
+		"content": "5926ad64c42d75ff9668f290",
+		"type": "output",
+		"title": "Sas or Spa"
+	}],
+	"visible": true,
+	"_owner": "59158069c42d753f623388c4",
+	"html": "<p>${output_5926ad64c42d75ff9668f290}</p>\n",
+	"licence": "Licenza",
+	"simple_preconditions": {
+		"5922a971c42d753c2d932646": {
+			"title": "Ragione sociale -> Spa",
+			"visible": true,
+			"_id": "5922a971c42d753c2d932646",
+			"type": "simple",
+			"public": true,
+			"condition": ["5922a961c42d753c2d93263f", "Spa"]
+		},
+		"5922a9d8c42d753c2d932663": {
+			"title": "nsoci -> da 10 a 500",
+			"visible": true,
+			"_id": "5922a9d8c42d753c2d932663",
+			"type": "simple",
+			"public": true,
+			"condition": ["5922a9bec42d753c2d932658", "da 10 a 500"]
+		},
+		"5922a97bc42d753c2d93264b": {
+			"title": "Ragione sociale -> Sas",
+			"visible": true,
+			"_id": "5922a97bc42d753c2d93264b",
+			"type": "simple",
+			"public": true,
+			"condition": ["5922a961c42d753c2d93263f", "Sas"]
+		}
+	},
+	"public": true
+}
