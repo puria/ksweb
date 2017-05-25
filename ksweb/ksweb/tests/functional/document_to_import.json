@@ -1,0 +1,117 @@
+{	"version": null,
+	"description": null,
+	"tags": [],
+	"outputs": {
+		"5922aa07c42d753c2d93266a": {
+			"title": "Output numero soci",
+			"content": [{
+				"content": "5922a9bec42d753c2d932658",
+				"type": "qa_response",
+				"title": "nsoci"
+			}],
+			"visible": true,
+			"html": "Wow hai&nbsp;${qa_5922a9bec42d753c2d932658}!&nbsp;",
+			"_precondition": "5922a9d8c42d753c2d932663",
+			"_id": "5922aa07c42d753c2d93266a",
+			"public": true
+		},
+		"5922aa30c42d753c2d932674": {
+			"title": "Sas",
+			"content": [{
+				"content": "5922a961c42d753c2d93263f",
+				"type": "qa_response",
+				"title": "Ragione sociale"
+			}],
+			"visible": true,
+			"html": "sei una&nbsp;${qa_5922a961c42d753c2d93263f}!",
+			"_precondition": "5922a97bc42d753c2d93264b",
+			"_id": "5922aa30c42d753c2d932674",
+			"public": true
+		},
+		"5922aa1dc42d753c2d93266f": {
+			"title": "Spa",
+			"content": [{
+				"content": "5922a961c42d753c2d93263f",
+				"type": "qa_response",
+				"title": "Ragione sociale"
+			}],
+			"visible": true,
+			"html": "Sei una&nbsp;${qa_5922a961c42d753c2d93263f}",
+			"_precondition": "5922a971c42d753c2d932646",
+			"_id": "5922aa1dc42d753c2d93266f",
+			"public": true
+		}
+	},
+	"title": "Prova",
+	"advanced_preconditions": {},
+	"qa": {
+		"5922a9bec42d753c2d932658": {
+			"_parent_precondition": "5922a97bc42d753c2d93264b",
+			"title": "nsoci",
+			"question": "Numero di soci",
+			"tooltip": null,
+			"visible": true,
+			"link": null,
+			"answers": ["da 1 a 10", "da 10 a 500"],
+			"_id": "5922a9bec42d753c2d932658",
+			"type": "single",
+			"public": true
+		},
+		"5922a961c42d753c2d93263f": {
+			"_parent_precondition": null,
+			"title": "Ragione sociale",
+			"question": "Ragione Sociale",
+			"tooltip": null,
+			"visible": true,
+			"link": null,
+			"answers": ["Sas", "Spa"],
+			"_id": "5922a961c42d753c2d93263f",
+			"type": "single",
+			"public": true
+		}
+	},
+	"content": [{
+		"content": "5922aa30c42d753c2d932674",
+		"type": "output",
+		"title": "Sas"
+	}, {
+		"content": "5922aa1dc42d753c2d93266f",
+		"type": "output",
+		"title": "Spa"
+	}, {
+		"content": "5922aa07c42d753c2d93266a",
+		"type": "output",
+		"title": "Output numero soci"
+	}],
+	"visible": true,
+	"_owner": "59158069c42d753f623388c4",
+	"html": "<p>Del testo prima:&nbsp;${output_5922aa30c42d753c2d932674}${output_5922aa1dc42d753c2d93266f}&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>${output_5922aa07c42d753c2d93266a}&nbsp;E va be ogni tanto ci sta!</p>\n\n<p>Provaci Quel bellissimo testo</p>\n",
+	"licence": null,
+	"simple_preconditions": {
+		"5922a971c42d753c2d932646": {
+			"title": "Ragione sociale -> Spa",
+			"visible": true,
+			"_id": "5922a971c42d753c2d932646",
+			"type": "simple",
+			"public": true,
+			"condition": ["5922a961c42d753c2d93263f", "Spa"]
+		},
+		"5922a9d8c42d753c2d932663": {
+			"title": "nsoci -> da 10 a 500",
+			"visible": true,
+			"_id": "5922a9d8c42d753c2d932663",
+			"type": "simple",
+			"public": true,
+			"condition": ["5922a9bec42d753c2d932658", "da 10 a 500"]
+		},
+		"5922a97bc42d753c2d93264b": {
+			"title": "Ragione sociale -> Sas",
+			"visible": true,
+			"_id": "5922a97bc42d753c2d93264b",
+			"type": "simple",
+			"public": true,
+			"condition": ["5922a961c42d753c2d93263f", "Sas"]
+		}
+	},
+	"public": true
+}

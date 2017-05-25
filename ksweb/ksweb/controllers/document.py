@@ -177,7 +177,6 @@ class DocumentController(RestController):
             description=imported_document['description'],
             licence=imported_document['licence'],
             tags=imported_document['tags']
-
         )
         model.DBSession.flush_all()
         tg.flash('Document successfully imported!')

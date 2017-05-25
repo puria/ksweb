@@ -59,7 +59,9 @@ def material_icon(icon_name):
         'delete': '&#xE872;',
 
         'download': '&#xE2C4;',
-        'upload': '&#xE2C6;'
+        'upload': '&#xE2C6;',
+
+        'print': '&#xE8AD'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
