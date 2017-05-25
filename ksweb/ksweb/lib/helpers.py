@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Template Helpers used in ksweb."""
 import logging
+
+from bson import ObjectId
 from markupsafe import Markup
 from datetime import datetime
 
@@ -22,7 +24,7 @@ def material_icon(icon_name):
     icon_code = {
         #  Navbar
         'account_circle': '&#xE853',
-
+        'label_outline': '&#xE893;',
         #  User menu
         'account_box': '&#xE851;',
         'notification_none': '&#xE7F5;',
@@ -61,7 +63,8 @@ def material_icon(icon_name):
         'download': '&#xE2C4;',
         'upload': '&#xE2C6;',
 
-        'print': '&#xE8AD'
+        'print': '&#xE8AD',
+        'list': '&#xE896;'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
@@ -147,3 +150,10 @@ try:
 except SyntaxError:
     log.error("WebHelpers2 helpers not available with this Python Version")
 
+
+def get_workspace_name(workspace_id):
+    ws = model.Category.query.get(_id=ObjectId(workspace_id))
+    if ws:
+        return ws.name.upper()
+    else:
+        return 'UNKNOWN WORKSPACE'
