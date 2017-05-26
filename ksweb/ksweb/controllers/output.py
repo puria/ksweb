@@ -43,8 +43,8 @@ class OutputController(RestController):
         return dict(
             page='output-index',
             fields={
-                'columns_name': [_('Label'), _('Filter'), _('Workspace'), _('Content')],
-                'fields_name': ['title', 'precondition', 'category', 'content']
+                'columns_name': [_('Label'), _('Filter'), _('Content')],
+                'fields_name': ['title', 'precondition', 'content']
             },
             entities=model.Output.output_available_for_user(request.identity['user']._id, workspace),
             actions=False,
@@ -56,7 +56,7 @@ class OutputController(RestController):
     @validate({'workspace': CategoryExistValidator(required=True)})
     def new(self, workspace, **kw):
         tmpl_context.sidebar_output = "output-new"
-        return dict(output={}, workspace=workspace, errors=None)
+        return dict(output={'_precondition': kw.get('precondition_id', None)}, workspace=workspace, errors=None)
 
     @decode_params('json')
     @expose('json')

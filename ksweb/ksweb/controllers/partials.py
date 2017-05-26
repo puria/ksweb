@@ -10,11 +10,11 @@ def sidebar(section=None, workspace=None, **kw):
     return render_template(dict(workspace=workspace), template_name='ksweb.templates.partials.sidebar')
 
 
-def table(entities, fields, actions, workspace, **kw):
+def table(entities, fields, workspace, *args, **kw):
     variables = dict(fields=fields,
                      entities=entities,
-                     actions=actions,
-                     workspace=workspace)
+                     workspace=workspace,
+                     actions_content=kw.get('actions_content', None))
     variables.update(kw)
 
     return render_template(

@@ -30,8 +30,8 @@ class QaController(RestController):
         return dict(
             page='qa-index',
             fields={
-                'columns_name': [_('Label'), _('Question'), _('Filter'), _('Workspace')],
-                'fields_name': ['title', 'question', 'parent_precondition', 'category']
+                'columns_name': [_('Label'), _('Question'), _('Filter')],
+                'fields_name': ['title', 'question', 'parent_precondition']
             },
             entities=model.Qa.qa_available_for_user(request.identity['user']._id, workspace),
             actions=False,
@@ -60,7 +60,6 @@ class QaController(RestController):
     @expose('ksweb.templates.qa.new')
     @validate({'workspace': CategoryExistValidator(required=True),})
     def new(self, workspace, **kw):
-
         return dict(errors=None, workspace=workspace,
                     qa={'question': kw.get('question_content', None),
                         'title': kw.get('question_title', None),
