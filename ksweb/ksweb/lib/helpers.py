@@ -54,7 +54,7 @@ def material_icon(icon_name):
 
         # Table
         'done': '&#xE876;',
-        'clear': '&#xE14C;',
+
         'more_horiz': '&#xE5D3;',
 
         #Workarea
@@ -64,7 +64,9 @@ def material_icon(icon_name):
         'upload': '&#xE2C6;',
 
         'print': '&#xE8AD',
-        'list': '&#xE896;'
+        'list': '&#xE896;',
+        'arrow_back': '&#xE5C4;',
+        'help_outline': '&#xE8FD;'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
