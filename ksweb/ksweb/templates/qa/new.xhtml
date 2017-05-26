@@ -107,9 +107,12 @@
                     <span class="help-block">{{errors.precondition}}</span>
                     {{/if}}
                 </div>
-                <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}"
+
+                <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}
+                &question_content={{create.question}}&question_title={{create.title}}"
                    type="button" id="create-filter"
                    class="btn btn-primary">${h.material_icon('save')} New Simple Filter</a>
+
 
             </div>
             <div class="form-group">
@@ -200,6 +203,9 @@
             self.submit_url = "${tg.url('/qa/post')}";
             self.submit_type = 'POST';
             self.workspace = options['workspace'];
+            self.question_content = options['question_content'];
+            self.question_title = options['question_title'];
+            self.precondition_id= options['precondition_id'];
         },
         oninit: function () {
             var self = this;
@@ -209,8 +215,13 @@
             self.set('input_type', null);
             self.set('available_response', []);
             self.set('create.category', self.workspace);
+
+            self.set('create.title', self.qa['title']);
+            self.set('create.question', self.qa['question']);
+            self.set('create.precondition', self.qa['_parent_precondition']);
+
             //  Check if document is provided
-            if (!jQuery.isEmptyObject(self.qa)) {
+            if (self.qa['_id']) {
                 self.submit_type = 'PUT';
                 self.submit_url = '${tg.url('/qa/put')}';
                 self.set('edit_mode', true);
