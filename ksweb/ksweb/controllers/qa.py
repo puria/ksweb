@@ -60,7 +60,11 @@ class QaController(RestController):
     @expose('ksweb.templates.qa.new')
     @validate({'workspace': CategoryExistValidator(required=True),})
     def new(self, workspace, **kw):
-        return dict(errors=None, workspace=workspace, qa={})
+
+        return dict(errors=None, workspace=workspace,
+                    qa={'question': kw.get('question_content', None),
+                        'title': kw.get('question_title', None),
+                        '_parent_precondition': kw.get('precondition_id', None)})
 
     @decode_params('json')
     @expose('json')

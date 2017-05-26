@@ -17,20 +17,20 @@
         <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
-        <a href="${tg.url('/output', params=dict(workspace=workspace))}">
-            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
-            ${h.material_icon('flip_to_front')} OUTPUTS
-            </div>
-        </a>
-        <div class="col-md-1"></div>
-    </div>
-    <div class="row sidebar-item">
         <a href="${tg.url('/precondition',params=dict(workspace=workspace))}">
             <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'preconditions']}">
             ${h.material_icon('group_work')} FILTERS
             </div>
         </a>
         <div class="col-md-2"></div>
+    </div>
+    <div class="row sidebar-item">
+        <a href="${tg.url('/output', params=dict(workspace=workspace))}">
+            <div class="col-md-11 ${('', 'sidebar_active')[sidebar_section == 'outputs']}">
+            ${h.material_icon('flip_to_front')} OUTPUTS
+            </div>
+        </a>
+        <div class="col-md-1"></div>
     </div>
     <div class="row sidebar-item">
         <a href="${tg.url('/document', params=dict(workspace=workspace))}">

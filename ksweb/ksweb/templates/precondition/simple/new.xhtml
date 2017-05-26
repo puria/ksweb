@@ -120,8 +120,9 @@
       self.submit_url = "${tg.url('/precondition/simple/post')}";
       self.submit_type = 'POST';
       self.workspace=options['workspace'];
-
-
+      self.question_content=options['question_content'];
+      self.question_title=options['question_title'];
+      console.log('options', options);
 
     },
     oninit: function() {
@@ -139,6 +140,8 @@
         self.set('create._id', self.precondition['_id']);
       }
 
+
+        console.log('asd', self.question_content);
       self.set('errors', {});
       self.set('saving', false);
       self.set('response_type', null);
@@ -177,9 +180,6 @@
     createPreconditionSimple: function(field) {
       var self = this;
       //self.set('saving', true);
-      console.log("JSON.stringify");
-      console.log(field);
-      console.log(JSON.stringify(field));
 
       var api_params = JSON.stringify(field);
 
@@ -191,7 +191,17 @@
         processData: false,
         contentType: 'application/json'
       }).done(function(resp) {
-        var redirect_to = "${tg.url('/precondition/', params=dict(workspace=workspace))}";
+
+          var redirect_to;
+
+          if(self.question_title || self.question_content){
+              redirect_to = "${tg.url('/qa/new', params=dict(workspace=workspace))}&question_content="
+                      + self.question_content + "&question_title=" + self.question_title + "&precondition_id=" + resp['precondition_id'];
+          }
+          else{
+               redirect_to = "${tg.url('/precondition/', params=dict(workspace=workspace))}";
+          }
+
         self.set('create', {});
         self.set('saving', false);
         self.set('editing', false);
@@ -216,7 +226,9 @@
   var ractive_precondition_simple = new PreconditionSimple({
       el: '#qa-ractive',
       precondition: ${Markup(h.script_json_encode(precondition))},
-      workspace: '${workspace}'
+      workspace: '${workspace}',
+      question_content: ${Markup(h.script_json_encode(question_content))},
+      question_title: ${Markup(h.script_json_encode(question_title))}
   });
 
   ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {
