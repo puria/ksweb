@@ -73,10 +73,14 @@
             <textarea id="extra-fields-form-question" type="text" class="form-control"
                       placeholder="Content of the question" value="{{create.question}}">
             </textarea>
+
+
                     {{#if errors.question}}
                     <span class="help-block">{{errors.question}}</span>
                     {{/if}}
                 </div>
+                <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} Insert a question that user
+                    will answer in the questionary. e.g. What's your name?</label>
             </div>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-sm-3">
@@ -86,6 +90,8 @@
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
                 </div>
+                 <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} This is a unique name that you will use to refer
+                 to this object in this workspace.</label>
             </div>
 
             <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
@@ -101,7 +107,8 @@
                     <span class="help-block">{{errors.precondition}}</span>
                     {{/if}}
                 </div>
-                <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}" type="button" id="create-filter"
+                <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}"
+                   type="button" id="create-filter"
                    class="btn btn-primary">${h.material_icon('save')} New Simple Filter</a>
 
             </div>
@@ -127,10 +134,11 @@
                                onclick="ractive_qa.switchResponseType('text');"/>
                         <img src="${tg.url('/img/radio_text.png')}" alt="Text"/>
                     </label>
+                    {{#if errors.answer_type}}
+                    <span class="help-block">{{errors.answer_type}}</span>
+                    {{/if}}
                 </div>
-                {{#if errors.answer_type}}
-                <span class="help-block">{{errors.answer_type}}</span>
-                {{/if}}
+
             </div>
             {{#if answer_type == 'single' || answer_type == 'multi'}}
             <div class="form-group {{errors.answers ? 'has-error' : ''}}">
@@ -191,7 +199,7 @@
             self.edit_mode = false;
             self.submit_url = "${tg.url('/qa/post')}";
             self.submit_type = 'POST';
-            self.workspace=options['workspace'];
+            self.workspace = options['workspace'];
         },
         oninit: function () {
             var self = this;
