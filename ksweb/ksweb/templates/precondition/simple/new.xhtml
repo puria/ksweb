@@ -30,6 +30,7 @@
           <span class="help-block">{{errors.question}}</span>
           {{/if}}
         </div>
+           <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} Select the question to apply this filter.</label>
       </div>
 
       <div id="answer_type" class="form-group {{errors.answer_type ? 'has-error' : ''}}">
@@ -79,6 +80,8 @@
           <span class="help-block">{{errors.title}}</span>
           {{/if}}
         </div>
+          <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} This is a unique name that you will use to refer
+                 to this object in this workspace.</label>
       </div>
 
      <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
@@ -120,8 +123,9 @@
       self.submit_url = "${tg.url('/precondition/simple/post')}";
       self.submit_type = 'POST';
       self.workspace=options['workspace'];
-      self.question_content=options['question_content'];
-      self.question_title=options['question_title'];
+      console.log('prec', self.precondition);
+      self.question_content=self.precondition['question_content'];
+      self.question_title=self.precondition['question_title'];
       console.log('options', options);
 
     },
@@ -129,7 +133,7 @@
       var self = this;
          self.set('create.category', self.workspace);
       //  Check if document is provided
-      if (! jQuery.isEmptyObject(self.precondition)) {
+      if (self.precondition['_id']) {
         self.submit_type = 'PUT';
         self.submit_url = '${tg.url('/precondition/simple/put')}';
         self.set('edit_mode', true);
@@ -193,8 +197,7 @@
       }).done(function(resp) {
 
           var redirect_to;
-
-          if(self.question_title || self.question_content){
+          if(self.question_content || self.question_title){
               redirect_to = "${tg.url('/qa/new', params=dict(workspace=workspace))}&question_content="
                       + self.question_content + "&question_title=" + self.question_title + "&precondition_id=" + resp['precondition_id'];
           }
@@ -226,9 +229,7 @@
   var ractive_precondition_simple = new PreconditionSimple({
       el: '#qa-ractive',
       precondition: ${Markup(h.script_json_encode(precondition))},
-      workspace: '${workspace}',
-      question_content: ${Markup(h.script_json_encode(question_content))},
-      question_title: ${Markup(h.script_json_encode(question_title))}
+      workspace: '${workspace}'
   });
 
   ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {

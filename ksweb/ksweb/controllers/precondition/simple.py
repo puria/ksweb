@@ -23,10 +23,10 @@ class PreconditionSimpleController(RestController):
 
     @expose('ksweb.templates.precondition.simple.new')
     @validate({'workspace': CategoryExistValidator(required=True)})
-    def new(self, workspace, question_content=None, question_title=None, **kw):
-        return dict(page='precondition-new', workspace=workspace, precondition={}, question_content=question_content,
-                    question_title=question_title)
-
+    def new(self, workspace, **kw):
+        return dict(page='precondition-new', workspace=workspace,
+                    precondition={'question_content': kw.get('question_content', None),
+                                  'question_title': kw.get('question_title', None)})
     @decode_params('json')
     @expose('json')
     @validate({
@@ -93,7 +93,7 @@ class PreconditionSimpleController(RestController):
                 condition=condition
             )
 
-        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
+        #flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
 
         return dict(precondition_id=str(created_precondition._id),errors=None)
 
