@@ -28,13 +28,15 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                        <div class="col-md-6">
+                        <div class="col-sm-3">
                             <input id="form-title" type="text" class="form-control" placeholder="Label"
                                    value="{{create.title}}"/>
                             {{#if errors.title}}
                             <span class="help-block">{{errors.title}}</span>
                             {{/if}}
                         </div>
+                        <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} This is a unique name that you will use to refer
+                 to this object in this workspace.</label>
                     </div>
                     <!--<div class="form-group {{errors.category ? 'has-error' : ''}}">
                       <div class="col-md-6">
@@ -54,7 +56,7 @@
                       </div>
                     </div>-->
                     <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
-                        <div class="col-md-6">
+                        <div class="col-sm-5">
                             <select id="form-precondition" class="form-control" value="{{create.precondition}}">
                                 <option value="" disabled selected>Choose a filter</option>
                                 {{#each preconditions}}
@@ -69,7 +71,7 @@
                            class="btn btn-primary">${h.material_icon('save')} New Simple Filter</a>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-6">
+                        <div class="col-sm-2">
                             Available answers
                             {{#each qas}}
                             <div class="row">
@@ -82,10 +84,16 @@
                             </div>
                             {{/each}}
                         </div>
+
+                        <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} Please select the value of the answer that you
+                        want to use in your output.</label>
                     </div>
                     <div class="form-group">
                         <textarea name="ks_editor"></textarea>
                     </div>
+                    <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} To create an object from a word, highlight the text with
+                    your mouse and click on the orange button Create OutputPlus</label>
+
                 </div>
             </div>
         </form>
@@ -261,7 +269,7 @@
                 contentType: 'application/json'
             }).done(function (resp) {
                 console.log("DONE", resp);
-                alert('OutputPlus created');
+                alert("It was created an automatic question, filter and output for displaying the text: '" + res['text'] +"'.");
                 var range = selector.getRanges()[0];
                 range.deleteContents();
                 range.select();
