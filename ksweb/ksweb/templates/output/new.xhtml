@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <input id="form-title" type="text" class="form-control" placeholder="Label"
                                    value="{{create.title}}"/>
                             {{#if errors.title}}
@@ -56,7 +56,7 @@
                       </div>
                     </div>-->
                     <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             <select id="form-precondition" class="form-control" value="{{create.precondition}}">
                                 <option value="" disabled selected>Choose a filter</option>
                                 {{#each preconditions}}
@@ -71,11 +71,11 @@
                            class="btn btn-primary">${h.material_icon('save')} New Simple Filter</a>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             Available answers
                             {{#each qas}}
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <span id="add_circle_outline"
                                           onclick='ractive_output.add_widget_to_editor("{{._id}}", "{{.title}}", "qa")'
                                           class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
@@ -125,8 +125,9 @@
             self.set('qas', []);
             self.set('create.content', []);
             self.set('create.category', self.workspace);
+            self.set('create.precondition',self.output['_precondition']);
             //  Check if document is provided
-            if (!jQuery.isEmptyObject(self.output)) {
+            if (self.output['_id']) {
                 self.set('edit_mode', true);
                 self.submit_type = 'PUT';
                 self.submit_url = '${tg.url('/output/put')}';
@@ -321,7 +322,7 @@
         extraPlugins: 'objplaceholder'
     });
 
-    CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if output else '' ))},
+    CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(output.upcast if '_id' in output else '' ))},
             {
                 callback: function () {
                     jQuery(CKEDITOR.instances.ks_editor.window.getFrame().$).contents().find('.objplaceholder').each(function (index) {

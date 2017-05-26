@@ -136,6 +136,9 @@ def editor_widget_template_for_qa(**kw):
     return '<span class="objplaceholder qa qa-widget ks_id-qa_{id_}">{title}</span>'.format(**kw)
 
 
+def underscore(text):
+    return text.lower().replace(" ", "_")
+
 def gravatar(email_address, size=24):
     from hashlib import md5
     from tg import url

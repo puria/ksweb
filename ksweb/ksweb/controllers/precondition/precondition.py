@@ -34,7 +34,7 @@ class PreconditionController(BaseController):
                 'fields_name': ['title', 'type', 'owner']
             },
             entities=model.Precondition.precondition_available_for_user(request.identity['user']._id, workspace=workspace),
-            actions=False,
+            actions_content=[l_('New Output'),l_('New QA')],
             workspace=workspace
         )
 
