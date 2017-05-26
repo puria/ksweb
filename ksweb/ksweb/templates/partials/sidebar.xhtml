@@ -1,7 +1,7 @@
 <div class="sidebar-default" py:with="sidebar_section = getattr(tmpl_context, 'sidebar_section', '')">
     <div class="row">
         <a class="category-name" href="${tg.url('/')}">
-            <div class="col-md-11 ws">
+            <div class="col-md-11 ws" title="Back to workspace selection">
              ${h.get_workspace_name(workspace)}
                  <hr class="category-name-separator"/>
             </div>
@@ -134,15 +134,11 @@
     <!-- Output -->
     <script id="OutputList" type="text/html">
         <![CDATA[
-        <div class="col-md-12">
+            <div class="col-md-12 category-name">
             Output
-        </div>
-        {{#each outputs}}
-        <div class="col-md-12 category-name">
-            {{.category_name}}
             <hr class="category-name-separator">
         </div>
-
+        {{#each outputs}}
         {{#each output}}
         <div class="col-md-12">
             {{.title}}

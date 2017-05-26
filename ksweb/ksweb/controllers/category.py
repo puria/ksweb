@@ -46,7 +46,7 @@ class CategoryController(RestController):
             visible=True,
             name=str(workspace_name)
         )
-        flash(_("Category successfully created!"))
+        flash(_("Workspace successfully created!"))
         return dict(workspaces=self.get_all())
 
 
