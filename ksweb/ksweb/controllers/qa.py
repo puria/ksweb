@@ -109,10 +109,10 @@ class QaController(RestController):
                             type='simple',
                             condition=[qa._id, ''])
 
-        if qa.is_text:
-            flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
-        else:
-            flash(_("Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> " % lurl('/precondition?workspace='+ str(category))))
+        # if qa.is_text:
+        #     flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
+        # else:
+        #     flash(_("Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> " % lurl('/precondition?workspace='+ str(category))))
 
         return dict(errors=None)
 
