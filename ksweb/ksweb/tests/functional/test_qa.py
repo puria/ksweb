@@ -46,7 +46,7 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_params
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
-        auto_precondition = model.Precondition.query.get(title=qa_text_params['title']+' compilata')
+        auto_precondition = model.Precondition.query.get(title=qa_text_params['title']+' -> ANSWERED')
 
         assert qa_text
         assert resp['errors'] is None

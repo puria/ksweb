@@ -106,9 +106,12 @@ class Questionary(MappedClass):
 
     @property
     def completion(self):
+        log.error(self.evaluate_questionary)
+        if self.evaluate_questionary.get('completed', False):
+            return "100 %"
         if not len(self.expressions):
-            return 0
-        return "%d %%" % int(len(self.output_values)*1.0/len(self.expressions)*100)
+            return "0 %"
+        return "%d %%" % int(len(self.qa_values)*1.0/len(self.expressions)*100)
 
     @property
     def evaluate_questionary(self):
