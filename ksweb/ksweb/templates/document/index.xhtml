@@ -1,0 +1,131 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">KS | Documents</title>
+</head>
+
+<body py:block="body" py:strip="True">
+<div class="row" style="padding-top: 20px">
+    <div class="col-md-6 text-left ks-section-name">
+        Documents
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="#">
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadFile">
+            ${h.material_icon('upload')} Import Document
+            </button>
+        </a>
+        <a href="${tg.url('/document/new', params=dict(workspace=workspace))}">
+            <button class="btn btn-primary">${h.material_icon('save')} New document</button>
+        </a>
+    </div>
+</div>
+<div class="row" style="padding-top: 20px">
+        ${h.partials.table(entities, fields, workspace, actions_content=actions_content)}
+</div>
+
+<!-- Modal -->
+        <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <form action="${tg.url('/document/import_document')}" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="workspace" value="${workspace}"/>
+           <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Import a new Document</h4>
+                        </div>
+                        <div class="modal-body">
+                             <input type="file" name="file_import"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <input type="submit"
+                                    class="btn btn-primary" value="Import">
+                            </input>
+                        </div>
+                    </div>
+                </div>
+                  </form>
+        </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="createQuestionary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <form on-submit="new_questionary">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Create a new questionary</h4>
+                            </div>
+                            <div class="modal-body">
+                                Insert the title:
+                                <input id="form-title" type="text" class="form-control" placeholder="Title"/>
+
+                                <span class="help-block bg-danger" id="questionary-error" style="display: none"></span>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <button type="button" id="submit-questionary"
+
+                                        class="btn btn-primary">Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+<script>
+    <![CDATA[
+    jQuery(document).ready(function () {
+        $(document).on("click", ".export", function(){
+            var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
+
+           window.location = "${tg.url("/document/export")}?_id=" + row_id;
+
+
+        });
+        $(document).on("click", ".create_questionary", function(){
+
+            $('#createQuestionary').modal();
+        });
+        $(document).on("click", "#submit-questionary", function(){
+            var self = this;
+            var row_id = jQuery('.create_questionary').parent().parent().parent().parent().find(".actions").data("row-id");
+
+
+            var questionary_params = {
+                'questionary_title': $('#form-title').val(),
+                'document_id': row_id
+            };
+            console.log(JSON.stringify(questionary_params));
+
+            var api_params = JSON.stringify(questionary_params);
+            $.ajax({
+                type: 'POST',
+                url: '${tg.url('/questionary/create')}',
+                data: api_params,
+                dataType: "json",
+                processData: false,
+                contentType: 'application/json'
+            }).done(function (data) {
+
+                console.log(data);
+                window.location.replace("${tg.url('/questionary/', params=dict(workspace=workspace))}");
+
+            }).fail(function (jqXHR) {
+                console.log("fail");
+                console.log(jqXHR.responseText);
+                var errors = jQuery.parseJSON(jqXHR.responseText)['errors'];
+                $('#questionary-error').text(errors['questionary_title']).css('display', 'inline-block');
+            });
+
+        });
+
+    });
+    ]]>
+</script>
+</body>
+</html>
