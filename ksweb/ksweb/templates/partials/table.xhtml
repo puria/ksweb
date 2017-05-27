@@ -14,12 +14,12 @@
             <tbody>
             <tr py:for="entity in entities">
             ${h.table_row_content(entity, fields['fields_name'])}
-                <td py:if="value_of('download', False)" >
+                <td py:if="value_of('download', False)">
                     <a class="btn btn-primary export"
                        href='${tg.url("/document/export", params=dict(_id=entity._id))}'>${h.material_icon('download')}</a>
                 </td>
                 <td py:if="value_of('actions_content', False)">
-                    <a class="actions" data-row-id="${entity._id}" href="#">${h.material_icon('more_horiz')}</a>
+                    <a class="actions" data-toggle="popover" data-trigger="focus" data-row-id="${entity._id}" href="#">${h.material_icon('more_horiz')}</a>
                 </td>
             </tr>
             </tbody>
@@ -28,7 +28,9 @@
     <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
 
     <div py:if="value_of('actions_content', False)" id="actions-popover-content" class="hidden">
-        <div py:for="action in actions_content"><a href="#" class="${h.underscore(action)}">${action}</a></div>
+        <div py:for="action in actions_content" style="margin: 5px 0"><a href="#"
+                                                                         class="${h.underscore(action)}">${action}</a>
+        </div>
     </div>
     <script>
         $(document).ready(function () {
@@ -40,12 +42,13 @@
                     return $("#actions-popover-content").html();
                 },
                 placement: 'bottom'
-            });
+            }).click(function(e) {
+  e.preventDefault();
+});
 
-            $(document).on('click', '.export', function (event) {
-                var self = this;
-                console.log(self.id);
-            });
+
+
+
         });
 
     </script>
