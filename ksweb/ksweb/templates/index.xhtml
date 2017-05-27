@@ -1,0 +1,237 @@
+<html py:extends="master_without_sidebar.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">Welcome to KS Web</title>
+    <style>
+        h4 {
+            margin-top: 80px;
+            margin-bottom: 0;
+            font-size: 17.2px;
+            font-weight: 900;
+            color: #14bc66;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 43.4px;
+            font-weight: 900;
+            color: #14bc66;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .welcome {
+            margin-top: 20px;
+
+            font-size: 20.5px;
+            font-weight: bold;
+            color: #004c99;
+        }
+
+        .usage {
+            color: #004c99;
+        }
+
+        .box, .add {
+            margin-top: 20px;
+            margin-right: 36px;
+            height: 160px;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            text-align: center;
+            position: relative;
+            padding: 0;
+            display: block;
+        }
+
+        .box div, .add div {
+            font-weight: 900;
+            font-size: 36px;
+            display: block;
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+        }
+
+        .add div i {
+            font-size: 50px;
+        }
+
+        .box aside {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 1rem;
+            display: none;
+            color: #d4d4d4;
+            cursor: pointer;
+        }
+
+        .box aside:hover {
+            color: #a4a4a4;
+        }
+
+        .box:hover, .add {
+            color: #7fbfff;
+            background-color: white;
+
+        }
+
+        .box:hover aside, .box:focus aside, .box:active aside {
+            display: block;
+        }
+
+        .box {
+            color: white;
+            background-color: #7fbfff;
+        }
+
+        .add:hover {
+            background-color: #004c99;
+            color: white;
+
+        }
+
+    </style>
+    <script id="index_template" type="text/html">
+        <![CDATA[
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">
+                <h4>Hello!</h4>
+                <h1>${user.display_name}</h1>
+                <span class="welcome">Welcome to KNOWLEDGE SHAPER! <br/> <br/> Select your workspace or create a new one:</span>
+
+                <div>
+                    {{#each workspaces}}
+                    <a class="col-md-3 box btn btn-info" href="${tg.url('/qa?workspace={{._id}}')}">
+
+                        <div>{{.name}}</div>
+                        <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
+                    </a>
+                    {{/each}}
+                    <a class="col-md-3 add btn btn-info" data-toggle="modal" data-target="#createWorkspace">
+                        <div>${h.material_icon('add_circle_outline')}</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="createWorkspace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <form on-submit="new_questionary">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Create a new Workspace</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input id="form-title" type="text" class="form-control" placeholder="Name"
+                                   value="{{workspace_name}}"/>
+                            {{#if errors.workspace_name}}
+                            <span class="help-block bg-danger">{{errors.workspace_name}}</span>
+                            {{/if}}
+                        </div>
+                        <div class="modal-footer">
+                            <a type="button" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                            <button type="button"
+                                    on-click="add_category:{{workspace_name}}"
+                                    class="btn btn-primary">Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        ]]>
+    </script>
+</head>
+<body py:block="body" py:strip="True">
+<div id="index-ractive" style="padding-top: 20px">
+
+</div>
+<script>
+    var RactiveIndex = Ractive.extend({
+        template: '#index_template',
+        onconstruct: function (options) {
+            var self = this;
+            console.log(options);
+        },
+        oninit: function () {
+            var self = this;
+            self.set('workspaces', self.workspaces);
+            self.on('add_category', function (event, workspace_name) {
+                var params = {
+                    'workspace_name': workspace_name
+                };
+
+                var api_params = JSON.stringify(params);
+                $.ajax({
+                    type: 'POST',
+                    url: '${tg.url('/category/create')}',
+                    data: api_params,
+                    dataType: "json",
+                    processData: false,
+                    contentType: 'application/json'
+                }).done(function (data) {
+                    window.location.replace("${tg.url('/')}");
+                }).fail(function (jqXHR) {
+                    var data = jQuery.parseJSON(jqXHR.responseText);
+                    console.log("fail");
+                    console.log(data);
+                    self.set('errors', data.errors);
+                    console.log(data.errors);
+                    self.set('saving', false);
+                });
+
+            });
+            self.on('delete_workspace', function (event, workspace_id) {
+                jQuery(".box").blur();
+                var r = confirm("WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover. " +
+                        "Are you sure you want to proceed?");
+                if (r == true) {
+                    var params = {
+                    'workspace_id': workspace_id
+                    };
+
+                var api_params = JSON.stringify(params);
+                     $.ajax({
+                    type: 'DELETE',
+                    url: '${tg.url('/category/delete')}',
+                    data: api_params,
+                    dataType: "json",
+                    processData: false,
+                    contentType: 'application/json'
+                }).done(function (data) {
+                    window.location.replace("${tg.url('/')}");
+                }).fail(function (jqXHR) {
+                    var data = jQuery.parseJSON(jqXHR.responseText);
+                    console.log("fail");
+                    console.log(data);
+                    self.set('errors', data.errors);
+                    console.log(data.errors);
+                    self.set('saving', false);
+                });
+
+                }
+
+                return false;
+            });
+        }
+
+    });
+</script>
+<script>
+    var ractive_index = new RactiveIndex({
+        el: '#index-ractive',
+        workspaces: ${Markup(h.script_json_encode(workspaces))}
+    });
+</script>
+</body>
+</html>
+
