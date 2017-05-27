@@ -104,9 +104,18 @@ class QaController(RestController):
                         model.Precondition(
                             _owner=user._id,
                             _category=ObjectId(category),
-                            title=title + ' compilata', #FIXME: decide a understandable title
+                            title=title + _(' -> ANSWERED'),
                             type='simple',
                             condition=[qa._id, ''])
+        else:
+            for answer in answers:
+                model.Precondition(
+                    _owner=user._id,
+                    _category=ObjectId(category),
+                    title=title + ' -> %s' % answer,
+                    type='simple',
+                    condition=[qa._id, answer],
+                )
 
         # if qa.is_text:
         #     flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
