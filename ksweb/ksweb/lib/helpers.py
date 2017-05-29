@@ -57,7 +57,6 @@ def material_icon(icon_name):
 
         'more_horiz': '&#xE5D3;',
 
-        # Workarea
         'delete': '&#xE872;',
 
         'download': '&#xE2C4;',
