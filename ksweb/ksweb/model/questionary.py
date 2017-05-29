@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Questionary model module."""
 from bson import ObjectId
+from ksweb.model import Document
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -14,13 +15,28 @@ log = logging.getLogger(__name__)
 
 
 def _compile_questionary(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id)),
+    workspace = Document.query.find({'_id': ObjectId(obj._document)}).first()._category
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id, workspace=workspace)),
                                            obj.title))
+
+
+def _owner_name(o):
+    from ksweb.model import User
+    owner = User.query.find({'_id': o._owner}).first()
+    return owner.display_name
+
+
+def _shared_with(o):
+    from ksweb.model import User
+    shared_with = User.query.find({'_id': o._user}).first()
+    return shared_with.email_address
 
 
 class Questionary(MappedClass):
     __ROW_COLUM_CONVERTERS__ = {
         'title': _compile_questionary,
+        '_owner': _owner_name,
+        '_user': _shared_with,
     }
 
     class __mongometa__:
@@ -83,6 +99,19 @@ class Questionary(MappedClass):
         In case of text or single response of the qa, the response are simply text.
         In case of multiple response of the qa, the response is a list with ['Res1', 'Resp4']
     """
+
+    @property
+    def creation_date(self):
+        return self._id.generation_time
+
+    @property
+    def completion(self):
+        log.error(self.evaluate_questionary)
+        if self.evaluate_questionary.get('completed', False):
+            return "100 %"
+        if not len(self.expressions):
+            return "0 %"
+        return "%d %%" % int(len(self.qa_values)*1.0/len(self.expressions)*100)
 
     @property
     def evaluate_questionary(self):
@@ -202,12 +231,15 @@ class Questionary(MappedClass):
         expression = self.expressions[output_id]
 
         answers = dict()
+
         for _id, resp in self.qa_values.items():
-            if isinstance(resp, basestring):
-                answers['q_' + _id] = resp
+            answer = resp['qa_response']
+            if isinstance(answer, basestring):
+                answers['q_' + _id] = answer
             else:
                 # array
-                answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, resp))
+                answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, answer))
+
         try:
             evaluation = eval(expression, answers)
         except NameError as ne:
@@ -218,8 +250,10 @@ class Questionary(MappedClass):
             }
 
         self.output_values[output_id] = {
-            'evaluation': evaluation,
+            'evaluation': evaluation
         }
+
+        DBSession.flush_all()
 
         return {
             'completed': True

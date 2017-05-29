@@ -21,8 +21,9 @@ class PreconditionAdvancedController(RestController):
         tmpl_context.sidebar_precondition_advanced = "preconditions-advanced"
 
     @expose('ksweb.templates.precondition.advanced.new')
-    def new(self, **kw):
-        return dict(precondition={})
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def new(self, workspace, **kw):
+        return dict(precondition={}, workspace=workspace)
 
     @decode_params('json')
     @expose('json')
@@ -75,7 +76,7 @@ class PreconditionAdvancedController(RestController):
             condition=condition
         )
 
-        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output')))
+        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
         return dict(errors=None)
 
     @decode_params('json')
@@ -149,13 +150,14 @@ class PreconditionAdvancedController(RestController):
 
     @expose('ksweb.templates.precondition.advanced.new')
     @validate({
-        '_id': PreconditionExistValidator()
+        '_id': PreconditionExistValidator(),
+        'workspace': CategoryExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id',
                                   entity_model=model.Precondition))
-    def edit(self, _id, **kw):
+    def edit(self, _id, workspace=None, **kw):
         precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
-        return dict(precondition=precondition, errors=None)
+        return dict(precondition=precondition, workspace=workspace, errors=None)
 
     @decode_params('json')
     @expose('json')

@@ -14,7 +14,7 @@ def _custom_title(obj):
         "<a href='%s'>%s</a>" % (
             tg.url(
                 '/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
-                params=dict(_id=obj._id)),
+                params=dict(_id=obj._id, workspace=obj._category)),
             obj.title))
 
 
@@ -62,7 +62,9 @@ class Precondition(MappedClass):
     visible = FieldProperty(s.Bool, if_missing=True)
 
     @classmethod
-    def precondition_available_for_user(cls, user_id):
+    def precondition_available_for_user(cls, user_id, workspace=None):
+        if workspace:
+            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)}).sort('title')
         return cls.query.find({'_owner': user_id, 'visible': True}).sort('title')
 
     @property
@@ -108,12 +110,12 @@ class Precondition(MappedClass):
             if qa.parent_precondition:
                 res_dict.update(qa.parent_precondition.response_interested)
             return res_dict
-
         for cond in self.condition:
             if cond in Precondition.PRECONDITION_OPERATOR:
                 continue
             else:
-                rel_ent = Precondition.query.get(_id=cond)
+                rel_ent = Precondition.query.get(_id=ObjectId(cond))
+                print cond
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict

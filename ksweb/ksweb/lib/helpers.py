@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Template Helpers used in ksweb."""
 import logging
+
+from bson import ObjectId
 from markupsafe import Markup
 from datetime import datetime
 
@@ -22,7 +24,7 @@ def material_icon(icon_name):
     icon_code = {
         #  Navbar
         'account_circle': '&#xE853',
-
+        'label_outline': '&#xE893;',
         #  User menu
         'account_box': '&#xE851;',
         'notification_none': '&#xE7F5;',
@@ -44,6 +46,7 @@ def material_icon(icon_name):
 
         # Mix
         'add_circle_outline': '&#xE148;',
+        'add': '&#xE145;',
         'add_circle_outline_rotate': '&#xE148;',
         'add_circle': '&#xE147;',
         'remove_circle_outline': '&#xE15D;',
@@ -51,8 +54,19 @@ def material_icon(icon_name):
 
         # Table
         'done': '&#xE876;',
-        'clear': '&#xE14C;',
-        'more_horiz': '&#xE5D3;'
+
+        'more_horiz': '&#xE5D3;',
+
+        #Workarea
+        'delete': '&#xE872;',
+
+        'download': '&#xE2C4;',
+        'upload': '&#xE2C6;',
+
+        'print': '&#xE8AD',
+        'list': '&#xE896;',
+        'arrow_back': '&#xE5C4;',
+        'help_outline': '&#xE8FD;'
 
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
@@ -122,6 +136,9 @@ def editor_widget_template_for_qa(**kw):
     return '<span class="objplaceholder qa qa-widget ks_id-qa_{id_}">{title}</span>'.format(**kw)
 
 
+def underscore(text):
+    return text.lower().replace(" ", "_")
+
 def gravatar(email_address, size=24):
     from hashlib import md5
     from tg import url
@@ -138,3 +155,10 @@ try:
 except SyntaxError:
     log.error("WebHelpers2 helpers not available with this Python Version")
 
+
+def get_workspace_name(workspace_id):
+    ws = model.Category.query.get(_id=ObjectId(workspace_id))
+    if ws:
+        return ws.name.upper()
+    else:
+        return 'UNKNOWN WORKSPACE'
