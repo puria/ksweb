@@ -23,6 +23,15 @@ def icon(icon_name):
 def material_icon(icon_name):
     icon_code = {
         #  Navbar
+        'delete': '&#xE872;',
+
+        'download': '&#xE2C4;',
+        'upload': '&#xE2C6;',
+
+        'print': '&#xE8AD',
+        'list': '&#xE896;',
+        'arrow_back': '&#xE5C4;',
+        'help_outline': '&#xE8FD;',
         'account_circle': '&#xE853',
         'label_outline': '&#xE893;',
         #  User menu
@@ -57,16 +66,7 @@ def material_icon(icon_name):
 
         'more_horiz': '&#xE5D3;',
 
-        'delete': '&#xE872;',
-
-        'download': '&#xE2C4;',
-        'upload': '&#xE2C6;',
-
-        'print': '&#xE8AD',
-        'list': '&#xE896;',
-        'arrow_back': '&#xE5C4;',
-        'help_outline': '&#xE8FD;'
-
+        
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
 
