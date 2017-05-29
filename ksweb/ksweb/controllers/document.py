@@ -61,7 +61,7 @@ class DocumentController(RestController):
 
         if not content:
             content = []
-        print description, licence, version, tags
+    
         user = request.identity['user']
 
         tags = tags.strip().split(',') if tags else []
