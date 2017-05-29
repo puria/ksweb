@@ -6,17 +6,21 @@ from ksweb import model
 class TestPreconditionAdvanced(TestController):
     application_under_test = 'main'
 
+    def setUp(self):
+        TestController.setUp(self)
+        self.category = self._get_category('Categoria 1')
+
     def test_access_new_permission_not_garanted(self):
         self.app.get('/precondition/advanced/new', status=302)
 
     def test_access_new_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/precondition/advanced/new')
+        resp_admin = self.app.get('/precondition/advanced/new', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_access_new_permission_lawyer(self):
         self._login_lavewr()
-        resp_lawyer = self.app.get('/precondition/advanced/new')
+        resp_lawyer = self.app.get('/precondition/advanced/new', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_post_precondition_advanced(self):

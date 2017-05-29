@@ -124,3 +124,44 @@ thead tr {
 hr {
   border-bottom: 2px solid $dark-blue;
 }
+
+.table-row{
+    white-space: nowrap;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#create-filter {
+  display: inline-block;
+}
+
+
+.response{
+  display: inline-block;
+}
+
+.response-text {
+   width: auto;
+  min-width: 0;
+  margin:0.1% auto;
+}
+
+.text-box {
+  padding-top: 20px;
+  font-size: 14px;
+}
+
+.ws:hover {
+  color: #0072e5;
+  cursor: pointer;
+}
+
+.ws{
+  font-size: 18px;
+}
+
+.help-text {
+  color: $grey;
+  font-weight: normal;
+}

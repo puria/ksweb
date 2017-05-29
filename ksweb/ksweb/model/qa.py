@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa model module."""
 import tg
+from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -15,7 +16,7 @@ def _format_instrumented_list(l):
 
 def _custom_title(obj):
     return Markup(
-        "<a href='%s'>%s</a>" % (tg.url('/qa/edit', params=dict(_id=obj._id)), obj.title))
+        "<a href='%s'>%s</a>" % (tg.url('/qa/edit', params=dict(_id=obj._id,workspace=obj._category)), obj.title))
 
 
 class Qa(MappedClass):
@@ -63,7 +64,9 @@ class Qa(MappedClass):
     visible = FieldProperty(s.Bool, if_missing=True)
 
     @classmethod
-    def qa_available_for_user(cls, user_id):
+    def qa_available_for_user(cls, user_id, workspace=None):
+        if workspace:
+            return cls.query.find({'_owner': user_id, '_category': ObjectId(workspace)}).sort('title')
         return cls.query.find({'_owner': user_id}).sort('title')
 
     @property

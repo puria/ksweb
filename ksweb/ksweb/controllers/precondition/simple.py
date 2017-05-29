@@ -22,9 +22,11 @@ class PreconditionSimpleController(RestController):
 
 
     @expose('ksweb.templates.precondition.simple.new')
-    def new(self, **kw):
-        return dict(page='precondition-new', precondition={})
-
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def new(self, workspace, **kw):
+        return dict(page='precondition-new', workspace=workspace,
+                    precondition={'question_content': kw.get('question_content', None),
+                                  'question_title': kw.get('question_title', None)})
     @decode_params('json')
     @expose('json')
     @validate({
@@ -41,7 +43,7 @@ class PreconditionSimpleController(RestController):
         #  CASO BASE in cui risco a creare un filtro semplice per definizione e' quella di che venga solamente selezionata una risposta
         if len(interested_response) == 1:
             #  La risposta e' solo una creo un filtro semplice
-            model.Precondition(
+            created_precondition = model.Precondition(
                 _owner=user._id,
                 _category=ObjectId(category),
                 title=title,
@@ -83,7 +85,7 @@ class PreconditionSimpleController(RestController):
 
             condition.append(base_precond[-1]._id)
 
-            model.Precondition(
+            created_precondition = model.Precondition(
                 _owner=user._id,
                 _category=ObjectId(category),
                 title=title,
@@ -91,9 +93,9 @@ class PreconditionSimpleController(RestController):
                 condition=condition
             )
 
-        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output')))
+        #flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
 
-        return dict(errors=None)
+        return dict(precondition_id=str(created_precondition._id),errors=None)
 
     @decode_params('json')
     @expose('json')
@@ -154,12 +156,13 @@ class PreconditionSimpleController(RestController):
 
     @expose('ksweb.templates.precondition.simple.new')
     @validate({
-        '_id': PreconditionExistValidator()
+        '_id': PreconditionExistValidator(),
+        'workspace': CategoryExistValidator()
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id', entity_model=model.Precondition))
-    def edit(self, _id, **kw):
-        precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
-        return dict(precondition=precondition, errors=None)
+    def edit(self, _id, workspace, **kw):
+        precondition = model.Precondition.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
+        return dict(precondition=precondition, workspace=workspace, errors=None)
 
 
     @expose('json')

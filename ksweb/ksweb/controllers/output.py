@@ -38,22 +38,25 @@ class OutputController(RestController):
 
     @expose('ksweb.templates.output.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    def get_all(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def get_all(self, workspace, **kw):
         return dict(
             page='output-index',
             fields={
-                'columns_name': [_('Label'), _('Filter'), _('Category'), _('Content')],
-                'fields_name': ['title', 'precondition', 'category', 'content']
+                'columns_name': [_('Label'), _('Filter'), _('Content')],
+                'fields_name': ['title', 'precondition', 'content']
             },
-            entities=model.Output.output_available_for_user(request.identity['user']._id),
-            actions=False
+            entities=model.Output.output_available_for_user(request.identity['user']._id, workspace),
+            actions=False,
+            workspace=workspace
         )
 
     @expose('json')
     @expose('ksweb.templates.output.new')
-    def new(self, **kw):
+    @validate({'workspace': CategoryExistValidator(required=True)})
+    def new(self, workspace, **kw):
         tmpl_context.sidebar_output = "output-new"
-        return dict(output={}, errors=None)
+        return dict(output={'_precondition': kw.get('precondition_id', None)}, workspace=workspace, errors=None)
 
     @decode_params('json')
     @expose('json')
@@ -121,7 +124,7 @@ class OutputController(RestController):
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
-            return dict(redirect_url=tg.url('/resolve'))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
@@ -134,24 +137,25 @@ class OutputController(RestController):
 
     @expose('ksweb.templates.output.new')
     @validate({
-        '_id': OutputExistValidator(required=True)
+        '_id': OutputExistValidator(required=True),
+        'workspace': CategoryExistValidator(required=True),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
-    def edit(self, _id, **kw):
-        output = model.Output.query.find({'_id': ObjectId(_id)}).first()
-
+    def edit(self, _id, workspace, **kw):
+        output = model.Output.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
         tmpl_context.sidebar_output = "output-edit"
-        return dict(output=output, errors=None)
+        return dict(output=output, workspace=workspace, errors=None)
 
 
     @expose('json')
-    def sidebar_output(self, _id=None):
+    def sidebar_output(self, _id=None, workspace=None):
         res = model.Output.query.aggregate([
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
                     '_id': {'$ne': ObjectId(_id)},
-                    'visible': True
+                    'visible': True,
+                    '_category': ObjectId(workspace)
                 }
             },
             {

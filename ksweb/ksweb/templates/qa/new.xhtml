@@ -1,162 +1,197 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-  <title py:block="master_title">KS | Nuova QA</title>
-  <style>
+    <title py:block="master_title">KS | Nuova QA</title>
+    <style>
 
-    label > input{ /*HIDE RADIO*/
-      display:none;
-    }
-    label > input + img{  /*IMAGE STYLES*/
-      cursor:pointer;
-      border:2px solid transparent;
-    }
-    label > input:checked + img{  /*(CHECKED) IMAGE STYLES*/
-      border:2px solid blue;
-    }
+        label > input { /*HIDE RADIO*/
+            display: none;
+        }
 
-    input[type="radio"], input[type="checkbox"] {
-      vertical-align: middle;
-      height: 24px;
-      width: 24px;
-      margin: 2px 2px 0;
-      line-height: normal;
-    }
+        label > input + img { /*IMAGE STYLES*/
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
 
-  </style>
-  <script id="QAForm_template" type="text/html">
-    <![CDATA[
-    <form class="form-horizontal" on-submit="submit-form">
-      <div class="form-group" style="padding-top: 20px">
-        <div class="col-md-6 text-left ks-section-name">
-          New Q/A
-        </div>
-        <div class="col-md-6 text-right">
-          {{#if saving}}
-          Saving...
-          {{else}}
-          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
-          {{/if}}
-        </div>
-      </div>
-      <hr/>
-        <div class="form-group {{errors.question ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <input id="extra-fields-form-question" type="text" class="form-control" placeholder="Content of the question" value="{{create.question}}"/>
-          {{#if errors.question}}
-          <span class="help-block">{{errors.question}}</span>
-          {{/if}}
-        </div>
-      </div>
-      <div class="form-group {{errors.title ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label" value="{{create.title}}"/>
-          {{#if errors.title}}
-          <span class="help-block">{{errors.title}}</span>
-          {{/if}}
-        </div>
-      </div>
-      <div class="form-group {{errors.category ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-            {{#each categories}}
-              {{#if .name == 'Altro'}}
-                <option value="{{._id}}" selected>{{.name}}</option>
-              {{else}}
-                <option value="{{._id}}">{{.name}}</option>
-              {{/if}}
-            {{/each}}
-          </select>
+        label > input:checked + img { /*(CHECKED) IMAGE STYLES*/
+            border: 2px solid blue;
+        }
 
-          {{#if errors.category}}
-          <span class="help-block">{{errors.category}}</span>
-          {{/if}}
-        </div>
-      </div>
-      <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <select id="form-precondition" class="form-control" value="{{create.precondition}}">
-            <option value="" disabled selected>Choose a filter</option>
-            {{#each preconditions}}
-            <option value="{{._id}}">{{.title}}</option>
-            {{/each}}
-          </select>
+        input[type="radio"], input[type="checkbox"] {
+            vertical-align: middle;
+            height: 24px;
+            width: 24px;
+            margin: 2px 2px 0;
+            line-height: normal;
+        }
 
-          {{#if errors.precondition}}
-          <span class="help-block">{{errors.precondition}}</span>
-          {{/if}}
-        </div>
-      </div>
-      <div class="form-group {{errors.tooltip ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <input id="extra-fields-form-tooltip" disabled="disabled" type="text" class="form-control" placeholder="Tooltip" value="{{create.tooltip}}"/>
-          {{#if errors.tooltip}}
-          <span class="help-block">{{errors.tooltip}}</span>
-          {{/if}}
-        </div>
-      </div>
-      <div class="form-group {{errors.link ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <input id="extra-fields-form-link" type="text" class="form-control" placeholder="Link" disabled="disabled" value="{{create.link}}"/>
-          {{#if errors.link}}
-          <span class="help-block">{{errors.link}}</span>
-          {{/if}}
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-md-12">
-          Answer's type
-        </div>
-      </div>
-      <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
-        <div class="col-sm-10">
-          <label>
-            <input id="single" type="radio" name="answer_type" value="single" onclick="ractive_qa.switchResponseType('single');" />
-            <img src="${tg.url('/img/radio_single.png')}"  alt="Single"/>
-          </label>
-          <label>
-            <input id="multi" type="radio" name="answer_type" value="multi" onclick="ractive_qa.switchResponseType('multi');" />
-            <img src="${tg.url('/img/radio_multi.png')}"  alt="Multi"/>
-          </label>
-          <label>
-            <input id="text" type="radio" name="answer_type" value="text" onclick="ractive_qa.switchResponseType('text');" />
-            <img src="${tg.url('/img/radio_text.png')}"  alt="Text"/>
-          </label>
-        </div>
-        {{#if errors.answer_type}}
-        <span class="help-block">{{errors.answer_type}}</span>
-        {{/if}}
-      </div>
-      {{#if answer_type == 'single' || answer_type == 'multi'}}
-      <div class="form-group {{errors.answers ? 'has-error' : ''}}">
+        input[name="example_response"] {
+            height: 12px;
+            width: 12px;
+            vertical-align: top;
+            margin-top: 6px;
+        }
 
-        {{#each available_response}}
-        <div class="col-md-12">
-          <input type="{{input_type}}" name="example_response"> {{.}}
-        </div>
-        {{/each}}
+        .response + label {
+            display: none;
+        }
 
-        <div class="col-md-3">
-          <div class="form-inline">
-            <label for="response_text" onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
-            <input id="response_text" type="text" class="form-control" placeholder="Answer"/>
-          </div>
-        </div>
-        {{#if errors.answers}}
-        <span class="help-block">{{errors.answers}}</span>
-        {{/if}}
-      </div>
-      {{/if}}
+        .answer:hover label {
+            display: inline;
+        }
 
-      {{#if answer_type == 'text'}}
-      <div class="form-group">
-        <div class="col-md-12">
-          Essay text answer
-        </div>
-      </div>
-      {{/if}}
-    </form>
-    ]]>
-  </script>
+        .answer {
+            min-height: 34px;
+        }
+
+        label i.material-icons {
+            font-size: 18px;
+            color: #a0a0a0;
+        }
+
+        label i.material-icons:hover {
+            color: black;
+        }
+    </style>
+    <script id="QAForm_template" type="text/html">
+        <![CDATA[
+        <form class="form-horizontal" on-submit="submit-form">
+            <div class="form-group" style="padding-top: 20px">
+                <div class="col-md-6 text-left ks-section-name">
+                    New Q/A
+                </div>
+                <div class="col-md-6 text-right">
+                    {{#if saving}}
+                    Saving...
+                    {{else}}
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
+                    {{/if}}
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group {{errors.question ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+            <textarea id="extra-fields-form-question" type="text" class="form-control"
+                      placeholder="Content of the question" value="{{create.question}}">
+            </textarea>
+
+
+                    {{#if errors.question}}
+                    <span class="help-block">{{errors.question}}</span>
+                    {{/if}}
+                </div>
+                <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} Insert a question that user
+                    will answer in the questionary. e.g. What's your name?</label>
+            </div>
+            <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label"
+                           value="{{create.title}}"/>
+                    {{#if errors.title}}
+                    <span class="help-block">{{errors.title}}</span>
+                    {{/if}}
+                </div>
+                 <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} This is a unique name that you will use to refer
+                 to this object in this workspace.</label>
+            </div>
+
+            <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
+                <div class="col-sm-3">
+                    <select id="form-precondition" class="form-control" value="{{create.precondition}}">
+                        <option value="" disabled selected>Choose a filter</option>
+                        {{#each preconditions}}
+                        <option value="{{._id}}">{{.title}}</option>
+                        {{/each}}
+                    </select>
+
+                    {{#if errors.precondition}}
+                    <span class="help-block">{{errors.precondition}}</span>
+                    {{/if}}
+                </div>
+
+                <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}
+                &question_content={{create.question}}&question_title={{create.title}}"
+                   type="button" id="create-filter"
+                   class="btn btn-primary">${h.material_icon('save')} New Simple Filter</a>
+
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    Answer's type
+                </div>
+            </div>
+            <div class="form-group {{errors.answer_type ? 'has-error' : ''}}">
+                <div class="col-sm-10">
+                    <label>
+                        <input id="single" type="radio" name="{{answer_type}}" value="single"
+                               onclick="ractive_qa.switchResponseType('single');"/>
+                        <img src="${tg.url('/img/radio_single.png')}" alt="Single"/>
+                    </label>
+                    <label>
+                        <input id="multi" type="radio" name="{{answer_type}}" value="multi"
+                               onclick="ractive_qa.switchResponseType('multi');"/>
+                        <img src="${tg.url('/img/radio_multi.png')}" alt="Multi"/>
+                    </label>
+                    <label>
+                        <input id="text" type="radio" name="{{answer_type}}" value="text"
+                               onclick="ractive_qa.switchResponseType('text');"/>
+                        <img src="${tg.url('/img/radio_text.png')}" alt="Text"/>
+                    </label>
+                    {{#if errors.answer_type}}
+                    <span class="help-block">{{errors.answer_type}}</span>
+                    {{/if}}
+                </div>
+
+            </div>
+            {{#if answer_type == 'single' || answer_type == 'multi'}}
+            <div class="form-group {{errors.answers ? 'has-error' : ''}}">
+
+                {{#each available_response:i}}
+
+                    {{#if .display}}
+                <div class="col-md-12" class="answer">
+                    <input type="{{input_type}}" name="example_response">
+
+                    {{#if .editable}}
+                    <textarea id="{{.answer}}" class="form-control response response-text" autofocus
+                              value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
+
+                    {{else}}
+                    <div id={{.answer}} class="response" onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
+                    {{/if}}
+                    {{#if ! edit_mode}}
+                    <label onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</label>
+                    {{/if}}
+                    </div>
+
+                    {{/if}}
+
+                {{/each}}
+
+                <div class="col-md-3">
+                    <div class="form-inline">
+
+                        <textarea id="response_text" class="form-control" placeholder="Answer"> </textarea>
+                        <label for="response_text"
+                               onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
+                    </div>
+                </div>
+                {{#if errors.answers}}
+                <span class="help-block">{{errors.answers}}</span>
+                {{/if}}
+            </div>
+            {{/if}}
+
+            {{#if answer_type == 'text'}}
+            <div class="form-group">
+                <div class="col-md-12">
+                    Essay text answer
+                </div>
+            </div>
+            {{/if}}
+        </form>
+        ]]>
+    </script>
 </head>
 
 <body py:block="body" py:strip="True">
@@ -164,133 +199,194 @@
 
 </div>
 <script>
-  var QAEditor = Ractive.extend({
-    template: '#QAForm_template',
-    onconstruct: function(options) {
-      var self = this;
-      self.qa = options['qa'];
-      self.edit_mode = false;
-      self.submit_url = "${tg.url('/qa/post')}";
-      self.submit_type = 'POST';
-    },
-    oninit: function() {
-      var self = this;
-      self.set('errors', {});
-      self.set('saving', false);
-      self.set('answer_type', null);
-      self.set('input_type', null);
-      self.set('available_response',[]);
+    var QAEditor = Ractive.extend({
+        template: '#QAForm_template',
+        onconstruct: function (options) {
+            var self = this;
+            self.qa = options['qa'];
+            self.edit_mode = false;
+            self.submit_url = "${tg.url('/qa/post')}";
+            self.submit_type = 'POST';
+            self.workspace = options['workspace'];
+            self.question_content = options['question_content'];
+            self.question_title = options['question_title'];
+            self.precondition_id= options['precondition_id'];
+        },
+        oninit: function () {
+            var self = this;
+            self.set('errors', {});
+            self.set('saving', false);
+            self.set('answer_type', null);
+            self.set('input_type', null);
+            self.set('available_response', []);
+            self.set('create.category', self.workspace);
 
-      //  Check if document is provided
-      if (! jQuery.isEmptyObject(self.qa)) {
-        self.submit_type = 'PUT';
-        self.submit_url = '${tg.url('/qa/put')}';
-        self.set('edit_mode', true);
-        self.set('create.title', self.qa['title']);
-        self.set('create.question', self.qa['question']);
-        self.set('create.category', self.qa['_category']);
-        self.set('create.precondition', self.qa['_parent_precondition']);
-        self.set('create.link', self.qa['link']);
-        self.set('create.tooltip', self.qa['tooltip']);
-        self.set('create._id', self.qa['_id']);
+            self.set('create.title', self.qa['title']);
+            self.set('create.question', self.qa['question']);
+            self.set('create.precondition', self.qa['_parent_precondition']);
 
-        self.switchResponseType(self.qa['type']);
-        self.set('available_response', self.qa['answers']);
-      }
+            //  Check if document is provided
+            if (self.qa['_id']) {
+                self.submit_type = 'PUT';
+                self.submit_url = '${tg.url('/qa/put')}';
+                self.set('edit_mode', true);
+                self.set('create.title', self.qa['title']);
+                self.set('create.question', self.qa['question']);
+                self.set('create.precondition', self.qa['_parent_precondition']);
+                self.set('create.link', self.qa['link']);
+                self.set('create.tooltip', self.qa['tooltip']);
+                self.set('create._id', self.qa['_id']);
 
-      self.on('submit-form', function(event) {
-        var all_var = self.get('create');
-        // Now append answer_type and answers
-        all_var['answer_type'] = self.get('answer_type');
-        all_var['answers'] = self.get('available_response');
-        console.log(all_var);
-        self.createQA(all_var);
-        return false;
-      });
+                var available_response = [];
+                for (var i in self.qa['answers']) {
+                    available_response.push({
+                        'answer': self.qa['answers'][i],
+                        'editable': false, 'type': self.qa['type'], 'display': true
+                    });
+                }
+                self.switchResponseType(self.qa['type']);
+                self.set('available_response', available_response);
+            }
 
-      self.loadCategory();
-      self.loadPrecondition();
-    },
-    loadCategory: function(callback) {
-      var self = this;
-      jQuery.get("${tg.url('/category/get_all')}",
-          function(data) {
-            self.set('categories', data['categories']);
-            if (callback)
-              callback();
-          });
-    },
-    loadPrecondition: function(callback) {
-      var self = this;
-      jQuery.get("${tg.url('/precondition/available_preconditions')}",
-          function(data) {
-            self.set('preconditions', data['preconditions']);
-            if (callback)
-              callback();
-          });
-    },
-    switchResponseType: function(section) {
-      var self = this;
-      if(section == 'single')
-        self.set('input_type', 'radio');
-      if(section == 'multi')
-        self.set('input_type', 'checkbox');
+            self.on('submit-form', function (event) {
+                var all_var = self.get('create');
+                // Now append answer_type and answers
+                all_var['answer_type'] = self.get('answer_type');
+                var answers = [];
+                var available_response = self.get('available_response');
+                for (var i in available_response) {
+                    if (available_response[i]['display']) {
+                        answers.push(available_response[i]['answer']);
+                    }
+                }
+                all_var['answers'] = answers;
+                console.log(all_var);
+                self.createQA(all_var);
+                return false;
+            });
 
-      jQuery("#insert_answer").empty();
+            //self.loadCategory();
+            self.loadPrecondition();
+        },
+        /*loadCategory: function (callback) {
+            var self = this;
+            jQuery.get("${tg.url('/category/get_all')}",
+                    function (data) {
+                        self.set('categories', data['categories']);
+                        if (callback)
+                            callback();
+                    });
+        },*/
+        loadPrecondition: function (callback) {
+            var self = this;
+            jQuery.get("${tg.url('/precondition/available_preconditions',  params=dict(workspace=workspace))}",
+                    function (data) {
+                        self.set('preconditions', data['preconditions']);
+                        if (callback)
+                            callback();
+                    });
+        },
+        switchResponseType: function (section) {
+            var self = this;
+            var available_response = self.get('available_response');
 
-      self.set('answer_type', section);
-      self.set('available_response', []);
-    },
-    addResponse: function() {
-      var self = this;
-      jQuery("#insert_answer").empty();
-      var resp = jQuery("#response_text").val();
-      if(!resp || 0 === resp.length || /^\s*$/.test(resp)) {
-        alert("Risposta non valida");
-        return;
-      }
-      jQuery("#response_text").val("");
-      self.push('available_response', resp);
-    },
-    createQA: function(field) {
-      var self = this;
-      self.set('saving', true);
-      console.log("JSON.stringify");
-      console.log(JSON.stringify(field));
+            if (section == 'single')
+                self.set('input_type', 'radio');
+            if (section == 'multi')
+                self.set('input_type', 'checkbox');
+            for (var i in available_response) {
+                if (available_response[i]['type'] == section) {
+                    available_response[i]['display'] = true;
+                }
+                else {
+                    available_response[i]['display'] = false;
+                }
 
-      var api_params = JSON.stringify(field);
+            }
+            jQuery("#insert_answer").empty();
 
-      $.ajax({
-        type: self.submit_type,
-        url:  self.submit_url,
-        data: api_params,
-        dataType: "json",
-        processData: false,
-        contentType: 'application/json'
-      }).done(function(resp) {
-        var redirect_to = "${tg.url('/qa/')}";
-        self.set('create', {});
-        self.set('saving', false);
-        self.set('editing', false);
-        if (resp.redirect_url)
-          redirect_to = resp.redirect_url;
-        window.location.replace(redirect_to);
+            self.set('answer_type', section);
+            self.set('available_response', available_response);
+            //self.set('available_response', []);
+        },
+        addResponse: function () {
+            var self = this;
+            jQuery("#insert_answer").empty();
+            var resp = jQuery("#response_text").val();
+            if (!resp || 0 === resp.length || /^\s*$/.test(resp)) {
+                alert("Risposta non valida");
+                return;
+            }
+            jQuery("#response_text").val("");
+            self.push('available_response', {
+                'answer': resp,
+                'editable': false,
+                'type': self.get('answer_type'),
+                'display': true
+            });
+        },
 
-      }).fail(function(jqXHR) {
-        var data = jQuery.parseJSON(jqXHR.responseText);
-        console.log("fail");
-        console.log(data);
-        self.set('errors', data.errors);
-        self.set('saving', false);
-      });
-    }
-  });
+        makeEditable: function (response) {
+            var self = this;
+            var available_response = self.get('available_response');
+            var edit_mode = self.get('edit_mode');
+            if (!edit_mode) {
+                available_response[response]['editable'] = true;
+                self.set('available_response', available_response);
+            }
+        },
+        editAnswer: function (index) {
+            var self = this;
+            var available_response = self.get('available_response');
+            available_response[index]['editable'] = false;
+            available_response[index]['answer'] = jQuery("#" + available_response[index]['answer']).val();
+            self.set('available_response', available_response);
+
+        },
+        removeResponse: function (index) {
+            var self = this;
+            var available_response = self.get('available_response');
+            self.splice('available_response', index, 1);
+        },
+        createQA: function (field) {
+            var self = this;
+            self.set('saving', true);
+            var api_params = JSON.stringify(field);
+            $.ajax({
+                type: self.submit_type,
+                url: self.submit_url,
+                data: api_params,
+                dataType: "json",
+                processData: false,
+                contentType: 'application/json'
+            }).done(function (resp) {
+
+                var redirect_to = "${tg.url('/qa', params=dict(workspace=workspace))}";
+                self.set('create', {});
+                self.set('saving', false);
+                self.set('editing', false);
+                if (resp.redirect_url)
+                    redirect_to = resp.redirect_url;
+                window.location.replace(redirect_to);
+
+            }).fail(function (jqXHR) {
+                if (jqXHR.status != 500) {
+                    var data = jQuery.parseJSON(jqXHR.responseText);
+                    console.log("fail");
+                    console.log(data);
+                    self.set('errors', data.errors);
+                    self.set('saving', false);
+                }
+            });
+        }
+    });
 </script>
 <script>
-  var ractive_qa = new QAEditor({
-    qa: ${Markup(h.script_json_encode(qa))},
-    el: '#qa-ractive'
-  });
+    var ractive_qa = new QAEditor({
+        qa: ${Markup(h.script_json_encode(qa))},
+        el: '#qa-ractive',
+        workspace: '${workspace}'
+    });
 </script>
 </body>
 </html>

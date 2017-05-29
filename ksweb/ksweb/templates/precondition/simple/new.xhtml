@@ -30,6 +30,7 @@
           <span class="help-block">{{errors.question}}</span>
           {{/if}}
         </div>
+           <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} Select the question to apply this filter.</label>
       </div>
 
       <div id="answer_type" class="form-group {{errors.answer_type ? 'has-error' : ''}}">
@@ -79,9 +80,11 @@
           <span class="help-block">{{errors.title}}</span>
           {{/if}}
         </div>
+          <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} This is a unique name that you will use to refer
+                 to this object in this workspace.</label>
       </div>
 
-      <div class="form-group {{errors.category ? 'has-error' : ''}}">
+     <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
             {{#each categories}}
@@ -98,7 +101,7 @@
           {{/if}}
         </div>
       </div>
-
+        -->
 
     </form>
     ]]>
@@ -119,23 +122,30 @@
       self.edit_mode = false;
       self.submit_url = "${tg.url('/precondition/simple/post')}";
       self.submit_type = 'POST';
+      self.workspace=options['workspace'];
+      console.log('prec', self.precondition);
+      self.question_content=self.precondition['question_content'];
+      self.question_title=self.precondition['question_title'];
+      console.log('options', options);
 
     },
     oninit: function() {
       var self = this;
-
+         self.set('create.category', self.workspace);
       //  Check if document is provided
-      if (! jQuery.isEmptyObject(self.precondition)) {
+      if (self.precondition['_id']) {
         self.submit_type = 'PUT';
         self.submit_url = '${tg.url('/precondition/simple/put')}';
         self.set('edit_mode', true);
         self.set('create.title', self.precondition['title']);
-        self.set('create.category', self.precondition['_category']);
+
         self.set('create.question', self.precondition['condition'][0]);
         self.set('create.interested_response', self.precondition['condition'][1]);
         self.set('create._id', self.precondition['_id']);
       }
 
+
+        console.log('asd', self.question_content);
       self.set('errors', {});
       self.set('saving', false);
       self.set('response_type', null);
@@ -164,7 +174,7 @@
     },
     loadQuestion: function(callback) {
       var self = this;
-      jQuery.get("${tg.url('/qa/get_single_or_multi_question')}",
+      jQuery.get("${tg.url('/qa/get_single_or_multi_question', params=dict(workspace=workspace))}",
           function(data) {
             self.set('questions', data['questions']);
             if (callback)
@@ -174,9 +184,6 @@
     createPreconditionSimple: function(field) {
       var self = this;
       //self.set('saving', true);
-      console.log("JSON.stringify");
-      console.log(field);
-      console.log(JSON.stringify(field));
 
       var api_params = JSON.stringify(field);
 
@@ -188,7 +195,16 @@
         processData: false,
         contentType: 'application/json'
       }).done(function(resp) {
-        var redirect_to = "${tg.url('/precondition/')}";
+
+          var redirect_to;
+          if(self.question_content || self.question_title){
+              redirect_to = "${tg.url('/qa/new', params=dict(workspace=workspace))}&question_content="
+                      + self.question_content + "&question_title=" + self.question_title + "&precondition_id=" + resp['precondition_id'];
+          }
+          else{
+               redirect_to = "${tg.url('/precondition/', params=dict(workspace=workspace))}";
+          }
+
         self.set('create', {});
         self.set('saving', false);
         self.set('editing', false);
@@ -212,7 +228,8 @@
 <script>
   var ractive_precondition_simple = new PreconditionSimple({
       el: '#qa-ractive',
-      precondition: ${Markup(h.script_json_encode(precondition))}
+      precondition: ${Markup(h.script_json_encode(precondition))},
+      workspace: '${workspace}'
   });
 
   ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {
