@@ -22,51 +22,33 @@ def icon(icon_name):
 
 def material_icon(icon_name):
     icon_code = {
-        #  Navbar
         'delete': '&#xE872;',
-
         'download': '&#xE2C4;',
         'upload': '&#xE2C6;',
-
         'print': '&#xE8AD',
         'list': '&#xE896;',
         'arrow_back': '&#xE5C4;',
         'help_outline': '&#xE8FD;',
         'account_circle': '&#xE853',
         'label_outline': '&#xE893;',
-        #  User menu
         'account_box': '&#xE851;',
         'notification_none': '&#xE7F5;',
         'exit_to_app': '&#xE879;',
-
-
-        #  Sidebar
+        'add': '&#xE145;',
         'insert_drive_file': '&#xE24D;',
         'content_paste': '&#xE14F;',
         'flip_to_front': '&#xE883;',
         'group_work': '&#xE886;',
         'view_list': '&#xE8EF;',
-
-        # QA
         'save': '&#xE161;',
-
-        #  Document
         'create': '&#xE150;',
-
-        # Mix
         'add_circle_outline': '&#xE148;',
-        'add': '&#xE145;',
         'add_circle_outline_rotate': '&#xE148;',
         'add_circle': '&#xE147;',
         'remove_circle_outline': '&#xE15D;',
         'clear': '&#xE14C;',
-
-        # Table
         'done': '&#xE876;',
-
         'more_horiz': '&#xE5D3;',
-
-        
         }
     return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
 
