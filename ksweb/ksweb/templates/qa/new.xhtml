@@ -97,7 +97,7 @@
             <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
                 <div class="col-sm-3">
                     <select id="form-precondition" class="form-control" value="{{create.precondition}}">
-                        <option value="" disabled selected>Choose a filter</option>
+                        <option value="" selected>Choose a filter</option>
                         {{#each preconditions}}
                         <option value="{{._id}}">{{.title}}</option>
                         {{/each}}

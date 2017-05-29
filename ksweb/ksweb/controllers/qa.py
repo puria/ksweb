@@ -108,14 +108,31 @@ class QaController(RestController):
                             type='simple',
                             condition=[qa._id, ''])
         else:
+            base_precond = []
             for answer in answers:
-                model.Precondition(
+                prec = model.Precondition(
                     _owner=user._id,
                     _category=ObjectId(category),
                     title=title + ' -> %s' % answer,
                     type='simple',
                     condition=[qa._id, answer],
                 )
+                base_precond.append(prec)
+
+            condition = []
+            for prc in base_precond[:-1]:
+                condition.append(prc._id)
+                condition.append('or')
+
+            condition.append(base_precond[-1]._id)
+
+            created_precondition = model.Precondition(
+                _owner=user._id,
+                _category=ObjectId(category),
+                title=title + _(' -> ANSWERED'),
+                type='advanced',
+                condition=condition
+            )
 
         # if qa.is_text:
         #     flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
