@@ -147,20 +147,25 @@
             <div class="form-group {{errors.answers ? 'has-error' : ''}}">
 
                 {{#each available_response:i}}
-                <div class="col-md-12" class="answer">
+
                     {{#if .display}}
+                <div class="col-md-12" class="answer">
                     <input type="{{input_type}}" name="example_response">
+
                     {{#if .editable}}
                     <textarea id="{{.answer}}" class="form-control response response-text" autofocus
                               value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
+
                     {{else}}
                     <div id={{.answer}} class="response" onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
                     {{/if}}
                     {{#if ! edit_mode}}
                     <label onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</label>
                     {{/if}}
+                    </div>
+
                     {{/if}}
-                </div>
+
                 {{/each}}
 
                 <div class="col-md-3">
