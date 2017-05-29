@@ -31,36 +31,6 @@
                 </div>
             </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="createQuestionary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <form on-submit="new_questionary">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Create a new questionary</h4>
-                            </div>
-                            <div class="modal-body">
-                                Insert the title:
-                                <input id="form-title" type="text" class="form-control" placeholder="Title"
-                                       value="{{questionary_title}}"/>
-                                {{#if errors.questionary_title}}
-                                <span class="help-block">{{errors.questionary_title}}</span>
-                                {{/if}}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                <button type="button"
-                                        onclick="ractive_document.new_questionary('{{questionary_title}}')"
-                                        class="btn btn-primary">Save
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
@@ -70,8 +40,60 @@
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
                 </div>
+
             </div>
-            <div class="form-group {{errors.category ? 'has-error' : ''}}">
+             <div class="form-group {{errors.title ? 'has-error' : ''}}">
+            <div class="col-md-3">
+                {{#if edit_mode}}
+                 <label for="extra-fields-form-description">Description</label>
+                {{/if}}
+                    <textarea id="extra-fields-form-description" class="form-control" placeholder="Descrizione"
+                             value="{{create.description}}" > {{create.description}} </textarea>
+                    {{#if errors.description}}
+                    <span class="help-block">{{errors.description}}</span>
+                    {{/if}}
+                </div>
+             </div>
+             <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                <div class="col-md-3">
+                     {{#if edit_mode}}
+                 <label for="extra-fields-form-licence">Licence</label>
+                {{/if}}
+                    <input id="extra-fields-form-licence" type="text" class="form-control" placeholder="Licenza"
+                           value="{{create.licence}}"/>
+                    {{#if errors.licence}}
+                    <span class="help-block">{{errors.licence}}</span>
+                    {{/if}}
+                </div>
+
+            </div>
+             <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                <div class="col-md-3">
+                     {{#if edit_mode}}
+                 <label for="extra-fields-form-version">Version</label>
+                {{/if}}
+                    <input id="extra-fields-form-version" type="text" class="form-control" placeholder="Versione"
+                           value="{{create.version}}"/>
+                    {{#if errors.version}}
+                    <span class="help-block">{{errors.version}}</span>
+                    {{/if}}
+                </div>
+
+            </div>
+             <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                <div class="col-md-3">
+                     {{#if edit_mode}}
+                 <label for="extra-fields-form-tags">Tags</label>
+                {{/if}}
+                    <input id="extra-fields-form-tags" type="text" class="form-control" placeholder="Tags"
+                           value="{{create.tags}}"/>
+                    {{#if errors.tags}}
+                    <span class="help-block">{{errors.tags}}</span>
+                    {{/if}}
+                </div>
+
+            </div>
+            <!--<div class="form-group {{errors.category ? 'has-error' : ''}}">
                 <div class="col-md-3">
                     <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
                       {{#each categories}}
@@ -87,7 +109,7 @@
                     <span class="help-block">{{errors.category}}</span>
                     {{/if}}
                 </div>
-            </div>
+            </div>-->
             <div class="form-group">
                  <textarea name="ks_editor"></textarea>
             </div>
@@ -112,11 +134,14 @@
             self.submit_type = 'POST';
             self.submit_url = '${tg.url('/document/post')}';
             self.document = options['document'];
+            self.workspace = options['workspace'];
+
         },
         oninit: function () {
             var self = this;
 
             self.set("edit_mode", false);
+            self.set('create.category', self.workspace);
 
             //  Check if document is provided
             if (!jQuery.isEmptyObject(self.document)) {
@@ -125,7 +150,10 @@
                 self.set("edit_mode", true);
                 //Set the document value as default
                 self.set('create.title', self.document['title']);
-                self.set('create.category', self.document['_category']);
+                self.set('create.licence', self.document['licence']);
+                self.set('create.version', self.document['version']);
+                self.set('create.description', self.document['description']);
+                self.set('create.tags', self.document['tags'].toString());
                 self.set('create._id', self.document['_id']);
             }
 
@@ -135,18 +163,17 @@
             self.set('saving', false);
             self.set('categories', []);
 
-            self.loadCategory();
+            //self.loadCategory();
             self.on('submit-form', function (event) {
                 jQuery(window).unbind('beforeunload');
                 var all_var = self.get('create');
                 all_var['content'] = self.get('create.content');
-                console.log(all_var)
                 self.createDocument(all_var);
                 return false;
             });
 
         },
-        loadCategory: function (callback) {
+        /*loadCategory: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/category/get_all')}",
                     function (data) {
@@ -154,7 +181,7 @@
                         if (callback)
                             callback();
                     });
-        },
+        },*/
         add_widget_to_editor: function(id, title, type){
           console.log('add_widget_to_editor:', id, title, type);
           var editor = CKEDITOR.instances.ks_editor;
@@ -166,7 +193,7 @@
 
           if (type == 'output'){
             element.on("click", function(){
-              var url = "${tg.url('/output/edit')}"+"?_id="+id;
+              var url = "${tg.url('/output/edit', params=dict(workspace=workspace))}"+"&_id="+id;
               var win = window.open(url, '_blank');
               win.focus();
             });
@@ -197,7 +224,7 @@
                 self.set('saving', false);
                 self.set('editing', false);
                 console.log(data);
-                window.location.replace("${tg.url('/document/')}");
+                window.location.replace("${tg.url('/document/', params=dict(workspace=workspace))}");
 
             }).fail(function (jqXHR) {
                 var data = jQuery.parseJSON(jqXHR.responseText);
@@ -231,7 +258,7 @@
                 self.set('saving', false);
                 self.set('editing', false);
                 console.log(data);
-                window.location.replace("${tg.url('/questionary/')}");
+                window.location.replace("${tg.url('/questionary/', params=dict(workspace=workspace))}");
 
             }).fail(function (jqXHR) {
                 var data = jQuery.parseJSON(jqXHR.responseText);
@@ -269,12 +296,13 @@
       var res = this.parse_selected(CKEDITOR.instances.ks_editor.getSelectedHtml().getHtml());
       var api_params = JSON.stringify({
         'highlighted_text': res['text'],
-        'list_': res['list']
+        'list_': res['list'],
+          'workspace': self.workspace
       });
 
       $.ajax({
         type: 'POST',
-        url: "${tg.url('/output_plus/')}",
+        url: "${tg.url('/output_plus')}",
         data: api_params,
         dataType: "json",
         processData: false,
@@ -300,6 +328,7 @@
     var ractive_document = new Document({
         el: '#document-ractive',
         document: ${Markup(h.script_json_encode(document))},
+        workspace: '${workspace}'
     });
 
     ractive_document.on('showOutputDetails', function (event, elem) {

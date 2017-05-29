@@ -13,7 +13,7 @@ from ksweb.model import DBSession
 
 
 def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/output/edit', params=dict(_id=obj._id)), obj.title))
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category)), obj.title))
 
 
 def _content_preview(obj):
@@ -80,7 +80,9 @@ class Output(MappedClass):
     created_at = FieldProperty(s.DateTime, if_missing=datetime.utcnow())
 
     @classmethod
-    def output_available_for_user(cls, user_id):
+    def output_available_for_user(cls, user_id, workspace=None):
+        if workspace:
+            return cls.query.find({'_owner': user_id, '_category': ObjectId(workspace)}).sort('title')
         return cls.query.find({'_owner': user_id}).sort('title')
 
     @property

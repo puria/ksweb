@@ -6,22 +6,26 @@ from ksweb import model
 class TestOutput(TestController):
     application_under_test = 'main'
 
+    def setUp(self):
+        TestController.setUp(self)
+        self.category = self._get_category('Categoria 1')
+
     def test_access_permission_not_garanted(self):
         self.app.get('/output/', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/output')
+        resp_admin = self.app.get('/output', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lavewr()
-        resp_lawyer = self.app.get('/output')
+        resp_lawyer = self.app.get('/output', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_new_precondition_simple(self):
         self._login_admin()
-        resp_admin = self.app.get('/output/new')
+        resp_admin = self.app.get('/output/new', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
     def test_creation_output(self):
@@ -139,7 +143,7 @@ class TestOutput(TestController):
         self.test_creation_output()
         out = self._get_output_by_title('Title of Output')
         resp = self.app.get(
-            '/output/edit', params={'_id': str(out._id)}
+            '/output/edit', params={'_id': str(out._id), 'workspace': out._category}
         )
         assert out._id in resp
 
@@ -167,10 +171,10 @@ class TestOutput(TestController):
 
     def test_sidebar_output(self):
         self._login_lavewr()
-
-        self._create_fake_output("Out1")
-        self._create_fake_output("Out2")
-        resp = self.app.get('/output/sidebar_output')
+        category1 = self._get_category('Categoria 1')
+        self._create_fake_output("Out1", category1._id)
+        self._create_fake_output("Out2", category1._id)
+        resp = self.app.get('/output/sidebar_output', params={'workspace': category1._id})
         assert "Out1" in resp
         assert "Out2" in resp
 

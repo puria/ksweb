@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Document model module."""
 import tg
+from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -9,7 +10,7 @@ from ksweb.model import DBSession
 
 
 def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(_id=obj._id)), obj.title))
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(_id=obj._id, workspace=obj._category)), obj.title))
 
 
 def _content_preview(obj):
@@ -46,6 +47,10 @@ class Document(MappedClass):
 
     content = FieldProperty(s.Anything, required=True)
 
+    description = FieldProperty(s.String, required=False)
+    licence = FieldProperty(s.String, required=False)
+    version = FieldProperty(s.String, required=False)
+    tags = FieldProperty(s.Anything, required=False)
     """
     Possible content of the document is a list with two elements type:
         - text
@@ -69,7 +74,9 @@ class Document(MappedClass):
     visible = FieldProperty(s.Bool, if_missing=True)
 
     @classmethod
-    def document_available_for_user(cls, user_id):
+    def document_available_for_user(cls, user_id, workspace=None):
+        if workspace:
+            return cls.query.find({'_owner': user_id,'_category': ObjectId(workspace)}).sort('title')
         return cls.query.find({'_owner': user_id}).sort('title')
 
     @property
