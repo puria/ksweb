@@ -101,7 +101,7 @@
             <div class="col-md-10 col-md-offset-2">
                 <h4>Hello!</h4>
                 <h1>${user.display_name}</h1>
-                <span class="welcome">Welcome to KNOWLEDGE SHAPER! <br/> <br/> Select your workspace or create a new one:</span>
+                <span class="welcome">${_('Welcome to KNOWLEDGE SHAPER!')} <br/> <br/> ${_('Select your workspace or create a new one')}:</span>
 
                 <div>
                     {{#each workspaces}}
@@ -126,7 +126,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Create a new Workspace</h4>
+                            <h4 class="modal-title" id="myModalLabel">${_('Create a new Workspace')}</h4>
                         </div>
                         <div class="modal-body">
                             <input id="form-title" type="text" class="form-control" placeholder="Name"
@@ -136,10 +136,10 @@
                             {{/if}}
                         </div>
                         <div class="modal-footer">
-                            <a type="button" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                            <a type="button" class="btn btn-danger" data-dismiss="modal">${_('Cancel')}</a>
                             <button type="button"
                                     on-click="add_category:{{workspace_name}}"
-                                    class="btn btn-primary">Save
+                                    class="btn btn-primary">${_('Save')}
                             </button>
                         </div>
                     </div>
@@ -192,8 +192,8 @@
             });
             self.on('delete_workspace', function (event, workspace_id) {
                 jQuery(".box").blur();
-                var r = confirm("WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover. " +
-                        "Are you sure you want to proceed?");
+                var r = confirm("${_('WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover.')} " +
+                        "${_('Are you sure you want to proceed?')}");
                 if (r == true) {
                     var params = {
                     'workspace_id': workspace_id
