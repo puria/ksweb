@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: ksweb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2017-06-09 16:35+0200\n"
-"PO-Revision-Date: 2017-06-09 16:46+0200\n"
+"PO-Revision-Date: 2017-06-09 17:44+0200\n"
 "Last-Translator: \n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 
 #: ksweb/controllers/category.py:49
 msgid "Workspace successfully created!"
-msgstr "Workspace creato con successo!"
+msgstr "Area di lavoro creata con successo!"
 
 #: ksweb/controllers/category.py:66
 msgid "Category and all entities associated deleted"
-msgstr "Il workspace e tutte le entità collegate sono state cancellate"
+msgstr "L’Area di lavoro e tutte le entità collegate sono state cancellate"
 
 #: ksweb/controllers/document.py:25 ksweb/controllers/output.py:37
 #: ksweb/controllers/precondition/precondition.py:18 ksweb/controllers/qa.py:23
@@ -109,7 +109,7 @@ msgstr "Aggiungete almeno una risposta"
 
 #: ksweb/controllers/qa.py:107 ksweb/controllers/qa.py:132
 msgid " -> ANSWERED"
-msgstr "-> RISPOSTA"
+msgstr " -> RISPOSTA"
 
 #: ksweb/controllers/qa.py:214
 msgid "You can not edit this Q/A"
@@ -197,7 +197,7 @@ msgstr "Operatore non valido"
 
 #: ksweb/controllers/precondition/advanced.py:68
 msgid "Syntax error."
-msgstr "Errore di sintassi"
+msgstr "Errore di sintassi."
 
 #: ksweb/controllers/precondition/advanced.py:79
 #, python-format
@@ -314,7 +314,7 @@ msgstr " si è verificato un errore"
 
 #: ksweb/templates/error.xhtml:7
 msgid "Error "
-msgstr "Errore"
+msgstr "Errore "
 
 #: ksweb/templates/index.xhtml:3
 msgid "Welcome to KS Web"
@@ -543,7 +543,7 @@ msgid ""
 "workspace."
 msgstr ""
 "Questo è un nome univoco a cui ci si potrà riferire a questo oggetto nell’area "
-"di lavoro"
+"di lavoro."
 
 #: ksweb/templates/output/new.xhtml:59 ksweb/templates/qa/new.xhtml:98
 msgid "Choose a filter"
@@ -559,7 +559,7 @@ msgstr "Risposta disponibili"
 
 #: ksweb/templates/output/new.xhtml:86
 msgid "Please select the value of the answer that you want to use in your output."
-msgstr "Seleziona il valore di una risposta che vuoi usare nell’output"
+msgstr "Seleziona il valore di una risposta che vuoi usare nell’output."
 
 #: ksweb/templates/output/new.xhtml:91
 msgid ""
@@ -615,7 +615,7 @@ msgstr "Filtri"
 
 #: ksweb/templates/partials/user_menu.xhtml:5
 msgid " Account"
-msgstr "Profilo"
+msgstr " Profilo"
 
 #: ksweb/templates/partials/user_menu.xhtml:11
 msgid " Logout"
@@ -849,7 +849,7 @@ msgstr "of"
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:30
 msgid "60% Complete"
-msgstr "Completo al 60%"
+msgstr "60% al completamento"
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:43
 msgid "Modifica con versione nuova"
