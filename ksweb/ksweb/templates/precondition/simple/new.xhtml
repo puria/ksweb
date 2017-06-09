@@ -6,13 +6,13 @@
     <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
       <div class="form-group" style="padding-top: 20px">
         <div class="col-md-6 text-left ks-section-name">
-          Simple filter
+          ${_('Simple filter')}
         </div>
         <div class="col-md-6 text-right">
           {{#if saving}}
-          Saving...
+          ${_('Saving...')}
           {{else}}
-          <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
+          <button type="submit" class="btn btn-primary">${h.material_icon('save')} ${_('Save')}</button>
           {{/if}}
         </div>
       </div>
@@ -20,7 +20,7 @@
       <div class="form-group {{errors.question ? 'has-error' : ''}}">
         <div class="col-sm-3">
           <select id="selected_question" class="form-control" value="{{create.question}}">
-            <option value="" disabled selected>Select a question</option>
+            <option value="" disabled selected>${_('Select a question')}</option>
             {{#each questions}}
             <option value="{{._id}}">{{.title}}</option>
             {{/each}}
@@ -30,7 +30,7 @@
           <span class="help-block">{{errors.question}}</span>
           {{/if}}
         </div>
-           <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} Select the question to apply this filter.</label>
+           <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('Select the question to apply this filter.')}</label>
       </div>
 
       <div id="answer_type" class="form-group {{errors.answer_type ? 'has-error' : ''}}">
@@ -38,13 +38,13 @@
           <div class="radio">
             <label>
               <input type="radio" name="{{create.answer_type}}" value="have_response" disabled="{{edit_mode}}"/>
-              The question was just answered
+              ${_('The question was just answered')}
             </label>
           </div>
           <div class="radio">
             <label>
               <input type="radio" name="{{create.answer_type}}" value="what_response" checked=""/>
-                The user selects one of the following answers
+                ${_('The user selects one of the following answers')}
             </label>
           </div>
         </div>
@@ -75,13 +75,12 @@
 
       <div class="form-group {{errors.title ? 'has-error' : ''}}">
         <div class="col-sm-3">
-          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Label" value="{{create.title}}"/>
+          <input id="extra-fields-form-title" type="text" class="form-control" placeholder="${_('Label')}" value="{{create.title}}"/>
           {{#if errors.title}}
           <span class="help-block">{{errors.title}}</span>
           {{/if}}
         </div>
-          <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} This is a unique name that you will use to refer
-                 to this object in this workspace.</label>
+          <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
       </div>
 
      <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
@@ -257,7 +256,7 @@
       var question = questions.filter(by_id);
       if (!question.length) return;
       var q_title = question[0].title;
-      var suffix = (value.length) ? " -> "+value : " ANSWERED";
+      var suffix = (value.length) ? " -> " + value : '${_(" ANSWERED")}';
       ractive_precondition_simple.set('create.title', q_title+suffix);
   });
 </script>
