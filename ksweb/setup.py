@@ -78,7 +78,7 @@ setup(
     ]},
     message_extractors={'ksweb': [
         ('**.py', 'python', None),
-        ('templates/**.xhtml', 'kajiki', None),
+        ('templates/**.xhtml', 'kajiki', {'extract_python': True}),
         ('templates/**.html', 'genshi', None),
         ('public/**', 'ignore', None)
     ]},

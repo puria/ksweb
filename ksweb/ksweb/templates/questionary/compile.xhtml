@@ -6,7 +6,7 @@
         <![CDATA[
         <div class="form-group" style="padding-top: 20px">
             <div class="col-md-6 ks-section-name">
-                Complete the questionary: {{questionary.title}}
+                ${_('Complete the questionary')}: {{questionary.title}}
             </div>
 
         </div>
@@ -38,14 +38,14 @@
                 <div style="margin: 20px 0">Questionary completed</div>
                 {{/if}}
                 <button type="button" class="btn btn-{{previous_class}} questionary_control {{previous}}"
-                        on-click="previous_question" {{previous}}>Prev
+                        on-click="previous_question" {{previous}}>${_('Prev')}
                 </button>
                 {{#if saving}}
                 <!--?<button type="button" class="btn btn-info questionary_control disabled">Indietro</button>-->
-                <button type="button" class="btn btn-default questionary_control disabled">Saving...</button>
+                <button type="button" class="btn btn-default questionary_control disabled">${_('Saving...')}</button>
                 {{else}}
                 <button type="button" class="btn btn-{{next_class}} questionary_control {{next}}"
-                        on-click="submit_response" {{next}}>Next
+                        on-click="submit_response" {{next}}>${_('Next')}
                 </button>
                 {{/if}}
             </div>
@@ -59,7 +59,7 @@
             <button type="button" class="btn btn-primary disabled" on-click="print_questionary" disabled>${h.material_icon('print')}</button>
             {{/if}}
             <div class="col-md-6 text-left ks-section-name">
-                Questionary: {{questionary.title}}
+                ${_('Questionary')}: {{questionary.title}}
             </div>
             <div id="html" class="col-md-12 text-box ">
                 {{{html}}}

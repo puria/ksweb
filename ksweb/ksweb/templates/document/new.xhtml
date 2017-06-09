@@ -9,24 +9,24 @@
         <form id="document-form" class="form-horizontal" on-submit="submit-form">
             <div class="form-group" style="padding-top: 20px">
                 <div class="col-md-6 text-left ks-section-name">
-                    Document
+                    ${_("Document")}
                 </div>
                 <div class="col-md-6 text-right">
                     {{#if create._id}}
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createQuestionary">
-                    ${h.material_icon('create')} New questionary
+                    ${h.material_icon('create')} ${_("New questionary")}
                     </button>
                     {{/if}}
 
                     {{#if edit_mode}}
-                    <button type="button" class="btn btn-warning" onclick='ractive_document.create_output_plus();'>${h.material_icon('create')} Create OutputPlus</button>
+                    <button type="button" class="btn btn-warning" onclick='ractive_document.create_output_plus();'>${h.material_icon('create')} ${_("Create OutputPlus")}</button>
                     {{/if}}
 
                     {{#if saving}}
-                    Saving...
+                    ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} Save</button>
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} ${_("Save")}</button>
                     {{/if}}
                 </div>
             </div>
@@ -34,7 +34,7 @@
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="Titolo"
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="${_('Titolo')}"
                            value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
@@ -45,9 +45,9 @@
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
             <div class="col-md-3">
                 {{#if edit_mode}}
-                 <label for="extra-fields-form-description">Description</label>
+                 <label for="extra-fields-form-description">${_('Description')}</label>
                 {{/if}}
-                    <textarea id="extra-fields-form-description" class="form-control" placeholder="Descrizione"
+                    <textarea id="extra-fields-form-description" class="form-control" placeholder="${_('Description')}"
                              value="{{create.description}}" > {{create.description}} </textarea>
                     {{#if errors.description}}
                     <span class="help-block">{{errors.description}}</span>
@@ -57,9 +57,9 @@
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
                      {{#if edit_mode}}
-                 <label for="extra-fields-form-licence">Licence</label>
+                 <label for="extra-fields-form-licence">${_("Licence")}</label>
                 {{/if}}
-                    <input id="extra-fields-form-licence" type="text" class="form-control" placeholder="Licenza"
+                    <input id="extra-fields-form-licence" type="text" class="form-control" placeholder="${_('License')}"
                            value="{{create.licence}}"/>
                     {{#if errors.licence}}
                     <span class="help-block">{{errors.licence}}</span>
@@ -70,9 +70,9 @@
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
                      {{#if edit_mode}}
-                 <label for="extra-fields-form-version">Version</label>
+                 <label for="extra-fields-form-version">${_("Version")}</label>
                 {{/if}}
-                    <input id="extra-fields-form-version" type="text" class="form-control" placeholder="Versione"
+                    <input id="extra-fields-form-version" type="text" class="form-control" placeholder="${_('Version')}"
                            value="{{create.version}}"/>
                     {{#if errors.version}}
                     <span class="help-block">{{errors.version}}</span>
@@ -83,9 +83,9 @@
              <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
                      {{#if edit_mode}}
-                 <label for="extra-fields-form-tags">Tags</label>
+                 <label for="extra-fields-form-tags">${_("Tags")}</label>
                 {{/if}}
-                    <input id="extra-fields-form-tags" type="text" class="form-control" placeholder="Tags"
+                    <input id="extra-fields-form-tags" type="text" class="form-control" placeholder="${_('Tags')}"
                            value="{{create.tags}}"/>
                     {{#if errors.tags}}
                     <span class="help-block">{{errors.tags}}</span>
@@ -289,7 +289,7 @@
       var highlighted_text = selector.getSelectedText();
 
       if(highlighted_text == ''){
-        alert("ATTENTION: you don't have highlighted any text.");
+        alert('${_("ATTENTION: you don't have highlighted any text.")}');
         return;
       }
 
@@ -369,7 +369,7 @@
 
     CKEDITOR.instances.ks_editor.on('change', function(){
         jQuery(window).bind('beforeunload', function(){
-            return 'Unsaved data! Are you sure you want to leave?';
+            return "${_('Unsaved data! Are you sure you want to leave?')}";
         });
     });
   </script>
