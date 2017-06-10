@@ -10,7 +10,7 @@ class TestQaController(TestController):
         TestController.setUp(self)
         self.category = self._get_category('Categoria 1')
 
-    def test_access_permission_not_garanted(self):
+    def test_access_permission_not_granted(self):
         self.app.get('/qa/get_all', status=302)
 
     def test_access_permission_admin(self):
@@ -46,14 +46,11 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_params
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
-        pp = model.Precondition.query.find()
-        auto_precondition = model.Precondition.query.get(title=qa_text_params['title']+' -> RISPOSTA')
+        auto_precondition = model.Precondition.query.get(title=qa_text_params['title'] + ' -> RISPOSTA')
 
         assert qa_text
         assert resp['errors'] is None
         assert auto_precondition
-
-
 
     def test_post_valid_qa_single_with_not_valid_answers(self):
         self._login_lawyer()
@@ -66,7 +63,7 @@ class TestQaController(TestController):
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
-            'answers':''
+            'answers': ''
         }
 
         resp = self.app.post_json(
@@ -108,7 +105,7 @@ class TestQaController(TestController):
 
         qa_single = model.Qa.query.get(title=qa_text_single['title'])
         assert qa_single
-        assert resp['errors'] == None
+        assert resp['errors'] is None
 
     def test_post_valid_qa_multi_with_not_valid_answers(self):
         self._login_lawyer()
@@ -128,7 +125,6 @@ class TestQaController(TestController):
         )
         errors = resp.json['errors']
         assert errors['answers'] == "Aggiungete almeno una risposta", errors
-
 
         qa_text_multi_missing_one_answers = {
             'title': 'Title of QA',
@@ -167,7 +163,7 @@ class TestQaController(TestController):
 
         qa_multi = model.Qa.query.get(title=qa_text_multi['title'])
         assert qa_multi
-        assert errors == None
+        assert errors is None
 
     def test_get_one(self):
         self._login_lawyer()
@@ -184,13 +180,11 @@ class TestQaController(TestController):
             'answers': ['First', 'Second']
         }
 
-        resp = self.app.post_json(
-            '/qa/post', params=qa_text_multi,
-        )
+        self.app.post_json('/qa/post', params=qa_text_multi)
 
         qa = model.Qa.query.get(title=qa_text_multi['title'])
 
-        resp = self.app.get('/qa/get_one', params={'id':str(qa._id)}).json
+        resp = self.app.get('/qa/get_one', params={'id': str(qa._id)}).json
         assert resp['qa']['title'] == qa_text_multi['title']
         assert str(resp['qa']['_category']) == qa_text_multi['category']
         assert resp['qa']['question'] == qa_text_multi['question']
