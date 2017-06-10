@@ -46,7 +46,8 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_params
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
-        auto_precondition = model.Precondition.query.get(title=qa_text_params['title'] + ' -> RISPOSTA')
+        auto_precondition = model.Precondition.query.get(
+            title=qa_text_params['title'] + '-> RISPOSTA')
 
         assert qa_text
         assert resp['errors'] is None
@@ -202,5 +203,6 @@ class TestQaController(TestController):
         self.test_post_valid_qa_multi()
         self.test_post_valid_qa_single()
 
-        resp = self.app.get('/qa/get_single_or_multi_question', params=dict(workspace=self.category._id)).json
+        resp = self.app.get('/qa/get_single_or_multi_question',
+                            params=dict(workspace=self.category._id)).json
         assert len(resp['questions']) == 2
