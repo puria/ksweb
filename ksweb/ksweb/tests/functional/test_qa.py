@@ -19,7 +19,7 @@ class TestQaController(TestController):
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp_lawyer = self.app.get('/qa/get_all', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
@@ -29,7 +29,7 @@ class TestQaController(TestController):
         assert resp_admin.status_code == 200
 
     def test_post_valid_qa_text(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
         qa_text_params = {
@@ -46,7 +46,8 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_params
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
-        auto_precondition = model.Precondition.query.get(title=qa_text_params['title']+' -> ANSWERED')
+        pp = model.Precondition.query.find()
+        auto_precondition = model.Precondition.query.get(title=qa_text_params['title']+' -> RISPOSTA')
 
         assert qa_text
         assert resp['errors'] is None
@@ -55,7 +56,7 @@ class TestQaController(TestController):
 
 
     def test_post_valid_qa_single_with_not_valid_answers(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
         qa_text_single_missing_answers = {
@@ -71,7 +72,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Aggiungere almeno un'altra risposta"
+        assert resp['errors']['answers'] == "Aggiungete almeno una risposta"
 
         qa_text_single_missing_one_answers = {
             'title': 'Title of QA',
@@ -85,10 +86,10 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_one_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Aggiungere almeno un'altra risposta"
+        assert resp['errors']['answers'] == "Aggiungete almeno una risposta"
 
     def test_post_valid_qa_single(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
 
@@ -110,7 +111,7 @@ class TestQaController(TestController):
         assert resp['errors'] == None
 
     def test_post_valid_qa_multi_with_not_valid_answers(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         qa_text_multi_missing_answers = {
             'title': 'Title of QA',
@@ -126,7 +127,7 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_multi_missing_answers, status=412
         )
         errors = resp.json['errors']
-        assert errors['answers'] == "Aggiungere almeno un'altra risposta", errors
+        assert errors['answers'] == "Aggiungete almeno una risposta", errors
 
 
         qa_text_multi_missing_one_answers = {
@@ -142,10 +143,10 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_multi_missing_one_answers, status=412
         )
         errors = resp.json['errors']
-        assert errors['answers'] == "Aggiungere almeno un'altra risposta", errors
+        assert errors['answers'] == "Aggiungete almeno una risposta", errors
 
     def test_post_valid_qa_multi(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
 
@@ -169,7 +170,7 @@ class TestQaController(TestController):
         assert errors == None
 
     def test_get_one(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
 
@@ -201,7 +202,7 @@ class TestQaController(TestController):
         assert resp['qa']['_id'] == str(qa._id), "%s - %s" % (resp['qa']['_id'], qa._id)
 
     def test_get_single_or_multi_question(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         self.test_post_valid_qa_text()
         self.test_post_valid_qa_multi()

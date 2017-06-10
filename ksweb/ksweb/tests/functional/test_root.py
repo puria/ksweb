@@ -21,7 +21,7 @@ class TestRootController(TestController):
 
     """Tests for the method in the root controller."""
     def test_index(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp = self.app.get('/')
 
     def test_index_redirect(self):

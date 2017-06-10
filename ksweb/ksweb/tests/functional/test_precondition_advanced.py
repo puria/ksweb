@@ -19,12 +19,12 @@ class TestPreconditionAdvanced(TestController):
         assert resp_admin.status_code == 200
 
     def test_access_new_permission_lawyer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp_lawyer = self.app.get('/precondition/advanced/new', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_post_precondition_advanced(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         #  Devo creare almeno 1 qa con delle risposte
 
@@ -107,7 +107,7 @@ class TestPreconditionAdvanced(TestController):
         assert errors == None
 
     def test_qa_precondition_involved(self):
-        self._login_lavewr()
+        self._login_lawyer()
         self.test_post_precondition_advanced()
         precond = self._get_precond_by_title('Resp1 or Resp2')
         resp = self.app.get(
@@ -120,7 +120,7 @@ class TestPreconditionAdvanced(TestController):
         assert str(qa2._id) in resp['qas'].keys()
 
     def test_post_advanced_precondition_with_not_valid_id(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
@@ -153,7 +153,7 @@ class TestPreconditionAdvanced(TestController):
         assert errors is not None
 
     def test_post_advanced_operator_not_valid(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
@@ -182,7 +182,7 @@ class TestPreconditionAdvanced(TestController):
         assert errors is not None
 
     def test_post_advanced_operator_and_condition_not_valid(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
@@ -211,7 +211,7 @@ class TestPreconditionAdvanced(TestController):
         assert errors is not None
 
     def test_post_advanced_condition_syntax_error(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 

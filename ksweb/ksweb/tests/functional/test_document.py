@@ -18,7 +18,7 @@ class TestDocument(TestController):
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp_lawyer = self.app.get('/document', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
@@ -28,7 +28,7 @@ class TestDocument(TestController):
         assert resp_admin.status_code == 200
 
     def test_creation_document(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
 

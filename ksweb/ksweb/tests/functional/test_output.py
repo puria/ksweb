@@ -19,7 +19,7 @@ class TestOutput(TestController):
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp_lawyer = self.app.get('/output', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
@@ -29,7 +29,7 @@ class TestOutput(TestController):
         assert resp_admin.status_code == 200
 
     def test_creation_output(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
         precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
@@ -52,7 +52,7 @@ class TestOutput(TestController):
         assert resp['errors'] is None, resp
 
     def test_creation_output_with_fake_qa_related(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         category1 = self._get_category('Categoria 1')
         precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
@@ -139,7 +139,7 @@ class TestOutput(TestController):
         assert resp['errors'] is not None, resp
 
     def test_edit_output(self):
-        self._login_lavewr()
+        self._login_lawyer()
         self.test_creation_output()
         out = self._get_output_by_title('Title of Output')
         resp = self.app.get(
@@ -148,7 +148,7 @@ class TestOutput(TestController):
         assert out._id in resp
 
     def test_creation_output_with_errors(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         output_params = {
             'title': '1',
@@ -170,7 +170,7 @@ class TestOutput(TestController):
         assert output is None
 
     def test_sidebar_output(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         self._create_fake_output("Out1", category1._id)
         self._create_fake_output("Out2", category1._id)
@@ -179,7 +179,7 @@ class TestOutput(TestController):
         assert "Out2" in resp
 
     def test_human_readable_details(self):
-        self._login_lavewr()
+        self._login_lawyer()
 
         out1 = self._create_fake_output("Out1")
 
