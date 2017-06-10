@@ -88,3 +88,28 @@ class TestDocument(TestController):
         assert updated_document._id == original_document._id
         assert resp['errors'] is None, resp
 
+
+    def test_human_readable_details(self):
+        self._login_lawyer()
+        document = self._create_fake_document("Document")
+        resp = self.app.get('/document/human_readable_details', params={'_id': document._id})
+        assert document._id in resp
+
+
+    def test_document_export(self):
+        self._login_lawyer()
+        document = self._create_fake_document("Document")
+        response = self.app.get('/document/export',
+                     params=dict(_id=str(document._id)))
+        assert "fake_tooltip_Document" in response.body
+
+
+    def test_document_import(self):
+        self._login_lawyer()
+        workspace = self._get_category("Categoria 1")
+        response = self.app.post('/document/import_document',
+                     params=dict(workspace=str(workspace._id)),
+                     upload_files=[('file_import',
+                                    'ksweb/tests/functional/document_to_import.json')])
+        r = response.follow()
+        assert "Document successfully imported!" in r
