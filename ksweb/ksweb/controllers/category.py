@@ -2,7 +2,7 @@
 """Category controller module"""
 from bson import ObjectId
 from pymongo.errors import DuplicateKeyError
-from tg import decode_params
+from tg import decode_params, predicates
 from tg import expose, validate, RestController, validation_errors_response
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator
@@ -14,8 +14,8 @@ from tg.i18n import ugettext as _, lazy_ugettext as l_
 
 
 class CategoryController(RestController):
-    # Uncomment this line if your controller requires an authenticated user
-    # allow_only = predicates.not_anonymous()
+    allow_only = predicates.has_any_permission('manage', 'lawyer', msg=l_('Only for admin or lawyer'))
+
 
     @expose('json')
     @validate({
