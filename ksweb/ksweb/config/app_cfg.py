@@ -155,12 +155,12 @@ webassets.plugme(base_config, bundles={
 })
 
 
-try:
-    # Enable DebugBar if available, install tgext.debugbar to turn it on
-    from tgext.debugbar import enable_debugbar
-    enable_debugbar(base_config)
-except ImportError:
-    pass
+# try:
+#     # Enable DebugBar if available, install tgext.debugbar to turn it on
+#     from tgext.debugbar import enable_debugbar
+#     enable_debugbar(base_config)
+# except ImportError:
+#     pass
 
 
 from tgext.pluggable import plug

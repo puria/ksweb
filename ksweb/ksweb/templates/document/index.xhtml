@@ -80,14 +80,11 @@
 <script>
     <![CDATA[
     jQuery(document).ready(function () {
-        $(document).on("click", ".export", function(){
+        $(document).on("click", ".export,.esporta", function(){
             var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
-
            window.location = "${tg.url("/document/export")}?_id=" + row_id;
-
-
         });
-        $(document).on("click", ".create_questionary", function(){
+        $(document).on("click", ".create_questionary, .crea_questionario", function(){
 
             $('#createQuestionary').modal();
         });
