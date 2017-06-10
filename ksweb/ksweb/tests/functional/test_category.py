@@ -80,7 +80,7 @@ class TestCategory(TestController):
                 'workspace_id': str(category._id),
             }
         )
-        
+
         c = self._get_category("fake_category")
         q = self._get_qa_by_title("fake_qa")
 
