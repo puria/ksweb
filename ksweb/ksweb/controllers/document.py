@@ -7,22 +7,24 @@ import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import import_output, export_outputs
-from tg import expose, tmpl_context, predicates, RestController, request, validate, validation_errors_response
+from tg import expose, tmpl_context, predicates, RestController, request, validate, \
+    validation_errors_response
 from tg import redirect
 from tg import response
 from tg.decorators import paginate, decode_params, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
 from tw2.core import StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, DocumentExistValidator, DocumentContentValidator
-from ksweb.lib.forms import UploadFileForm
+from ksweb.lib.validator import CategoryExistValidator, DocumentExistValidator,\
+    DocumentContentValidator
 
 
 class DocumentController(RestController):
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "documents"
 
-    allow_only = predicates.has_any_permission('manage', 'lawyer', msg=l_('Only for admin or lawyer'))
+    allow_only = predicates.has_any_permission('manage', 'lawyer',
+                                               msg=l_('Only for admin or lawyer'))
 
     @expose('ksweb.templates.document.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
@@ -31,10 +33,11 @@ class DocumentController(RestController):
         return dict(
             page='document-index',
             fields={
-                'columns_name': [_('Title'), _('Description'),_('Version'), _('License')],
+                'columns_name': [_('Title'), _('Description'), _('Version'), _('License')],
                 'fields_name': ['title', 'description', 'version', 'licence']
             },
-            entities=model.Document.document_available_for_user(request.identity['user']._id, workspace=workspace),
+            entities=model.Document.document_available_for_user(request.identity['user']._id,
+                                                                workspace=workspace),
             actions_content=[_('Export'), _('Create Questionary')],
             workspace=workspace,
             download=True
@@ -88,7 +91,8 @@ class DocumentController(RestController):
         'version': StringLengthValidator(min=0, max=100),
         'tags': StringLengthValidator(min=0),
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id',
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'),
+                                  field='_id',
                                   entity_model=model.Document))
     def put(self, _id, title, content, category, description, licence, version, tags, **kw):
 
@@ -113,7 +117,8 @@ class DocumentController(RestController):
         '_id': DocumentExistValidator(required=True),
         'workspace': CategoryExistValidator(required=True)
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'), field='_id',
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'),
+                                  field='_id',
                                   entity_model=model.Document))
     def edit(self, _id, workspace, **kw):
         tmpl_context.sidebar_document = "document-new"
@@ -126,7 +131,7 @@ class DocumentController(RestController):
         '_id': DocumentExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id, **kw):
-        #TODO implement something meaningful
+        # TODO: implement something meaningful
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
         return dict(document=document)
 
@@ -136,12 +141,13 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     def export(self, _id):
         document = model.Document.query.get(_id=ObjectId(_id)).__json__()
-        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % _id)))
+        response.headerlist.append(('Content-Disposition',
+                                    str('attachment;filename=%s.json' % _id)))
         document.pop('_category', None)
         document.pop('_id', None)
         document.pop('entity', None)
-        document['outputs'],  document['advanced_preconditions'], document['simple_preconditions'], document['qa'] = \
-            dict(), dict(), dict(), dict()
+        document['outputs'] = document['advanced_preconditions'] = {}
+        document['simple_preconditions'] = document['qa'] = {}
         for output in document['content']:
             export_outputs(output['content'], document)
         return document
@@ -155,8 +161,14 @@ class DocumentController(RestController):
         content = []
         values = {}
         for output in imported_document['content']:
-            c = {'type': output['type'], 'title': output['title'], 'content': str(
-                import_output(imported_document, str(output['content']), imported_document['_owner'], workspace))}
+            c = {
+                'type': output['type'],
+                'title': output['title'],
+                'content': str(import_output(imported_document,
+                                             str(output['content']),
+                                             imported_document['_owner'],
+                                             workspace))
+            }
             content.append(c)
             values['output_' + output['content']] = '${output_' + c['content'] + '}'
         html = Template(imported_document['html']).safe_substitute(**values)
