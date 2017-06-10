@@ -19,7 +19,7 @@ class TestPreconditionSimple(TestController):
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp_lawyer = self.app.get('/precondition',  params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
@@ -29,7 +29,7 @@ class TestPreconditionSimple(TestController):
         assert resp_admin.status_code == 200
 
     def test_post_precondition_simple_what_response(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
@@ -62,7 +62,7 @@ class TestPreconditionSimple(TestController):
         assert errors == None
 
     def test_post_precondition_advanced_what_response(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
@@ -95,7 +95,7 @@ class TestPreconditionSimple(TestController):
         assert errors == None
 
     def test_post_precondition_advanced_have_response(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
@@ -128,7 +128,7 @@ class TestPreconditionSimple(TestController):
         assert errors == None
 
     def test_post_precondition_advanced_what_response_error(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
@@ -158,7 +158,7 @@ class TestPreconditionSimple(TestController):
         assert errors is not None
 
     def test_sidebar_precondition(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
 
         self._create_fake_simple_precondition('Precond1', category1._id)
@@ -172,7 +172,7 @@ class TestPreconditionSimple(TestController):
 
 
     def test_available_preconditions(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')

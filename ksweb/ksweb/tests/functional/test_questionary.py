@@ -22,12 +22,12 @@ class TestQuestionaryController(TestController):
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         resp_lawyer = self.app.get('/questionary', params=dict(workspace=self.category._id))
         assert resp_lawyer.status_code == 200
 
     def test_questionary_create(self):
-        self._login_lavewr()
+        self._login_lawyer()
         doc = self._create_fake_document('Fake1')
         resp = self.app.post_json('/questionary/create', params={
             'questionary_title': 'TestQuestionary',
@@ -37,7 +37,7 @@ class TestQuestionaryController(TestController):
         assert resp
 
     def test_compile_questionary(self):
-        self._login_lavewr()
+        self._login_lawyer()
         questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
@@ -48,7 +48,7 @@ class TestQuestionaryController(TestController):
 
     def test_responde_questionary(self):
 
-        self._login_lavewr()
+        self._login_lawyer()
         questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
 
         resp = self.app.get('/questionary/compile.json', params={
@@ -67,7 +67,7 @@ class TestQuestionaryController(TestController):
         assert resp['quest_compiled']['completed'] is True, resp
 
     def test_hack_response(self):
-        self._login_lavewr()
+        self._login_lawyer()
         questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
@@ -83,7 +83,7 @@ class TestQuestionaryController(TestController):
 
 
     def test_compile_advanced_questionary(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
@@ -151,7 +151,7 @@ class TestQuestionaryController(TestController):
 
 
     def test_compile_advanced_questionary_not_showing_two_time_same_answer(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')

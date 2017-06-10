@@ -13,7 +13,7 @@ class TestValidators(TestController):
     application_under_test = 'main'
 
     def test_qa_exist_validator(self):
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         qa_params = {
             'title': 'Title of QA',
@@ -174,7 +174,7 @@ class TestValidators(TestController):
                 assert False
 
     def test_output_content_validator(self):
-        self._login_lavewr()
+        self._login_lawyer()
         qa1 = self._create_qa('FakeQa1', self._get_category('Categoria 1')._id, 'Di che sesso sei', 'tooltip', 'link',
                               'text', '')
 
@@ -296,7 +296,7 @@ class TestValidators(TestController):
                 assert False
 
     def test_questionary_exist_validator(self):
-        self._login_lavewr()
+        self._login_lawyer()
         fake_questionary = self._create_fake_questionary('Test_validator')
         validator = QuestionaryExistValidator()
         try:

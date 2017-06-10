@@ -79,7 +79,7 @@ class TestController(object):
             '/login_handler?login=admin&password=adminks', status=302
         )
 
-    def _login_lavewr(self):
+    def _login_lawyer(self):
         self.app.get('/login_handler?login=lawyer&password=lawyerks', status=302)
 
     def _get_user(self, email_address):
@@ -191,7 +191,7 @@ class TestController(object):
         :param title: title of the precondition
         :return: the created precondition
         """
-        self._login_lavewr()
+        self._login_lawyer()
         category1 = self._get_category('Categoria 1')
         #  Devo creare almeno 1 qa con delle risposte
 
