@@ -57,13 +57,8 @@ class DocumentController(RestController):
         'version': StringLengthValidator(min=0, max=100),
         'tags': StringLengthValidator(min=0, max=100)
     }, error_handler=validation_errors_response)
-    def post(self, title, category, description, licence, version, tags, content=[],   **kw):
-
-        if not content:
-            content = []
-
+    def post(self, title, category, description, licence, version, tags, content=[], **kw):
         user = request.identity['user']
-
         tags = tags.strip().split(',') if tags else []
 
         model.Document(
@@ -129,9 +124,9 @@ class DocumentController(RestController):
     @decode_params('json')
     @validate({
         '_id': DocumentExistValidator(required=True),
-
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id, **kw):
+        #TODO implement something meaningful
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
         return dict(document=document)
 
@@ -179,5 +174,5 @@ class DocumentController(RestController):
             tags=imported_document['tags']
         )
         model.DBSession.flush_all()
-        tg.flash('Document successfully imported!')
+        tg.flash(_('Document successfully imported!'))
         return redirect(tg.url('/document', params=dict(workspace=workspace)))
