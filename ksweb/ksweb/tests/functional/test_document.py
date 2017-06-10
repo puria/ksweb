@@ -2,6 +2,7 @@
 from ksweb.tests import TestController
 from ksweb import model
 
+
 class TestDocument(TestController):
     application_under_test = 'main'
 
@@ -81,13 +82,11 @@ class TestDocument(TestController):
             '/document/put', params=document_params
         ).json
 
-
         updated_document = self._get_document_by_title(document_params['title'])
 
         assert updated_document
         assert updated_document._id == original_document._id
         assert resp['errors'] is None, resp
-
 
     def test_human_readable_details(self):
         self._login_lawyer()
@@ -95,21 +94,18 @@ class TestDocument(TestController):
         resp = self.app.get('/document/human_readable_details', params={'_id': document._id})
         assert document._id in resp
 
-
     def test_document_export(self):
         self._login_lawyer()
         document = self._create_fake_document("Document")
-        response = self.app.get('/document/export',
-                     params=dict(_id=str(document._id)))
+        response = self.app.get('/document/export', params=dict(_id=str(document._id)))
         assert "fake_tooltip_Document" in response.body
-
 
     def test_document_import(self):
         self._login_lawyer()
         workspace = self._get_category("Categoria 1")
         response = self.app.post('/document/import_document',
-                     params=dict(workspace=str(workspace._id)),
-                     upload_files=[('file_import',
-                                    'ksweb/tests/functional/document_to_import.json')])
+                                 params=dict(workspace=str(workspace._id)),
+                                 upload_files=[('file_import',
+                                                'ksweb/tests/functional/document_to_import.json')])
         r = response.follow()
         assert "Document successfully imported!" in r
