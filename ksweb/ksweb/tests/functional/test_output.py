@@ -184,3 +184,32 @@ class TestOutput(TestController):
         resp = self.app.get('/output/human_readable_details', params={'_id': out1._id})
         assert 'human_readbale_content' in resp
         assert out1._id in resp
+
+class TestOutputPlus(TestController):
+    application_under_test = 'main'
+
+    def setUp(self):
+        TestController.setUp(self)
+        self.category = self._get_category('Categoria 1')
+
+    def test_output_plus_creation(self):
+        self._login_lawyer()
+        self.app.get('/output_plus/post', params=dict(
+            highlighted_text='output_plus',
+            workspace=str(self.category._id),
+        ), status=200)
+
+        qa = self._get_qa_by_title('Domanda per l\'Output output_plus')
+        assert qa
+
+    def test_output_plus_with_nested_output(self):
+        self._login_lawyer()
+        nested_output = self._create_fake_output("nested_output")
+        self.app.post_json('/output_plus/post', params=dict(
+            highlighted_text='output_plus',
+            workspace=str(self.category._id),
+            list_=["output_%s" % str(nested_output._id)],
+        ), status=200)
+
+        qa = self._get_qa_by_title('Domanda per l\'Output output_plus')
+        assert qa
