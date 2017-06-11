@@ -71,7 +71,7 @@ class TestOutput(TestController):
                     "content": str(fake_qa._id),
                     "type": "qa_response",
                     "title": fake_qa.title
-               }
+                }
             ]
         }
 
@@ -101,8 +101,6 @@ class TestOutput(TestController):
             '/output/put', params=output_params
         ).json
 
-        print resp
-
         output_updated = self._get_output_by_title('Title of Output edited')
         assert output_updated, output_updated
         assert output_updated._id == output1._id
@@ -128,7 +126,7 @@ class TestOutput(TestController):
                     "content": str(fake_qa._id),
                     "type": "qa_response",
                     "title": fake_qa.title
-               }
+                }
             ]
         }
 
