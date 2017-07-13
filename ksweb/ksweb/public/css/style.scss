@@ -1,0 +1,167 @@
+@import "palette.scss";
+
+$footer_height: 10vh;
+
+/* TurboGears flash bootstrap look */
+#flash > div {
+  padding: 8px 35px 8px 14px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  color: lavender;
+
+  a {
+    color: $white;
+    text-decoration: underline;
+    font-weight: bolder;
+  }
+
+  &.ok {
+    background-color: $green;
+    border-color: $green;
+  }
+
+  &.error {
+    background-color: indianred;
+    border-color: indianred;
+  }
+
+  &.info {
+    background-color: $dark-blue;
+    border-color: $dark-blue;
+  }
+}
+
+
+
+.footer {
+  height: $footer_height;
+  width: 100%;
+  background-color: $dark-blue;
+
+  p {
+    padding-top: 34px;
+    color: white;
+    span {
+      color: $red;
+    }
+  }
+}
+
+/* Layout style for sidebar and content */
+html, body,
+.ks-container, .ks-row {
+  height: 100%;
+}
+
+.ks-sidebar {
+  background: $light-gray;
+  overflow: auto;
+  height: 100%;
+}
+
+.ks-section-name {
+  font-size: 18px;
+  color: $dark-blue;
+  font-weight: bold;
+}
+
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td{
+  border: none;
+}
+
+thead tr {
+  background-color: $very-light-blue;
+}
+
+.table>tbody>tr>td {
+  border-bottom: 1px solid $very-light-blue;
+}
+
+
+.table-hover>tbody>tr:hover {
+  background-color: $very-light-blue;
+}
+
+.table > thead:first-child > tr:first-child > th{
+  color: $dark-blue;
+  font-size: 12px;
+
+}
+
+.material-icon-add_circle_outline_rotate {
+  z-index: 2;
+  -webkit-transform: rotate(-315deg);
+  transform: rotate(-315deg);
+}
+
+.cursor-pointer {
+  cursor:pointer;
+}
+
+
+/* Questionary temporaney Style */
+.questionary_control {
+  border-radius: 20px;
+}
+
+.a_standard {
+  color: #0072e5;
+}
+
+.a_standard:hover {
+  color: #004c99;
+}
+
+.padding-30 {
+  padding: 30px;
+}
+
+hr {
+  border-bottom: 2px solid $dark-blue;
+}
+
+.table-row{
+    white-space: nowrap;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#create-filter {
+  display: inline-block;
+}
+
+
+.response{
+  display: inline-block;
+}
+
+.response-text {
+   width: auto;
+  min-width: 0;
+  margin:0.1% auto;
+}
+
+.text-box {
+  padding-top: 20px;
+  font-size: 14px;
+}
+
+.ws:hover {
+  color: #0072e5;
+  cursor: pointer;
+}
+
+.ws{
+  font-size: 18px;
+}
+
+.help-text {
+  color: $grey;
+  font-weight: normal;
+}
