@@ -1,0 +1,18 @@
+syntax: glob
+
+devdata.db
+.git
+*.pyc
+*.pyo
+.idea
+venv
+env
+*.egg
+*.egg-info
+.coverage
+*.swp
+*.DS_Store
+*.orig
+ksweb/ksweb/public/.webassets-cache/*
+mail
+assets

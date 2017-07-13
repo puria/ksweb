@@ -1,0 +1,4 @@
+repository_id: ksweb
+repository: http://repo.axant.it/hg/{{repository_id}}
+project_id: 570f73205d37c93234b65304
+
