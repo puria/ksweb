@@ -34,10 +34,10 @@ testpkgs = [
 ]
 
 install_requires = [
-    "TurboGears2 >= 2.3.8",
+    "TurboGears2 >= 2.3.10",
     "Beaker >= 1.8.0",
     "Genshi",
-    "Kajiki >= 0.3.5",
+    "Kajiki >= 0.6.0",
     "ming>=0.4.3",
     "repoze.who",
     "tw2.forms",
