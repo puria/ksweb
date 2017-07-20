@@ -51,6 +51,9 @@
         label i.material-icons:hover {
             color: black;
         }
+        .media-middle.material-icon-add_circle_outline {
+            font-size: 40px;
+        }
     </style>
     <script id="QAForm_template" type="text/html">
         <![CDATA[
@@ -95,7 +98,7 @@
             <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
                 <div class="col-sm-3">
                     <select id="form-precondition" class="form-control" value="{{create.precondition}}">
-                        <option value="" selected>${_("Choose a filter")}</option>
+                        <option value="" selected>${_("Add an optional filter to this Q/A")}</option>
                         {{#each preconditions}}
                         <option value="{{._id}}">{{.title}}</option>
                         {{/each}}
@@ -122,17 +125,17 @@
                 <div class="col-sm-10">
                     <label>
                         <input id="single" type="radio" name="{{answer_type}}" value="single"
-                               onclick="ractive_qa.switchResponseType('single');"/>
+                                                                               onclick="ractive_qa.switchResponseType('single');"/>
                         <img src="${tg.url('/img/radio_single.png')}" alt="Single"/>
                     </label>
                     <label>
                         <input id="multi" type="radio" name="{{answer_type}}" value="multi"
-                               onclick="ractive_qa.switchResponseType('multi');"/>
+                                                                              onclick="ractive_qa.switchResponseType('multi');"/>
                         <img src="${tg.url('/img/radio_multi.png')}" alt="Multi"/>
                     </label>
                     <label>
                         <input id="text" type="radio" name="{{answer_type}}" value="text"
-                               onclick="ractive_qa.switchResponseType('text');"/>
+                                                                             onclick="ractive_qa.switchResponseType('text');"/>
                         <img src="${tg.url('/img/radio_text.png')}" alt="Text"/>
                     </label>
                     {{#if errors.answer_type}}
@@ -152,7 +155,7 @@
 
                     {{#if .editable}}
                     <textarea id="{{.answer}}" class="form-control response response-text" autofocus
-                              value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
+                                               value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
 
                     {{else}}
                     <div id={{.answer}} class="response" onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
@@ -169,8 +172,8 @@
                 <div class="col-md-3">
                     <div class="form-inline">
 
-                        <textarea id="response_text" class="form-control" placeholder="${_('Answer')}"> </textarea>
-                        <label for="response_text"
+                        <textarea id="response_text" class="form-control" placeholder="${_('Insert an option of Answer and click on +')}"> </textarea>
+                        <label for="response_text" style="font-size: 26px;"
                                onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
                     </div>
                 </div>
