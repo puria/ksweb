@@ -471,7 +471,7 @@ msgid "KS | Documenti"
 msgstr "KS | Documenti"
 
 #: ksweb/templates/document/new.xhtml:292 ksweb/templates/output/new.xhtml:249
-msgid "ATTENTION: you don't have highlighted any text."
+msgid "ATTENTION: you dont have highlighted any text."
 msgstr "ATTENZIONE: nessun testo è stato selezionato."
 
 #: ksweb/templates/document/new.xhtml:372 ksweb/templates/output/new.xhtml:345
