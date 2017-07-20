@@ -47,17 +47,17 @@ def bootstrap(command, conf, vars):
     u2.password = 'userks'
 
     c0 = model.Category(
-        name="Altro",
+        name="Area 1",
         visible=True
     )
 
     c1 = model.Category(
-        name="Categoria 1",
+        name="Area 2",
         visible=True
     )
 
     c2 = model.Category(
-        name="Categoria 2",
+        name="Area 51",
         visible=True
     )
 
