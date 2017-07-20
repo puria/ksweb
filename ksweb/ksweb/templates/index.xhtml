@@ -105,7 +105,7 @@
 
                 <div>
                     {{#each workspaces}}
-                    <a class="col-md-3 box btn btn-info" href="${tg.url('/qa?workspace={{._id}}')}">
+                    <a class="col-md-3 box btn btn-info" href="${tg.url('/welcome?workspace={{._id}}')}">
 
                         <div>{{.name}}</div>
                         <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>

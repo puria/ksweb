@@ -26,6 +26,7 @@ from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
 from ksweb import model
+from bson import ObjectId
 from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
@@ -78,6 +79,12 @@ class RootController(BaseController):
         categories = model.Category.query.find({'visible': True}).sort('_id').all()
         return dict(page='index', user=user, workspaces=categories, show_sidebar=False)
 
+    @expose('ksweb.templates.welcome')
+    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    def welcome(self, workspace):
+        user = request.identity['user']
+        ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()
+        return dict(page='welcome', user=user, workspace=workspace, ws=ws, show_sidebar=True)
 
     @expose('ksweb.templates.login')
     def login(self, came_from=lurl('/'), failure=None, login=''):
