@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Knowledge Shaper, Open Source Knoledge Base Application
-#    Copyright (c) 2015-TODAY Studiolegale.it <http://studiolegale.it>
+#    Knowledge Shaper, Collaborative knowledge tools editor
+#    Copyright (c) 2017-TODAY StudioLegale.it <http://studiolegale.it>
+#                             AXANT.it <http://axant.it>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
