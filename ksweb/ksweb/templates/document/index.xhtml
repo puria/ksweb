@@ -91,7 +91,8 @@
         });
         $(document).on("click", "#submit-questionary", function(){
             var self = this;
-            var row_id = jQuery('.create_questionary').parent().parent().parent().parent().find(".actions").data("row-id");
+            var row_id = jQuery('.create_questionary, .crea_questionario').parent().parent().parent().parent().find
+            (".actions").data("row-id");
 
 
             var questionary_params = {
