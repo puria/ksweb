@@ -86,6 +86,22 @@ class RootController(BaseController):
         ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()
         return dict(page='welcome', user=user, workspace=workspace, ws=ws, show_sidebar=True)
 
+    @expose('ksweb.templates.terms')
+    def terms(self):
+        return ''
+
+    @expose('ksweb.templates.privacy')
+    def privacy(self):
+        return ''
+
+    @expose('ksweb.templates.legal')
+    def legal(self):
+        return dict()
+
+    @expose('ksweb.templates.source')
+    def source(self):
+        return dict()
+
     @expose('ksweb.templates.login')
     def login(self, came_from=lurl('/'), failure=None, login=''):
         """Start the user login."""
