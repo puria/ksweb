@@ -54,12 +54,13 @@ def _upcast(obj):
     values = dict()
 
     # qa_response and output only
-    for c in obj.content:
-        if c['type'] == 'output':
-            values['output_' + c['content']] = editor_widget_template_for_output(id_=c['content'], title=c['title'])
-        else:
-            # qa_response
-            values['qa_' + c['content']] = editor_widget_template_for_qa(id_=c['content'], title=c['title'])
+    if obj.content:
+        for c in obj.content:
+            if c['type'] == 'output':
+                values['output_' + c['content']] = editor_widget_template_for_output(id_=c['content'], title=c['title'])
+            else:
+                # qa_response
+                values['qa_' + c['content']] = editor_widget_template_for_qa(id_=c['content'], title=c['title'])
 
     return Template(obj.html).safe_substitute(**values)
 
