@@ -22,21 +22,21 @@ class OutputPlusController(RestController):
                 _owner=user._id,
                 _category=workspace,
                 _parent_precondition=None,
-                title=_(u'Domanda per l\'Output ') + first_5_words,
-                question=_(u'Inserisci ') + first_5_words,
+                title=_(u'Question for Output ') + first_5_words,
+                question=_(u'Add ') + first_5_words,
                 tooltip=None,
                 link=None,
                 type='multi',
-                answers=[_(u'Attiva ') + first_5_words],
+                answers=[_(u'Start ') + first_5_words],
                 public=True,
                 visible=True)
 
         precondition = model.Precondition(
             _owner=user._id,
             _category=workspace,
-            title=_(u'Filtro per l\'Output ') + first_5_words,
+            title=_(u'Filter for Ouput ') + first_5_words,
             type='simple',
-            condition=[qa._id, _(u'Attiva ') + first_5_words])
+            condition=[qa._id, _(u'Start ') + first_5_words])
 
         content = []
         for elem in list_:

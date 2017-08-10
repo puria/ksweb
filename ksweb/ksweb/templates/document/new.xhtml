@@ -1,6 +1,6 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">KS | Documenti</title>
+    <title py:block="master_title">KS | Documents</title>
 
     <script src="${tg.url('/javascript/ckeditor/ckeditor.js')}"></script>
 
@@ -15,7 +15,7 @@
                     {{#if create._id}}
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createQuestionary">
-                    ${h.material_icon('create')} ${_("New questionary")}
+                    ${h.material_icon('create')} ${_("New Questionary")}
                     </button>
                     {{/if}}
 
@@ -34,7 +34,7 @@
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="${_('Titolo')}"
+                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="${_('Title')}"
                            value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>

@@ -11,20 +11,20 @@
 
       <div class="row" style="padding-top: 20px">
         <div class="col-md-12 text-left ks-section-name">
-          ${_('Risoluzione manuale')}
+          ${_('Manual resolving')}
 
           <a href="${tg.url('/resolve/discard_changes', params=dict(workspace=workspace))}"
-           onclick="return confirm('${_('Continuando verranno perse tutte le modifiche. Continuare?')}')">
+           onclick="return confirm('${_('If you continue all edits will be lost. Continue?')}')">
           <button
               type="button"
               class="pull-right btn btn-danger"
               data-toggle="tooltip"
-              title="${_('Cancella tutte le modifiche effettuate')}">
-            ${_('Termina risoluzione')}</button>
+              title="${_('Cancel all the edits')}">
+            ${_('Leave the procedure')}</button>
           </a>
 
           <hr/>
-          {{total - related_entities.length}} ${_('di')} {{total}}
+          {{total - related_entities.length}} ${_('of')} {{total}}
           <div class="progress">
               <div class="progress-bar" role="progressbar" aria-valuenow="{{related_entities.length}}" aria-valuemin="0" aria-valuemax="{{total}}" style="width: {{(total - related_entities.length)/total*100}}%;">
                 <span class="sr-only">${_('60% Complete')}</span>
@@ -40,21 +40,21 @@
             </div>
             <div class="row">
               <div class="col-md-6">
-                <button class="btn btn-warning" on-click="addToList:{{related_entities[0]}},'new'">${_('Modifica con versione nuova')}</button>
+                <button class="btn btn-warning" on-click="addToList:{{related_entities[0]}},'new'">${_('Modify with new version')}</button>
                 <br/>
-                ${_('L\'oggetto in questione viene modificato e lascia il vecchio riferimento')}
+                ${_('This object is modified and keeps the previous reference')}
               </div>
               <div class="col-md-6">
-                <button class="btn btn-info" on-click="addToList:{{related_entities[0]}},'old'">${_('Tieni versione vecchia')}</button>
+                <button class="btn btn-info" on-click="addToList:{{related_entities[0]}},'old'">${_('Use the previous version')}</button>
                 <br/>
-                ${_('Crea un nuovo oggetto moodificato e lascia il vecchio riferimento')}
+                ${_('Create a new modified object and use the previous reference')}
               </div>
             </div>
           </div>
           {{/if}}
           <div class="col-md-3">
              <ul class="list-group">
-              <li class="list-group-item list-group-item-success">${_('Si riferiscono al nuovo')}</li>
+              <li class="list-group-item list-group-item-success">${_('They refer to the new one')}</li>
               {{#each list_change_to_new}}
                <li class="list-group-item text-center">({{.entity}}) - {{.title}}</li>
               {{/each}}
@@ -62,7 +62,7 @@
           </div>
           <div class="col-md-3">
            <ul class="list-group">
-            <li class="list-group-item list-group-item-danger">${_('Si riferiscono al vecchio')}</li>
+            <li class="list-group-item list-group-item-danger">${_('They refer to the previous one')}</li>
             {{#each list_change_to_old}}
              <li class="list-group-item text-center">({{.entity}}) - {{.title}}</li>
             {{/each}}
@@ -71,7 +71,7 @@
 
 
           {{#if related_entities.length == 0}}
-          <button class="btn btn-success" on-click="apply:{{}}">${_('Applica')}</button>
+          <button class="btn btn-success" on-click="apply:{{}}">${_('Apply')}</button>
           {{/if}}
 
         </div>
