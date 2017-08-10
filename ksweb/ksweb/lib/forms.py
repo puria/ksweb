@@ -31,7 +31,7 @@ class ResetPasswordForm(twf.Form):
                 '''
         email_address = TextField(label=l_('Email address'), validator=RegisteredUserValidator(required=True), css_class="form-control",placeholder=l_('Email address'))
 
-    submit = SubmitButton(css_class="btn btn-primary", value=l_("Invia"))
+    submit = SubmitButton(css_class="btn btn-primary", value=l_("Send"))
 
     action = lurl('/reset_request')
 
@@ -64,7 +64,7 @@ class NewPasswordForm(twf.Form):
 
                 '''
         data = HiddenField()
-        password = PasswordField(label=l_('New password'), validator=Validator(required=True), css_class='form-control', placeholder=l_('Nuova password'))
+        password = PasswordField(label=l_('New password'), validator=Validator(required=True), css_class='form-control', placeholder=l_('New password'))
         password_confirm = PasswordField(label=l_('Confirm new password'), validator=Validator(required=True), css_class='form-control', placeholder=l_('Confirm password'))
         validator = FieldsMatch('password', 'password_confirm')
 

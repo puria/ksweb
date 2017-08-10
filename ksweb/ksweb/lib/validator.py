@@ -18,10 +18,10 @@ class QAExistValidator(Validator):
         try:
             qa = model.Qa.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Domanda non esistente'), self)
+            raise ValidationError(l_(u'Question does not exists'), self)
 
         if qa is None:
-            raise ValidationError(l_(u'Domanda non esistente'), self)
+            raise ValidationError(l_(u'Question does not exists'), self)
 
 
 class CategoryExistValidator(Validator):
@@ -30,10 +30,10 @@ class CategoryExistValidator(Validator):
         try:
             category = model.Category.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Categoria non esistente'), self)
+            raise ValidationError(l_(u'Work Area does not exists'), self)
 
         if category is None:
-            raise ValidationError(l_(u'Categoria non esistente'), self)
+            raise ValidationError(l_(u'Work Area does not exists'), self)
 
 
 class PreconditionExistValidator(Validator):
@@ -42,10 +42,10 @@ class PreconditionExistValidator(Validator):
         try:
             precondition = model.Precondition.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Filtro non esistente'), self)
+            raise ValidationError(l_(u'Filter does not exists'), self)
 
         if precondition is None:
-            raise ValidationError(l_(u'Filtro non esistente'), self)
+            raise ValidationError(l_(u'Filter does not exists'), self)
 
 
 class OutputExistValidator(Validator):
@@ -54,10 +54,10 @@ class OutputExistValidator(Validator):
         try:
             output = model.Output.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Output non esistente'), self)
+            raise ValidationError(l_(u'Output does not exists'), self)
 
         if output is None:
-            raise ValidationError(l_(u'Output non esistente'), self)
+            raise ValidationError(l_(u'Output does not exists'), self)
 
 
 class DocumentExistValidator(Validator):
@@ -66,10 +66,10 @@ class DocumentExistValidator(Validator):
         try:
             document = model.Document.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Documento non esistente'), self)
+            raise ValidationError(l_(u'Document does not exists'), self)
 
         if document is None:
-            raise ValidationError(l_(u'Documento non esistente'), self)
+            raise ValidationError(l_(u'Document does not exists'), self)
 
 
 class QuestionaryExistValidator(Validator):
@@ -78,10 +78,10 @@ class QuestionaryExistValidator(Validator):
         try:
             questionary = model.Questionary.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Questionario non esistente'), self)
+            raise ValidationError(l_(u'Questionary does not exists'), self)
 
         if questionary is None:
-            raise ValidationError(l_(u'Questionario non esistente'), self)
+            raise ValidationError(l_(u'Questionary does not exists'), self)
 
 
 class OutputContentValidator(ListLengthValidator):
@@ -91,13 +91,13 @@ class OutputContentValidator(ListLengthValidator):
             if cond['type'] == 'qa_response':
                 qa = model.Qa.query.get(_id=ObjectId(cond['content']))
                 if not qa:
-                    raise ValidationError(l_(u'Domanda non trovata.'), self)
+                    raise ValidationError(l_(u'Question not found.'), self)
             elif cond['type'] == 'output':
                 out = model.Output.query.get(_id=ObjectId(cond['content']))
                 if not out:
-                    raise ValidationError(l_(u'Output non trovato'), self)
+                    raise ValidationError(l_(u'Output not found'), self)
             else:
-                raise ValidationError(l_(u'Condizione non valida.'), self)
+                raise ValidationError(l_(u'Invalid Filter.'), self)
 
     def _convert_to_python(self, value, state=None):
         if isinstance(value, basestring):
@@ -115,7 +115,7 @@ class ConditionValidator(Validator):
         try:
             value = json.loads(value)
         except Exception as e:
-            raise ValidationError(l_(u'Condizione non valida.'), self)
+            raise ValidationError(l_(u'Invalid Filter.'), self)
 
         for index, v in enumerate(value):
             try:
@@ -134,7 +134,7 @@ class AnswersValidator(Validator):
         try:
             value = json.loads(value)
         except Exception as e:
-            raise ValidationError(l_(u'Condizione non valida.'), self)
+            raise ValidationError(l_(u'Invalid Filter.'), self)
 
         return value
 
@@ -146,6 +146,6 @@ class DocumentContentValidator(Validator):
             if cond['type'] == 'output':
                 output = model.Output.query.get(_id=ObjectId(cond['content']))
                 if not output:
-                    raise ValidationError(l_(u'Output non trovato.'), self)
+                    raise ValidationError(l_(u'Output not found.'), self)
             else:
-                raise ValidationError(l_(u'Condizione non valida.'), self)
+                raise ValidationError(l_(u'Invalid Filter.'), self)
