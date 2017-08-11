@@ -14,7 +14,7 @@ class TestValidators(TestController):
 
     def test_qa_exist_validator(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -55,7 +55,7 @@ class TestValidators(TestController):
                 assert False
 
     def test_category_exist_validator(self):
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         validator = CategoryExistValidator()
         try:
             res = validator._validate_python(str(category1._id))
@@ -87,7 +87,7 @@ class TestValidators(TestController):
     def test_document_exist_validator(self):
         model.Document(
             _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
-            _category=self._get_category('Categoria 1')._id,
+            _category=self._get_category('Area 1')._id,
             title="Titolone",
             html='',
             content=[],
@@ -140,7 +140,7 @@ class TestValidators(TestController):
             content=[],
             html='',
             _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
-            _category=self._get_category('Categoria 1')._id,
+            _category=self._get_category('Area 1')._id,
             _precondition=None
         )
         DBSession.flush()
@@ -175,7 +175,7 @@ class TestValidators(TestController):
 
     def test_output_content_validator(self):
         self._login_lawyer()
-        qa1 = self._create_qa('FakeQa1', self._get_category('Categoria 1')._id, 'Di che sesso sei', 'tooltip', 'link',
+        qa1 = self._create_qa('FakeQa1', self._get_category('Area 1')._id, 'Di che sesso sei', 'tooltip', 'link',
                               'text', '')
 
         with test_context(self.app):
@@ -238,7 +238,7 @@ class TestValidators(TestController):
                 content="Content of the fake output",
                 html='',
                 _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
-                _category=self._get_category('Categoria 1')._id,
+                _category=self._get_category('Area 1')._id,
                 _precondition=None,
             )
             DBSession.flush()

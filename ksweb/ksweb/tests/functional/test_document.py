@@ -8,7 +8,7 @@ class TestDocument(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/document/', status=302)
@@ -31,7 +31,7 @@ class TestDocument(TestController):
     def test_creation_document(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
 
         output1 = self._create_fake_output('Output1')
 
@@ -68,7 +68,7 @@ class TestDocument(TestController):
 
     def test_document_put(self):
         self.test_creation_document()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         original_document = self._get_document_by_title('Titolo documento 1')
 
         document_params = {
@@ -102,7 +102,7 @@ class TestDocument(TestController):
 
     def test_document_import(self):
         self._login_lawyer()
-        workspace = self._get_category("Categoria 1")
+        workspace = self._get_category("Area 1")
         response = self.app.post('/document/import_document',
                                  params=dict(workspace=str(workspace._id)),
                                  upload_files=[('file_import',

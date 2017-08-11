@@ -8,7 +8,7 @@ class TestPreconditionSimple(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/precondition/', status=302)
@@ -30,7 +30,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_simple_what_response(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -63,7 +63,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_what_response(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -96,7 +96,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_have_response(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -129,7 +129,7 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_what_response_error(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -159,21 +159,21 @@ class TestPreconditionSimple(TestController):
 
     def test_sidebar_precondition(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
 
         self._create_fake_simple_precondition('Precond1', category1._id)
         self._create_fake_simple_precondition('Precond2', category1._id)
 
         resp = self.app.get('/precondition/sidebar_precondition', params=dict(workspace=category1._id))
 
-        assert 'Categoria 1' in resp
+        assert 'Area 1' in resp
         assert 'Precond1' in resp
         assert 'Precond2' in resp
 
 
     def test_available_preconditions(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
