@@ -15,7 +15,7 @@ class TestUtils(TestController):
     def setUp(self):
         TestController.setUp(self)
         self._login_admin()
-        self.ws = self._get_category('Categoria 1')
+        self.ws = self._get_category('Area 1')
         self.document = {'qa': {}, 'advanced_preconditions': {}, 'simple_preconditions': {}, 'outputs': {}}
         self.qa = self._create_qa('title', self.ws._id, 'question', 'tooltip', 'link', 'single', ['a', 'b'])
         self.qa_struct = {str(self.qa._id): {'_parent_precondition': None, 'title': u'title', 'question': u'question',

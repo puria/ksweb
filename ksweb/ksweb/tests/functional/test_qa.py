@@ -8,7 +8,7 @@ class TestQaController(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_access_permission_not_granted(self):
         self.app.get('/qa/get_all', status=302)
@@ -31,7 +31,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_text(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -55,7 +55,7 @@ class TestQaController(TestController):
 
     def test_update_qa(self):
         self._login_lawyer()
-        category = self._get_category('Categoria 1')
+        category = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
             'category': str(category._id),
@@ -79,7 +79,7 @@ class TestQaController(TestController):
 
     def test_put_qa_with_not_valid_answers(self):
         self._login_lawyer()
-        category = self._get_category('Categoria 1')
+        category = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
             'category': str(category._id),
@@ -96,7 +96,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_single_with_not_valid_answers(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_text_single_missing_answers = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -129,7 +129,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_single(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
 
         qa_text_single = {
             'title': 'Title of QA',
@@ -150,7 +150,7 @@ class TestQaController(TestController):
 
     def test_post_valid_qa_multi_with_not_valid_answers(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         qa_text_multi_missing_answers = {
             'title': 'Title of QA',
             'category': str(category1._id),
@@ -185,7 +185,7 @@ class TestQaController(TestController):
     def test_post_valid_qa_multi(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
 
         qa_text_multi = {
             'title': 'Title of QA',
@@ -209,7 +209,7 @@ class TestQaController(TestController):
     def test_get_one(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
 
         qa_text_multi = {
             'title': 'Title of QA',
