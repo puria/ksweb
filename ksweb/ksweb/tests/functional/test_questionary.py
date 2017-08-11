@@ -11,7 +11,7 @@ class TestQuestionaryController(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/questionary', status=302)
@@ -84,7 +84,7 @@ class TestQuestionaryController(TestController):
 
     def test_compile_advanced_questionary(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
         color_content = [
@@ -152,7 +152,7 @@ class TestQuestionaryController(TestController):
 
     def test_compile_advanced_questionary_not_showing_two_time_same_answer(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
         color_content = [
@@ -238,7 +238,7 @@ class TestQuestionaryController(TestController):
 """ FIXME:
     def test_hack_response_multi(self):
         self._login_lavewr()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
         color_content = [

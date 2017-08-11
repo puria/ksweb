@@ -8,7 +8,7 @@ class TestPreconditionAdvanced(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_access_new_permission_not_garanted(self):
         self.app.get('/precondition/advanced/new', status=302)
@@ -25,7 +25,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_precondition_advanced(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         #  Devo creare almeno 1 qa con delle risposte
 
         qa_params = {
@@ -121,7 +121,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_precondition_with_not_valid_id(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
@@ -154,7 +154,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_operator_not_valid(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
@@ -183,7 +183,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_operator_and_condition_not_valid(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
@@ -212,7 +212,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_condition_syntax_error(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
         self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')

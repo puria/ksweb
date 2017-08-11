@@ -23,14 +23,14 @@ class TestCategory(TestController):
 
     def test_get_one(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         resp = self.app.get('/category/get_one', params={'id': str(category1._id)})
         assert category1._id in resp
 
     def test_get_all(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
-        category2 = self._get_category('Categoria 2')
+        category1 = self._get_category('Area 1')
+        category2 = self._get_category('Area 2')
         category3 = self._get_category('Not Visible Category')
 
         resp = self.app.get('/category/get_all', params={'id': str(category1._id)})

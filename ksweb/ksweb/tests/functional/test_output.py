@@ -8,7 +8,7 @@ class TestOutput(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/output/', status=302)
@@ -31,7 +31,7 @@ class TestOutput(TestController):
     def test_creation_output(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
 
         output_params = {
@@ -54,7 +54,7 @@ class TestOutput(TestController):
     def test_creation_output_with_fake_qa_related(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
         fake_qa = self._create_fake_qa('Fake name')
         output_params = {
@@ -84,7 +84,7 @@ class TestOutput(TestController):
 
     def test_put_output(self):
         self.test_creation_output()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         precondition = self._get_precond_by_title('Precondition 1')
 
         output1 = self._get_output_by_title('Title of Output')
@@ -109,7 +109,7 @@ class TestOutput(TestController):
 
     def test_put_output_with_fake_qa_related(self):
         self.test_creation_output()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         precondition = self._get_precond_by_title('Precondition 1')
 
         output1 = self._get_output_by_title('Title of Output')
@@ -162,14 +162,14 @@ class TestOutput(TestController):
 
         output = model.Output.query.get(title=output_params['title'])
 
-        assert resp['category'] == 'Categoria non esistente', resp
-        assert resp['precondition'] == 'Filtro non esistente', resp
+        assert resp['category'] == 'Work Area does not exists', resp
+        assert resp['precondition'] == 'Filter does not exists', resp
         assert resp['title'] == 'Deve essere di almeno 2 caratteri', resp
         assert output is None
 
     def test_sidebar_output(self):
         self._login_lawyer()
-        category1 = self._get_category('Categoria 1')
+        category1 = self._get_category('Area 1')
         self._create_fake_output("Out1", category1._id)
         self._create_fake_output("Out2", category1._id)
         resp = self.app.get('/output/sidebar_output', params={'workspace': category1._id})
@@ -190,7 +190,7 @@ class TestOutputPlus(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Categoria 1')
+        self.category = self._get_category('Area 1')
 
     def test_output_plus_creation(self):
         self._login_lawyer()
@@ -199,7 +199,7 @@ class TestOutputPlus(TestController):
             workspace=str(self.category._id),
         ), status=200)
 
-        qa = self._get_qa_by_title('Domanda per l\'Output output_plus')
+        qa = self._get_qa_by_title('Question for Output output_plus')
         assert qa
 
     def test_output_plus_with_nested_output(self):
@@ -211,5 +211,5 @@ class TestOutputPlus(TestController):
             list_=["output_%s" % str(nested_output._id)],
         ), status=200)
 
-        qa = self._get_qa_by_title('Domanda per l\'Output output_plus')
+        qa = self._get_qa_by_title('Question for Output output_plus')
         assert qa
