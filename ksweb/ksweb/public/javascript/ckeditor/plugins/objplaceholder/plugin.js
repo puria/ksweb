@@ -1,4 +1,3 @@
-/*
 CKEDITOR.plugins.add( 'objplaceholder', {
     requires: 'widget',
 
@@ -69,4 +68,3 @@ CKEDITOR.plugins.add( 'objplaceholder', {
     }
 } );
 
-*/
