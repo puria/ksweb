@@ -1,19 +1,21 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-  <title py:block="master_title">KS | QA</title>
+    <title py:block="master_title">KS | QA</title>
 </head>
 
 <body py:block="body" py:strip="True">
 <div class="row" style="padding-top: 20px">
-  <div class="col-md-6 text-left ks-section-name">
-    ${_('Welcome in %s' % ws.name)}
-  </div>
+    <div class="col-md-6 text-left ks-section-name">
+        ${_('Welcome in %s' % ws.name)}
+    </div>
 </div>
 <div class="row" style="padding-top: 20px">
-                <h2>Build your wise tool</h2>
-                <a href="${tg.url('/qa/new', params=dict(workspace=workspace))}" class="btn btn-default">Draft a new Q/A</a>
-                or
-                <a href="${tg.url('/document/new', params=dict(workspace=workspace))}" class="btn btn-default">Draft a new Document</a>
+    <div class="col-md-12">
+        <h2>Build your wise tool</h2>
+        <a href="${tg.url('/qa/new', params=dict(workspace=workspace))}" class="btn btn-default">Draft a new Q/A</a>
+        or
+        <a href="${tg.url('/document/new', params=dict(workspace=workspace))}" class="btn btn-default">Draft a new Document</a>
+    </div>
 </div>
 </body>
 </html>

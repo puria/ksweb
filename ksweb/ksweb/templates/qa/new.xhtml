@@ -145,7 +145,7 @@
 
             </div>
             {{#if answer_type == 'single' || answer_type == 'multi'}}
-            <div class="form-group {{errors.answers ? 'has-error' : ''}}">
+            <div class="form-group col-md-12 {{errors.answers ? 'has-error' : ''}}">
 
                 {{#each available_response:i}}
 
@@ -169,8 +169,8 @@
 
                 {{/each}}
 
-                <div class="col-md-3">
-                    <div class="form-inline">
+                <div class="row">
+                    <div class="form-inline col-md-3">
 
                         <textarea id="response_text" class="form-control" placeholder="${_('Insert an option of Answer and click on +')}"> </textarea>
                         <label for="response_text" style="font-size: 26px;"
