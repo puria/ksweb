@@ -333,7 +333,8 @@
                         if (placeholder.startsWith('output_')) {
                             var _id = placeholder.split('_')[1];
                             this.onclick = function () {
-                                var url = "${tg.url('/output/edit',params=dict(workspace=workspace))}" + "?_id=" + _id;
+                                var url =
+                                    "${tg.url('/output/edit',params=dict(workspace=workspace))}" + "&_id=" + _id;
                                 var win = window.open(url, '_blank');
                                 win.focus();
                             };
