@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Precondition model module."""
+from __future__ import print_function
 from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -70,10 +71,10 @@ class Precondition(MappedClass):
     @property
     def evaluate(self):
         if self.type == 'simple':
-            print "evaluate simple precondition"
+            print("evaluate simple precondition")
             return
         if self.type == 'advanced':
-            print "evaluate advanced precondition"
+            print("evaluate advanced precondition")
             return
 
     @property
@@ -115,7 +116,7 @@ class Precondition(MappedClass):
                 continue
             else:
                 rel_ent = Precondition.query.get(_id=ObjectId(cond))
-                print cond
+                print(cond)
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict

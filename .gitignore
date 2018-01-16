@@ -1,0 +1,30 @@
+*.py[co]
+
+# Default development database
+devdata.db
+
+# Default data directory
+data/*
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+
+.idea
+venv
+env
+*.swp
+*.DS_Store
+ksweb/ksweb/public/.webassets-cache/*
+mail
+assets

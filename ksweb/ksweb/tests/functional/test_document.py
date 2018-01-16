@@ -98,7 +98,7 @@ class TestDocument(TestController):
         self._login_lawyer()
         document = self._create_fake_document("Document")
         response = self.app.get('/document/export', params=dict(_id=str(document._id)))
-        assert "fake_tooltip_Document" in response.body
+        assert b"fake_tooltip_Document" in response.body
 
     def test_document_import(self):
         self._login_lawyer()

@@ -157,18 +157,18 @@ class TestPreconditionSimple(TestController):
 
         assert errors is not None
 
-    def test_sidebar_precondition(self):
-        self._login_lawyer()
-        category1 = self._get_category('Area 1')
-
-        self._create_fake_simple_precondition('Precond1', category1._id)
-        self._create_fake_simple_precondition('Precond2', category1._id)
-
-        resp = self.app.get('/precondition/sidebar_precondition', params=dict(workspace=category1._id))
-
-        assert 'Area 1' in resp
-        assert 'Precond1' in resp
-        assert 'Precond2' in resp
+    # def test_sidebar_precondition(self):
+    #     self._login_lawyer()
+    #     category1 = self._get_category('Area 1')
+    #
+    #     self._create_fake_simple_precondition('Precond1', category1._id)
+    #     self._create_fake_simple_precondition('Precond2', category1._id)
+    #
+    #     resp = self.app.get('/precondition/sidebar_precondition', params=dict(workspace=category1._id))
+    #
+    #     assert 'Area 1' in resp
+    #     assert 'Precond1' in resp
+    #     assert 'Precond2' in resp
 
 
     def test_available_preconditions(self):

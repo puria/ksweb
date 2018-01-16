@@ -10,6 +10,10 @@ from ming.odm.declarative import MappedClass
 from ksweb.model import DBSession
 import tg
 import logging
+try:
+    basestring
+except NameError:
+    basestring = str
 
 log = logging.getLogger(__name__)
 
@@ -243,7 +247,8 @@ class Questionary(MappedClass):
         try:
             evaluation = eval(expression, answers)
         except NameError as ne:
-            _id = ne.message.split("'")[1][2:]
+            message = str(getattr(ne, 'message', ne))
+            _id = message.split("'")[1][2:]
             return {
                 'completed': False,
                 'qa': _id

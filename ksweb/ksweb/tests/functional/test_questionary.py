@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from unittest import SkipTest
 
 from ksweb.tests import TestController
@@ -221,7 +222,7 @@ class TestQuestionaryController(TestController):
             'qa_response': qa_response[rel_qa.title]['response']
         }, status=qa_response[rel_qa.title]['status']).json
 
-        print "=====", resp
+        print("=====", resp)
 
         assert resp['quest_compiled']['completed'] is True, resp
 

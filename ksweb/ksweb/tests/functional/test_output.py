@@ -164,17 +164,17 @@ class TestOutput(TestController):
 
         assert resp['category'] == 'Work Area does not exists', resp
         assert resp['precondition'] == 'Filter does not exists', resp
-        assert resp['title'] == 'Deve essere di almeno 2 caratteri', resp
+        assert resp['title'] == 'Must be at least 2 characters', resp
         assert output is None
 
-    def test_sidebar_output(self):
-        self._login_lawyer()
-        category1 = self._get_category('Area 1')
-        self._create_fake_output("Out1", category1._id)
-        self._create_fake_output("Out2", category1._id)
-        resp = self.app.get('/output/sidebar_output', params={'workspace': category1._id})
-        assert "Out1" in resp
-        assert "Out2" in resp
+    # def test_sidebar_output(self):
+    #     self._login_lawyer()
+    #     category1 = self._get_category('Area 1')
+    #     self._create_fake_output("Out1", category1._id)
+    #     self._create_fake_output("Out2", category1._id)
+    #     resp = self.app.get('/output/sidebar_output', params={'workspace': category1._id})
+    #     assert "Out1" in resp
+    #     assert "Out2" in resp
 
     def test_human_readable_details(self):
         self._login_lawyer()

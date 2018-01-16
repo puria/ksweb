@@ -13,6 +13,11 @@ from tg.util import Bunch
 from ksweb import model
 from ksweb.model import DBSession
 
+try:
+    unicode
+except NameError:
+    unicode = str
+
 __all__ = ['setup_app', 'setup_db', 'teardown_db', 'TestController']
 
 application_name = 'main_without_authn'

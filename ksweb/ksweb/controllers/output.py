@@ -149,7 +149,7 @@ class OutputController(RestController):
 
     @expose('json')
     def sidebar_output(self, _id=None, workspace=None):
-        res = model.Output.query.aggregate([
+        res = list(model.Output.query.aggregate([
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
@@ -164,7 +164,7 @@ class OutputController(RestController):
                     'output': {'$push': "$$ROOT",}
                 }
             }
-        ])['result']
+        ]))
 
         #  Insert category name into res
         for e in res:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Precondition/simple controller module"""
+from __future__ import print_function
 import json
 
 import tg
@@ -129,7 +130,7 @@ class PreconditionAdvancedController(RestController):
         check = self.get_related_entities(_id)
 
         if check.get("entities"):
-            print "condition", condition
+            print("condition", condition)
             entity = dict(
                 _id=_id,
                 title=title,
