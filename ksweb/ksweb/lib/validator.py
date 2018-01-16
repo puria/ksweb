@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-import HTMLParser
+try:
+    import HTMLParser
+except ImportError:
+    from html.parser import HTMLParser
 import ast
 import json
 
@@ -10,6 +13,11 @@ from tw2.core import Validator, ValidationError
 from tg.i18n import lazy_ugettext as l_
 
 from ksweb import model
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 
 class QAExistValidator(Validator):

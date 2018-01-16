@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from ksweb import model
 from ksweb.model import DBSession
 from ksweb.tests import TestController
@@ -6,7 +7,7 @@ from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, Docume
     QuestionaryExistValidator
 from tg.util.webtest import test_context
 from tw2.core import ValidationError
-from test_document import TestDocument
+from .test_document import TestDocument
 
 
 class TestValidators(TestController):

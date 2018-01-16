@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Precondition controller module"""
+from __future__ import print_function
 import tg
 from bson import ObjectId
 from tg import request
@@ -40,7 +41,7 @@ class PreconditionController(BaseController):
 
     @expose('json')
     def sidebar_precondition(self, workspace):
-        res = model.Precondition.query.aggregate([
+        res = list(model.Precondition.query.aggregate([
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
@@ -54,7 +55,7 @@ class PreconditionController(BaseController):
                     'precondition': {'$push': "$$ROOT",}
                 }
             }
-        ])['result']
+        ]))
 
         #  Insert category name into res
         for e in res:
@@ -73,7 +74,7 @@ class PreconditionController(BaseController):
         'id': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def qa_precondition(self, id, **kw):
-        print ObjectId(id)
+        print(ObjectId(id))
         precondition = model.Precondition.query.get(_id=ObjectId(id))
-        print precondition.response_interested
+        print(precondition.response_interested)
         return dict(qas=precondition.response_interested)
