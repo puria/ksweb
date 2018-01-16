@@ -77,9 +77,9 @@ class QaController(RestController):
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
     def post(self, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
-
-        if answer_type == "single" or answer_type == "multi":
-            if len(answers) < 2:
+        if (answer_type == "single" and len(answers) < 2) \
+           or \
+           (answer_type == "multi" and len(answers) < 1):
                 response.status_code = 412
                 return dict(
                     errors={'answers': _('Please add at least one more answer')})
@@ -154,9 +154,9 @@ class QaController(RestController):
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
     def put(self, _id, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
-
-        if answer_type == "single" or answer_type == "multi":
-            if len(answers) < 2:
+        if (answer_type == "single" and len(answers) < 2) \
+           or \
+           (answer_type == "multi" and len(answers) < 1):
                 response.status_code = 412
                 return dict(
                     errors={'answers': _('Please add at least one more answer')})

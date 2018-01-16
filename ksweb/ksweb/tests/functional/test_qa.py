@@ -167,7 +167,10 @@ class TestQaController(TestController):
         errors = resp.json['errors']
         assert errors['answers'] == "Aggiungete almeno una risposta", errors
 
-        qa_text_multi_missing_one_answers = {
+    def test_post_valid_qa_multi_with_one_answer(self):
+        self._login_lawyer()
+        category1 = self._get_category('Area 1')
+        qa_text_multi_one_answers = {
             'title': 'Title of QA',
             'category': str(category1._id),
             'question': 'Text of the question',
@@ -177,10 +180,12 @@ class TestQaController(TestController):
             'answers': ['First']
         }
         resp = self.app.post_json(
-            '/qa/post', params=qa_text_multi_missing_one_answers, status=412
+            '/qa/post', params=qa_text_multi_one_answers
         )
         errors = resp.json['errors']
-        assert errors['answers'] == "Aggiungete almeno una risposta", errors
+        qa_multi = model.Qa.query.get(title=qa_text_multi_one_answers['title'])
+        assert qa_multi
+        assert errors is None
 
     def test_post_valid_qa_multi(self):
         self._login_lawyer()
