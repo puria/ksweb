@@ -60,7 +60,7 @@ class QaController(RestController):
     @expose('ksweb.templates.qa.new')
     @validate({'workspace': CategoryExistValidator(required=True),})
     def new(self, workspace, **kw):
-        return dict(errors=None, workspace=workspace,
+        return dict(errors=None, workspace=workspace, referrer=kw.get('referrer'),
                     qa={'question': kw.get('question_content', None),
                         'title': kw.get('question_title', None),
                         '_parent_precondition': kw.get('precondition_id', None)})
@@ -134,12 +134,7 @@ class QaController(RestController):
                 condition=condition
             )
 
-        # if qa.is_text:
-        #     flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
-        # else:
-        #     flash(_("Now you can create a simple filter or an advanced one <a href='%s'>HERE</a> " % lurl('/precondition?workspace='+ str(category))))
-
-        return dict(errors=None)
+        return dict(errors=None, _id=ObjectId(qa._id))
 
     @decode_params('json')
     @expose('json')

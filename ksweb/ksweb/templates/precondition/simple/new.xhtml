@@ -30,7 +30,12 @@
           <span class="help-block">{{errors.question}}</span>
           {{/if}}
         </div>
-           <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('Select the question to use for this filter.')}</label>
+           <label for="extra-fields-form-question" class="help-text">
+             <a href="${tg.url('/qa/new', params=dict(workspace=workspace, referrer='new_filter'))}"
+                type="button" id="create-filter" class="btn btn-primary">
+               ${h.material_icon('save')} ${_('New Question')}
+             </a>
+             ${h.material_icon('help_outline')} ${_('Select the question to use for this filter.')}</label>
       </div>
 
       <div id="answer_type" class="form-group {{errors.answer_type ? 'has-error' : ''}}">
@@ -82,26 +87,6 @@
         </div>
           <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
       </div>
-
-     <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
-        <div class="col-sm-3">
-          <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-            {{#each categories}}
-              {{#if .name == 'Altro'}}
-                <option value="{{._id}}" selected>{{.name}}</option>
-              {{else}}
-                <option value="{{._id}}">{{.name}}</option>
-              {{/if}}
-            {{/each}}
-          </select>
-
-          {{#if errors.category}}
-          <span class="help-block">{{errors.category}}</span>
-          {{/if}}
-        </div>
-      </div>
-        -->
-
     </form>
     ]]>
   </script>
@@ -122,29 +107,28 @@
       self.submit_url = "${tg.url('/precondition/simple/post')}";
       self.submit_type = 'POST';
       self.workspace=options['workspace'];
-      console.log('prec', self.precondition);
       self.question_content=self.precondition['question_content'];
       self.question_title=self.precondition['question_title'];
-      console.log('options', options);
-
+      self.qa_value=options['qa_value'];
     },
     oninit: function() {
       var self = this;
-         self.set('create.category', self.workspace);
+      self.set('create.category', self.workspace);
+
       //  Check if document is provided
       if (self.precondition['_id']) {
         self.submit_type = 'PUT';
-        self.submit_url = '${tg.url('/precondition/simple/put')}';
+        self.submit_url = "${tg.url('/precondition/simple/put')}";
         self.set('edit_mode', true);
         self.set('create.title', self.precondition['title']);
-
         self.set('create.question', self.precondition['condition'][0]);
         self.set('create.interested_response', self.precondition['condition'][1]);
         self.set('create._id', self.precondition['_id']);
+      } else {
+          self.set('create.question', self.qa_value);
       }
 
 
-        console.log('asd', self.question_content);
       self.set('errors', {});
       self.set('saving', false);
       self.set('response_type', null);
@@ -153,8 +137,6 @@
 
       self.on('submit-form', function(event) {
         var all_var = self.get('create');
-        console.log("Sto inviando");
-        console.log(all_var);
         self.createPreconditionSimple(all_var);
         return false;
       });
@@ -182,8 +164,6 @@
     },
     createPreconditionSimple: function(field) {
       var self = this;
-      //self.set('saving', true);
-
       var api_params = JSON.stringify(field);
 
       $.ajax({
@@ -214,8 +194,6 @@
 
       }).fail(function(jqXHR) {
         var data = jQuery.parseJSON(jqXHR.responseText);
-        console.log("fail");
-        console.log(data);
         self.set('errors', data.errors);
         self.set('saving', false);
       });
@@ -228,7 +206,8 @@
   var ractive_precondition_simple = new PreconditionSimple({
       el: '#qa-ractive',
       precondition: ${Markup(h.script_json_encode(precondition))},
-      workspace: '${workspace}'
+      workspace: '${workspace}',
+      qa_value: "${value_of('qa_value', '')}"
   });
 
   ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {
@@ -236,7 +215,6 @@
     if (!resp_id) return;
 
     self.set('available_reponse', []);
-    console.log(resp_id);
     jQuery.get("${tg.url('/qa/get_one')}", {'id':resp_id}, function(data) {
       self.set('available_reponse', data['qa']['answers'])
     })

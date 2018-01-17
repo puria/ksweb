@@ -24,7 +24,7 @@ class PreconditionSimpleController(RestController):
     @expose('ksweb.templates.precondition.simple.new')
     @validate({'workspace': CategoryExistValidator(required=True)})
     def new(self, workspace, **kw):
-        return dict(page='precondition-new', workspace=workspace,
+        return dict(page='precondition-new', workspace=workspace, qa_value=kw.get('qa_value'),
                     precondition={'question_content': kw.get('question_content', None),
                                   'question_title': kw.get('question_title', None)})
     @decode_params('json')
