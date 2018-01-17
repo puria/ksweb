@@ -1,64 +1,71 @@
 # Translations template for ksweb.
-# Copyright (C) 2017 ORGANIZATION
+# Copyright (C) 2018 ORGANIZATION
 # This file is distributed under the same license as the ksweb project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ksweb 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-09 16:35+0200\n"
+"POT-Creation-Date: 2018-01-17 19:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.4.0\n"
+"Generated-By: Babel 2.5.3\n"
 
-#: ksweb/controllers/category.py:49
-msgid "Workspace successfully created!"
-msgstr ""
-
-#: ksweb/controllers/category.py:66
-msgid "Category and all entities associated deleted"
-msgstr ""
-
-#: ksweb/controllers/document.py:25 ksweb/controllers/output.py:37
-#: ksweb/controllers/precondition/precondition.py:18 ksweb/controllers/qa.py:23
-#: ksweb/controllers/questionary.py:28 ksweb/controllers/root.py:56
+#: ksweb/controllers/category.py:16 ksweb/controllers/document.py:27
+#: ksweb/controllers/output.py:37 ksweb/controllers/precondition/precondition.py:19
+#: ksweb/controllers/qa.py:23 ksweb/controllers/questionary.py:28
+#: ksweb/controllers/root.py:76 ksweb/controllers/root.py:83
 msgid "Only for admin or lawyer"
 msgstr ""
 
-#: ksweb/controllers/document.py:34 ksweb/controllers/questionary.py:44
+#: ksweb/controllers/category.py:48
+#, python-format
+msgid "Workspace %s successfully created!"
+msgstr ""
+
+#: ksweb/controllers/category.py:65
+msgid "Category and all entities associated deleted"
+msgstr ""
+
+#: ksweb/controllers/document.py:36 ksweb/controllers/questionary.py:44
+#: ksweb/templates/document/new.xhtml:37
 msgid "Title"
 msgstr ""
 
-#: ksweb/controllers/document.py:34 ksweb/templates/document/new.xhtml:48
+#: ksweb/controllers/document.py:36 ksweb/templates/document/new.xhtml:48
 #: ksweb/templates/document/new.xhtml:50
 msgid "Description"
 msgstr ""
 
-#: ksweb/controllers/document.py:34 ksweb/templates/document/new.xhtml:73
-#: ksweb/templates/document/new.xhtml:75
+#: ksweb/controllers/document.py:36 ksweb/templates/document/new.xhtml:75
+#: ksweb/templates/document/new.xhtml:77
 msgid "Version"
 msgstr ""
 
-#: ksweb/controllers/document.py:34 ksweb/templates/document/new.xhtml:62
+#: ksweb/controllers/document.py:36 ksweb/templates/document/new.xhtml:63
 msgid "License"
 msgstr ""
 
-#: ksweb/controllers/document.py:38
+#: ksweb/controllers/document.py:41
 msgid "Export"
 msgstr ""
 
-#: ksweb/controllers/document.py:38
+#: ksweb/controllers/document.py:41
 msgid "Create Questionary"
 msgstr ""
 
-#: ksweb/controllers/document.py:96 ksweb/controllers/document.py:121
+#: ksweb/controllers/document.py:94 ksweb/controllers/document.py:120
 msgid "You are not allowed to edit this document."
+msgstr ""
+
+#: ksweb/controllers/document.py:189
+msgid "Document successfully imported!"
 msgstr ""
 
 #: ksweb/controllers/error.py:34
@@ -70,10 +77,10 @@ msgstr ""
 msgid "The question %s is not related to the filter"
 msgstr ""
 
-#: ksweb/controllers/output.py:46 ksweb/controllers/precondition/precondition.py:33
+#: ksweb/controllers/output.py:46 ksweb/controllers/precondition/precondition.py:34
 #: ksweb/controllers/qa.py:33 ksweb/templates/output/new.xhtml:31
 #: ksweb/templates/precondition/advanced/new.xhtml:22
-#: ksweb/templates/precondition/simple/new.xhtml:78 ksweb/templates/qa/new.xhtml:86
+#: ksweb/templates/precondition/simple/new.xhtml:83 ksweb/templates/qa/new.xhtml:89
 msgid "Label"
 msgstr ""
 
@@ -94,11 +101,31 @@ msgstr ""
 msgid "You are not allowed to edit this output."
 msgstr ""
 
+#: ksweb/controllers/output_plus.py:25
+msgid "Question for Output "
+msgstr ""
+
+#: ksweb/controllers/output_plus.py:26
+msgid "Add "
+msgstr ""
+
+#: ksweb/controllers/output_plus.py:30 ksweb/controllers/output_plus.py:39
+msgid "Start "
+msgstr ""
+
+#: ksweb/controllers/output_plus.py:37
+msgid "Filter for Ouput "
+msgstr ""
+
+#: ksweb/controllers/output_plus.py:52
+msgid "Output "
+msgstr ""
+
 #: ksweb/controllers/qa.py:33
 msgid "Question"
 msgstr ""
 
-#: ksweb/controllers/qa.py:85 ksweb/controllers/qa.py:162
+#: ksweb/controllers/qa.py:85 ksweb/controllers/qa.py:157
 msgid "Please add at least one more answer"
 msgstr ""
 
@@ -106,11 +133,11 @@ msgstr ""
 msgid " -> ANSWERED"
 msgstr ""
 
-#: ksweb/controllers/qa.py:214
+#: ksweb/controllers/qa.py:209
 msgid "You can not edit this Q/A"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:33
+#: ksweb/controllers/precondition/precondition.py:34
 #: ksweb/controllers/questionary.py:44
 msgid "Owner"
 msgstr ""
@@ -154,72 +181,72 @@ msgstr ""
 msgid "All the conflicts are successfully resolved"
 msgstr ""
 
-#: ksweb/controllers/root.py:68
+#: ksweb/controllers/root.py:110
 msgid "User not found"
 msgstr ""
 
-#: ksweb/controllers/root.py:70
+#: ksweb/controllers/root.py:112
 msgid "Invalid Password"
 msgstr ""
 
-#: ksweb/controllers/root.py:74
+#: ksweb/controllers/root.py:116
 msgid "Wrong credentials"
 msgstr ""
 
-#: ksweb/controllers/root.py:90
+#: ksweb/controllers/root.py:132
 #, python-format
 msgid "Welcome back, %s!"
 msgstr ""
 
-#: ksweb/controllers/root.py:103
+#: ksweb/controllers/root.py:145
 msgid "We hope to see you soon!"
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:47
-#: ksweb/controllers/precondition/advanced.py:106
+#: ksweb/controllers/precondition/advanced.py:48
+#: ksweb/controllers/precondition/advanced.py:107
 msgid "Filter not found."
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:55
-#: ksweb/controllers/precondition/advanced.py:114
+#: ksweb/controllers/precondition/advanced.py:56
+#: ksweb/controllers/precondition/advanced.py:115
 msgid "Invalid logic operator."
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:62
-#: ksweb/controllers/precondition/advanced.py:121
+#: ksweb/controllers/precondition/advanced.py:63
+#: ksweb/controllers/precondition/advanced.py:122
 msgid "Invalid operator"
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:68
+#: ksweb/controllers/precondition/advanced.py:69
 msgid "Syntax error."
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:79
+#: ksweb/controllers/precondition/advanced.py:80
 #, python-format
 msgid "Now you can create an output <a href='%s'>HERE</a>"
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:92
-#: ksweb/controllers/precondition/advanced.py:156
+#: ksweb/controllers/precondition/advanced.py:93
+#: ksweb/controllers/precondition/advanced.py:157
 #: ksweb/controllers/precondition/simple.py:111
 #: ksweb/controllers/precondition/simple.py:162
 msgid "You are not allowed to edit this filter."
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:127
+#: ksweb/controllers/precondition/advanced.py:128
 msgid "Syntax error"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:33
+#: ksweb/controllers/precondition/precondition.py:34
 msgid "Type"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:37
+#: ksweb/controllers/precondition/precondition.py:38
 msgid "New Output"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:37
-msgid "New QA"
+#: ksweb/controllers/precondition/precondition.py:38
+msgid "New Q/A"
 msgstr ""
 
 #: ksweb/controllers/precondition/simple.py:66
@@ -231,15 +258,11 @@ msgid "Email address"
 msgstr ""
 
 #: ksweb/lib/forms.py:34
-msgid "Invia"
+msgid "Send"
 msgstr ""
 
 #: ksweb/lib/forms.py:67
 msgid "New password"
-msgstr ""
-
-#: ksweb/lib/forms.py:67
-msgid "Nuova password"
 msgstr ""
 
 #: ksweb/lib/forms.py:68
@@ -258,45 +281,45 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: ksweb/lib/validator.py:21 ksweb/lib/validator.py:24
-msgid "Domanda non esistente"
+#: ksweb/lib/validator.py:29 ksweb/lib/validator.py:32
+msgid "Question does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:33 ksweb/lib/validator.py:36
-msgid "Categoria non esistente"
+#: ksweb/lib/validator.py:41 ksweb/lib/validator.py:44
+msgid "Work Area does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:45 ksweb/lib/validator.py:48
-msgid "Filtro non esistente"
+#: ksweb/lib/validator.py:53 ksweb/lib/validator.py:56
+msgid "Filter does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:57 ksweb/lib/validator.py:60
-msgid "Output non esistente"
+#: ksweb/lib/validator.py:65 ksweb/lib/validator.py:68
+msgid "Output does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:69 ksweb/lib/validator.py:72
-msgid "Documento non esistente"
+#: ksweb/lib/validator.py:77 ksweb/lib/validator.py:80
+msgid "Document does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:81 ksweb/lib/validator.py:84
-msgid "Questionario non esistente"
+#: ksweb/lib/validator.py:89 ksweb/lib/validator.py:92
+msgid "Questionary does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:94
-msgid "Domanda non trovata."
+#: ksweb/lib/validator.py:102
+msgid "Question not found."
 msgstr ""
 
-#: ksweb/lib/validator.py:98
-msgid "Output non trovato"
+#: ksweb/lib/validator.py:106
+msgid "Output not found"
 msgstr ""
 
-#: ksweb/lib/validator.py:100 ksweb/lib/validator.py:118 ksweb/lib/validator.py:137
-#: ksweb/lib/validator.py:151
-msgid "Condizione non valida."
+#: ksweb/lib/validator.py:108 ksweb/lib/validator.py:126 ksweb/lib/validator.py:145
+#: ksweb/lib/validator.py:159
+msgid "Invalid Filter."
 msgstr ""
 
-#: ksweb/lib/validator.py:149
-msgid "Output non trovato."
+#: ksweb/lib/validator.py:157
+msgid "Output not found."
 msgstr ""
 
 #: ksweb/templates/error.xhtml:3
@@ -337,52 +360,114 @@ msgstr ""
 msgid "Create a new Workspace"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:42 ksweb/templates/document/index.xhtml:70
+#: ksweb/templates/document/index.xhtml:43 ksweb/templates/document/index.xhtml:71
 #: ksweb/templates/index.xhtml:139
 msgid "Cancel"
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:29 ksweb/templates/index.xhtml:142
-#: ksweb/templates/output/new.xhtml:22
+#: ksweb/templates/document/index.xhtml:74 ksweb/templates/document/new.xhtml:29
+#: ksweb/templates/index.xhtml:142 ksweb/templates/output/new.xhtml:22
 #: ksweb/templates/precondition/advanced/new.xhtml:15
-#: ksweb/templates/precondition/simple/new.xhtml:15 ksweb/templates/qa/new.xhtml:66
+#: ksweb/templates/precondition/simple/new.xhtml:15 ksweb/templates/qa/new.xhtml:69
 msgid "Save"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:3 ksweb/templates/login.xhtml:29
+#: ksweb/templates/legal.xhtml:3 ksweb/templates/login.xhtml:3
+#: ksweb/templates/login.xhtml:29 ksweb/templates/source.xhtml:3
 msgid "Login"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:11 ksweb/templates/master.html:47
+#: ksweb/templates/legal.xhtml:11 ksweb/templates/login.xhtml:11
+#: ksweb/templates/master.html:47 ksweb/templates/source.xhtml:11
 msgid "KS"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:12
+#: ksweb/templates/legal.xhtml:12 ksweb/templates/login.xhtml:12
+#: ksweb/templates/source.xhtml:12
 msgid "Knowledge Shaper"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:30
-msgid "Password dimenticata?"
+#: ksweb/templates/legal.xhtml:16
+msgid ""
+"Knowledge Shaper – A collaborative wizard editing software\n"
+"Copyright (C) 2017 – StudioLegale.it &lt;http://studiolegale.it&gt;\n"
+"Copyright (C) 2017 – AXANT &lt;http://www.axant.it&gt;\n"
+"\n"
+"Knowledge Shaper is free software: you can redistribute it and/or modify\n"
+"it under the terms of the GNU Affero General Public License as\n"
+"published by the Free Software Foundation, either version 3 of the\n"
+"License, or (at your option) any later version.\n"
+"\n"
+"Knowledge Shaper is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU Affero General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU Affero General Public License\n"
+"along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;."
 msgstr ""
 
-#: ksweb/templates/login.xhtml:30
-msgid " oppure  "
+#: ksweb/templates/legal.xhtml:42 ksweb/templates/login.xhtml:43
+#: ksweb/templates/source.xhtml:25
+msgid "Terms"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:30
-msgid "Registrati"
+#: ksweb/templates/legal.xhtml:42 ksweb/templates/legal.xhtml:43
+#: ksweb/templates/legal.xhtml:44 ksweb/templates/login.xhtml:43
+#: ksweb/templates/login.xhtml:44 ksweb/templates/login.xhtml:45
+#: ksweb/templates/source.xhtml:25 ksweb/templates/source.xhtml:26
+#: ksweb/templates/source.xhtml:27
+msgid "·"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:40
-msgid "Made with "
+#: ksweb/templates/legal.xhtml:43 ksweb/templates/login.xhtml:44
+#: ksweb/templates/source.xhtml:26
+msgid "Privacy Policy"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:40
-msgid " by "
+#: ksweb/templates/legal.xhtml:44 ksweb/templates/login.xhtml:45
+#: ksweb/templates/source.xhtml:27
+msgid "Legal notice"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:40
+#: ksweb/templates/legal.xhtml:45 ksweb/templates/login.xhtml:46
+#: ksweb/templates/source.xhtml:28
+msgid "Source"
+msgstr ""
+
+#: ksweb/templates/legal.xhtml:46 ksweb/templates/login.xhtml:47
+#: ksweb/templates/source.xhtml:29
+msgid "Made with"
+msgstr ""
+
+#: ksweb/templates/legal.xhtml:46 ksweb/templates/login.xhtml:47
+#: ksweb/templates/source.xhtml:29
+msgid "by"
+msgstr ""
+
+#: ksweb/templates/legal.xhtml:46 ksweb/templates/login.xhtml:47
+#: ksweb/templates/source.xhtml:29
 msgid "AXANT"
+msgstr ""
+
+#: ksweb/templates/legal.xhtml:47 ksweb/templates/login.xhtml:48
+#: ksweb/templates/source.xhtml:30
+msgid ""
+"Studio Legale Ciurcina Tita Ass. Prof. · Torino, Via San Quintino n.\n"
+"                      32, cap\n"
+"                      10121 · C.F. e P. IVA 09027200014"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:30
+msgid "Did you forget the password?"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:30 ksweb/templates/welcome.xhtml:16
+msgid "or"
+msgstr ""
+
+#: ksweb/templates/login.xhtml:30
+msgid "Register"
 msgstr ""
 
 #: ksweb/templates/master.html:13
@@ -402,61 +487,72 @@ msgstr ""
 msgid "KS Web"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:3
+#: ksweb/templates/source.xhtml:15
+msgid "The source code of Knowledge Shaper is available here [link al GitHub]"
+msgstr ""
+
+#: ksweb/templates/qa/index.xhtml:3 ksweb/templates/welcome.xhtml:3
+msgid "KS | QA"
+msgstr ""
+
+#: ksweb/templates/welcome.xhtml:9
+#, python-format
+msgid "Welcome in %s"
+msgstr ""
+
+#: ksweb/templates/welcome.xhtml:14
+msgid "Build your wise tool"
+msgstr ""
+
+#: ksweb/templates/welcome.xhtml:15
+msgid "Draft a new Q/A"
+msgstr ""
+
+#: ksweb/templates/welcome.xhtml:17
+msgid "Draft a new Document"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:3 ksweb/templates/document/new.xhtml:3
 msgid "KS | Documents"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:8
-msgid ""
-"\n"
-"        Documents\n"
-"    "
+#: ksweb/templates/document/index.xhtml:9
+msgid "Documents"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:15
-msgid ""
-" Import Document\n"
-"            "
+#: ksweb/templates/document/index.xhtml:10
+msgid "Document is a collection of Outputs"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:19
-msgid " New document"
+#: ksweb/templates/document/index.xhtml:16
+msgid " Import Document"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:35 ksweb/templates/document/index.xhtml:59
+#: ksweb/templates/document/index.xhtml:20
+msgid " New Document"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:36 ksweb/templates/document/index.xhtml:60
 msgid "×"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:36
+#: ksweb/templates/document/index.xhtml:37
 msgid "Import a new Document"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:60
+#: ksweb/templates/document/index.xhtml:61
 msgid "Create a new questionary"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:62
-msgid ""
-"\n"
-"                                Insert the title:\n"
-"                                "
+#: ksweb/templates/document/index.xhtml:64
+msgid "Insert the title:"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:73
-msgid ""
-"Save\n"
-"                                "
+#: ksweb/templates/document/new.xhtml:281
+msgid "ATTENTION: you dont have highlighted any text."
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:3
-msgid "KS | Documenti"
-msgstr ""
-
-#: ksweb/templates/document/new.xhtml:292 ksweb/templates/output/new.xhtml:249
-msgid "ATTENTION: you don't have highlighted any text."
-msgstr ""
-
-#: ksweb/templates/document/new.xhtml:372 ksweb/templates/output/new.xhtml:345
+#: ksweb/templates/document/new.xhtml:362 ksweb/templates/output/new.xhtml:348
 msgid "Unsaved data! Are you sure you want to leave?"
 msgstr ""
 
@@ -465,29 +561,25 @@ msgid "Document"
 msgstr ""
 
 #: ksweb/templates/document/new.xhtml:18
-msgid "New questionary"
+msgid "New Questionary"
 msgstr ""
 
 #: ksweb/templates/document/new.xhtml:23 ksweb/templates/output/new.xhtml:16
-msgid "Create OutputPlus"
+msgid "Create Output+"
 msgstr ""
 
 #: ksweb/templates/document/new.xhtml:27 ksweb/templates/output/new.xhtml:20
 #: ksweb/templates/precondition/advanced/new.xhtml:13
-#: ksweb/templates/precondition/simple/new.xhtml:13 ksweb/templates/qa/new.xhtml:64
+#: ksweb/templates/precondition/simple/new.xhtml:13 ksweb/templates/qa/new.xhtml:67
 #: ksweb/templates/questionary/compile.xhtml:45
 msgid "Saving..."
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:37
-msgid "Titolo"
-msgstr ""
-
-#: ksweb/templates/document/new.xhtml:60
+#: ksweb/templates/document/new.xhtml:61
 msgid "Licence"
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:86 ksweb/templates/document/new.xhtml:88
+#: ksweb/templates/document/new.xhtml:89 ksweb/templates/document/new.xhtml:91
 msgid "Tags"
 msgstr ""
 
@@ -495,36 +587,43 @@ msgstr ""
 msgid "KS | Output"
 msgstr ""
 
-#: ksweb/templates/output/index.xhtml:8
-msgid ""
-"\n"
-"    Output\n"
-"  "
+#: ksweb/templates/output/index.xhtml:9
+msgid "Output"
 msgstr ""
 
-#: ksweb/templates/output/index.xhtml:13
+#: ksweb/templates/output/index.xhtml:10
+msgid ""
+"Outputs is what you decide to show in the document depending on the Answers "
+"provided by the user"
+msgstr ""
+
+#: ksweb/templates/output/index.xhtml:14
 msgid " New output"
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:269
+#: ksweb/templates/output/new.xhtml:251
+msgid "ATTENTION: you don't have highlighted any text."
+msgstr ""
+
+#: ksweb/templates/output/new.xhtml:271
 msgid ""
-"It was created an automatic question, filter and output for displaying the "
-"text:"
+"A Q/A, Filter and Output where automatically created and the following text "
+"is based on them:"
 msgstr ""
 
 #: ksweb/templates/output/new.xhtml:37
 #: ksweb/templates/precondition/advanced/new.xhtml:28
-#: ksweb/templates/precondition/simple/new.xhtml:83 ksweb/templates/qa/new.xhtml:92
+#: ksweb/templates/precondition/simple/new.xhtml:88 ksweb/templates/qa/new.xhtml:95
 msgid ""
 "This is a unique name that you will use to refer to this object in this "
 "workspace."
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:59 ksweb/templates/qa/new.xhtml:98
-msgid "Choose a filter"
+#: ksweb/templates/output/new.xhtml:59
+msgid "Choose a filter (select a Q/A)"
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:69 ksweb/templates/qa/new.xhtml:112
+#: ksweb/templates/output/new.xhtml:69 ksweb/templates/qa/new.xhtml:115
 msgid "New Simple Filter"
 msgstr ""
 
@@ -533,47 +632,38 @@ msgid "Available answers"
 msgstr ""
 
 #: ksweb/templates/output/new.xhtml:86
-msgid "Please select the value of the answer that you want to use in your output."
+msgid "Please select the Answer to the Question that you want to use in this Output."
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:91
+#: ksweb/templates/output/new.xhtml:93
 msgid ""
-"To create an object from a word, highlight the text with your mouse and click"
-" on the orange button Create OutputPlus"
+"To create an Output from a text, highlight it with your mouse and click on "
+"the orange button Create Output+"
 msgstr ""
 
 #: ksweb/templates/partials/sidebar.xhtml:14
-msgid ""
-" Q/A\n"
-"            "
+msgid " Q/A"
 msgstr ""
 
 #: ksweb/templates/partials/sidebar.xhtml:22
-msgid ""
-" FILTERS\n"
-"            "
+msgid " FILTERS"
 msgstr ""
 
 #: ksweb/templates/partials/sidebar.xhtml:30
-msgid ""
-" OUTPUTS\n"
-"            "
+msgid " OUTPUTS"
 msgstr ""
 
 #: ksweb/templates/partials/sidebar.xhtml:38
-msgid ""
-" DOCUMENTS\n"
-"            "
+msgid " DOCUMENTS"
 msgstr ""
 
 #: ksweb/templates/partials/sidebar.xhtml:46
-msgid ""
-" QUESTIONARIES\n"
-"            "
+msgid " QUESTIONARIES"
 msgstr ""
 
 #: ksweb/templates/partials/sidebar.xhtml:61
-msgid "Filtri"
+#: ksweb/templates/precondition/index.xhtml:9
+msgid "Filters"
 msgstr ""
 
 #: ksweb/templates/partials/user_menu.xhtml:5
@@ -590,18 +680,25 @@ msgstr ""
 msgid "KS | Filters"
 msgstr ""
 
-#: ksweb/templates/precondition/index.xhtml:8
+#: ksweb/templates/precondition/index.xhtml:11
 msgid ""
-"\n"
-"    Filters\n"
-"  "
+"Filters allows you to filter how Outputs or Q/A are displayed in "
+"questionaries."
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:12
+msgid "Simple Filters are based on one single Q/A."
 msgstr ""
 
 #: ksweb/templates/precondition/index.xhtml:13
+msgid "Advanced Filters are based on multiple Q/As."
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:17
 msgid " New simple filter"
 msgstr ""
 
-#: ksweb/templates/precondition/index.xhtml:16
+#: ksweb/templates/precondition/index.xhtml:20
 msgid " New advanced filter"
 msgstr ""
 
@@ -613,7 +710,7 @@ msgstr ""
 msgid "Operators"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:259
+#: ksweb/templates/precondition/simple/new.xhtml:237
 msgid " ANSWERED"
 msgstr ""
 
@@ -625,53 +722,60 @@ msgstr ""
 msgid "Select a question"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:33
-msgid "Select the question to apply this filter."
+#: ksweb/templates/precondition/simple/new.xhtml:36
+msgid "New Question"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:41
+#: ksweb/templates/precondition/simple/new.xhtml:38
+msgid "Select the question to use for this filter."
+msgstr ""
+
+#: ksweb/templates/precondition/simple/new.xhtml:46
 msgid "The question was just answered"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:47
+#: ksweb/templates/precondition/simple/new.xhtml:52
 msgid "The user selects one of the following answers"
 msgstr ""
 
-#: ksweb/templates/qa/index.xhtml:3
-msgid "KS | QA"
+#: ksweb/templates/qa/index.xhtml:9
+msgid "Q / A"
 msgstr ""
 
-#: ksweb/templates/qa/index.xhtml:8
+#: ksweb/templates/qa/index.xhtml:11
 msgid ""
-"\n"
-"    Q / A\n"
-"  "
+"Q/As are Question that the Wise Tool makes to the user and relative Answers "
+"that user provides"
 msgstr ""
 
-#: ksweb/templates/qa/index.xhtml:13
+#: ksweb/templates/qa/index.xhtml:15
 msgid " New Q/A"
 msgstr ""
 
 #: ksweb/templates/qa/new.xhtml:3
-msgid "KS | New QA"
+msgid "KS | New Q/A"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:74
+#: ksweb/templates/qa/new.xhtml:77
 msgid "Content of the question"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:82
+#: ksweb/templates/qa/new.xhtml:85
 msgid ""
 "Insert a question that user will answer in the questionary. e.g. What's your "
 "name?"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:118
+#: ksweb/templates/qa/new.xhtml:101
+msgid "Add an optional filter to this Q/A"
+msgstr ""
+
+#: ksweb/templates/qa/new.xhtml:121
 msgid "Answer's type"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:172
-msgid "Answer"
+#: ksweb/templates/qa/new.xhtml:175
+msgid "Insert an option of Answer and click on +"
 msgstr ""
 
 #: ksweb/templates/questionary/compile.xhtml:3
@@ -702,11 +806,12 @@ msgstr ""
 msgid "KS | Questionaries"
 msgstr ""
 
-#: ksweb/templates/questionary/index.xhtml:8
-msgid ""
-"\n"
-"    Questionaries\n"
-"  "
+#: ksweb/templates/questionary/index.xhtml:9
+msgid "Questionaries"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:10
+msgid "Questionary is an instances of a Document assigned to a user"
 msgstr ""
 
 #: ksweb/templates/resetpassword/index.xhtml:3
@@ -717,45 +822,49 @@ msgstr ""
 msgid "KS | Resolve"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:12
-msgid ""
-"\n"
-"        L'entità che si vuole modificare è usata in altre entità.\n"
-"        "
+#: ksweb/templates/resolve/index.xhtml:13
+msgid "The entity you want to edit is used in other entities."
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:14
-msgid ""
-"\n"
-"        Come procediamo?\n"
-"      "
+#: ksweb/templates/resolve/index.xhtml:15
+msgid "How to continue?"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:26
-msgid ""
-"\n"
-"            Applica su tutti gli altri\n"
-"          "
+#: ksweb/templates/resolve/index.xhtml:23
+msgid "Le modifiche si applicheranno all'oggetto originario"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:34
-msgid ""
-"\n"
-"          Non applicare su tutti gli altri\n"
-"          "
+#: ksweb/templates/resolve/index.xhtml:27
+msgid "Apply to all the others"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:42
-msgid ""
-"\n"
-"          Scegli manualmente\n"
-"          "
+#: ksweb/templates/resolve/index.xhtml:31
+msgid "Viene creata una copia dell'oggetto originario con le modifiche"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:54
-msgid ""
-"\n"
-"            Termina risoluzione"
+#: ksweb/templates/resolve/index.xhtml:35
+msgid "Do not apply to all the others"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:39
+msgid "Viene scelto caso per caso"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:43
+msgid "Select manually"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:48
+msgid "Continuando verranno perse tutte le modifiche. Continuare?"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:50
+msgid "Cancella tutte le modifiche effettuate"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:55
+#: ksweb/templates/resolve/manually_resolve.xhtml:23
+msgid "Leave the procedure"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:8
@@ -763,23 +872,19 @@ msgid "KS | Manually Resolve"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:14
-msgid "Risoluzione manuale"
+msgid "Manual resolving"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:17
-msgid "Continuando verranno perse tutte le modifiche. Continuare?"
+msgid "If you continue all edits will be lost. Continue?"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:22
-msgid "Cancella tutte le modifiche effettuate"
-msgstr ""
-
-#: ksweb/templates/resolve/manually_resolve.xhtml:23
-msgid "Termina risoluzione"
+msgid "Cancel all the edits"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:27
-msgid "di"
+msgid "of"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:30
@@ -787,31 +892,31 @@ msgid "60% Complete"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:43
-msgid "Modifica con versione nuova"
+msgid "Modify with new version"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:45
-msgid "L'oggetto in questione viene modificato e lascia il vecchio riferimento"
+msgid "This object is modified and keeps the previous reference"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:48
-msgid "Tieni versione vecchia"
+msgid "Use the previous version"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:50
-msgid "Crea un nuovo oggetto moodificato e lascia il vecchio riferimento"
+msgid "Create a new modified object and use the previous reference"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:57
-msgid "Si riferiscono al nuovo"
+msgid "They refer to the new one"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:65
-msgid "Si riferiscono al vecchio"
+msgid "They refer to the previous one"
 msgstr ""
 
 #: ksweb/templates/resolve/manually_resolve.xhtml:74
-msgid "Applica"
+msgid "Apply"
 msgstr ""
 
 #: ksweb/templates/userprofile/index.xhtml:46

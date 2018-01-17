@@ -87,5 +87,5 @@ class TestAuthentication(TestController):
         resp = self.app.get('/login_handler?login=admin&password=badpassword',
                             status=302)
         resp = resp.follow(status=200)
-        ok_('Password non valida' in resp, resp)
+        ok_('Invalid Password' in resp, resp)
         eq_(resp.form['login'].value, 'admin')
