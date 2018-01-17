@@ -47,7 +47,7 @@ class TestQaController(TestController):
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
         auto_precondition = model.Precondition.query.get(
-            title=qa_text_params['title'] + ' -> RISPOSTA')
+            title=qa_text_params['title'] + ' -> ANSWERED')
 
         assert qa_text
         assert resp['errors'] is None
@@ -110,7 +110,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Aggiungete almeno una risposta"
+        assert resp['errors']['answers'] == "Please add at least one more answer"
 
         qa_text_single_missing_one_answers = {
             'title': 'Title of QA',
@@ -124,7 +124,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_one_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Aggiungete almeno una risposta"
+        assert resp['errors']['answers'] == "Please add at least one more answer"
 
     def test_post_valid_qa_single(self):
         self._login_lawyer()
@@ -165,7 +165,7 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_multi_missing_answers, status=412
         )
         errors = resp.json['errors']
-        assert errors['answers'] == "Aggiungete almeno una risposta", errors
+        assert errors['answers'] == "Please add at least one more answer", errors
 
     def test_post_valid_qa_multi_with_one_answer(self):
         self._login_lawyer()
