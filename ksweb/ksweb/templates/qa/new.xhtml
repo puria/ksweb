@@ -261,23 +261,11 @@
                     }
                 }
                 all_var['answers'] = answers;
-                console.log(all_var);
                 self.createQA(all_var);
                 return false;
             });
-
-            //self.loadCategory();
             self.loadPrecondition();
         },
-        /*loadCategory: function (callback) {
-            var self = this;
-            jQuery.get("${tg.url('/category/get_all')}",
-                    function (data) {
-                        self.set('categories', data['categories']);
-                        if (callback)
-                            callback();
-                    });
-        },*/
         loadPrecondition: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/precondition/available_preconditions',  params=dict(workspace=workspace))}",
@@ -298,8 +286,7 @@
             for (var i in available_response) {
                 if (available_response[i]['type'] == section) {
                     available_response[i]['display'] = true;
-                }
-                else {
+                } else {
                     available_response[i]['display'] = false;
                 }
 
@@ -308,7 +295,6 @@
 
             self.set('answer_type', section);
             self.set('available_response', available_response);
-            //self.set('available_response', []);
         },
         addResponse: function () {
             var self = this;
@@ -361,8 +347,12 @@
                 processData: false,
                 contentType: 'application/json'
             }).done(function (resp) {
-
                 var redirect_to = "${tg.url('/qa', params=dict(workspace=workspace))}";
+                if ("${value_of('referrer','')}" !== "") {
+                    redirect_to =
+                        "${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}";
+                    redirect_to += "&amp;qa_value=" + resp._id;
+                }
                 self.set('create', {});
                 self.set('saving', false);
                 self.set('editing', false);
@@ -373,8 +363,6 @@
             }).fail(function (jqXHR) {
                 if (jqXHR.status != 500) {
                     var data = jQuery.parseJSON(jqXHR.responseText);
-                    console.log("fail");
-                    console.log(data);
                     self.set('errors', data.errors);
                     self.set('saving', false);
                 }
