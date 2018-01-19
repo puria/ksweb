@@ -5,7 +5,7 @@
 }
 
 .navbar-brand {
-  padding-left: 10px;
+  padding-left: 120px;
   padding-top: 5px;
 }
 
@@ -32,7 +32,11 @@
   padding:5px;
 }
 
-/* Pupup */
+.navbar-nav.navbar-right {
+  padding-right: 120px;
+}
+
+/* Popup */
 .submenu > span {
   position: relative;
 }
