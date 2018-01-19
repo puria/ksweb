@@ -39,8 +39,12 @@
   </div>
 
   <div class="collapse navbar-collapse" id="navbar-content">
-    <ul py:if="request.identity" class="nav navbar-nav">
-      <li><a href="${tg.url('/')}" class=""><img class="img-circle" src="${h.gravatar(request.identity['user'].email_address)}"/></a></li>
+    <ul py:if="request.identity" class="nav navbar-nav navbar-right">
+      <li>
+        <a href="${tg.url('/')}" class="">
+          <img class="img-circle" src="${h.gravatar(request.identity['user'].email_address)}"/>
+        </a>
+      </li>
       <li class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">
           <span class="submenu">
               ${request.identity['user'].display_name}
