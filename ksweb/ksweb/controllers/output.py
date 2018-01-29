@@ -67,9 +67,7 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
-
-        if not content:
-            content = []
+        content = content or []
 
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
@@ -148,7 +146,7 @@ class OutputController(RestController):
 
 
     @expose('json')
-    def sidebar_output(self, _id=None, workspace=None):
+    def sidebar_output(self, _id=None, workspace=None): #pragma: no cover
         res = list(model.Output.query.aggregate([
             {
                 '$match': {

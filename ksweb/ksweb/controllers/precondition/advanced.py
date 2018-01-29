@@ -34,39 +34,10 @@ class PreconditionAdvancedController(RestController):
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, category, conditions, **kw):
-
-        bool_str = ""
-        condition = []
-
-        # TODO refactor this
-        for cond in conditions:
-            if cond['type'] == 'precondition':
-                #  Check if precondition exist
-                precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
-                if not precond:
-                    response.status_code = 412
-                    return dict(errors={'conditions': _('Filter not found.')})
-
-                bool_str += "True "
-                condition.append(ObjectId(cond['content']))
-
-            elif cond['type'] == 'operator':
-                if not cond['content'] in model.Precondition.PRECONDITION_OPERATOR:
-                    response.status_code = 412
-                    return dict(errors={'conditions': _('Invalid logic operator.')})
-
-                bool_str += cond['content']+" "
-                condition.append(cond['content'])
-
-            else:
-                response.status_code = 412
-                return dict(errors={'conditions': _('Invalid operator')})
-
-        try:
-            res_eval = eval(bool_str)
-        except SyntaxError as e:
+        error, condition = self._marshall_complex_filter(conditions)
+        if error:
             response.status_code = 412
-            return dict(errors={'conditions': _('Syntax error.')})
+            return dict(errors=error)
 
         user = request.identity['user']
         model.Precondition(
@@ -94,47 +65,18 @@ class PreconditionAdvancedController(RestController):
             field='_id',
             entity_model=model.Precondition))
     def put(self, _id, title, category, conditions, **kw):
-        bool_str = ""
-        condition = []
-
-        # TODO refactor this
-        for cond in conditions:
-            if cond['type'] == 'precondition':
-                #  Check if precondition exist
-                precond = model.Precondition.query.get(_id=ObjectId(cond['content']))
-                if not precond:
-                    response.status_code = 412
-                    return dict(errors={'conditions': _('Filter not found.')})
-
-                bool_str += "True "
-                condition.append(ObjectId(cond['content']))
-
-            elif cond['type'] == 'operator':
-                if not cond['content'] in model.Precondition.PRECONDITION_OPERATOR:
-                    response.status_code = 412
-                    return dict(errors={'conditions': _('Invalid logic operator.')})
-
-                bool_str += cond['content']+" "
-                condition.append(cond['content'])
-
-            else:
-                response.status_code = 412
-                return dict(errors={'conditions': _('Invalid operator')})
-
-        try:
-            res_eval = eval(bool_str)
-        except SyntaxError as e:
+        error, condition = self._marshall_complex_filter(conditions)
+        if error:
             response.status_code = 412
-            return dict(errors={'conditions': _('Syntax error')})
+            return dict(errors=error)
 
         check = self.get_related_entities(_id)
 
         if check.get("entities"):
-            print("condition", condition)
             entity = dict(
                 _id=_id,
                 title=title,
-                condition=map(str, condition),
+                condition=list(map(str, condition)),
                 _category=category,
                 entity='precondition/advanced',
             )
@@ -179,3 +121,29 @@ class PreconditionAdvancedController(RestController):
             'entities': entities,
             'len': len(entities)
         }
+
+
+    def _marshall_complex_filter(self, filters):
+        boolean_str = ""
+        marshalled_filter = []
+
+        for _f in filters:
+            if _f['type'] == 'precondition':
+                p = model.Precondition.query.get(_id=ObjectId(_f['content']))
+                error = None if p else {'conditions': _('Filter not found.')}
+                boolean_str += "True "
+                marshalled_filter.append(ObjectId(_f['content']))
+            elif _f['type'] == 'operator':
+                o = _f['content'] in model.Precondition.PRECONDITION_OPERATOR
+                error = None if o else {'conditions': _('Filter not found.')}
+                boolean_str += _f['content'] + " "
+                marshalled_filter.append(_f['content'])
+            else:
+                error = {'conditions': _('Invalid operator')}
+
+        try:
+            eval(boolean_str)
+        except SyntaxError as e:
+            error = {'conditions': _('Syntax error')}
+
+        return error, marshalled_filter

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from ksweb.tests import TestController
 from ksweb import model
+from tg import session
 
 
 class TestPreconditionAdvanced(TestController):
@@ -26,7 +27,6 @@ class TestPreconditionAdvanced(TestController):
     def test_post_precondition_advanced(self):
         self._login_lawyer()
         category1 = self._get_category('Area 1')
-        #  Devo creare almeno 1 qa con delle risposte
 
         qa_params = {
             'title': 'Title of QA',
@@ -81,18 +81,18 @@ class TestPreconditionAdvanced(TestController):
         precond_advanced = {
             'title': 'Resp1 or Resp2',
             'category': str(category1._id),
-            'conditions':[
+            'conditions': [
                 {
-                    'type':'precondition',
-                    'content':str(precond1._id)
+                    'type': 'precondition',
+                    'content': str(precond1._id)
                 },
                 {
-                    'type':'operator',
-                    'content':'or'
+                    'type': 'operator',
+                    'content': 'or'
                 },
                 {
-                    'type':'precondition',
-                    'content':str(precond2._id)
+                    'type': 'precondition',
+                    'content': str(precond2._id)
                  }
             ]
         }
@@ -100,11 +100,10 @@ class TestPreconditionAdvanced(TestController):
         resp = self.app.post_json(
             '/precondition/advanced/post', params=precond_advanced
         )
-        errors = resp.json['errors']
-        precond_advanced= model.Precondition.query.get(title=precond_advanced['title'])
+        assert not resp.json['errors']
 
+        precond_advanced= model.Precondition.query.get(title=precond_advanced['title'])
         assert precond_advanced.type == 'advanced'
-        assert errors == None
 
     def test_qa_precondition_involved(self):
         self._login_lawyer()
@@ -148,9 +147,8 @@ class TestPreconditionAdvanced(TestController):
         resp = self.app.post_json(
             '/precondition/advanced/post', params=precond_advanced, status=412
         )
-        errors = resp.json['errors']
+        assert resp.json['errors']
 
-        assert errors is not None
 
     def test_post_advanced_operator_not_valid(self):
         self._login_lawyer()
@@ -177,9 +175,7 @@ class TestPreconditionAdvanced(TestController):
         resp = self.app.post_json(
             '/precondition/advanced/post', params=precond_advanced, status=412
         )
-        errors = resp.json['errors']
-
-        assert errors is not None
+        assert resp.json['errors']
 
     def test_post_advanced_operator_and_condition_not_valid(self):
         self._login_lawyer()
@@ -206,9 +202,7 @@ class TestPreconditionAdvanced(TestController):
         resp = self.app.post_json(
             '/precondition/advanced/post', params=precond_advanced, status=412
         )
-        errors = resp.json['errors']
-
-        assert errors is not None
+        assert resp.json['errors']
 
     def test_post_advanced_condition_syntax_error(self):
         self._login_lawyer()
@@ -235,6 +229,142 @@ class TestPreconditionAdvanced(TestController):
         resp = self.app.post_json(
             '/precondition/advanced/post', params=precond_advanced, status=412
         )
-        errors = resp.json['errors']
+        assert resp.json['errors']
 
-        assert errors is not None
+
+    def test_update_advanced_filter(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
+
+        precond_advanced = {
+            '_id': str(advanced_filter._id),
+            'title': 'new title',
+            'category': str(workspace._id),
+            'conditions': [
+                {
+                    'type': 'precondition',
+                    'content': str(advanced_filter.condition[0])
+                },
+                {
+                    'type': 'operator',
+                    'content': 'and'
+                },
+                {
+                    'type': 'precondition',
+                    'content': str(advanced_filter.condition[2])
+                 }
+            ]
+        }
+
+        resp = self.app.put_json('/precondition/advanced/put', params=precond_advanced).json
+        assert not resp['errors']
+
+        edited_filter = self._get_precond_by_title('new title')
+        assert edited_filter
+        assert edited_filter.condition[1] == 'and', edited_filter.condition[1]
+
+    def test_update_advanced_filter_no_id(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
+
+        precond_advanced = {
+            'title': 'new title',
+            'category': str(workspace._id),
+            'conditions': [
+                {
+                    'type': 'precondition',
+                    'content': str(advanced_filter.condition[0])
+                },
+                {
+                    'type': 'operator',
+                    'content': 'and'
+                },
+                {
+                    'type': 'precondition',
+                    'content': str(advanced_filter.condition[2])
+                 }
+            ]
+        }
+
+        resp = self.app.put_json('/precondition/advanced/put', params=precond_advanced,
+                                 status=412).json
+        assert resp['errors']
+
+    def test_update_advanced_filter_syntax_error(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
+
+        precond_advanced = {
+            '_id': str(advanced_filter._id),
+            'title': 'new title',
+            'category': str(workspace._id),
+            'conditions': [
+                {
+                    'type': 'operator',
+                    'content': 'and'
+                }
+            ]
+        }
+
+        resp = self.app.put_json('/precondition/advanced/put', params=precond_advanced,
+                                 status=412).json
+        assert resp['errors']
+
+    def test_update_advanced_filter_with_related_entity(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
+        self._create_output("Title", workspace._id, advanced_filter._id, "balblaba")
+
+        precond_advanced = {
+            '_id': str(advanced_filter._id),
+            'title': 'new title',
+            'category': str(workspace._id),
+            'conditions': [
+                {
+                    'type': 'precondition',
+                    'content': str(advanced_filter.condition[0])
+                },
+                {
+                    'type': 'operator',
+                    'content': 'and'
+                },
+                {
+                    'type': 'precondition',
+                    'content': str(advanced_filter.condition[2])
+                 }
+            ]
+        }
+
+        response = self.app.put_json('/precondition/advanced/put', params=precond_advanced).json
+        assert response['redirect_url']
+
+        self.app.get(response['redirect_url'], params=dict(workspace=str(workspace._id)))
+        response = self.app.get('/resolve/original_edit',
+                                params=dict(workspace=str(workspace._id)))
+        response.follow()
+
+        edited_filter = self._get_precond_by_title('new title')
+        assert edited_filter
+        assert edited_filter.condition[1] == 'and', edited_filter.condition[1]
+
+    def test_edit_advanced_filter(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
+
+        response = self.app.get('/precondition/advanced/edit',
+                                params=dict(_id=advanced_filter._id, workspace=workspace._id))
+        assert str(advanced_filter._id) in response
+
+    def test_edit_advanced_filter_wrong_id(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        response = self.app.get('/precondition/advanced/edit', status=412,
+                                params=dict(_id='aaaa1231', workspace=workspace._id)).json
+
+        assert response['errors']
+        assert response['errors']['_id'] == 'Filter does not exists'
