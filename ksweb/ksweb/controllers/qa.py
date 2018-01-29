@@ -100,40 +100,7 @@ class QaController(RestController):
                 visible=True
             )
 
-        if answer_type == 'text':   # model.Qa.QA_TYPE[0]
-                        model.Precondition(
-                            _owner=user._id,
-                            _category=ObjectId(category),
-                            title=title + _(' -> ANSWERED'),
-                            type='simple',
-                            condition=[qa._id, ''])
-        else:
-            base_precond = []
-            for answer in answers:
-                prec = model.Precondition(
-                    _owner=user._id,
-                    _category=ObjectId(category),
-                    title=title + ' -> %s' % answer,
-                    type='simple',
-                    condition=[qa._id, answer],
-                )
-                base_precond.append(prec)
-
-            condition = []
-            for prc in base_precond[:-1]:
-                condition.append(prc._id)
-                condition.append('or')
-
-            condition.append(base_precond[-1]._id)
-
-            created_precondition = model.Precondition(
-                _owner=user._id,
-                _category=ObjectId(category),
-                title=title + _(' -> ANSWERED'),
-                type='advanced',
-                condition=condition
-            )
-
+        self._autofill_qa_filters(qa)
         return dict(errors=None, _id=ObjectId(qa._id))
 
     @decode_params('json')
@@ -181,7 +148,6 @@ class QaController(RestController):
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
         qa = model.Qa.query.get(_id=ObjectId(_id))
-
         qa._category = ObjectId(category)
         qa._parent_precondition = to_object_id(precondition)
         qa.title = title
@@ -191,14 +157,7 @@ class QaController(RestController):
         qa.link = link
         qa.type = answer_type
         qa.answers = answers
-
-        if answer_type == 'text':   # model.Qa.QA_TYPE[0]
-                        model.Precondition(
-                            _owner=user._id,
-                            _category=ObjectId(category),
-                            title=title + ' compilata', #FIXME: decide a understandable title
-                            type='simple',
-                            condition=[qa._id, ''])
+        self._autofill_qa_filters(qa)
 
         return dict(errors=None)
 
@@ -238,3 +197,39 @@ class QaController(RestController):
             'entities': entities,
             'len': len(entities)
         }
+
+    def _autofill_qa_filters(self, qa):
+        user = request.identity['user']
+        if qa.type == 'text':   # model.Qa.QA_TYPE[0]
+                        model.Precondition(
+                            _owner=user._id,
+                            _category=ObjectId(qa._category),
+                            title=qa.title + _(' -> ANSWERED'),
+                            type='simple',
+                            condition=[qa._id, ''])
+        else:
+            base_precond = []
+            for answer in qa.answers:
+                prec = model.Precondition(
+                    _owner=user._id,
+                    _category=ObjectId(qa._category),
+                    title=qa.title + ' -> %s' % answer,
+                    type='simple',
+                    condition=[qa._id, answer],
+                )
+                base_precond.append(prec)
+
+            condition = []
+            for prc in base_precond[:-1]:
+                condition.append(prc._id)
+                condition.append('or')
+
+            condition.append(base_precond[-1]._id)
+
+            created_precondition = model.Precondition(
+                _owner=user._id,
+                _category=ObjectId(qa._category),
+                title=qa.title + _(' -> ANSWERED'),
+                type='advanced',
+                condition=condition
+            )
