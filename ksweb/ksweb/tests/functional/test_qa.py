@@ -73,9 +73,79 @@ class TestQaController(TestController):
         params['_id'] = str(qa._id)
         params['answer_type'] = qa.type
         params['category'] = str(qa.category._id)
-        response = self.app.put_json('/qa/put', params=params)
-        qa_edited = model.Qa.query.get(_id=qa._id)
+        response = self.app.put_json('/qa/put', params=params).json
+
+        assert response['redirect_url']
+        self.app.get(response['redirect_url'])
+        response = self.app.get('/resolve/original_edit', params=dict(workspace=params['category']))
+        response.follow()
+
+        qa_edited = model.Qa.query.get(title=params['title'])
+
         assert qa_edited
+        assert qa_edited.title == params['title']
+        assert qa_edited.category._id == qa.category._id
+        assert qa_edited.question == params['question']
+        assert qa_edited.tooltip == params['tooltip']
+        assert qa_edited.link == params['link']
+
+    def test_update_qa_with_no_related_entities(self):
+        self._login_lawyer()
+        category = self._get_category('Area 1')
+        qa_text_params = {
+            'title': 'Title of QA',
+            'category': str(category._id),
+            'question': 'Text of the question',
+            'tooltip': 'Tooltip of QA1',
+            'link': 'http://www.axant.it',
+            'answer_type': 'text',
+            'answers': ''
+        }
+        self.app.post_json('/qa/post', params=qa_text_params)
+        qa = self._get_qa_by_title(qa_text_params['title'])
+        model.Precondition.query.remove({'type': 'simple', 'condition': qa._id})
+        fields = ['title', 'question', 'tooltip', 'link']
+        params = {_: qa[_] + ' edited' for _ in fields}
+        params['_id'] = str(qa._id)
+        params['answer_type'] = qa.type
+        params['category'] = str(qa.category._id)
+        self.app.put_json('/qa/put', params=params).json
+        qa_edited = model.Qa.query.get(title=params['title'])
+
+        assert qa_edited
+        assert qa_edited.title == params['title']
+        assert qa_edited.category._id == qa.category._id
+        assert qa_edited.question == params['question']
+        assert qa_edited.tooltip == params['tooltip']
+        assert qa_edited.link == params['link']
+
+    def test_update_removing_answer(self):
+        self._login_lawyer()
+        category = self._get_category('Area 1')
+        qa_text_params = {
+            'title': 'Title of QA',
+            'category': str(category._id),
+            'question': 'Text of the question',
+            'tooltip': 'Tooltip of QA1',
+            'link': 'http://www.axant.it',
+            'answer_type': 'multi',
+            'answers': ['Some answer'],
+        }
+        self.app.post_json('/qa/post', params=qa_text_params)
+        qa = self._get_qa_by_title('Title of QA')
+
+        params = dict(
+            _id = str(qa._id),
+            title = qa.title,
+            category = str(qa.category._id),
+            question = qa.question,
+            answer_type = qa.type,
+            answers = []
+        )
+
+        resp = self.app.put_json('/qa/put', params=params, status=412).json
+        assert resp['errors'] is not None
+        assert resp['errors']['answers'] == "Please add at least one more answer"
 
     def test_put_qa_with_not_valid_answers(self):
         self._login_lawyer()
