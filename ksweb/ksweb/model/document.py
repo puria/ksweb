@@ -76,7 +76,7 @@ class Document(MappedClass):
     @classmethod
     def document_available_for_user(cls, user_id, workspace=None):
         if workspace:
-            return cls.query.find({'_owner': user_id,'_category': ObjectId(workspace)}).sort('title')
+            return cls.query.find({'_owner': user_id, '_category': ObjectId(workspace)}).sort('title')
         return cls.query.find({'_owner': user_id}).sort('title')
 
     @property

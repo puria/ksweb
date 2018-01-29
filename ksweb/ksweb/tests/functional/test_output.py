@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from bson import ObjectId
 from ksweb.tests import TestController
 from ksweb import model
 
@@ -80,7 +81,9 @@ class TestOutput(TestController):
             status=412
         ).json
 
-        assert resp['errors'] is not None, resp
+        assert resp, resp
+        assert resp['errors'], resp
+        assert resp['errors']['content'] == 'Invalid Filter.'
 
     def test_put_output(self):
         self.test_creation_output()
@@ -134,7 +137,35 @@ class TestOutput(TestController):
             '/output/put', params=output_params,
             status=412
         ).json
+        assert resp is not None
         assert resp['errors'] is not None, resp
+        assert resp['errors']['content'] == 'The question Fake name is not related to the filter', resp['errors']['content']
+
+    def test_update_output_with_related_entities(self):
+        self._login_lawyer()
+        category = self._get_category('Area 1')
+        document = self._create_fake_document("Title", category_id=category._id)
+        output_id = document['content'][0]['content']
+        output1 = model.Output.query.get(_id=ObjectId(output_id))
+
+        output_params = {
+            '_id': str(output1._id),
+            'title': 'Title of Output edited',
+            'category': str(category._id),
+            'precondition': str(output1.precondition._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'content': []
+        }
+
+        response = self.app.put_json('/output/put', params=output_params).json
+        assert response['redirect_url']
+        self.app.get(response['redirect_url'])
+        response = self.app.get('/resolve/original_edit',
+                                params=dict(workspace=output_params['category']))
+        response.follow()
+        output_edited = model.Output.query.get(_id=ObjectId(output_id))
+        assert output_edited['title'] == output_params['title']
+
 
     def test_edit_output(self):
         self._login_lawyer()
@@ -158,10 +189,12 @@ class TestOutput(TestController):
 
         resp = self.app.post_json(
             '/output/post', params=output_params, status=412
-        ).json['errors']
+        ).json
 
         output = model.Output.query.get(title=output_params['title'])
 
+        assert resp
+        resp = resp['errors']
         assert resp['category'] == 'Work Area does not exists', resp
         assert resp['precondition'] == 'Filter does not exists', resp
         assert resp['title'] == 'Must be at least 2 characters', resp
@@ -178,9 +211,7 @@ class TestOutput(TestController):
 
     def test_human_readable_details(self):
         self._login_lawyer()
-
         out1 = self._create_fake_output("Out1")
-
         resp = self.app.get('/output/human_readable_details', params={'_id': out1._id})
         assert 'human_readbale_content' in resp
         assert out1._id in resp

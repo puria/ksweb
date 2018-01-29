@@ -27,7 +27,7 @@ class ErrorController(BaseController):
         try:
             # tg.abort exposes the message as .detail in response
             message = resp.detail
-        except:
+        except: # pragma: no cover
             message = None
 
         if not message:
