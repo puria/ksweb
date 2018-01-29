@@ -40,7 +40,7 @@ class PreconditionController(BaseController):
         )
 
     @expose('json')
-    def sidebar_precondition(self, workspace):
+    def sidebar_precondition(self, workspace): #pragma: no cover
         res = list(model.Precondition.query.aggregate([
             {
                 '$match': {

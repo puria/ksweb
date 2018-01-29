@@ -154,21 +154,7 @@ class TestPreconditionSimple(TestController):
             '/precondition/simple/post', params=precondition_params, status=412
         )
         errors = resp.json['errors']
-
-        assert errors is not None
-
-    # def test_sidebar_precondition(self):
-    #     self._login_lawyer()
-    #     category1 = self._get_category('Area 1')
-    #
-    #     self._create_fake_simple_precondition('Precond1', category1._id)
-    #     self._create_fake_simple_precondition('Precond2', category1._id)
-    #
-    #     resp = self.app.get('/precondition/sidebar_precondition', params=dict(workspace=category1._id))
-    #
-    #     assert 'Area 1' in resp
-    #     assert 'Precond1' in resp
-    #     assert 'Precond2' in resp
+        assert errors
 
 
     def test_available_preconditions(self):
@@ -188,3 +174,57 @@ class TestPreconditionSimple(TestController):
         assert "Precond1" in resp
         assert "Precond2" not in resp
 
+    def test_update_simple_filter(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
+        precondition_params = {
+            '_id': str(precondition._id),
+            'title': 'Title of the precondition',
+            'category': str(workspace._id),
+            'question': str(precondition.get_qa()._id),
+            'answer_type': 'what_response',
+            'interested_response': []
+        }
+
+        response = self.app.put_json('/precondition/simple/put', params=precondition_params).json
+        assert response
+        assert self._get_precond_by_title(precondition_params['title'])
+
+    def test_update_simple_filter_with_related_entities(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
+        self._create_output("Title", workspace._id, precondition._id, "balblaba")
+
+        precondition_params = {
+            '_id': str(precondition._id),
+            'title': 'Title of the precondition',
+            'category': str(workspace._id),
+            'question': str(precondition.get_qa()._id),
+            'answer_type': 'what_response',
+            'interested_response': []
+        }
+
+        response = self.app.put_json('/precondition/simple/put', params=precondition_params).json
+        assert response['redirect_url']
+        self.app.get(response['redirect_url'])
+        self.app.get('/resolve/original_edit', params=dict(workspace=str(workspace._id))).follow()
+        assert self._get_precond_by_title(precondition_params['title'])
+
+    def test_edit_simple_filter(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
+        response = self.app.get('/precondition/simple/edit',
+                                params=dict(_id=precondition._id, workspace=workspace._id))
+        assert str(precondition._id) in response
+
+    def test_human_redable_simple_filter(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
+        response = self.app.get('/precondition/simple/human_readable_details',
+                                params=dict(_id=precondition._id)).json
+        assert response['precondition']
+        assert response['precondition']['_id'] == str(precondition._id)
