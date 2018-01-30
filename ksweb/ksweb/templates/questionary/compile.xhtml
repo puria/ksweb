@@ -53,6 +53,8 @@
 
         <div class="form-group" style="padding-top: 40px;">
             {{#if quest_compiled.completed}}
+                       <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
+                          class="btn btn-primary">${h.material_icon('download')}</a>
                        <button type="button" class="btn btn-primary" on-click="print_questionary">${h.material_icon('print')}</button>
 
             {{else}}

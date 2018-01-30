@@ -179,6 +179,7 @@ replace_template(base_config,
                  'resetpassword.templates.index',
                  'ksweb.templates.resetpassword.index')
 
+plug(base_config, 'tgextodt')
 plug(base_config, 'userprofile')
 replace_template(base_config, 'userprofile.templates.index', 'ksweb.templates.userprofile.index')
 def replace_profile_form_layout():

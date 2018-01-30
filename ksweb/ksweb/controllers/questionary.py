@@ -19,6 +19,10 @@ from ksweb.lib.base import BaseController
 from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator, \
     CategoryExistValidator
 from ksweb.model import DBSession
+try:
+    basestring
+except NameError:
+    basestring = str
 
 
 class QuestionaryController(BaseController):
@@ -79,6 +83,19 @@ class QuestionaryController(BaseController):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary,
                     html=self.get_questionary_html(_id), workspace=workspace)
+
+    @expose('odt:ksweb.templates.questionary.questionary', content_type='application/vnd.oasis.opendocument.text')
+    @validate({
+        '_id': QuestionaryExistValidator(required=True),
+    }, error_handler=validation_errors_response)
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id',
+                                  entity_model=model.Questionary))
+    def download(self, _id):
+        questionary = model.Questionary.query.get(_id=ObjectId(_id))
+        response.headerlist.append(('Content-Disposition',
+                                    'attachment;filename=%s.odt' % questionary.title))
+        return dict(content=self.get_questionary_html(_id).striptags())
+
 
     @staticmethod
     def get_questionary_html(quest_id):

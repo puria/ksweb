@@ -50,6 +50,7 @@ install_requires = [
     "tgapp-resetpassword==0.1.10",
     "tgapp-userprofile",
     "axf==0.0.19",
+    "tgext.odt",
 ]
 
 if py_version != (3, 2):
