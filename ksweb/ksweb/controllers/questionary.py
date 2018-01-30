@@ -96,7 +96,6 @@ class QuestionaryController(BaseController):
                                     'attachment;filename=%s.odt' % questionary.title))
         return dict(content=self.get_questionary_html(_id).striptags())
 
-
     @staticmethod
     def get_questionary_html(quest_id):
         questionary = model.Questionary.query.get(_id=ObjectId(quest_id))
@@ -217,5 +216,7 @@ class QuestionaryController(BaseController):
             questionary.qa_values.pop(last_question_answered, None)
             DBSession.flush_all()
 
-        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary, html=self.get_questionary_html(_id),
+        return dict(questionary=questionary,
+                    quest_compiled=questionary.evaluate_questionary,
+                    html=self.get_questionary_html(_id),
                     previous_response=previous_response)

@@ -19,6 +19,8 @@ from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidat
 
 class OutputController(RestController):
     def _validate_precondition_with_qa(self, precondition, content):
+        if not precondition:
+            return dict()
         #  Check content precondition element
         precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
         related_qa = precond.response_interested
@@ -64,7 +66,7 @@ class OutputController(RestController):
         'title': StringLengthValidator(min=2),
         'content': OutputContentValidator(),
         'category': CategoryExistValidator(required=True),
-        'precondition': PreconditionExistValidator(required=True),
+        'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
         content = content or []
@@ -95,7 +97,7 @@ class OutputController(RestController):
         'title': StringLengthValidator(min=2),
         'content': OutputContentValidator(),
         'category': CategoryExistValidator(required=True),
-        'precondition': PreconditionExistValidator(required=True),
+        'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
     def put(self, _id, title, content, category, precondition, **kw):
@@ -204,16 +206,5 @@ class OutputController(RestController):
         """
         output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
         documents_related = model.Document.query.find({"content.type": "output", "content.content": _id}).all()
-
-        import logging
-        log = logging.getLogger(__name__)
-        log.debug("get_related_entities")
-        log.debug("output related: %s %s %s", [o.title for o in output_related], len(output_related), type(output_related))
-        log.debug("document related %s %s %s", [d.title for d in documents_related], len(documents_related), type(documents_related))
-
         entities = list(output_related + documents_related)
-
-        return {
-            'entities': entities,
-            'len': len(entities)
-        }
+        return dict(entities=entities, len=len(entities))

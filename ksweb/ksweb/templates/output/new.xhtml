@@ -114,8 +114,6 @@
             self.submit_url = '${tg.url('/output/post')}';
             self.output = options['output'];
             self.workspace = options['workspace'];
-
-
         },
         oninit: function () {
             var self = this;
@@ -123,7 +121,7 @@
             self.set('qas', []);
             self.set('create.content', []);
             self.set('create.category', self.workspace);
-            self.set('create.precondition',self.output['_precondition']);
+            self.set('create.precondition', self.output['_precondition']);
             //  Check if document is provided
             if (self.output['_id']) {
                 self.set('edit_mode', true);
@@ -132,7 +130,6 @@
 
                 //Set the output value as default
                 self.set('create.title', self.output['title']);
-
                 self.set('create.precondition', self.output['_precondition']);
                 self.set('create._id', self.output['_id']);
             }
@@ -144,7 +141,6 @@
 
             self.on('submit-form', function (event) {
                 jQuery(window).unbind('beforeunload');
-                console.log(self.get('create'));
                 self.create_output(self.get('create'));
                 return false;
             });
@@ -299,6 +295,8 @@
 
     ractive_output.observe('create.precondition', function (precond_value) {
         var self = this;
+        if (!precond_value)
+            return;
         //Load precondition elements
         $.get("${tg.url('/precondition/qa_precondition', params=dict(workspace=workspace),qualified=True)}", {id: precond_value}, function (data) {
             self.set('qas', data['qas']);
