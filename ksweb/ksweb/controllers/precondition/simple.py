@@ -5,7 +5,7 @@ import json
 import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import to_object_id
+from ksweb.lib.utils import to_object_id, get_related_entities_for_filters
 from tg import expose, validate, RestController, decode_params, request, \
     validation_errors_response,  response, tmpl_context, flash, lurl
 from tg.i18n import ugettext as _, lazy_ugettext as l_
@@ -136,23 +136,7 @@ class PreconditionSimpleController(RestController):
     @decode_params('json')
     @expose('json')
     def get_related_entities(self, _id):
-        """
-        This method return ALL entities (Output, Document) that have inside a `content.content` the given _id
-        :param _id:
-        :return:
-        """
-
-        # devo cercare nelle qa, nei filtri avanzati, negli output
-        outputs_related = model.Output.query.find({'_precondition': ObjectId(_id)}).all()
-        preconditions_related = model.Precondition.query.find({'type': 'advanced', 'condition': ObjectId(_id)}).all()
-        qas_related = model.Qa.query.find({"_parent_precondition": ObjectId(_id)}).all()
-
-        entities = list(outputs_related + preconditions_related + qas_related)
-
-        return {
-            'entities': entities,
-            'len': len(entities)
-        }
+        return get_related_entities_for_filters(_id)
 
     @expose('ksweb.templates.precondition.simple.new')
     @validate({
