@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/puria/ksweb.svg?branch=master)](https://travis-ci.org/puria/ksweb)
+[![Coverage Status](https://coveralls.io/repos/github/puria/ksweb/badge.svg?branch=master)](https://coveralls.io/github/puria/ksweb?branch=master)
+
 This file is for you to describe the ksweb application. Typically
 you would include information such as the information below:
 
