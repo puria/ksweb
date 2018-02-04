@@ -19,77 +19,50 @@ try:
 except NameError:
     basestring = str
 
+class EntityValidator(Validator):
+    entity = None
+    msgs = {
+        'not_exists': l_('Value is too short'),
+    }
 
-class QAExistValidator(Validator):
     def _validate_python(self, value, state=None):
-
         try:
-            qa = model.Qa.query.get(_id=ObjectId(value))
+            found = self.entity.query.get(_id=ObjectId(value))
         except InvalidId:
-            raise ValidationError(l_(u'Question does not exists'), self)
+            raise ValidationError('not_exists', self)
 
-        if qa is None:
-            raise ValidationError(l_(u'Question does not exists'), self)
-
-
-class CategoryExistValidator(Validator):
-    def _validate_python(self, value, state=None):
-
-        try:
-            category = model.Category.query.get(_id=ObjectId(value))
-        except InvalidId:
-            raise ValidationError(l_(u'Work Area does not exists'), self)
-
-        if category is None:
-            raise ValidationError(l_(u'Work Area does not exists'), self)
+        if found is None:
+            raise ValidationError('not_exists', self)
 
 
-class PreconditionExistValidator(Validator):
-    def _validate_python(self, value, state=None):
-
-        try:
-            precondition = model.Precondition.query.get(_id=ObjectId(value))
-        except InvalidId:
-            raise ValidationError(l_(u'Filter does not exists'), self)
-
-        if precondition is None:
-            raise ValidationError(l_(u'Filter does not exists'), self)
+class QAExistValidator(EntityValidator):
+    entity = model.Qa
+    msgs = dict(not_exists=l_(u'Question does not exists'))
 
 
-class OutputExistValidator(Validator):
-    def _validate_python(self, value, state=None):
-
-        try:
-            output = model.Output.query.get(_id=ObjectId(value))
-        except InvalidId:
-            raise ValidationError(l_(u'Output does not exists'), self)
-
-        if output is None:
-            raise ValidationError(l_(u'Output does not exists'), self)
+class CategoryExistValidator(EntityValidator):
+    entity = model.Category
+    msgs = dict(not_exists=l_(u'Work Area does not exists'))
 
 
-class DocumentExistValidator(Validator):
-    def _validate_python(self, value, state=None):
-
-        try:
-            document = model.Document.query.get(_id=ObjectId(value))
-        except InvalidId:
-            raise ValidationError(l_(u'Document does not exists'), self)
-
-        if document is None:
-            raise ValidationError(l_(u'Document does not exists'), self)
+class PreconditionExistValidator(EntityValidator):
+    entity = model.Precondition
+    msgs = dict(not_exists=l_(u'Filter does not exists'))
 
 
-class QuestionaryExistValidator(Validator):
-    def _validate_python(self, value, state=None):
+class OutputExistValidator(EntityValidator):
+    entity = model.Output
+    msgs = dict(not_exists=l_(u'Output does not exists'))
 
-        try:
-            questionary = model.Questionary.query.get(_id=ObjectId(value))
-        except InvalidId:
-            raise ValidationError(l_(u'Questionary does not exists'), self)
 
-        if questionary is None:
-            raise ValidationError(l_(u'Questionary does not exists'), self)
+class DocumentExistValidator(EntityValidator):
+    entity = model.Document
+    msgs = dict(not_exists=l_(u'Document does not exists'))
+
+
+class QuestionaryExistValidator(EntityValidator):
+    entity = model.Questionary
+    msgs = dict(not_exists=l_(u'Questionary does not exists'))
 
 
 class OutputContentValidator(ListLengthValidator):
