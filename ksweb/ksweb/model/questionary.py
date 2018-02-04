@@ -164,6 +164,8 @@ class Questionary(MappedClass):
     def _generate(self, precondition):
         log.debug("_generate")
         parent_expression, expression = '', ''
+        if not precondition:
+            return "()"
 
         if precondition.is_simple:
             qa = precondition.get_qa()
@@ -216,8 +218,12 @@ class Questionary(MappedClass):
             elif elem['type'] == 'output':  # nested output
                 output_nested_id = elem['content']
                 output_nested = Output.query.get(_id=ObjectId(output_nested_id))
-                self.expressions[str(output_nested_id)] = self._generate(output_nested.precondition)
-                output_res = self.evaluate_expression(output_nested_id)
+                if output_nested.precondition:
+                    self.expressions[str(output_nested_id)] = self._generate(output_nested.precondition)
+                    output_res = self.evaluate_expression(output_nested_id)
+                else:
+                    log.error(output_nested)
+                    log.error(elem['content'])
                 if not output_res['completed']:
                     return output_res
                 else:

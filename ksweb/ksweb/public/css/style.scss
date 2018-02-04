@@ -12,7 +12,8 @@ $footer_height: 10vh;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  color: lavender;
+  color: white;
+  text-shadow: 1px 1px 2px grey;
 
   a {
     color: $white;
@@ -33,6 +34,10 @@ $footer_height: 10vh;
   &.info {
     background-color: $dark-blue;
     border-color: $dark-blue;
+  }
+
+  &.warning {
+    color: $dark-blue;
   }
 }
 
