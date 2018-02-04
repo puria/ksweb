@@ -192,7 +192,18 @@ def export_preconditions(precondition_id, document):
         if precondition['_id'] not in document['advanced_preconditions']:
             document['advanced_preconditions'][str(precondition['_id'])] = precondition
 
+def get_related_entities_for_filters(_id):
+    outputs_related = model.Output.query.find({'_precondition': ObjectId(_id)}).all()
+    preconditions_related = model.Precondition.query.find(
+        {'type': 'advanced', 'condition': ObjectId(_id)}).all()
+    qas_related = model.Qa.query.find({"_parent_precondition": ObjectId(_id)}).all()
 
+    entities = list(outputs_related + preconditions_related + qas_related)
+
+    return {
+        'entities': entities,
+        'len': len(entities)
+    }
 
 
 
