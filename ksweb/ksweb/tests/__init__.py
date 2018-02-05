@@ -289,7 +289,7 @@ class TestController(object):
                 'content': content,
                 'category': str(category_id),
                 'precondition': str(precondition_id),
-                'ks_editor': html
+                'ks_editor': html,
             }
         )
         return self._get_output_by_title(title)
@@ -297,9 +297,9 @@ class TestController(object):
     def _create_fake_output(self, title, category_id=None):
         if not category_id:
             category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
-        return self._create_output(title, category_id, self._create_fake_simple_precondition(title)._id, "Fake content text")
-
-    #  Document Utility
+        return self._create_output(title, category_id,
+                                   self._create_fake_simple_precondition(title)._id,
+                                   "Fake content text", "Fake html")
 
     def _get_document_by_title(self, title):
         return model.Document.query.get(title=title)

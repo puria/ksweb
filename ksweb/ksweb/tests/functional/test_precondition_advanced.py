@@ -317,7 +317,7 @@ class TestPreconditionAdvanced(TestController):
         self._login_lawyer()
         workspace = self._get_category('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
-        self._create_output("Title", workspace._id, advanced_filter._id, "balblaba")
+        self._create_output("Title", workspace._id, advanced_filter._id, "balblaba", "blabla")
 
         precond_advanced = {
             '_id': str(advanced_filter._id),
