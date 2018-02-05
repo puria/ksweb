@@ -165,7 +165,10 @@
             if (!self.get('create.precondition'))
                 alert('${_("You have not selected a Filter. Are you sure you want to create an output without a filter?")}')
 
-            field['ks_editor'] = CKEDITOR.instances.ks_editor.getData().slice(3, -5); // remove p element: <p>text</p> -> text
+            var data = CKEDITOR.instances.ks_editor.getData();
+            if (data.startsWith('<p>')) // remove p element: <p>text</p> -> text
+                data = data.slice(3, -5);
+            field['ks_editor'] = data;
 
             var api_params = JSON.stringify(field);
 
