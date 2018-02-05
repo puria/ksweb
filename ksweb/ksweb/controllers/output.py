@@ -11,7 +11,7 @@ from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
 from tg import predicates
-from tw2.core import StringLengthValidator
+from tw2.core import StringLengthValidator, LengthValidator, All
 from ksweb import model
 from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
@@ -65,6 +65,7 @@ class OutputController(RestController):
     @validate({
         'title': StringLengthValidator(min=2),
         'content': OutputContentValidator(),
+        'ks_editor': StringLengthValidator(min=2),
         'category': CategoryExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
@@ -101,9 +102,7 @@ class OutputController(RestController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
     def put(self, _id, title, content, category, precondition, **kw):
-
-        if not content:
-            content = []
+        content = content or []
 
         #  Check content precondition element
         error = self._validate_precondition_with_qa(precondition, content)
