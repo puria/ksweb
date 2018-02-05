@@ -67,7 +67,6 @@ class QuestionaryExistValidator(EntityValidator):
 
 class OutputContentValidator(ListLengthValidator):
     def _validate_python(self, value, state=None):
-        document_accepted_type = ['qa_response', 'output']
         for cond in value:
             if cond['type'] == 'qa_response':
                 qa = model.Qa.query.get(_id=ObjectId(cond['content']))
