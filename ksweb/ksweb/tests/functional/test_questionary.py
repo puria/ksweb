@@ -95,7 +95,8 @@ class TestQuestionaryController(TestController):
                 "title": "Favourite Color"
             }
         ]
-        out_1 = self._create_output("example1", category1._id, fake_advanced_precond._id, color_content)
+        out_1 = self._create_output("example1", category1._id,
+                                    fake_advanced_precond._id, color_content, 'some html')
 
         qa_animal = self._get_qa_by_title('Favourite color')
         animal_content = [
@@ -105,7 +106,8 @@ class TestQuestionaryController(TestController):
                 "title": "Favourite Animals"
             }
         ]
-        out_2 = self._create_output("example1", category1._id, fake_advanced_precond._id, animal_content)
+        out_2 = self._create_output("example1", category1._id,
+                                    fake_advanced_precond._id, animal_content, 'some html')
 
         content = [
             {
@@ -163,7 +165,8 @@ class TestQuestionaryController(TestController):
                 "title": "Favourite Color"
             }
         ]
-        out_1 = self._create_output("example1", category1._id, fake_advanced_precond._id, color_content)
+        out_1 = self._create_output("example1", category1._id,
+                                    fake_advanced_precond._id, color_content, 'html')
 
         qa_animal = self._get_qa_by_title('Favourite color')
         animal_content = [
@@ -173,7 +176,8 @@ class TestQuestionaryController(TestController):
                 "title": "Favourite Animals"
             }
         ]
-        out_2 = self._create_output("example1", category1._id, fake_advanced_precond._id, animal_content)
+        out_2 = self._create_output("example1", category1._id,
+                                    fake_advanced_precond._id, animal_content, 'html')
 
         content = [
             {

@@ -195,7 +195,7 @@ class TestPreconditionSimple(TestController):
         self._login_lawyer()
         workspace = self._get_category('Area 1')
         precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
-        self._create_output("Title", workspace._id, precondition._id, "balblaba")
+        self._create_output("Title", workspace._id, precondition._id, "balblaba", "blablbla")
 
         precondition_params = {
             '_id': str(precondition._id),
