@@ -9,7 +9,7 @@ from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
 from datetime import datetime
-from ksweb.model import DBSession
+from ksweb.model import DBSession, User
 
 
 def _custom_title(obj):
@@ -81,9 +81,7 @@ class Output(MappedClass):
 
     @classmethod
     def output_available_for_user(cls, user_id, workspace=None):
-        if workspace:
-            return cls.query.find({'_owner': user_id, '_category': ObjectId(workspace)}).sort('title')
-        return cls.query.find({'_owner': user_id}).sort('title')
+        return User.query.get(_id=user_id).owned_entities(cls, workspace)
 
     @property
     def human_readbale_content(self):

@@ -6,7 +6,7 @@ from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
-from ksweb.model import DBSession
+from ksweb.model import DBSession, User
 
 
 def _custom_title(obj):
@@ -75,9 +75,7 @@ class Document(MappedClass):
 
     @classmethod
     def document_available_for_user(cls, user_id, workspace=None):
-        if workspace:
-            return cls.query.find({'_owner': user_id, '_category': ObjectId(workspace)}).sort('title')
-        return cls.query.find({'_owner': user_id}).sort('title')
+        return User.query.get(_id=user_id).owned_entities(cls, workspace)
 
     @property
     def entity(self):

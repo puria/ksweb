@@ -11,6 +11,9 @@ though.
 import os
 from datetime import datetime
 from hashlib import sha256
+
+from bson import ObjectId
+
 __all__ = ['User', 'Group', 'Permission']
 
 from ming import schema as s
@@ -121,3 +124,9 @@ class User(MappedClass):
         hash = sha256()
         hash.update((password + self.password[:64]).encode('utf-8'))
         return self.password[64:] == hash.hexdigest()
+
+    def owned_entities(self, entity_class, workspace=None):
+        if workspace:
+            return entity_class.query.find({'_owner': self._id, '_category': ObjectId(
+                workspace)}).sort('title')
+        return entity_class.query.find({'_owner': self._id}).sort('title')
