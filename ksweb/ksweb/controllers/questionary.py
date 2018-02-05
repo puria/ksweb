@@ -130,7 +130,6 @@ class QuestionaryController(BaseController):
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id',
                                   entity_model=model.Questionary))
     def responde(self, _id=None, qa_id=None, qa_response=None, **kwargs):
-
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         #  Check if the qa response is valid
         qa = model.Qa.query.get(_id=ObjectId(qa_id))
@@ -159,7 +158,6 @@ class QuestionaryController(BaseController):
 
         # Not sure about flush here
         DBSession.flush(questionary)
-
         quest_compiled = questionary.evaluate_questionary
 
         return dict(questionary=questionary, quest_compiled=quest_compiled, html=self.get_questionary_html(_id))
@@ -212,7 +210,6 @@ class QuestionaryController(BaseController):
             last_question_answered = [qa_val for qa_val in questionary.qa_values
                                       if questionary.qa_values[qa_val]['order_number'] == last_order_number][0]
             previous_response = questionary.qa_values[last_question_answered]['qa_response']
-
             questionary.qa_values.pop(last_question_answered, None)
             DBSession.flush_all()
 
