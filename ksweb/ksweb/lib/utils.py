@@ -124,14 +124,19 @@ def import_output(imported_document, output_id, owner, workspace_id):
     prec_id = import_precondition(imported_document, output['_precondition'], owner, workspace_id)
     content = []
     values ={}
+    options = {'output': {'fn': import_output, 'prefix': 'output_'},
+               'qa_response': {'fn': import_qa, 'prefix': 'qa_'}}
+
     for element in output['content']:
         c = {'type': element['type'], 'title': element['title']}
-        if element['type'] == 'output':
-            c['content'] = str(import_output(imported_document, element['content'], owner, workspace_id))
-            values['output_' + element['content']] = '${output_' + c['content'] + '}'
-        elif element['type'] == 'qa_response':
-            c['content'] = str(import_qa(imported_document, element['content'], owner, workspace_id))
-            values['qa_' + element['content']] = '${qa_' + c['content']+'}'
+        fn = options[c['type']]['fn']
+        prefix = options[c['type']]['prefix']
+
+        c['content'] = str(fn(imported_document,
+                              element['content'],
+                              owner,
+                              workspace_id))
+        values[prefix + element['content']] = '${' + prefix + c['content'] + '}'
         content.append(c)
 
     html = Template(output['html']).safe_substitute(**values)
