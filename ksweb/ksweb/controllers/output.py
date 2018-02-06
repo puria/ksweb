@@ -88,7 +88,6 @@ class OutputController(RestController):
             visible=True,
             html=kw['ks_editor']
         )
-        flash(l_("Select the document for you outputs <a href='%s'>HERE</a>" % lurl('/document')))
         return dict(errors=None)
 
     @expose('json')
