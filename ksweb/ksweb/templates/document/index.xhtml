@@ -63,8 +63,15 @@
                             <div class="modal-body">
                                 Insert the title:
                                 <input id="form-title" type="text" class="form-control" placeholder="Title"/>
-
+                                <br/>
                                 <span class="help-block bg-danger" id="questionary-error" style="display: none"></span>
+
+                                Optionally insert nsert the email to invite:
+                                <input id="form-email" type="email" class="form-control"
+                                       placeholder="email@test.com"/>
+
+                                <span class="help-block bg-danger" id="email-error"
+                                      style="display: none"></span>
 
                             </div>
                             <div class="modal-footer">
@@ -86,7 +93,6 @@
            window.location = "${tg.url("/document/export")}?_id=" + row_id;
         });
         $(document).on("click", ".create_questionary, .crea_questionario", function(){
-
             $('#createQuestionary').modal();
         });
         $(document).on("click", "#submit-questionary", function(){
@@ -97,9 +103,9 @@
 
             var questionary_params = {
                 'questionary_title': $('#form-title').val(),
-                'document_id': row_id
+                'document_id': row_id,
+                'email_to_share': $('#form-email').val(),
             };
-            console.log(JSON.stringify(questionary_params));
 
             var api_params = JSON.stringify(questionary_params);
             $.ajax({
@@ -110,10 +116,8 @@
                 processData: false,
                 contentType: 'application/json'
             }).done(function (data) {
-
                 console.log(data);
                 window.location.replace("${tg.url('/questionary/', params=dict(workspace=workspace))}");
-
             }).fail(function (jqXHR) {
                 console.log("fail");
                 console.log(jqXHR.responseText);

@@ -12,7 +12,7 @@ from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 import tg
 from tg.i18n import ugettext as _
-from tw2.core import StringLengthValidator
+from tw2.core import StringLengthValidator, EmailValidator
 
 from ksweb import model
 from ksweb.lib.base import BaseController
@@ -50,7 +50,7 @@ class QuestionaryController(BaseController):
             },
             entities=entities,
             actions=False,
-            actions_content=['Esporta'],
+            actions_content=[_('Export')],
             workspace=workspace
         )
 
@@ -59,16 +59,43 @@ class QuestionaryController(BaseController):
     @validate({
         'questionary_title': StringLengthValidator(min=2),
         'document_id': DocumentExistValidator(required=True),
+        'email_to_share': EmailValidator(),
     }, error_handler=validation_errors_response)
-    def create(self, questionary_title=None, document_id=None, **kw):
+    def create(self, questionary_title=None, document_id=None, email_to_share=None, **kw):
         #  create questionary for himself
-        user = request.identity['user']
+        owner = request.identity['user']
+        if (email_to_share):
+            user = model.User.by_email_address(email_to_share)
+
+
+            if not user:
+                user = model.User(
+                    user_name=email_to_share,
+                    email_address=email_to_share,
+                    display_name=email_to_share,
+                )
+        else:
+            user = owner
+
         questionary = model.Questionary(
             title=questionary_title,
             _user=user._id,
-            _owner=user._id,
+            _owner=owner._id,
             _document=ObjectId(document_id),
         )
+
+        if (email_to_share):
+            from tgext.mailer import get_mailer
+            from tgext.mailer import Message
+            mailer = get_mailer(request)
+            share_url = tg.url('/dashboard', params={'share_id':user._id}, qualified=True)
+            message = Message(subject=_("Invite to a KSWEB document"),
+                              sender="admin@ksweb.com",
+                              recipients=[user.email_address],
+                              body=_("Hi, you were invited to compile the following document %s "
+                                     "at the following url %s" % (questionary_title, share_url)))
+            mailer.send_immediately(message)
+            flash(_("Questionary succesfully created and shared to %s" % email_to_share))
         return dict(questionary=questionary)
 
     @expose('ksweb.templates.questionary.compile')

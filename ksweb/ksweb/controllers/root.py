@@ -20,8 +20,9 @@
 #
 ##############################################################################
 from ksweb.controllers.output_plus import OutputPlusController
-from tg import expose, flash, require, url, lurl
+from tg import expose, flash, require, url, lurl, response, config
 from tg import request, redirect, tmpl_context
+from tg.decorators import paginate, decode_params
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
@@ -72,9 +73,57 @@ class RootController(BaseController):
     def _before(self, *args, **kw):
         tmpl_context.project_name = "ksweb"
 
-    @expose('ksweb.templates.index')
+    @expose()
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def index(self):
+        if predicates.has_any_permission('manage', 'lawyer'):
+            redirect('/start')
+        return dict()
+
+    @expose('ksweb.templates.questionary.index')
+    @paginate('entities', items_per_page=int(config.get('pagination.items_per_page')))
+    def dashboard(self, share_id):
+        user = model.User.query.find({'_id': ObjectId(share_id)}).first()
+
+        if not user:
+            response.status_code = 403
+            flash(_('You are not allowed to operate in this page'))
+            return dict()
+
+        entities = model.Questionary.query.find({'$or': [
+            {'_user': ObjectId(user._id)},
+            {'_owner': ObjectId(user._id)}
+        ]}).sort('title')
+
+        return dict(
+            page='questionary-index',
+            fields={
+                'columns_name': [_('Title'), _('Owner'), _('Shared with'), _('Created on'),
+                                 _('Completion %')],
+                'fields_name': ['title', '_owner', '_user', 'creation_date', 'completion']
+            },
+            entities=entities,
+            actions=False,
+            actions_content=[_('Export')],
+            workspace=None,
+            show_sidebar=False,
+            share_id=share_id
+        )
+
+    @decode_params('json')
+    @expose('json')
+    def become_editor_from_user(self, **kw):
+        user = model.User.query.find({'_id': ObjectId(kw['share_id'])}).first()
+        if user and not user.password:
+            user.password = kw['password']
+            user.user_name = kw['username']
+            group = model.Group.query.find({'group_name': 'lawyer'}).first()
+            user.groups = [group]
+        return dict()
+
+    @expose('ksweb.templates.index')
+    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    def start(self):
         user = request.identity['user']
         categories = model.Category.query.find({'visible': True}).sort('_id').all()
         return dict(page='index', user=user, workspaces=categories, show_sidebar=False)
@@ -110,6 +159,8 @@ class RootController(BaseController):
                 flash(_('User not found'), 'error')
             elif failure == 'invalid-password':
                 flash(_('Invalid Password'), 'error')
+            elif failure == 'user-created':
+                flash(_('User successfully created'))
 
         login_counter = request.environ.get('repoze.who.logins', 0)
         if failure is None and login_counter > 0:
