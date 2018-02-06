@@ -181,6 +181,7 @@ replace_template(base_config,
 
 plug(base_config, 'tgextodt')
 plug(base_config, 'userprofile')
+replace_template(base_config, 'registration.templates.register', 'ksweb.templates.registration.register')
 replace_template(base_config, 'userprofile.templates.index', 'ksweb.templates.userprofile.index')
 def replace_profile_form_layout():
     from axf.bootstrap import BootstrapFormLayout

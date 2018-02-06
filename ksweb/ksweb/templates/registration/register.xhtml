@@ -1,0 +1,30 @@
+<html py:extends="master_without_sidebar.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" py:if="False"/>
+    <title py:block="master_title">Register New User</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/_pluggable/registration/css/style.css')}" />
+    <style>
+        th, td { padding: 10px; }
+        table { width: 100%; }
+        p { margin-left: 90px; margin-top: -5px; }
+    </style>
+</head>
+
+<body py:block="body" py:strip="True">
+<div class="container">
+    <div class="row">
+    <br/>
+    <div id="registration_new" class="form-group col-md-8 col-md-offset-2">
+        ${form.display(value=value, action=action)}
+        <p>By clicking on “Save” you accept the terms [link to ToS], consent to use of your personal data according to the privacy policy [link to privacy policy] and ask to use the Knowledge Shaper.</p>
+    </div>
+</div>
+</div>
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('input').addClass('form-control');
+            jQuery('input[type=submit]').addClass('btn btn-primary pull-left').removeClass('form-control')
+        })
+    </script>
+</body>
+</html>
