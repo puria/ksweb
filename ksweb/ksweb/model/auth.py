@@ -125,8 +125,8 @@ class User(MappedClass):
         hash.update((password + self.password[:64]).encode('utf-8'))
         return self.password[64:] == hash.hexdigest()
 
-    def owned_entities(self, entity_class, workspace=None):
+    def owned_entities(self, entity_model, workspace=None):
         if workspace:
-            return entity_class.query.find({'_owner': self._id, '_category': ObjectId(
+            return entity_model.query.find({'_owner': self._id, '_category': ObjectId(
                 workspace)}).sort('title')
-        return entity_class.query.find({'_owner': self._id}).sort('title')
+        return entity_model.query.find({'_owner': self._id}).sort('title')

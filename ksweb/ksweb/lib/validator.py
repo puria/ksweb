@@ -4,7 +4,6 @@ try:
 except ImportError:
     from html.parser import HTMLParser
 import ast
-import json
 
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -83,39 +82,6 @@ class OutputContentValidator(ListLengthValidator):
         if isinstance(value, basestring):
             # need transform from string to list
             return ast.literal_eval(value)
-        return value
-
-
-class ConditionValidator(Validator):
-
-    def _validate_python(self, value, state=None):
-        super(ConditionValidator, self)._validate_python(value, state)
-
-    def _convert_to_python(self, value, state=None):
-        try:
-            value = json.loads(value)
-        except Exception as e:
-            raise ValidationError(l_(u'Invalid Filter.'), self)
-
-        for index, v in enumerate(value):
-            try:
-                value[index] = ObjectId(v)
-            except InvalidId:
-                continue
-        return value
-
-
-class AnswersValidator(Validator):
-
-    def _validate_python(self, value, state=None):
-        super(AnswersValidator, self)._validate_python(value, state)
-
-    def _convert_to_python(self, value, state=None):
-        try:
-            value = json.loads(value)
-        except Exception as e:
-            raise ValidationError(l_(u'Invalid Filter.'), self)
-
         return value
 
 

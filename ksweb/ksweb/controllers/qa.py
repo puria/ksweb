@@ -112,7 +112,8 @@ class QaController(RestController):
         'answer_type': OneOfValidator(values=model.Qa.QA_TYPE, required=True),
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
-    def put(self, _id, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
+    def put(self, _id, title, category, question, tooltip, link, answer_type,
+                  precondition=None, answers=None, **kw):
         if not self._are_answers_valid(answer_type, answers):
             response.status_code = 412
             return dict(errors={'answers': _('Please add at least one more answer')})
@@ -121,13 +122,10 @@ class QaController(RestController):
 
         if check.get("entities"):
             entity = dict(
-                _id=_id,
-                title=title,
-                _category=category,
-                entity='qa',
+                _id=_id, _category=category,
+                title=title, entity='qa',
                 question=question,
-                tooltip=tooltip,
-                link=link,
+                tooltip=tooltip, link=link,
                 type=answer_type,
                 _parent_precondition=precondition,
                 answers=answers
