@@ -33,3 +33,5 @@ img, img a, .more-link a {border:none;}
   color: darkblue;
   font-weight: bold;
 }
+
+hr { page-break-after: always; visibility: hidden; }
