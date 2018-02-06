@@ -14,50 +14,62 @@
         <br/>
         How to continue?
       </div>
-
     </div>
 
-    <div class="row" style="padding-top: 20px">
-      <div class="col-md-6">
-        <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
+    <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" >
+      <div class="row" style="padding-top: 20px">
+        <div class="col-md-12">
           <button type="submit"
-                  class="btn btn-success"
+                  class="btn btn-success btn-lg"
                   formaction="${tg.url('/resolve/original_edit', params=dict(workspace=workspace))}"
-                  data-toggle="tooltip" title="${_('Le modifiche si applicheranno all\'oggetto originario')}">
+                  data-toggle="tooltip"
+                  title="${_('All the edits will be applied to the original entity')}">
             Apply to all the others
           </button>
-          <br/>
-          <br/>
+          </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+
+      <div class="row" style="padding-top: 20px">
+        <div class="col-md-12 text-left ks-section-name">
+          Other alternatives
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-md-4">
           <button type="submit"
-                  class="btn btn-default"
+                  class="btn btn-primary btn-sm"
                   formaction="${tg.url('/resolve/clone_object', params=dict(workspace=workspace))}"
-                  data-toggle="tooltip" title="${_('Viene creata una copia dell\'oggetto originario con le modifiche')}">
+                  data-toggle="tooltip"
+                  title="${_('A shallow copy of the original entity will be created')}">
           Do not apply to all the others
           </button>
-          <br/>
-          <br/>
+        </div>
+        <div class="col-md-4">
           <button type="submit"
-                  class="btn btn-warning"
+                  class="btn btn-primary btn-sm"
                   formaction="${tg.url('/resolve/manually_resolve', params=dict(workspace=workspace))}"
-                  data-toggle="tooltip" title="${_('Viene scelto caso per caso')}">
+                  data-toggle="tooltip" title="${_('It will be chosen case by case')}">
           Select manually
           </button>
-        </form>
-    </div>
-    <div class="col-md-6">
-        <a href="${tg.url('/resolve/discard_changes', params=dict(workspace=workspace))}"
-           onclick="return confirm('${_('Continuando verranno perse tutte le modifiche. Continuare?')}')">
-          <button
-              type="button"
-              class="btn btn-danger"
-              data-toggle="tooltip"
-              title="${_('Cancella tutte le modifiche effettuate')}">
-            Leave the procedure</button>
-        </a>
-    </div>
-      <div id="resolve-ractive" style="padding-top: 20px"></div>
-
-    </div>
-
+        </div>
+        <div class="col-md-4">
+          <a href="${tg.url('/resolve/discard_changes', params=dict(workspace=workspace))}"
+             onclick="return confirm('${_('If you continue you will loose all the edits. Continue?')}')">
+            <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                data-toggle="tooltip"
+                title="${_('Cancella tutte le modifiche effettuate')}">
+              Leave the procedure</button>
+          </a>
+        </div>
+        <div id="resolve-ractive" style="padding-top: 20px"></div>
+      </div>
+    </form>
   </body>
 </html>
