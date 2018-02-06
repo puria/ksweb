@@ -18,26 +18,6 @@ class OutputPlusController(RestController):
 
         user = request.identity['user']
 
-        qa = model.Qa(
-                _owner=user._id,
-                _category=workspace,
-                _parent_precondition=None,
-                title=_(u'Question for Output ') + first_5_words,
-                question=_(u'Add ') + first_5_words,
-                tooltip=None,
-                link=None,
-                type='multi',
-                answers=[_(u'Start ') + first_5_words],
-                public=True,
-                visible=True)
-
-        precondition = model.Precondition(
-            _owner=user._id,
-            _category=workspace,
-            title=_(u'Filter for Ouput ') + first_5_words,
-            type='simple',
-            condition=[qa._id, _(u'Start ') + first_5_words])
-
         content = []
         for elem in list_:
             type, _id = elem.split("_")
@@ -53,7 +33,6 @@ class OutputPlusController(RestController):
         output = model.Output(
             _owner=user._id,
             _category=workspace,
-            _precondition=precondition._id,
             title=title,
             content=content,
             public=True,
