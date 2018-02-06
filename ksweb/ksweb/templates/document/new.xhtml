@@ -14,19 +14,25 @@
                 <div class="col-md-6 text-right">
                     {{#if create._id}}
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createQuestionary">
-                    ${h.material_icon('create')} ${_("New Questionary")}
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#createQuestionary">
+                        ${h.material_icon('create')} ${_("New Questionary")}
                     </button>
                     {{/if}}
 
                     {{#if edit_mode}}
-                    <button type="button" class="btn btn-warning" onclick='ractive_document.create_output_plus();'>${h.material_icon('create')} ${_("Create Output+")}</button>
+                    <button type="button" class="btn btn-warning"
+                            onclick='ractive_document.create_output_plus();'>
+                        ${h.material_icon('create')} ${_("Create Output+")}
+                    </button>
                     {{/if}}
 
                     {{#if saving}}
                     ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} ${_("Save")}</button>
+                    <button type="submit" class="btn btn-primary">${h.material_icon('save')}
+                        ${_("Save")}
+                    </button>
                     {{/if}}
                 </div>
             </div>
@@ -34,73 +40,90 @@
             <hr/>
             <div class="form-group {{errors.title ? 'has-error' : ''}}">
                 <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="${_('Title')}"
+                    <input id="extra-fields-form-title" type="text" class="form-control"
+                           placeholder="${_('Title')}"
                            value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
                 </div>
-                <label for="extra-fields-form-title" class="help-text">${h.material_icon('help_outline')} Title your document (eg. Privacy Policy) .</label>
+                <label for="extra-fields-form-title" class="help-text">${h.material_icon('help_outline')}
+                    Title your document (eg. Privacy Policy) .</label>
             </div>
-             <div class="form-group {{errors.title ? 'has-error' : ''}}">
-            <div class="col-md-3">
-                {{#if edit_mode}}
-                 <label for="extra-fields-form-description">${_('Description')}</label>
-                {{/if}}
-                    <textarea id="extra-fields-form-description" class="form-control" placeholder="${_('Description')}"
-                             value="{{create.description}}" > {{create.description}} </textarea>
-                    {{#if errors.description}}
-                    <span class="help-block">{{errors.description}}</span>
-                    {{/if}}
-                </div>
-                <label for="extra-fields-form-description" class="help-text">${h.material_icon('help_outline')} Give a short description of the problem that your document solves.</label>
-             </div>
-             <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                     {{#if edit_mode}}
-                 <label for="extra-fields-form-licence">${_("Licence")}</label>
-                {{/if}}
-                    <input id="extra-fields-form-licence" type="text" class="form-control" placeholder="${_('License')}"
-                           value="{{create.licence}}"/>
-                    {{#if errors.licence}}
-                    <span class="help-block">{{errors.licence}}</span>
-                    {{/if}}
-                </div>
-                <label for="extra-fields-form-licence" class="help-text">${h.material_icon('help_outline')} Choose the license under which you allow use of your knowledge tool (eg. MIT, LGPL, CC-xx...).</label>
 
-            </div>
-             <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                     {{#if edit_mode}}
-                 <label for="extra-fields-form-version">${_("Version")}</label>
-                {{/if}}
-                    <input id="extra-fields-form-version" type="text" class="form-control" placeholder="${_('Version')}"
-                           value="{{create.version}}"/>
-                    {{#if errors.version}}
-                    <span class="help-block">{{errors.version}}</span>
-                    {{/if}}
-                </div>
-                <label for="extra-fields-form-version" class="help-text">${h.material_icon('help_outline')} Insert a sequential versioning number (eg. 1.0).</label>
+            <a class="btn btn-primary" data-toggle="collapse" href="#metadata">Metdata</a>
+            <br/>
 
-            </div>
-             <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                     {{#if edit_mode}}
-                 <label for="extra-fields-form-tags">${_("Tags")}</label>
-                {{/if}}
-                    <input id="extra-fields-form-tags" type="text" class="form-control" placeholder="${_('Tags')}"
-                           value="{{create.tags}}"/>
-                    {{#if errors.tags}}
-                    <span class="help-block">{{errors.tags}}</span>
-                    {{/if}}
+            <div id="metadata" class="collapse">
+                <br/>
+                <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                    <div class="col-md-3">
+                        {{#if edit_mode}}
+                        <label for="extra-fields-form-description">${_('Description')}</label>
+                        {{/if}}
+                        <textarea id="extra-fields-form-description" class="form-control"
+                                  placeholder="${_('Description')}"
+                                  value="{{create.description}}"> {{create.description}} </textarea>
+                        {{#if errors.description}}
+                        <span class="help-block">{{errors.description}}</span>
+                        {{/if}}
+                    </div>
+                    <label for="extra-fields-form-description" class="help-text">${h.material_icon('help_outline')}
+                        Give a short description of the problem that your document solves.</label>
                 </div>
-                <label for="extra-fields-form-tags" class="help-text">${h.material_icon('help_outline')} Comma separated values tags.</label>
+                <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                    <div class="col-md-3">
+                        {{#if edit_mode}}
+                        <label for="extra-fields-form-licence">${_("Licence")}</label>
+                        {{/if}}
+                        <input id="extra-fields-form-licence" type="text" class="form-control"
+                               placeholder="${_('License')}"
+                               value="{{create.licence}}"/>
+                        {{#if errors.licence}}
+                        <span class="help-block">{{errors.licence}}</span>
+                        {{/if}}
+                    </div>
+                    <label for="extra-fields-form-licence" class="help-text">${h.material_icon('help_outline')}
+                        Choose the license under which you allow use of your knowledge tool (eg.
+                        MIT, LGPL, CC-xx...).</label>
 
+                </div>
+                <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                    <div class="col-md-3">
+                        {{#if edit_mode}}
+                        <label for="extra-fields-form-version">${_("Version")}</label>
+                        {{/if}}
+                        <input id="extra-fields-form-version" type="text" class="form-control"
+                               placeholder="${_('Version')}"
+                               value="{{create.version}}"/>
+                        {{#if errors.version}}
+                        <span class="help-block">{{errors.version}}</span>
+                        {{/if}}
+                    </div>
+                    <label for="extra-fields-form-version" class="help-text">${h.material_icon('help_outline')}
+                        Insert a sequential versioning number (eg. 1.0).</label>
+
+                </div>
+                <div class="form-group {{errors.title ? 'has-error' : ''}}">
+                    <div class="col-md-3">
+                        {{#if edit_mode}}
+                        <label for="extra-fields-form-tags">${_("Tags")}</label>
+                        {{/if}}
+                        <input id="extra-fields-form-tags" type="text" class="form-control"
+                               placeholder="${_('Tags')}"
+                               value="{{create.tags}}"/>
+                        {{#if errors.tags}}
+                        <span class="help-block">{{errors.tags}}</span>
+                        {{/if}}
+                    </div>
+                    <label for="extra-fields-form-tags" class="help-text">${h.material_icon('help_outline')}
+                        Comma separated values tags.</label>
+                </div>
             </div>
             <br/>
             <h4>Document editor</h4>
             <div class="form-group col-md-12">
-                 <textarea name="ks_editor"></textarea>
+                <textarea name="ks_editor"></textarea>
             </div>
         </form>
         ]]>
