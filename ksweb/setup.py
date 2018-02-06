@@ -51,6 +51,7 @@ install_requires = [
     "tgapp-userprofile",
     "axf==0.0.19",
     "tgext.odt",
+    "tgext.pluggable==0.7.1"
 ]
 
 if py_version != (3, 2):
