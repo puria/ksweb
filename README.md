@@ -12,7 +12,7 @@ Installation and Setup
 Install ``ksweb`` using the setup.py script::
 
     $ cd ksweb
-    $ python setup.py develop
+    $ pip install -e .
 
 Create the project database for any model classes defined::
 
