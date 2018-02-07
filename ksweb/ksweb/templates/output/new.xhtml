@@ -260,7 +260,7 @@
                 contentType: 'application/json'
             }).done(function (resp) {
                 console.log("DONE", resp);
-                alert("${_('A Q/A, Filter and Output where automatically created and the following text is based on them:')} '" + res['text'] +"'.");
+                alert("${_('An Output without filter was automatically created from ')} '" + res['text'] +"'.");
                 var range = selector.getRanges()[0];
                 range.deleteContents();
                 range.select();
