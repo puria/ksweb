@@ -1,0 +1,41 @@
+---
+# tasks file for Mongo
+- name: test
+  debug: var=dbport
+
+- name: Import the public key used by the package management system
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: 0C49F3730359A14518585931BC711F9BA15703C6
+  when: install_mongo
+
+- name: Create a list file for MongoDB.
+  apt_repository:
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.4 multiverse"
+    state: present
+  when: install_mongo
+
+- name: Reload local package database. && Install the MongoDB packages.
+  apt:
+   name: mongodb-org
+   update_cache: yes
+  when: install_mongo
+
+- name: Creates /data/db directory
+  file:
+    state: directory
+    path: /data/db
+    owner: mongodb
+    mode: 0775
+  when: install_mongo
+
+- name: Create the mongodb configuration file
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf
+  when: install_mongo
+
+
+- name: Ensure mongodb is up and running
+  service:
+    name: mongod
+    state: started
+  when: install_mongo

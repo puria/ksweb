@@ -1,0 +1,7 @@
+---
+# handlers file for Mongo
+- name: restart mongo
+  service:
+    name: mongod
+    state: restarted
+  become: yes

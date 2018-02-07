@@ -1,0 +1,17 @@
+[nginx]
+ks.studiolegale.it
+
+[circus]
+ks.studiolegale.it
+
+[databases]
+ks.studiolegale.it
+
+[all:vars]
+ansible_user=axant
+ansible_ssh_private_key_file=~/.ssh/axant
+host_key_checking=False
+release_type=test
+dbport=30000
+install_mongo=False
+notify_projects=False
