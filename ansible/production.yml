@@ -1,5 +1,5 @@
 - hosts: databases
-  name: Install mongo on ubuntu 12.04 64bit
+  name: Install mongo
   become: yes
   roles:
     - Mongo
