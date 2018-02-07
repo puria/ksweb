@@ -124,7 +124,7 @@ def gravatar(email_address, size=24):
     from hashlib import md5
     from tg import url
     mhash = md5(email_address.encode('utf-8')).hexdigest()
-    return url('http://www.gravatar.com/avatar/'+mhash, params=dict(s=size))
+    return url('https://www.gravatar.com/avatar/'+mhash, params=dict(s=size))
 
 # Import commonly used helpers from WebHelpers2 and TG
 from tg.util.html import script_json_encode
