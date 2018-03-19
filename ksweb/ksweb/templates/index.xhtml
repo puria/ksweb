@@ -15,37 +15,20 @@
             font-size: 43.4px;
             font-weight: 900;
             color: #14bc66;
-            text-transform: uppercase;
             margin-bottom: 20px;
         }
 
-        .welcome {
-            margin-top: 20px;
-
-            font-size: 20.5px;
-            font-weight: bold;
-            color: #004c99;
-        }
-
-        .usage {
-            color: #004c99;
-        }
-
-        .box, .add {
-            margin-top: 20px;
-            margin-right: 36px;
+        .card, .add {
             height: 160px;
             line-height: 1.3;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: normal;
-            text-align: center;
             position: relative;
-            padding: 0;
             display: block;
         }
 
-        .box div, .add div {
+        .card div, .add div {
             font-weight: 900;
             font-size: 36px;
             display: block;
@@ -59,7 +42,7 @@
             font-size: 50px;
         }
 
-        .box aside {
+        .card aside {
             position: absolute;
             top: 0;
             right: 0;
@@ -69,21 +52,21 @@
             cursor: pointer;
         }
 
-        .box aside:hover {
+        .card aside:hover {
             color: #a4a4a4;
         }
 
-        .box:hover, .add {
+        .card:hover, .add {
             color: #7fbfff;
             background-color: white;
 
         }
 
-        .box:hover aside, .box:focus aside, .box:active aside {
+        .card:hover aside, .card:focus aside, .card:active aside {
             display: block;
         }
 
-        .box {
+        .card {
             color: white;
             background-color: #7fbfff;
         }
@@ -97,26 +80,32 @@
     </style>
     <script id="index_template" type="text/html">
         <![CDATA[
+        <div class="col-md-10 col-md-offset-2">
+            <h4>Hello!</h4>
+            <h1 class="text-uppercase">${user.display_name}</h1>
+            <span><br/> ${_('Select your workspace or create a new one')}:</span>
+        </div>
         <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-                <h4>Hello!</h4>
-                <h1>${user.display_name}</h1>
-                <span class="welcome">${_('Welcome to KNOWLEDGE SHAPER!')} <br/> <br/> ${_('Select your workspace or create a new one')}:</span>
-
-                <div>
-                    {{#each workspaces}}
-                    <a class="col-md-3 box btn btn-info" href="${tg.url('/welcome?workspace={{._id}}')}">
-
+                {{#each workspaces}}
+                <div class="card mb-4 box-shadow col-md-4">
+                    <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
                         <div>{{.name}}</div>
                         <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
                     </a>
-                    {{/each}}
-                    <a class="col-md-3 add btn btn-info" data-toggle="modal" data-target="#createWorkspace">
-                        <div>${h.material_icon('add_circle_outline')}</div>
-                    </a>
                 </div>
-            </div>
+                {{/each}}
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body" data-toggle="modal" data-target="#createWorkspace">
+                            <div>${h.material_icon('add_circle_outline')}</div>
+                        </div>
+                    </div>
+                </div>
+                <!--<a class="col-md-3 add btn btn-info" data-toggle="modal" data-target="#createWorkspace">-->
+                    <!--<div>${h.material_icon('add_circle_outline')}</div>-->
+                <!--</a>-->
         </div>
+
 
         <!-- Modal -->
         <div class="modal fade" id="createWorkspace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -152,7 +141,7 @@
     </script>
 </head>
 <body py:block="body" py:strip="True">
-<div id="index-ractive" style="padding-top: 20px">
+<div id="index-ractive" style="padding-top: 20px" class="row">
 
 </div>
 <script>
@@ -191,7 +180,7 @@
 
             });
             self.on('delete_workspace', function (event, workspace_id) {
-                jQuery(".box").blur();
+                jQuery(".card").blur();
                 var r = confirm("${_('WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover.')} " +
                         "${_('Are you sure you want to proceed?')}");
                 if (r == true) {

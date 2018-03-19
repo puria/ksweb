@@ -7,6 +7,8 @@ from markupsafe import Markup
 from datetime import datetime
 
 from ksweb import model
+from tg.i18n import lazy_ugettext as l_
+
 
 log = logging.getLogger(__name__)
 
@@ -14,10 +16,6 @@ log = logging.getLogger(__name__)
 def current_year():
     now = datetime.now()
     return now.strftime('%Y')
-
-
-def icon(icon_name):
-    return Markup('<i class="glyphicon glyphicon-%s"></i>' % icon_name)
 
 
 def material_icon(icon_name):
@@ -37,9 +35,7 @@ def material_icon(icon_name):
         'add': '&#xE145;',
         'insert_drive_file': '&#xE24D;',
         'content_paste': '&#xE14F;',
-        'flip_to_front': '&#xE883;',
-        'group_work': '&#xE886;',
-        'view_list': '&#xE8EF;',
+        'view_day': '&#xE8ED;',
         'save': '&#xE161;',
         'create': '&#xE150;',
         'add_circle_outline': '&#xE148;',
@@ -49,8 +45,12 @@ def material_icon(icon_name):
         'clear': '&#xE14C;',
         'done': '&#xE876;',
         'more_horiz': '&#xE5D3;',
+        'question_answer': '&#xE8AF',
+        'low_priority': '&#xE16D',
         }
-    return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
+    return Markup('<i class="material-icons media-middle material-icon-%s" '
+                  'style="vertical-align: bottom;">%s</i>' % (
+                   icon_name, icon_code[icon_name]))
 
 
 def table_row_content(entity, fields):
@@ -142,4 +142,4 @@ def get_workspace_name(workspace_id):
     if ws:
         return ws.name.upper()
     else:
-        return 'UNKNOWN WORKSPACE'
+        return l_('UNKNOWN WORKSPACE')

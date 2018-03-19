@@ -25,59 +25,84 @@
 
 <body>
 <!-- Navbar -->
-<nav class="navbar navbar-default">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-content">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="${tg.url('/')}">
-      <img src="${tg.url('/img/logo.png')}"  alt="KS"/>
-    </a>
-  </div>
+<!--<nav class="navbar navbar-default">-->
+  <!--<div class="navbar-header">-->
+    <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-content">-->
+      <!--<span class="sr-only">Toggle navigation</span>-->
+      <!--<span class="icon-bar"></span>-->
+      <!--<span class="icon-bar"></span>-->
+      <!--<span class="icon-bar"></span>-->
+    <!--</button>-->
+    <!--<a class="navbar-brand" href="${tg.url('/')}">-->
+      <!--<img src="${tg.url('/img/logo.png')}"  alt="KS"/>-->
+    <!--</a>-->
+  <!--</div>-->
 
-  <div class="collapse navbar-collapse" id="navbar-content">
-    <ul py:if="request.identity" class="nav navbar-nav navbar-right">
-      <li>
-        <a href="${tg.url('/')}" class="">
-          <img class="img-circle" src="${h.gravatar(request.identity['user'].email_address)}"/>
-        </a>
-      </li>
-      <li class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">
-          <span class="submenu">
-              ${request.identity['user'].display_name}
+  <!--<div class="collapse navbar-collapse" id="navbar-content">-->
+    <!--<ul py:if="request.identity" class="nav navbar-nav navbar-right">-->
+      <!--<li>-->
+        <!--<a href="${tg.url('/')}" class="">-->
+          <!--<img class="img-circle" src="${h.gravatar(request.identity['user'].email_address)}"/>-->
+        <!--</a>-->
+      <!--</li>-->
+      <!--<li class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">-->
+          <!--<span class="submenu">-->
+              <!--${request.identity['user'].display_name}-->
 
-                <span>
-                  <img src="${tg.url('/img/expand-more.png')}" alt="Profile"/>
-                    ${h.partials.user_menu("user_menu")}
-              </span>
+                <!--<span>-->
+                  <!--<img src="${tg.url('/img/expand-more.png')}" alt="Profile"/>-->
+                    <!--${h.partials.user_menu("user_menu")}-->
+              <!--</span>-->
 
-          </span>
+          <!--</span>-->
 
-      </li>
+      <!--</li>-->
 
-    </ul>
-  </div>
+    <!--</ul>-->
+  <!--</div>-->
 
+<!--</nav>-->
+
+<nav class="navbar sticky-top bg-primary flex-md-nowrap p-0">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="${tg.url('/')}">
+    <h2 class="font-weight-bold text-light">KS</h2>
+  </a>
+
+  <ul class="navbar-nav px-3" py:if="request.identity">
+    <li>
+      <a href="${tg.url('/userprofile')}">
+        <img class="img-circle"
+             src="${h.gravatar(request.identity['user'].email_address)}"/>
+        <span class="navbar-display-name ${('', 'active')[value_of('page') == 'profile']}">
+          ${request.identity['user'].display_name}
+        </span>
+      </a>
+    </li>
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="#">Sign out</a>
+    </li>
+  </ul>
 </nav>
 
 <!-- Logged User -->
-<div py:if="request.identity" class="container-fluid ks-container">
-  <!-- Flash messages -->
-  <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
-    <div class="row ks-row">
-        <div py:if="value_of('show_sidebar', True)" class="col-md-2 ks-sidebar">
-          ${h.partials.sidebar("sidebar", workspace=value_of("workspace"))}
-      </div>
-      <div class="col-md-10" style="padding-bottom: 20px">
-        <div py:if="flash" py:replace="Markup(flash)" />
-        <!--  Main included content -->
-        <py:block name="body"></py:block>
-      </div>
-    </div>
-  </py:with>
+<div py:if="request.identity" class="container-fluid">
+  <div class="row">
+    <!-- Flash messages -->
+    <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
+        <div py:if="flash" py:replace="Markup(flash)"/>
+        <nav py:if="value_of('show_sidebar', True)" class="col-md-2 d-none d-md-block sidebar">
+            ${h.partials.sidebar("sidebar", workspace=value_of("workspace"))}
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="d-flex justify-content-between flex-wrap align-items-center pb-2 mb-3 border-bottom">
+              <div py:if="flash" py:replace="Markup(flash)" />
+              <!--  Main included content -->
+              <py:block name="body"></py:block>
+            </div>
+        </main>
+    </py:with>
+  </div>
 </div>
 
 <!-- Not Logged User -->
