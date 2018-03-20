@@ -6,96 +6,90 @@
     <script id="OutputForm_template" type="text/html">
         <![CDATA[
         <form class="form-horizontal" on-submit="submit-form">
-            <div class="form-group" style="padding-top: 20px">
-                <div class="col-md-6 text-left ks-section-name">
-                    Output
-                </div>
-                <div class="col-md-6 text-right">
+            <div class="row mt-2 pb-3 mb-3 border-bottom">
+                <h1 class="col type-page-title">New Output</h1>
+                <div class="col-md-auto text-right">
                     {{#if edit_mode }}
-                    <button type="button" class="btn btn-warning"
+                        <button type="button" class="btn btn-outline-warning"
                             onclick='ractive_output.create_output_plus();'>${h.material_icon('create')} ${_('Create Output+')}
-                    </button>
+                        </button>
                     {{/if}}
                     {{#if saving}}
-                    ${_('Saving...')}
+                        ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} ${_('Save')}</button>
+                        <button type="submit" class="btn btn-outline-success">${h.material_icon('save')} ${_("Save")}</button>
                     {{/if}}
                 </div>
             </div>
-            <hr/>
+
+            <div class="form-group row align-items-center">
+                <div class="col-4">
+                    <input id="form-title" type="text" class="form-control {{errors.title ? 'is-invalid' : ''}}"
+                           placeholder="${_('Label')}" value="{{create.title}}"/>
+                    {{#if errors.title}}<span class="invalid-feedback">{{errors.title}}</span>{{/if}}
+                </div>
+                <div class="col">
+                    <label for="form-title" class="help-text">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <div class="col-4">
+                    <select id="form-precondition" class="custom-select {{errors.precondition ? 'is-invalid' : ''}}"
+                            value="{{create.precondition}}">
+                        <option value="" disabled selected>${_('Choose a filter (select a Q/A)')}</option>
+                        {{#each preconditions}}
+                            <option value="{{._id}}">{{.title}}</option>
+                        {{/each}}
+                    </select>
+                    {{#if errors.precondition}}<span class="help-block">{{errors.precondition}}</span>{{/if}}
+                </div>
+                <div class="col">
+                     <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}" id="create-filter"
+                           class="btn btn-outline-success">${h.material_icon('save')} ${_('New Simple Filter')}</a>
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-4 h5 text-primary my-3">${_('Available answers')}</div>
+                <label class="col help-text">${h.material_icon('help_outline')} ${_('Please select the Answer to the Question that you want to use in this Output.')}</label>
+            </div>
+
+            {{#each qas}}
+                <div class="row">
+                    <div class="col">
+                        <span class="add_circle_outline cursor-pointer"
+                              onclick='ractive_output.add_widget_to_editor("{{._id}}", "{{.title}}", "qa")'>
+                            ${h.material_icon('add_circle_outline')}
+                        </span>
+                        {{.title}}
+                    </div>
+                </div>
+            {{/each}}
+
+
+            <h5 class="text-primary mt-2">Output editor</h5>
+            {{#if errors.content}}
+            <div class="form-group {{errors.content ? 'has-error' : ''}} col-md-12">
+                <span class="help-block">{{errors.content}}</span>
+            </div>
+            {{/if}}
             <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                        <div class="col-sm-4">
-                            <input id="form-title" type="text" class="form-control" placeholder="${_('Label')}"
-                                   value="{{create.title}}"/>
-                            {{#if errors.title}}
-                            <span class="help-block">{{errors.title}}</span>
-                            {{/if}}
-                        </div>
-                        <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
-                    </div>
-                    <div class="form-group {{errors.precondition ? 'has-error' : ''}}">
-                        <div class="col-sm-4">
-                            <select id="form-precondition" class="form-control" value="{{create.precondition}}">
-                                <option value="" disabled selected>${_('Choose a filter (select a Q/A)')}</option>
-                                {{#each preconditions}}
-                                <option value="{{._id}}">{{.title}}</option>
-                                {{/each}}
-                            </select>
-                            {{#if errors.precondition}}
-                            <span class="help-block">{{errors.precondition}}</span>
-                            {{/if}}
-                        </div>
-                        <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}" type="button" id="create-filter"
-                           class="btn btn-primary">${h.material_icon('save')} ${_('New Simple Filter')}</a>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-4">
-                            ${_('Available answers')}
-                            {{#each qas}}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <span id="add_circle_outline"
-                                          onclick='ractive_output.add_widget_to_editor("{{._id}}", "{{.title}}", "qa")'
-                                          class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
-                                    {{.title}}
-                                </div>
-                            </div>
-                            {{/each}}
-                        </div>
-
-                        <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('Please select the Answer to the Question that you want to use in this Output.')}</label>
-                    </div>
-                    <br/>
-                    <h4>Output editor</h4>
-                    {{#if errors.ks_editor}}
-                    <div class="form-group {{errors.ks_editor ? 'has-error' : ''}} col-md-12">
-                        <span class="help-block">{{errors.ks_editor}}</span>
-                    </div>
-                    {{/if}}
-                    {{#if errors.content}}
-                    <div class="form-group {{errors.content ? 'has-error' : ''}} col-md-12">
-                        <span class="help-block">{{errors.content}}</span>
-                    </div>
-                    {{/if}}
-                    <div class="form-group col-md-12">
-                        <textarea name="ks_editor"></textarea>
-                    </div>
-                    <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('To create an Output from a text, highlight it with your mouse and click on the orange button Create Output+')}</label>
-
+                <div class="form-group col">
+                    <textarea id="ks_editor" name="ks_editor"
+                              class="form-control {{errors.ks_editor ? 'is-invalid' : ''}}"></textarea>
+                    {{#if errors.ks_editor}}<span class="invalid-feedback">{{errors.ks_editor}}</span>{{/if}}
                 </div>
             </div>
+            <label for="ks_editor" class="help-text">${h.material_icon('help_outline')} ${_('To create an Output from a text, highlight it with your mouse and click on the orange button Create Output+')}</label>
+
         </form>
         ]]>
     </script>
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="output-ractive" style="padding-top: 20px">
-
-</div>
+<div id="output-ractive"></div>
 <script>
     //<![CDATA[
     var OutputEditor = Ractive.extend({

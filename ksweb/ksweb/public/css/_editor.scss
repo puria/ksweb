@@ -17,8 +17,7 @@ $element_radius: 2rem;
 }
 
 .editor-element-operator {
-  @extend .editor-element;
-  background-color: $blue;
+  @extend .editor-element, .bg-primary;
   border: $blue solid 2px;
 }
 
@@ -29,18 +28,17 @@ $element_radius: 2rem;
 .editor-element-answer,
 .objplaceholder.qa.qa-widget.cke_widget_element,
 .qa-widget {
-  @extend .editor-element;
-  background-color: $green;
+  @extend .editor-element, .bg-success;
   border: darkgreen solid 2px;
 }
 
 .editor-element-output, .output-widget {
-  @extend .editor-element;
-  background-color: #0072E5;
+  @extend .editor-element, .bg-primary;
   border: $dark-blue solid 2px;
 }
 
-.editor-element-text {@extend .editor-element;
+.editor-element-text {
+  @extend .editor-element;
   background-color: #F1F1F1;
 }
 
