@@ -4,17 +4,23 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div class="row" style="padding-top: 20px">
-  <div class="col-md-6 text-left ks-section-name">
-    Questionaries
-    <h5>Questionary is an instances of a Document assigned to a user</h5>
-  </div>
-  <div class="col-md-6 text-right">
-      <a py:if='not value_of("show_sidebar")' href="#" data-toggle="modal"
+
+<div class="row mt-2">
+    <h1 class="col type-page-title">Forms</h1>
+    <div class="col-md-auto text-right">
+        <a py:if='not value_of("show_sidebar")' href="#" data-toggle="modal"
          data-target="#become-editor">
-        <button class="btn btn-primary">Become Editor</button>
-      </a>
-  </div>
+            <button class="btn btn-outline-success">Become Editor</button>
+        </a>
+    </div>
+</div>
+
+<div class="row border-bottom">
+    <p class="col">Form is an instances of a Document assigned to a user</p>
+</div>
+
+<div class="row mt-3">
+    ${h.partials.table(entities, fields, actions, workspace, actions_content=actions_content)}
 </div>
 
 <!-- Modal -->
@@ -52,9 +58,6 @@
     </form>
 </div>
 
-<div class="row" style="padding-top: 20px">
-    ${h.partials.table(entities, fields, actions, workspace, actions_content=actions_content)}
-</div>
 <script>
 <![CDATA[
 jQuery(document).ready(function () {

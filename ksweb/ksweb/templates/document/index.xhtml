@@ -4,26 +4,29 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div class="row" style="padding-top: 20px">
-    <div class="col-md-6 text-left ks-section-name">
-        Documents
-        <h5>Document is a collection of Outputs</h5>
-    </div>
-    <div class="col-md-6 text-right">
-        <a href="#">
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadFile">
+<div class="row mt-2">
+    <h1 class="col type-page-title">Documents</h1>
+    <div class="col-md-auto text-right">
+        <a href="#">
+            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#uploadFile">
             ${h.material_icon('upload')} Import Document
             </button>
         </a>
         <a href="${tg.url('/document/new', params=dict(workspace=workspace))}">
-            <button class="btn btn-primary">${h.material_icon('save')} New Document</button>
+            <button class="btn btn-outline-success">${h.material_icon('save')} New Document</button>
         </a>
     </div>
 </div>
-<div class="row" style="padding-top: 20px">
-        ${h.partials.table(entities, fields, workspace, actions_content=actions_content)}
+
+<div class="row border-bottom">
+    <p class="col">Document is a collection of Outputs</p>
 </div>
+
+<div class="row mt-3">
+    ${h.partials.table(entities, fields, workspace, actions_content=actions_content)}
+</div>
+
 
 <!-- Modal -->
         <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

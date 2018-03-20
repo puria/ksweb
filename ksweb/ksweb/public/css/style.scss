@@ -23,6 +23,7 @@ $table-head-color: $dark-blue;
 @import "editor";
 @import "vendors/bs/bootstrap";
 
+.custom-select { height: 38px; -moz-appearance: none; -webkit-appearance: none; }
 
 $footer_height: 10vh;
 

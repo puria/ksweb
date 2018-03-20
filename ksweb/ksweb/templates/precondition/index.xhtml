@@ -4,43 +4,41 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div class="row" style="padding-top: 20px">
-  <div class="col-md-6 text-left ks-section-name">
-    Filters
-    <br/>
-    <h5>Filters allows you to filter how Outputs or Q/A are displayed in questionaries.
-        <br/>Simple Filters are based on one single Q/A.
-        <br/>Advanced Filters are based on multiple Q/As.</h5>
-  </div>
-  <div class="col-md-6 text-right">
-    <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}">
-      <button class="btn btn-primary">${h.material_icon('save')} New simple filter</button>
-    </a>
-    <a href="${tg.url('/precondition/advanced/new', params=dict(workspace=workspace))}">
-      <button class="btn btn-primary">${h.material_icon('save')} New advanced filter</button>
-    </a>
 
-  </div>
+<div class="row mt-2">
+    <h1 class="col type-page-title">Filters</h1>
+    <div class="col-md-auto text-right">
+      <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}">
+        <button class="btn btn-outline-success">${h.material_icon('save')} New simple filter</button>
+      </a>
+      <a href="${tg.url('/precondition/advanced/new', params=dict(workspace=workspace))}">
+        <button class="btn btn-outline-success">${h.material_icon('save')} New advanced filter</button>
+      </a>
+    </div>
 </div>
-<div class="row" style="padding-top: 20px">
+
+<div class="row border-bottom">
+    <p class="col">Filters allows you to filter how Outputs or Q/A are displayed in questionaries.
+        <br/>Simple Filters are based on one single Q/A.
+        <br/>Advanced Filters are based on multiple Q/As.</p>
+</div>
+
+<div class="row mt-3">
     ${h.partials.table(entities, fields, workspace, actions_content=actions_content)}
 </div>
 <script>
-    <![CDATA[
-    jQuery(document).ready(function () {
-        $(document).on("click", ".new_qa", function(){
-            var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
-
-           window.location = "${tg.url('/qa/new', params=dict(workspace=workspace))}&precondition_id=" + row_id;
-
-
-        });
-        $(document).on("click", ".new_output", function(){
-            var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
-            window.location = "${tg.url('/output/new', params=dict(workspace=workspace))}&precondition_id=" + row_id;
-        });
-    });
-    ]]>
+<![CDATA[
+jQuery(document).ready(function () {
+  $(document).on("click", ".new_qa", function(){
+    var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
+    window.location = "${tg.url('/qa/new', params=dict(workspace=workspace))}&precondition_id=" + row_id;
+  });
+  $(document).on("click", ".new_output", function(){
+    var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
+    window.location = "${tg.url('/output/new', params=dict(workspace=workspace))}&precondition_id=" + row_id;
+  });
+});
+]]>
 </script>
 </body>
 </html>

@@ -109,8 +109,9 @@
                 </div>
                 <div class="col">
                     <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}&question_content={{create.question}}&question_title={{create.title}}"
-                       type="button" id="create-filter"
-                       class="btn btn-outline-success">${h.material_icon('save')} ${_("New Simple Filter")}</a>
+                       id="create-filter" class="btn btn-outline-success">
+                        ${h.material_icon('save')} ${_("New Simple Filter")}
+                    </a>
                 </div>
             </div>
 
