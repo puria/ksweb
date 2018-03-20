@@ -1,0 +1,18 @@
+$font-size-base:              1rem;
+$font-size-lg:                ($font-size-base * 1.25);
+$font-size-sm:                ($font-size-base * .875);
+
+.type-welcome-text              { @extend .font-weight-bold, .text-success }
+.type-page-title                { @extend .text-secondary, .font-weight-bold; font-size: $font-size-lg; }
+.type-table-item-title          { @extend .text-primary, .font-weight-bold; }
+.type-table-item                { @extend .text-light; font-size: $font-size-sm; }
+.type-sidebar                   { @extend .text-primary; font-size: $font-size-sm; }
+.type-navabar-menu              { @extend .text-primary; font-size: $font-size-sm; }
+.type-table-item-title-selected { @extend .font-weight-bold, .text-white; font-size: $font-size-sm; }
+.type-sidebar-items-title       { @extend .text-primary, .font-weight-bold; font-size: $font-size-sm; }
+.type-sidebar-items             { @extend .text-secondary; font-size: $font-size-sm; }
+.type-search-result-q-forms     { @extend .text-secondary, .font-weight-bold; }
+.type-success-message           { @extend .font-weight-bold, .text-success; font-size: $font-size-lg; }
+.type-table-field               { @extend .text-secondary, .font-weight-bold; font-size: $font-size-sm; }
+.type-text                      { @extend .text-secondary; font-size: $font-size-sm; }
+.type-footer                    { @extend .text-white; font-size: $font-size-sm }
