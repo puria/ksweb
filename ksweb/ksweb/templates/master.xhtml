@@ -6,7 +6,6 @@
   <meta charset="${response.charset}" />
 
   <title py:block="master_title">KS Web</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link py:for="asset_url in g.webassets['css_all'].urls()" rel="stylesheet" type="text/css"
         media="all" href="$asset_url"/>
@@ -95,7 +94,7 @@
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="d-flex justify-content-between flex-wrap align-items-center pb-2 mb-3 border-bottom">
+            <div class="pb-2 mb-3 border-bottom">
               <div py:if="flash" py:replace="Markup(flash)" />
               <!--  Main included content -->
               <py:block name="body"></py:block>

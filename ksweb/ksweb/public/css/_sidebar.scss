@@ -1,41 +1,28 @@
-/*
- * Sidebar
- */
-
 .sidebar {
-  position: fixed;
+  @extend .p-0;
+  background-color: $light-gray;
   top: 0;
   bottom: 0;
   left: 0;
   z-index: 100; /* Behind the navbar */
-  padding: 0;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 
-  .category-name {
-    color: $dark-blue;
-    font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 5px;
-  }
-  .category-name-separator {
-    margin: 0px !important;
-  }
-
-  a:hover {
-    color: $white;
-  }
-  a:link {
-    text-decoration: none;
-  }
-
-  #add_circle_outline:hover {
-    color: $blue;
-  }
+  .category-name { @extend .pt-2, .pb-1, .type-sidebar-items-title; }
+  .category-name-separator { @extend .m-0 }
+  a:hover { @extend .text-white }
+  a:link { text-decoration: none; }
+  #add_circle_outline:hover { @extend .text-primary; }
 
   .nav-item {
+    @extend .mb-1;
+    &.sidebar-active,
     &:hover {
-      background-color: $light-blue;
-      border-radius: 0px 5px 5px 0px;
+      @extend .rounded-right, .mr-4, .bg-light;
+    }
+
+    &.sidebar-active {
+      @extend .bg-dark, .text-white;
+      a { @extend .text-white }
     }
   }
 }
@@ -49,80 +36,3 @@
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
-
-
-/*
- * Navbar
- */
-
-//.navbar-brand {
-//  padding-top: .75rem;
-//  padding-bottom: .75rem;
-//  font-size: 1rem;
-//  background-color: rgba(0, 0, 0, .25);
-//  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-//}
-
-/*
- * Utilities
- */
-
-//.border-top { border-top: 1px solid #e5e5e5; }
-//.border-bottom { border-bottom: 1px solid #e5e5e5; }
-
-/*
-
-.ks-sidebar {
-  height: 100%;
-
-  .sidebar-default {
-    color: $blue;
-    padding-top: 20px;
-
-    .sidebar-item {
-      .col-md-11 {
-        padding-bottom: 5px;
-        padding-top: 5px;
-        &:hover {
-          background-color: $light-blue;
-          border-radius: 0px 5px 5px 0px;
-        }
-      }
-
-      .sidebar_active {
-        color: $white;
-        background-color: $dark-blue;
-        border-radius: 0px 5px 5px 0px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-
-        a {
-          color: $white;
-        }
-      }
-    }
-
-    .category-name {
-      color: $dark-blue;
-      font-weight: bold;
-      padding-top: 10px;
-      padding-bottom: 5px;
-    }
-    .category-name-separator {
-      margin: 0px !important;
-    }
-
-    a:hover {
-      color: $white;
-    }
-    a:link {
-      text-decoration: none;
-    }
-
-    #add_circle_outline:hover {
-      color: #2a6496;
-    }
-  }
-}
-
-*/

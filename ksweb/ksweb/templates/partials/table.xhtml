@@ -1,55 +1,42 @@
-<div class="col-md-12">
+<div class="col">
     <div class="table-responsive">
         <table class="table table-hover">
-            <thead>
-            <tr>
-                <th py:for="idx, field in enumerate(fields['columns_name'])">
+            <thead class="thead-light">
+                <tr>
+                    <th py:for="idx, field in enumerate(fields['columns_name'])">
                         ${field}
-                </th>
-                <th py:if="value_of('actions_content', False)">
-                    &nbsp;<!-- nameless column -->
-                </th>
-            </tr>
+                    </th>
+                    <th py:if="value_of('actions_content', False)"></th>
+                </tr>
             </thead>
             <tbody>
-            <tr py:for="entity in entities">
-            ${h.table_row_content(entity, fields['fields_name'])}
-                <td py:if="value_of('download', False)">
-                    <a class="btn btn-primary export"
-                       href='${tg.url("/document/export", params=dict(_id=entity._id))}'>${h.material_icon('download')}</a>
-                </td>
-                <td py:if="value_of('actions_content', False)">
-                    <a class="actions" data-toggle="popover" data-trigger="focus" data-row-id="${entity._id}" href="#">${h.material_icon('more_horiz')}</a>
-                </td>
-            </tr>
+                <tr py:for="entity in entities">
+                    ${h.table_row_content(entity, fields['fields_name'])}
+                    <td py:if="value_of('download', False)">
+                        <a class="btn btn-primary export"
+                           href='${tg.url("/document/export", params=dict(_id=entity._id))}'>${h.material_icon('download')}</a>
+                    </td>
+                    <td py:if="value_of('actions_content', False)">
+                        <a class="actions" data-toggle="popover" data-trigger="focus" data-row-id="${entity._id}" href="#">${h.material_icon('more_horiz')}</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
     <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
 
     <div py:if="value_of('actions_content', False)" id="actions-popover-content" class="hidden">
-        <div py:for="action in actions_content" style="margin: 5px 0"><a href="#"
-                                                                         class="${h.underscore(action)}">${action}</a>
+        <div py:for="action in actions_content" class="my-2">
+            <a href="#" class="${h.underscore(action)}">${action}</a>
         </div>
     </div>
     <script>
-        $(document).ready(function () {
-            $('.actions').popover({
-                html: true,
-
-                content: function () {
-                    console.log($(this).data("row-id"));
-                    return $("#actions-popover-content").html();
-                },
-                placement: 'bottom'
-            }).click(function(e) {
-  e.preventDefault();
-});
-
-
-
-
-        });
-
+    $(document).ready(function () {
+        $('.actions').popover({
+            html: true,
+            content: () => $("#actions-popover-content").html(),
+            placement: 'bottom'
+        }).click(e => {e.preventDefault()})
+    })
     </script>
 </div>

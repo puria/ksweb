@@ -12,11 +12,15 @@ $white: #ffffff;
 
 $dark: $dark-blue;
 $light: $light-blue;
-$primary: $blue;
+$secondary: $dark-blue;
 
+$table-border-width: 0;
+$table-head-bg: $very-light-blue;
+$table-head-color: $dark-blue;
+
+@import "typography";
 @import "sidebar";
 @import "editor";
-@import "table";
 @import "vendors/bs/bootstrap";
 
 
@@ -34,47 +38,6 @@ $footer_height: 10vh;
       color: $red;
     }
   }
-}
-
-/* Layout style for sidebar and content */
-html, body,
-.ks-container, .ks-row {
-  height: 100%;
-}
-
-.ks-sidebar {
-  background: $light-gray;
-  overflow: auto;
-  height: 100%;
-}
-
-.ks-section-name {
-  font-size: 18px;
-  color: $dark-blue;
-  font-weight: bold;
-}
-
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td{
-  border: none;
-}
-
-thead tr {
-  background-color: $very-light-blue;
-}
-
-.table>tbody>tr>td {
-  border-bottom: 1px solid $very-light-blue;
-}
-
-
-.table-hover>tbody>tr:hover {
-  background-color: $very-light-blue;
-}
-
-.table > thead:first-child > tr:first-child > th{
-  color: $dark-blue;
-  font-size: 12px;
-
 }
 
 .material-icon-add_circle_outline_rotate {
@@ -154,38 +117,3 @@ hr {
 
 ////////// WORKING
 
-.sidebar {
-  @extend .position-fixed, .p-0;
-  background-color: $light-gray;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 100; /* Behind the navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-
-  .category-name {
-    color: $dark-blue;
-    font-weight: bold;
-    @extend .pt-2, .pb-1;
-  }
-  .category-name-separator { @extend .m-0 }
-  a:hover { @extend .text-white }
-  a:link { text-decoration: none; }
-
-  #add_circle_outline:hover {
-    color: $blue;
-  }
-
-  .nav-item {
-    @extend .mb-1;
-    &.sidebar-active,
-    &:hover {
-      @extend .rounded-right, .mr-4, .bg-light;
-    }
-
-    &.sidebar-active {
-      @extend .bg-dark, .text-white;
-      a { @extend .text-white }
-    }
-  }
-}

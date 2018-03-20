@@ -58,11 +58,10 @@ def table_row_content(entity, fields):
 
     # name of field that you want customize
     css_class = {
-        'title': 'table-row-title'
+        'title': 'type-table-item-title'
     }
     for field in fields:
         data = getattr(entity, field)
-        converters_map = {}
         if field != '_id':
             converted_value = data
             if type(data) in table_row_content.ROW_CONVERSIONS:
@@ -80,7 +79,7 @@ def table_row_content(entity, fields):
                 convert = converters_map.get(field, lambda o: getattr(o, field))
                 converted_value = convert(entity)
 
-        tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'table-row')))
+        tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'type-table-item')))
     return html.HTML(*tags)
 
 table_row_content.ROW_CONVERSIONS = {
