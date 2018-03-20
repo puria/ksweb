@@ -1,7 +1,8 @@
 
-$element_radius: 15px;
+$element_radius: 2rem;
 
-.editor-element {border-radius: $element_radius;
+.editor-element {
+  border-radius: $element_radius;
   background-color: $carbon;
   font-size: 12px;
   padding: 4px 0px 4px 8px;
@@ -12,6 +13,7 @@ $element_radius: 15px;
   .media-middle {
     vertical-align: top;
   }
+  .material-icons { margin-bottom: 2px; }
 }
 
 .editor-element-operator {
