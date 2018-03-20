@@ -25,7 +25,7 @@
     </div>
     <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
 
-    <div py:if="value_of('actions_content', False)" id="actions-popover-content" class="hidden">
+    <div py:if="value_of('actions_content', False)" id="actions-popover-content" class="d-none">
         <div py:for="action in actions_content" class="my-2">
             <a href="#" class="${h.underscore(action)}">${action}</a>
         </div>
