@@ -13,11 +13,6 @@ from tg.i18n import lazy_ugettext as l_
 log = logging.getLogger(__name__)
 
 
-def current_year():
-    now = datetime.now()
-    return now.strftime('%Y')
-
-
 def material_icon(icon_name):
     icon_code = {
         'delete': '&#xE872;',
@@ -119,7 +114,7 @@ def editor_widget_template_for_qa(**kw):
 def underscore(text):
     return text.lower().replace(" ", "_")
 
-def gravatar(email_address, size=24):
+def gravatar(email_address, size=200):
     from hashlib import md5
     from tg import url
     mhash = md5(email_address.encode('utf-8')).hexdigest()

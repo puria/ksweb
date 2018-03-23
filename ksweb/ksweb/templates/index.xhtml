@@ -1,109 +1,31 @@
-<html py:extends="master_without_sidebar.xhtml" py:strip="True">
+<html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
     <title py:block="master_title">Welcome to KS Web</title>
-    <style>
-        h4 {
-            margin-top: 80px;
-            margin-bottom: 0;
-            font-size: 17.2px;
-            font-weight: 900;
-            color: #14bc66;
-        }
-
-        h1 {
-            margin-top: 0;
-            font-size: 43.4px;
-            font-weight: 900;
-            color: #14bc66;
-            margin-bottom: 20px;
-        }
-
-        .card, .add {
-            height: 160px;
-            line-height: 1.3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-            position: relative;
-            display: block;
-        }
-
-        .card div, .add div {
-            font-weight: 900;
-            font-size: 36px;
-            display: block;
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            transform: translateY(-50%);
-        }
-
-        .add div i {
-            font-size: 50px;
-        }
-
-        .card aside {
-            position: absolute;
-            top: 0;
-            right: 0;
-            padding: 1rem;
-            display: none;
-            color: #d4d4d4;
-            cursor: pointer;
-        }
-
-        .card aside:hover {
-            color: #a4a4a4;
-        }
-
-        .card:hover, .add {
-            color: #7fbfff;
-            background-color: white;
-
-        }
-
-        .card:hover aside, .card:focus aside, .card:active aside {
-            display: block;
-        }
-
-        .card {
-            color: white;
-            background-color: #7fbfff;
-        }
-
-        .add:hover {
-            background-color: #004c99;
-            color: white;
-
-        }
-
-    </style>
+    <link rel="stylesheet" py:for="asset_url in g.webassets['index'].urls()" href="$asset_url"/>
     <script id="index_template" type="text/html">
         <![CDATA[
-        <div class="col-md-10 col-md-offset-2">
-            <h4>Hello!</h4>
-            <h1 class="text-uppercase">${user.display_name}</h1>
-            <span><br/> ${_('Select your workspace or create a new one')}:</span>
-        </div>
         <div class="row">
-                {{#each workspaces}}
-                <div class="card mb-4 box-shadow col-md-4">
-                    <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
-                        <div>{{.name}}</div>
-                        <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
-                    </a>
+          <div class="col col-offset-2">
+              <h4 class="type-welcome-text">Hello!</h4>
+              <h1 class="text-uppercase type-welcome-text">${user.display_name}</h1>
+              <p class="type-table-item-title my-4">${_('Select your workspace or create a new one')}:</p>
+          </div>
+        </div>
+        <div class="card-columns">
+            {{#each workspaces}}
+            <div class="card p-4">
+                <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
+                    <div>{{.name}}</div>
+                    <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
+                </a>
+            </div>
+            {{/each}}
+            <div class="card p-4">
+                <div class="card-body add text-center" data-toggle="modal"
+                     data-target="#createWorkspace">
+                    ${h.material_icon('add_circle_outline')}
                 </div>
-                {{/each}}
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body" data-toggle="modal" data-target="#createWorkspace">
-                            <div>${h.material_icon('add_circle_outline')}</div>
-                        </div>
-                    </div>
-                </div>
-                <!--<a class="col-md-3 add btn btn-info" data-toggle="modal" data-target="#createWorkspace">-->
-                    <!--<div>${h.material_icon('add_circle_outline')}</div>-->
-                <!--</a>-->
+            </div>
         </div>
 
 
@@ -113,9 +35,10 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">${_('Create a new Workspace')}</h4>
+                          <h4 class="modal-title" id="myModalLabel">${_('Create a new Workspace')}</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
                         </div>
                         <div class="modal-body">
                             <input id="form-title" type="text" class="form-control" placeholder="Name"
@@ -125,10 +48,11 @@
                             {{/if}}
                         </div>
                         <div class="modal-footer">
-                            <a type="button" class="btn btn-danger" data-dismiss="modal">${_('Cancel')}</a>
-                            <button type="button"
+                            <button type="button" class="btn btn-outline-danger"
+                               data-dismiss="modal">${_('Cancel')}</button>
+                            <button type="submit"
                                     on-click="add_category:{{workspace_name}}"
-                                    class="btn btn-primary">${_('Save')}
+                                    class="btn btn-outline-success">${_('Save')}
                             </button>
                         </div>
                     </div>
@@ -141,7 +65,7 @@
     </script>
 </head>
 <body py:block="body" py:strip="True">
-<div id="index-ractive" style="padding-top: 20px" class="row">
+<div id="index-ractive" class="pt-3">
 
 </div>
 <script>
@@ -171,10 +95,8 @@
                     window.location.replace("${tg.url('/')}");
                 }).fail(function (jqXHR) {
                     var data = jQuery.parseJSON(jqXHR.responseText);
-                    console.log("fail");
-                    console.log(data);
                     self.set('errors', data.errors);
-                    console.log(data.errors);
+                    console.error(data.errors);
                     self.set('saving', false);
                 });
 

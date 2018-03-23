@@ -18,6 +18,12 @@ $table-border-width: 0;
 $table-head-bg: $very-light-blue;
 $table-head-color: $dark-blue;
 
+$hr-border-color: $dark;
+$hr-border-width: 2px;
+
+$navbar-dark-color: $white;
+$navbar-dark-hover-color: $white;
+
 @import "typography";
 @import "sidebar";
 @import "editor";
@@ -48,7 +54,7 @@ $footer_height: 10vh;
 }
 
 .cursor-pointer {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 
@@ -69,24 +75,11 @@ $footer_height: 10vh;
   padding: 30px;
 }
 
-hr {
-  border-bottom: 2px solid $dark-blue;
-}
-
 .table-row{
     white-space: nowrap;
     max-width: 500px;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-#create-filter {
-  display: inline-block;
-}
-
-
-.response{
-  display: inline-block;
 }
 
 .response-text {
@@ -95,19 +88,9 @@ hr {
   margin:0.1% auto;
 }
 
-.text-box {
-  padding-top: 20px;
-  font-size: 14px;
-}
-
-.ws:hover {
-  color: #0072e5;
-  cursor: pointer;
-}
-
-.ws{
+.ws {
   font-size: 18px;
+  &:hover { @extend .cursor-pointer, .text-primary; }
 }
-
 .help-text { color: $grey; }
 
