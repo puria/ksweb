@@ -28,3 +28,4 @@ env
 ksweb/ksweb/public/.webassets-cache/*
 mail
 assets
+*.retry
