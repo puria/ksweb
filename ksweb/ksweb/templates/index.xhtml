@@ -31,7 +31,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="createWorkspace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <form on-submit="new_questionary">
+            <form on-submit="add_category:{{workspace_name}}">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -50,8 +50,8 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-danger"
                                data-dismiss="modal">${_('Cancel')}</button>
-                            <button type="submit"
-                                    on-click="add_category:{{workspace_name}}"
+                            <button type="buttom"
+                                    on-submit="add_category:{{workspace_name}}"
                                     class="btn btn-outline-success">${_('Save')}
                             </button>
                         </div>
@@ -79,24 +79,19 @@
             var self = this;
             self.set('workspaces', self.workspaces);
             self.on('add_category', function (event, workspace_name) {
-                var params = {
-                    'workspace_name': workspace_name
-                };
-
-                var api_params = JSON.stringify(params);
+                var params = { 'workspace_name': workspace_name };
                 $.ajax({
                     type: 'POST',
                     url: '${tg.url('/category/create')}',
-                    data: api_params,
+                    data: JSON.stringify(params),
                     dataType: "json",
                     processData: false,
                     contentType: 'application/json'
                 }).done(function (data) {
                     window.location.replace("${tg.url('/')}");
-                }).fail(function (jqXHR) {
-                    var data = jQuery.parseJSON(jqXHR.responseText);
-                    self.set('errors', data.errors);
-                    console.error(data.errors);
+                }).fail(function (jqXHR, ts) {
+                    console.error(jqXHR, ts)
+                    self.set('errors', ts);
                     self.set('saving', false);
                 });
 
