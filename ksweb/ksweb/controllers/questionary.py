@@ -119,8 +119,7 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def download(self, _id):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        response.headerlist.append(('Content-Disposition',
-                                    'attachment;filename=%s.odt' % questionary.title))
+        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.odt' % questionary._id))
         return dict(content=self.get_questionary_html(_id).striptags())
 
     @staticmethod
