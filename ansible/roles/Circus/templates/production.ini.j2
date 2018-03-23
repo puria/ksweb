@@ -11,7 +11,7 @@
 # WARNING: *THE LINE BELOW MUST BE FALSE ON A PRODUCTION ENVIRONMENT*
 # Debug mode will enable the interactive debugging tool, allowing ANYONE to
 # execute malicious code after an exception is raised.
-debug = false
+debug = true
 
 # ERROR REPORTING BY EMAIL
 # Uncomment to enable email error reporting, you probably want this
@@ -40,29 +40,26 @@ trace_errors.smtp_server = localhost
 
 [server:main]
 use = egg:gearbox#wsgiref
-host = 0.0.0.0
-port = 8080
+host = 127.0.0.1
+port = 8888
 
 [app:main]
 use = egg:ksweb
-#lang = it
 
 # Default application language, when available this will be
 # used when none of the browser requested languages is available.
-i18n.lang = it
+#i18n.lang = en
 
 cache_dir = %(here)s/data
+public_dir = %(here)s/ksweb/ksweb/public
 session.key = ksweb
-session.secret = dbb29b2e-2633-486b-88a4-2f5d75ebdc6d
+session.secret = 8d79fec5-6cd0-4586-b90d-cfbf80244835
 
 #By default session is store in cookies to avoid the overhead
 #of having to manage a session storage. On production you might
 #want to switch to a better session storage.
 session.type = cookie
-session.validate_key = dbb29b2e-2633-486b-88a4-2f5d75ebdc6d
-
-beaker.session.tg_avoid_touch = true
-beaker.session.cookie_expires  = 1800
+session.validate_key = 8d79fec5-6cd0-4586-b90d-cfbf80244835
 
 # If you'd like to fine-tune the individual locations of the cache data dirs
 # un-comment the desired settings here:
@@ -84,11 +81,11 @@ beaker.session.cookie_expires  = 1800
 #javascript files (if your library supports that)
 toscawidgets.framework.resource_variant=debug
 
+
 # pick the form for your database
 # %(here) may include a ':' character on Windows environments; this can
 # invalidate the URI when specifying a SQLite db via path name
-ming.url = mongodb://db.axantweb.com:30000/
-ming.db = ksweb-axant
+ming.url = mongodb://127.0.0.1:{{dbport}}/{{dbname}}
 
 # This line ensures that Genshi will render xhtml when sending the
 # output. Change to html or xml, as desired.
@@ -109,26 +106,36 @@ templating.genshi.doctype = html5
 # to an in-memory cache.
 templating.mako.compiled_templates_dir = %(here)s/data/templates
 
+pagination.items_per_page = 20
+
 # Logging configuration
 # Add additional loggers, handlers, formatters here
 # Uses python's logging config file format
 # http://docs.python.org/lib/logging-config-fileformat.html
 
-pagination.items_per_page = 20
-
-#  MAILER SENDRIG CONFIGURATION
-mail.debugmailer = false
-mail.host = smtp.sendgrid.com
-mail.port = 587
-mail.username = axant
+#tgext.mailer data:
+mail.host = mail.axantweb.com
+mail.username = no-reply@axantweb.com
 mail.password = ********
-mail.debug = 1
+mail.tls = true
 
-#  TGAPP-REGISTRATION Configuration
-registration.email_sender = no-reply@ksweb.com
+#tgapp-registration
+registration.email_sender = no-reply@axantweb.com
+registration.smtp_host = mail.axantweb.com
+registration.smtp_login = no-reply@axantweb.com
+registration.smtp_passwd = ********
 
-#  TGAPP-RESETPASSWORD Configuration
-resetpassword.email_sender = no-reply@ksweb.com
+#Reset password
+resetpassword.email_sender = no-reply@axantweb.it
+resetpassword.smtp_host = mail.axantweb.com
+resetpassword.smtp_login = no-reply@axantweb.com
+resetpassword.smtp_passwd = ********
+
+#tgapp-userprofile
+userprofile.email_sender = no-reply@axantweb.it
+userprofile.smtp_host = mail.axantweb.com
+userprofile.smtp_login = no-reply@axantweb.com
+userprofile.smtp_passwd = ********
 
 [loggers]
 keys = root, ksweb, auth
@@ -148,7 +155,6 @@ handlers = console
 level = DEBUG
 handlers =
 qualname = ksweb
-# A logger for authentication, identification and authorization
 # this is repoze.who:
 [logger_auth]
 level = WARN
