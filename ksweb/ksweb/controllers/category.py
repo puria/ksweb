@@ -2,7 +2,7 @@
 """Category controller module"""
 from bson import ObjectId
 from ksweb.model import Category, Qa, Output, Precondition, Document, Questionary
-from tg import decode_params, predicates
+from tg import decode_params, predicates, request
 from tg import expose, validate, RestController, validation_errors_response
 from ksweb.lib.validator import CategoryExistValidator
 from tg import flash
@@ -25,7 +25,8 @@ class CategoryController(RestController):
 
     @expose('json')
     def get_all(self):
-        categories = Category.query.find({'visible': True}).sort('_id').all()
+        query = {'_owner': {'$in': [request.identity['user']._id, None]}, 'visible': True}
+        categories = Category.query.find(query).sort('_id').all()
         return dict(categories=categories)
 
     @decode_params('json')
@@ -34,7 +35,7 @@ class CategoryController(RestController):
         'workspace_name': StringLengthValidator(min=2),
     }, error_handler=validation_errors_response)
     def create(self, workspace_name=None, **kw):
-
+        user = request.identity['user']
         ws = Category.query.find({'name': str(workspace_name)}).first()
         if ws:
             response.status_code = 412
@@ -43,6 +44,7 @@ class CategoryController(RestController):
         workspace = Category(
             visible=True,
             name=str(workspace_name),
+            _owner=user._id
         )
 
         flash(_("Workspace %s successfully created!" % workspace.name))

@@ -7,9 +7,7 @@ from ksweb import model
 
 
 def to_object_id(s):
-    if not s:
-        return None
-    return ObjectId(s)
+    return ObjectId(s) if s else None
 
 
 def to_dict(obj):
@@ -24,7 +22,6 @@ def to_dict(obj):
 
 
 def clone_obj(class_, original_obj, params):
-
     values = params.copy()
 
     for k, v in to_dict(original_obj).items():
@@ -90,8 +87,7 @@ def import_precondition(imported_document, precondition_id, owner, workspace_id)
     if precondition_id in ['and', 'or', '(', ')', 'not']:
         return precondition_id
 
-    s_preconditions, a_preconditions = imported_document['simple_preconditions'], imported_document[
-        'advanced_preconditions']
+    s_preconditions, a_preconditions = imported_document['simple_preconditions'], imported_document['advanced_preconditions']
 
     if precondition_id in s_preconditions:
         precondition = s_preconditions[str(precondition_id)]
@@ -99,8 +95,9 @@ def import_precondition(imported_document, precondition_id, owner, workspace_id)
         condition = [ObjectId(qa_id), precondition['condition'][1]]
     elif precondition_id in a_preconditions:
         precondition = a_preconditions[str(precondition_id)]
-        condition = [import_precondition(imported_document, condition, owner, workspace_id) for condition in
-                     precondition['condition']]
+        condition = [import_precondition(imported_document, condition, owner, workspace_id) for condition in precondition['condition']]
+    else:
+        return
 
     prec = upsert_document(model_class=model.Precondition, _owner=ObjectId(owner),
                            _category=ObjectId(workspace_id),
@@ -124,19 +121,14 @@ def import_output(imported_document, output_id, owner, workspace_id):
     prec_id = import_precondition(imported_document, output['_precondition'], owner, workspace_id)
     content = []
     values ={}
-    options = {'output': {'fn': import_output, 'prefix': 'output_'},
-               'qa_response': {'fn': import_qa, 'prefix': 'qa_'}}
-
     for element in output['content']:
         c = {'type': element['type'], 'title': element['title']}
-        fn = options[c['type']]['fn']
-        prefix = options[c['type']]['prefix']
-
-        c['content'] = str(fn(imported_document,
-                              element['content'],
-                              owner,
-                              workspace_id))
-        values[prefix + element['content']] = '${' + prefix + c['content'] + '}'
+        if element['type'] == 'output':
+            c['content'] = str(import_output(imported_document, element['content'], owner, workspace_id))
+            values['output_' + element['content']] = '${output_' + c['content'] + '}'
+        elif element['type'] == 'qa_response':
+            c['content'] = str(import_qa(imported_document, element['content'], owner, workspace_id))
+            values['qa_' + element['content']] = '${qa_' + c['content']+'}'
         content.append(c)
 
     html = Template(output['html']).safe_substitute(**values)
@@ -183,7 +175,9 @@ def export_qa(qa_id, document):
 def export_preconditions(precondition_id, document):
     if precondition_id in ['and', 'or', '(', ')', 'not']:
         return
-    precondition = model.Precondition.query.get(_id=ObjectId(precondition_id)).__json__()
+    precondition = model.Precondition.query.get(_id=ObjectId(precondition_id))
+    if not precondition: return
+    precondition = precondition.__json__()
     precondition.pop('_owner', None)
     precondition.pop('_category', None)
     precondition.pop('entity', None)

@@ -33,7 +33,7 @@ class TestCategory(TestController):
         category2 = self._get_category('Area 2')
         category3 = self._get_category('Not Visible Category')
 
-        resp = self.app.get('/category/get_all', params={'id': str(category1._id)})
+        resp = self.app.get('/category/get_all')
         assert category1._id in resp
         assert category2._id in resp
         assert category3._id not in resp
