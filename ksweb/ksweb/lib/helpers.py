@@ -86,11 +86,11 @@ table_row_content.ROW_CONVERSIONS = {
 
 
 def bootstrap_pager(paginator):
-    return html.HTML.div(paginator.pager(
-        page_link_template='<li><a%s>%s</a></li>',
-        page_plain_template='<li%s><span>%s</span></li>',
+    return html.HTML.ul(paginator.pager(
+        page_link_template='<li class="page-item"><a class="page-link"%s>%s</a></li>',
+        page_plain_template='<li class="page-item active"%s><span class="page-link">%s</span></li>',
         curpage_attr={'class': 'active'}
-    ), class_="pagination")
+    ), class_="pagination justify-content-end")
 
 
 def editor_widget_template_for_output(**kw):
