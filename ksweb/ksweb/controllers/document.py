@@ -5,6 +5,8 @@ from string import Template
 
 import tg
 from bson import ObjectId
+from tg.renderers import json as json_render
+
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import import_output, export_outputs
 from tg import expose, tmpl_context, predicates, RestController, request, validate, \
@@ -141,8 +143,7 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     def export(self, _id):
         document = model.Document.query.get(_id=ObjectId(_id)).__json__()
-        response.headerlist.append(('Content-Disposition',
-                                    str('attachment;filename=%s.json' % _id)))
+        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % _id)))
         document.pop('_category', None)
         document.pop('_id', None)
         document.pop('entity', None)
@@ -150,7 +151,9 @@ class DocumentController(RestController):
         document['simple_preconditions'] = document['qa'] = {}
         for output in document['content']:
             export_outputs(output['content'], document)
-        return document
+
+        encoded = json_render.encode(document)
+        return json.dumps(json.loads(encoded), sort_keys=True, indent=4)
 
     @expose()
     @validate({

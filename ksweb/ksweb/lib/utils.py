@@ -3,6 +3,8 @@ from string import Template
 
 from bson import ObjectId
 import ming
+from tg.util.ming import dictify
+
 from ksweb import model
 
 
@@ -11,14 +13,7 @@ def to_object_id(s):
 
 
 def to_dict(obj):
-    """Converts a Ming model to a dictionary"""
-    prop_names = [
-        prop.name for prop in ming.odm.mapper(obj).properties if isinstance(prop, ming.odm.property.FieldProperty)
-    ]
-    props = {}
-    for key in prop_names:
-        props[key] = getattr(obj, key)
-    return props
+    return dictify(obj)
 
 
 def clone_obj(class_, original_obj, params):
