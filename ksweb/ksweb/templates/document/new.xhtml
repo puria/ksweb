@@ -7,48 +7,37 @@
     <script id="DocumentForm_template" type="text/html">
         <![CDATA[
         <form id="document-form" class="form-horizontal" on-submit="submit-form">
-            <div class="form-group" style="padding-top: 20px">
-                <div class="col-md-6 text-left ks-section-name">
-                    ${_("Document")}
-                </div>
-                <div class="col-md-6 text-right">
+            <div class="row mt-2 pb-3 mb-3 border-bottom">
+                <h1 class="col type-page-title">${_("New Document")}</h1>
+                <div class="col-md-auto text-right">
                     {{#if create._id}}
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-success" data-toggle="modal"
-                            data-target="#createQuestionary">
-                        ${h.material_icon('create')} ${_("New Questionary")}
-                    </button>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createQuestionary">
+                            ${h.material_icon('create')} ${_("New Form")}
+                        </button>
                     {{/if}}
-
-                    {{#if edit_mode}}
-                    <button type="button" class="btn btn-warning"
-                            onclick='ractive_document.create_output_plus();'>
-                        ${h.material_icon('create')} ${_("Create Output+")}
-                    </button>
+                    {{#if edit_mode }}
+                        <button type="button" class="btn btn-outline-warning"
+                            onclick='ractive_output.create_output_plus();'>${h.material_icon('create')} ${_('Create Output+')}
+                        </button>
                     {{/if}}
-
                     {{#if saving}}
-                    ${_("Saving...")}
+                        ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')}
-                        ${_("Save")}
-                    </button>
+                        <button type="submit" class="btn btn-outline-success">${h.material_icon('save')} ${_("Save")}</button>
                     {{/if}}
                 </div>
             </div>
 
-            <hr/>
-            <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control"
-                           placeholder="${_('Title')}"
-                           value="{{create.title}}"/>
-                    {{#if errors.title}}
-                    <span class="help-block">{{errors.title}}</span>
-                    {{/if}}
+
+            <div class="form-group row align-items-center">
+                <div class="col-4">
+                    <input id="extra-fields-form-title" type="text" class="form-control {{errors.title ? 'is-invalid' : ''}}"
+                           placeholder="${_('Title')}" value="{{create.title}}"/>
+                    {{#if errors.title}}<span class="invalid-feedback">{{errors.title}}</span>{{/if}}
                 </div>
-                <label for="extra-fields-form-title" class="help-text">${h.material_icon('help_outline')}
-                    Title your document (eg. Privacy Policy) .</label>
+                <div class="col">
+                    <label for="extra-fields-form-title" class="help-text">${h.material_icon('help_outline')} ${_('Title your document (eg. Privacy Policy).')}</label>
+                </div>
             </div>
 
             <a class="btn btn-primary" data-toggle="collapse" href="#metadata">Metadata</a>
@@ -121,9 +110,11 @@
                 </div>
             </div>
             <br/>
-            <h4>Document editor</h4>
-            <div class="form-group col-md-12">
-                <textarea name="ks_editor"></textarea>
+            <h5 class="text-primary">Document editor</h5>
+            <div class="row">
+                <div class="form-group col">
+                    <textarea name="ks_editor"></textarea>
+                </div>
             </div>
         </form>
         ]]>
@@ -131,9 +122,7 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="document-ractive" style="padding-top: 20px">
-
-</div>
+<div id="document-ractive"></div>
 <script>
 
     <![CDATA[

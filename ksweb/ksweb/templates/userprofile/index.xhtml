@@ -2,7 +2,7 @@
       xmlns:xi="http://www.w3.org/2001/XInclude"
       py:strip="">
 
-<py:extends href="master_without_sidebar.xhtml" />
+<py:extends href="master.xhtml" />
 
 <head py:block="head" py:strip="True">
     <title>${user_displayname[1]} Profile</title>
@@ -14,13 +14,6 @@
 
         .actions {
             padding-top: 67px;
-        }
-
-        h2 {
-            font-size: 18px;
-            color: #004c99;
-            font-weight: bolder;
-            margin-bottom: 52px;
         }
 
         span.label {
@@ -66,9 +59,9 @@
         <img id="userprofile_avatar" src="${user_avatar}" />
         <div class="row">
             <div class="col-md-12 actions">
-                <a href="${h.plug_url('userprofile', '/edit')}" class="btn btn-primary">Edit</a>
+                <a href="${h.plug_url('userprofile', '/edit')}" class="btn btn-outline-primary">Edit</a>
                 &nbsp;
-                <a href="${h.plug_url('userprofile', '/chpasswd')}" class="btn btn-default">Change password</a>
+                <a href="${h.plug_url('userprofile', '/chpasswd')}" class="btn btn-outline-success">Change password</a>
             </div>
         </div>
     </div>

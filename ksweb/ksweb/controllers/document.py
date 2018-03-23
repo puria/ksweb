@@ -5,6 +5,8 @@ from string import Template
 
 import tg
 from bson import ObjectId
+from tg.renderers import json as json_render
+
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import import_output, export_outputs
 from tg import expose, tmpl_context, predicates, RestController, request, validate, \
@@ -141,8 +143,7 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     def export(self, _id):
         document = model.Document.query.get(_id=ObjectId(_id)).__json__()
-        response.headerlist.append(('Content-Disposition',
-                                    str('attachment;filename=%s.json' % _id)))
+        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % _id)))
         document.pop('_category', None)
         document.pop('_id', None)
         document.pop('entity', None)
@@ -150,13 +151,16 @@ class DocumentController(RestController):
         document['simple_preconditions'] = document['qa'] = {}
         for output in document['content']:
             export_outputs(output['content'], document)
-        return document
+
+        encoded = json_render.encode(document)
+        return json.dumps(json.loads(encoded), sort_keys=True, indent=4)
 
     @expose()
     @validate({
         'workspace': CategoryExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def import_document(self, workspace, file_import):
+        owner = user = request.identity['user']._id
         imported_document = json.load(file_import.file)
         content = []
         values = {}
@@ -166,14 +170,14 @@ class DocumentController(RestController):
                 'title': output['title'],
                 'content': str(import_output(imported_document,
                                              str(output['content']),
-                                             imported_document['_owner'],
+                                             owner,
                                              workspace))
             }
             content.append(c)
             values['output_' + output['content']] = '${output_' + c['content'] + '}'
         html = Template(imported_document['html']).safe_substitute(**values)
         model.Document(
-            _owner=imported_document['_owner'],
+            _owner=owner,
             _category=ObjectId(workspace),
             title=imported_document['title'],
             content=content,

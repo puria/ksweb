@@ -125,7 +125,7 @@ class RootController(BaseController):
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def start(self):
         user = request.identity['user']
-        categories = model.Category.query.find({'visible': True}).sort('_id').all()
+        categories = model.Category.per_user(user._id)
         return dict(page='index', user=user, workspaces=categories, show_sidebar=False)
 
     @expose('ksweb.templates.welcome')

@@ -4,49 +4,35 @@
     <script id="PreconditionSimpleForm_template" type="text/html">
         <![CDATA[
         <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
-            <div class="form-group" style="padding-top: 20px">
-                <div class="col-md-6 text-left ks-section-name">
-                    ${_('Advanced Filters')}
-                </div>
-                <div class="col-md-6 text-right">
+            <div class="row mt-2 pb-3 mb-3 border-bottom">
+                <h1 class="col type-page-title">${_('Advanced Filters')}</h1>
+                <div class="col-md-auto text-right">
                     {{#if saving}}
-                    ${_('Saving...')}
+                    ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-primary">${h.material_icon('save')} ${_('Save')}</button>
+                    <button type="submit" class="btn btn-outline-success">
+                        ${h.material_icon('save')}
+                        ${_("Save")}
+                    </button>
                     {{/if}}
                 </div>
             </div>
-            <hr/>
-            <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                <div class="col-md-3">
-                    <input id="extra-fields-form-title" type="text" class="form-control" placeholder="${_('Label')}"
+
+            <div class="form-group row align-items-center">
+                <div class="col-4">
+                    <input id="extra-fields-form-title" type="text"
+                           class="form-control {{errors.title ? 'is-invalid' : ''}}"
+                           placeholder="${_('Label')}"
                            value="{{create.title}}"/>
                     {{#if errors.title}}
-                    <span class="help-block">{{errors.title}}</span>
+                    <span class="invalid-feedback">{{errors.title}}</span>
                     {{/if}}
                 </div>
-                <label for="extra-fields-form-question" class="help-text">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
+                <label for="extra-fields-form-title" class="help-text col">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
             </div>
-            <!-- <div class="form-group {{errors.category ? 'has-error' : ''}}">
-                 <div class="col-md-3">
-                     <select id="extra-fields-form-category" class="form-control" value="{{create.category}}">
-                       {{#each categories}}
-                         {{#if .name == 'Altro'}}
-                           <option value="{{._id}}" selected>{{.name}}</option>
-                         {{else}}
-                           <option value="{{._id}}">{{.name}}</option>
-                         {{/if}}
-                       {{/each}}
-                     </select>
 
-                     {{#if errors.category}}
-                     <span class="help-block">{{errors.category}}</span>
-                     {{/if}}
-                 </div>
-             </div>-->
-
-            <div class="form-group">
-                <div class="col-md-12">
+            <div class="form-group row">
+                <div class="col">
                     ${_('Operators')}:
                     <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')"><img
                             class="cursor-pointer" src="${tg.url('/img/and.png')}"></span>
@@ -62,7 +48,7 @@
 
             </div>
 
-            <div class="col-md-12 form-group {{errors.conditions ? 'has-error' : ''}}">
+            <div class="col form-group {{errors.conditions ? 'has-error' : ''}}">
                 {{#conditions:i}}
                 {{#if .type == 'operator'}}
                 <span class="editor-element-operator">
@@ -90,9 +76,7 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="qa-ractive" style="padding-top: 20px">
-
-</div>
+<div id="qa-ractive"></div>
 <script>
     /*
         Ractive in `conditions` contiene la struttura dati dei filtri e degli operatori:
