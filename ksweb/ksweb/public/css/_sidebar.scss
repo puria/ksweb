@@ -1,0 +1,38 @@
+.sidebar {
+  @extend .p-0;
+  background-color: $light-gray;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* Behind the navbar */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+
+  .category-name { @extend .pt-2, .pb-1, .type-sidebar-items-title; }
+  .category-name-separator { @extend .m-0 }
+  a:hover { @extend .text-white }
+  a:link { text-decoration: none; }
+  #add_circle_outline:hover { @extend .text-primary; }
+
+  .nav-item {
+    @extend .mb-1;
+    &.sidebar-active,
+    &:hover {
+      @extend .rounded-right, .mr-4, .bg-light;
+    }
+
+    &.sidebar-active {
+      @extend .bg-dark, .text-white;
+      a { @extend .text-white }
+    }
+  }
+}
+
+.sidebar-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 48px; /* Height of navbar */
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}

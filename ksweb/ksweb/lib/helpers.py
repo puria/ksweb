@@ -7,17 +7,10 @@ from markupsafe import Markup
 from datetime import datetime
 
 from ksweb import model
+from tg.i18n import lazy_ugettext as l_
+
 
 log = logging.getLogger(__name__)
-
-
-def current_year():
-    now = datetime.now()
-    return now.strftime('%Y')
-
-
-def icon(icon_name):
-    return Markup('<i class="glyphicon glyphicon-%s"></i>' % icon_name)
 
 
 def material_icon(icon_name):
@@ -37,9 +30,7 @@ def material_icon(icon_name):
         'add': '&#xE145;',
         'insert_drive_file': '&#xE24D;',
         'content_paste': '&#xE14F;',
-        'flip_to_front': '&#xE883;',
-        'group_work': '&#xE886;',
-        'view_list': '&#xE8EF;',
+        'view_day': '&#xE8ED;',
         'save': '&#xE161;',
         'create': '&#xE150;',
         'add_circle_outline': '&#xE148;',
@@ -49,8 +40,12 @@ def material_icon(icon_name):
         'clear': '&#xE14C;',
         'done': '&#xE876;',
         'more_horiz': '&#xE5D3;',
+        'question_answer': '&#xE8AF',
+        'low_priority': '&#xE16D',
         }
-    return Markup('<i class="material-icons media-middle material-icon-%s">%s</i>' % (icon_name, icon_code[icon_name]))
+    return Markup('<i class="material-icons media-middle material-icon-%s" '
+                  'style="vertical-align: bottom;">%s</i>' % (
+                   icon_name, icon_code[icon_name]))
 
 
 def table_row_content(entity, fields):
@@ -58,11 +53,10 @@ def table_row_content(entity, fields):
 
     # name of field that you want customize
     css_class = {
-        'title': 'table-row-title'
+        'title': 'type-table-item-title'
     }
     for field in fields:
         data = getattr(entity, field)
-        converters_map = {}
         if field != '_id':
             converted_value = data
             if type(data) in table_row_content.ROW_CONVERSIONS:
@@ -80,7 +74,7 @@ def table_row_content(entity, fields):
                 convert = converters_map.get(field, lambda o: getattr(o, field))
                 converted_value = convert(entity)
 
-        tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'table-row')))
+        tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'type-table-item')))
     return html.HTML(*tags)
 
 table_row_content.ROW_CONVERSIONS = {
@@ -120,7 +114,7 @@ def editor_widget_template_for_qa(**kw):
 def underscore(text):
     return text.lower().replace(" ", "_")
 
-def gravatar(email_address, size=24):
+def gravatar(email_address, size=200):
     from hashlib import md5
     from tg import url
     mhash = md5(email_address.encode('utf-8')).hexdigest()
@@ -142,4 +136,4 @@ def get_workspace_name(workspace_id):
     if ws:
         return ws.name.upper()
     else:
-        return 'UNKNOWN WORKSPACE'
+        return l_('UNKNOWN WORKSPACE')

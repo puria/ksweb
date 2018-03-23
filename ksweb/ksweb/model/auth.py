@@ -126,7 +126,7 @@ class User(MappedClass):
         return self.password[64:] == hash.hexdigest()
 
     def owned_entities(self, entity_model, workspace=None):
+        query = {'_owner': self._id}
         if workspace:
-            return entity_model.query.find({'_owner': self._id, '_category': ObjectId(
-                workspace)}).sort('title')
-        return entity_model.query.find({'_owner': self._id}).sort('title')
+            query['_category'] = ObjectId(workspace)
+        return entity_model.query.find(query).sort('title')

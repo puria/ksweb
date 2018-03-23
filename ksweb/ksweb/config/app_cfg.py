@@ -133,25 +133,33 @@ base_config.sa_auth.post_login_url = '/post_login'
 # on logout:
 base_config.sa_auth.post_logout_url = '/post_logout'
 base_config['flash.allow_html'] = True
+# configure tg.flash with toastr
+base_config['flash.default_status'] = 'success'
+base_config['flash.template'] = '''
+    <script>
+        toastr.options = { "closeButton": true, "positionClass": "toast-top-right" }
+        toastr.$status("$message");
+    </script>
+'''
 
 
 from tgext import webassets
 
 webassets.plugme(base_config, bundles={
-    'js_all': webassets.Bundle('javascript/jquery.js',
-                               'javascript/bootstrap.min.js',
-                               'javascript/ractive.js',
+    'js_all': webassets.Bundle('javascript/vendors/jquery-3.3.1.min.js',
+                               'javascript/vendors/toastr.min.js',
+                               'javascript/vendors/popper.min.js',
+                               'javascript/vendors/bootstrap.min.js',
+                               'javascript/vendors/ractive.js',
                                filters='rjsmin', output='assets/js_all.js'),
-    'css_all': webassets.Bundle('css/ks_theme.css',
+    'css_all': webassets.Bundle('css/vendors/toastr.min.css',
+                                'css/vendors/material-icons.css',
                                 webassets.Bundle('css/style.scss', filters='libsass', output='assets_debug/style.css'),
-                                webassets.Bundle('css/navbar.scss', filters='libsass', output='assets_debug/navbar.css'),
-                                webassets.Bundle('css/sidebar.scss', filters='libsass', output='assets_debug/sidebar.css'),
-                                webassets.Bundle('css/editor.scss', filters='libsass', output='assets_debug/editor.css'),
-                                webassets.Bundle('css/table.scss', filters='libsass', output='assets_debug/table.css'),
                                 filters='cssmin', output='assets/css_all.css'),
     'login': webassets.Bundle(webassets.Bundle('css/login.scss', filters='libsass', output='assets_debug/login.css'),
                               filters='cssmin', output='assets/login.css'),
-
+    'index': webassets.Bundle(webassets.Bundle('css/index.scss', filters='libsass', output='assets_debug/index.css'),
+                              filters='cssmin', output='assets/index.css'),
 })
 
 

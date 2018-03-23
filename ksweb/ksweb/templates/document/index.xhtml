@@ -4,26 +4,29 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div class="row" style="padding-top: 20px">
-    <div class="col-md-6 text-left ks-section-name">
-        Documents
-        <h5>Document is a collection of Outputs</h5>
-    </div>
-    <div class="col-md-6 text-right">
-        <a href="#">
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadFile">
+<div class="row mt-2">
+    <h1 class="col type-page-title">Documents</h1>
+    <div class="col-md-auto text-right">
+        <a href="#">
+            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#uploadFile">
             ${h.material_icon('upload')} Import Document
             </button>
         </a>
         <a href="${tg.url('/document/new', params=dict(workspace=workspace))}">
-            <button class="btn btn-primary">${h.material_icon('save')} New Document</button>
+            <button class="btn btn-outline-success">${h.material_icon('save')} New Document</button>
         </a>
     </div>
 </div>
-<div class="row" style="padding-top: 20px">
-        ${h.partials.table(entities, fields, workspace, actions_content=actions_content)}
+
+<div class="row border-bottom">
+    <p class="col">Document is a collection of Outputs</p>
 </div>
+
+<div class="row mt-3">
+    ${h.partials.table(entities, fields, workspace, actions_content=actions_content)}
+</div>
+
 
 <!-- Modal -->
         <div class="modal fade" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -32,18 +35,16 @@
            <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                          <h4 class="modal-title" id="myModalLabel">Import a new Document</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Import a new Document</h4>
                         </div>
                         <div class="modal-body">
                              <input type="file" name="file_import"/>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                            <input type="submit"
-                                    class="btn btn-primary" value="Import">
-                            </input>
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+                            <input type="submit" class="btn btn-outline-success" value="Import" />
                         </div>
                     </div>
                 </div>
@@ -56,9 +57,9 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              <h4 class="modal-title" id="myModalLabel">Create a new Form</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Create a new questionary</h4>
                             </div>
                             <div class="modal-body">
                                 Insert the title:
@@ -75,11 +76,8 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                <button type="button" id="submit-questionary"
-
-                                        class="btn btn-primary">Save
-                                </button>
+                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+                                <button type="submit" id="submit-questionary" class="btn btn-outline-success">Save</button>
                             </div>
                         </div>
                     </div>
