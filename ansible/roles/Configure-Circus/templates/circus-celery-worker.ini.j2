@@ -1,0 +1,16 @@
+[env:{{name_app}}_celery_worker]
+PATH={{deploy_path}}/venv/bin:$PATH
+VIRTUAL_ENV={{deploy_path}}/venv
+
+[watcher:{{name_app}}_celery_worker]
+working_dir = {{deploy_path}}/app
+cmd = gearbox celeryworker --logfile=/var/log/circus/{{name_app}}_celery_worker_tasks.log -c {{production_ini_path}}
+
+numprocesses = 1
+
+uid={{user_name}}
+gid={{group_name}}
+
+stderr_stream.class = FileStream
+stderr_stream.filename = /var/log/circus/{{name_app}}_celery_worker.log
+stderr_stream.refresh_time = 0.3

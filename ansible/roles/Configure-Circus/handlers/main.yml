@@ -1,0 +1,9 @@
+---
+# handlers file for Configure-Circus
+
+
+- name: start circus
+  command: circusd /etc/circus/circusd.ini --daemon --log-level debug --log-output /var/log/circus/circusd.log
+
+- name: restart circus
+  command: circusctl restart

@@ -1,4 +1,0 @@
-- hosts: stagingservers
-  user: aw{{testuser}}
-  roles:
-    - axantweb

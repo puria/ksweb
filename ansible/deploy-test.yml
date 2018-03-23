@@ -1,4 +1,0 @@
-- hosts: testservers
-  user: aw{{testuser}}
-  roles:
-    - axantweb
