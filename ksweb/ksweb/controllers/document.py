@@ -157,6 +157,7 @@ class DocumentController(RestController):
         'workspace': CategoryExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def import_document(self, workspace, file_import):
+        owner = user = request.identity['user']._id
         imported_document = json.load(file_import.file)
         content = []
         values = {}
@@ -166,14 +167,14 @@ class DocumentController(RestController):
                 'title': output['title'],
                 'content': str(import_output(imported_document,
                                              str(output['content']),
-                                             imported_document['_owner'],
+                                             owner,
                                              workspace))
             }
             content.append(c)
             values['output_' + output['content']] = '${output_' + c['content'] + '}'
         html = Template(imported_document['html']).safe_substitute(**values)
         model.Document(
-            _owner=imported_document['_owner'],
+            _owner=owner,
             _category=ObjectId(workspace),
             title=imported_document['title'],
             content=content,
