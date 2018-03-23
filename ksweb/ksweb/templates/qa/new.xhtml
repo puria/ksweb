@@ -109,7 +109,7 @@
                 </div>
                 <div class="col">
                     <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}&question_content={{create.question}}&question_title={{create.title}}"
-                       id="create-filter" class="btn btn-outline-success">
+                       id="create-filter" class="btn btn-outline-success d-inline-block">
                         ${h.material_icon('save')} ${_("New Simple Filter")}
                     </a>
                 </div>
@@ -159,11 +159,12 @@
                             <div class="col-md-12" class="answer">
                                 <input type="{{input_type}}" name="example_response">
                                     {{#if .editable}}
-                                        <textarea id="{{.answer}}" class="form-control response response-text" autofocus
+                                        <textarea id="{{.answer}}" class="form-control d-inline-block response response-text" autofocus
                                                                value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
 
                                     {{else}}
-                                        <div id={{.answer}} class="response" onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
+                                        <div id={{.answer}} class="response d-inline-block"
+                                             onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
                                     {{/if}}
                                 {{#if ! edit_mode}}
                                     <label onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</label>

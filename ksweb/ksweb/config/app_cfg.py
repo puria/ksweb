@@ -153,11 +153,13 @@ webassets.plugme(base_config, bundles={
                                'javascript/vendors/ractive.js',
                                filters='rjsmin', output='assets/js_all.js'),
     'css_all': webassets.Bundle('css/vendors/toastr.min.css',
+                                'css/vendors/material-icons.css',
                                 webassets.Bundle('css/style.scss', filters='libsass', output='assets_debug/style.css'),
                                 filters='cssmin', output='assets/css_all.css'),
     'login': webassets.Bundle(webassets.Bundle('css/login.scss', filters='libsass', output='assets_debug/login.css'),
                               filters='cssmin', output='assets/login.css'),
-
+    'index': webassets.Bundle(webassets.Bundle('css/index.scss', filters='libsass', output='assets_debug/index.css'),
+                              filters='cssmin', output='assets/index.css'),
 })
 
 

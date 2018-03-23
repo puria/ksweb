@@ -30,7 +30,7 @@
                     {{#if errors.question}}<span class="invalid-feedback">{{errors.question}}</span>{{/if}}
                 </div>
                 <a href="${tg.url('/qa/new', params=dict(workspace=workspace, referrer='new_filter'))}"
-                   id="create-filter" class="btn btn-outline-success">
+                   id="create-filter" class="btn btn-outline-success d-inline-block">
                     ${h.material_icon('save')} ${_('New Question')}
                 </a>
                 <label for="selected_question" class="col help-text">
