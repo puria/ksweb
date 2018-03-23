@@ -1,9 +1,0 @@
-from paste.deploy import loadapp
-import logging.config
-
-
-def init_application(path):
-    APP_CONFIG = path + "/{{app_package}}/staging.ini"
-    logging.config.fileConfig(APP_CONFIG)
-    application = loadapp("config:%s" % APP_CONFIG)
-    return application

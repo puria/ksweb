@@ -1,0 +1,23 @@
+
+[env:{{name_app}}]
+PATH={{deploy_path}}/venv/bin:$PATH
+VIRTUAL_ENV={{deploy_path}}/venv
+
+[watcher:{{name_app}}]
+working_dir = {{deploy_path}}/app/
+cmd = {{deploy_path}}/venv/bin/chaussette --backend waitress --log-level debug --log-output - --fd $(circus.sockets.{{name_app}}) paste:{{production_ini_path}}
+use_sockets = True
+warmup_delay = 2
+numprocesses = 1
+
+uid={{user_name}}
+gid={{group_name}}
+
+stderr_stream.class = FileStream
+stderr_stream.filename = /var/log/circus/{{name_app}}.log
+stderr_stream.refresh_time = 0.3
+
+
+[socket:{{name_app}}]
+host = 0.0.0.0
+port = {{circus_port}}

@@ -1,0 +1,53 @@
+---
+# tasks file for Circus
+- name: Upgrade setuptools
+  pip:
+    name: setuptools
+    virtualenv: "{{ deploy_path }}/venv"
+    extra_args: --upgrade --index-url=https://pypi.python.org/simple/
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    virtualenv: "{{ deploy_path }}/venv"
+    extra_args: --upgrade --index-url=https://pypi.python.org/simple/
+
+- name: Install python dependencies
+  pip: name={{item}} virtualenv={{ deploy_path }}/venv virtualenv_site_packages=no
+  with_items:
+    - setuptools
+    - chaussette
+    - waitress==0.9.0
+    - tg.devtools
+    - backlash
+    - speaklater
+    - circus-web
+    - PasteDeploy
+
+
+- name: Get code from repository
+  git: repo={{repository}} dest={{deploy_path}}/app force=yes
+
+
+- name: Install WebApp Python Dependencies
+  pip: virtualenv={{ deploy_path }}/venv name='file://{{deploy_path}}/app/{{name_app}}' extra_args='-e' virtualenv_site_packages=no
+
+- name: Production webapp config file
+  template:
+    src: production.ini.j2
+    dest: "{{production_ini_path}}"
+
+- name: Set repository dir permissions
+  file: dest={{deploy_path}}/app state=directory
+         owner={{user_name}} group={{group_name}}
+         mode=0775
+         recurse=yes
+  become: yes
+
+
+- name: Set virtualenv dir permissions
+  file: dest={{deploy_path}}/venv state=directory
+         owner={{user_name}} group={{group_name}}
+         mode=0775
+         recurse=yes
+  become: yes

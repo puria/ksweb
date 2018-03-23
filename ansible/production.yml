@@ -1,0 +1,105 @@
+- hosts: databases
+  name: Install mongo
+  become: yes
+  roles:
+    - Mongo
+
+- hosts: databases
+  name: Find out if database has been initialized
+  tasks:
+    - name: Find out if database has been initialized (task)
+      command: >
+        mongo --port {{dbport}} {{name_app}} --eval "printjson(db.getCollectionNames())"
+      register: output_db
+    - name: test db not initialized
+      when: hostvars[groups['databases'][0]]['output_db'].stdout.find('tg_user') == -1
+      debug: var=true
+
+- name: Create user
+  hosts: circus
+  become: yes
+  tasks:
+    - name: Create Group
+      group:
+        name: "{{group_name}}"
+        state: present
+
+    - name: Create User
+      user:
+        name: "{{user_name}}"
+        group: "{{group_name}}"
+
+
+- name: Checkout code and install dependencies
+  hosts: circus
+  become: yes
+  roles:
+    - Configure-Circus
+    - Circus
+
+- name: Setup Application
+  hosts: circus
+  tasks:
+    - name: Install tg.devtools if Database Init is required
+      become: yes
+      pip: virtualenv={{ deploy_path }}/venv name='tg.devtools==2.3.4'
+      when: hostvars[groups['databases'][0]]['output_db'].stdout.find('tg_user') == -1
+
+    - name: Set repository dir permissions
+      file: dest={{deploy_path}}/app state=directory
+            owner={{user_name}} group={{group_name}}
+            mode=0775
+            recurse=yes
+      become: yes
+
+    - name: Set virtualenv dir permissions
+      file: dest={{deploy_path}}/venv state=directory
+         owner={{user_name}} group={{group_name}}
+         mode=0775
+         recurse=yes
+      become: yes
+
+    - name: Set logging files permissions
+      shell: >
+        chown {{user_name}} /var/log/circus/ksweb*
+      become: yes
+
+    - name: Init Database if it does not exists
+      args:
+        executable: /bin/bash
+      shell: >
+        cd {{deploy_path}} ;
+        source venv/bin/activate ;
+        cd app/ksweb;
+        gearbox setup-app -c {{production_ini_path}} ;
+        /usr/local/bin/circusctl restart
+      when: hostvars[groups['databases'][0]]['output_db'].stdout.find('tg_user') == -1
+      become: yes
+
+    - name: Reload circus
+      shell: >
+        /usr/local/bin/circusctl restart
+      become: yes
+
+
+- name: install and start nginx
+  hosts: nginx
+  become: yes
+  roles:
+    - nginx
+
+
+- name: Notify Release
+  hosts: 127.0.0.1
+  become: no
+  connection: local
+  tasks:
+    - name: Notify Release to Projects
+      when: notify_projects
+      local_action: shell curl https://projects.axantweb.com/api/release
+                    --insecure
+                    -d project={{project_id}}
+                    -d repository={{repository_id}}
+                    -d revision=`hg id -i`
+                    -d branch=`hg branch`
+                    -d releasetype={{release_type}}

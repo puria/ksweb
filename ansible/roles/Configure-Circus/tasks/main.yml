@@ -1,0 +1,51 @@
+---
+# tasks file for Configure-Circus
+
+- name: Install software dependencies
+  apt: name={{item}} update_cache=yes state=installed
+  with_items:
+    - python-pip
+    - python-dev
+    - build-essential
+    - python-virtualenv
+    - libxml2-dev
+    - libxslt-dev
+    - libzmq-dev
+    - libevent-dev
+    - git-core
+
+- name: Install Circus
+  pip:
+    name: circus
+    extra_args: --index-url=https://pypi.python.org/simple/
+
+- name: Create circus directory
+  file:
+    path: /etc/circus/
+    state: directory
+    mode: 0755
+
+- name: Configure Circus
+  template: src=circus.ini.j2 dest=/etc/circus/circusd.ini
+
+- name: Configure Application
+  template: src=circus-app.ini.j2 dest=/etc/circus/{{name_app}}.ini force=yes
+
+- name: Configure Celery Worker
+  template: src=circus-celery-worker.ini.j2 dest=/etc/circus/{{name_app}}_celery_worker.ini force=yes
+
+- name: Configure Celery Beat
+  template: src=circus-celery-beat.ini.j2 dest=/etc/circus/{{name_app}}_celery_beat.ini force=yes
+  notify:
+    - restart circus
+
+- name: Create circus log directory
+  file: path=/var/log/circus state=directory
+
+- name: Setup Circus at Boot
+  lineinfile:
+    dest: /etc/rc.local
+    insertbefore: exit 0
+    line: circusd /etc/circus/circusd.ini --daemon --log-level debug --log-output /var/log/circus/circusd.log
+  notify:
+    - start circus
