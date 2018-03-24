@@ -40,7 +40,7 @@ class DocumentController(RestController):
             },
             entities=model.Document.document_available_for_user(request.identity['user']._id,
                                                                 workspace=workspace),
-            actions_content=[_('Export'), _('Create Form')],
+            actions_content=[_('Export'), _('Create Questionary')],
             workspace=workspace,
             download=True
         )
