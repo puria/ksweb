@@ -4,18 +4,17 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div class="row" style="padding-top: 20px">
-    <div class="col-md-6 text-left ks-section-name">
-        ${_('Welcome in %s' % ws.name)}
-    </div>
+<div class="row pt-3">
+    <h1 class="col type-page-title">${_('Welcome in %s' % ws.name)}</h1>
 </div>
-<div class="row w-100" style="padding-top: 20px">
+<div class="row w-100 pt-3">
     <div class="col-md-12">
-        <h2>Build your wise tool</h2>
+        <h2 class="mb-5 text-dark">Build your wise tool</h2>
         <a href="${tg.url('/qa/new', params=dict(workspace=workspace))}"
-           class="btn btn-primary">Draft a new Q/A</a>
+           class="btn btn-outline-primary">Draft a new Q/A</a>
         or
-        <a href="${tg.url('/document/new', params=dict(workspace=workspace))}" class="btn btn-primary">Draft a new Document</a>
+        <a href="${tg.url('/document/new', params=dict(workspace=workspace))}" class="btn
+        btn-outline-primary">Draft a new Document</a>
     </div>
 </div>
 </body>

@@ -1,143 +1,204 @@
-<html py:extends="master.xhtml" py:strip="True">
-<head py:block="head" py:strip="True">
-    <title py:block="master_title">Welcome to KS Web</title>
-    <link rel="stylesheet" py:for="asset_url in g.webassets['index'].urls()" href="$asset_url"/>
-    <script id="index_template" type="text/html">
-        <![CDATA[
-        <div class="row">
-          <div class="col col-offset-2">
-              <h4 class="type-welcome-text">Hello!</h4>
-              <h1 class="text-uppercase type-welcome-text">${user.display_name}</h1>
-              <p class="type-table-item-title my-4">${_('Select your workspace or create a new one')}:</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="${response.charset}" />
+
+  <title py:block="master_title">KS Web</title>
+  <link rel="stylesheet" href="${'/css/vendors/simple-line-icons/css/simple-line-icons.css'}" />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" py:for="asset_url in g.webassets['css_all'].urls()" href="$asset_url"/>
+  <link rel="stylesheet" py:for="asset_url in g.webassets['new-age'].urls()" href="$asset_url"/>
+
+  <script async="async" defer="defer" src="https://buttons.github.io/buttons.js"></script>
+  <script py:for="asset_url in g.webassets['js_all'].urls()" src="$asset_url"></script>
+  <script src="${tg.url('/javascript/axel.js')}"></script>
+  <script type="text/javascript">
+    <![CDATA[
+    if (typeof jQuery === 'undefined')
+      axel.register('jquery', 'https://code.jquery.com/jquery.js');
+    else
+      axel.register('jquery', axel.Preloaded);
+    ]]>
+  </script>
+  <py:block name="head"></py:block>
+</head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">KNOWLEDGE SHAPER</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#download">Download</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Freedom</a>
+            </li>
+            <li class="nav-item">
+              <a href="${tg.url('/login')}" class="nav-link">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header class="masthead">
+      <div class="container h-100">
+        <div class="row h-100">
+          <div class="col-lg-7 my-auto">
+            <div class="header-content mx-auto">
+              <h1 class="mb-5">Knowledge Shaper. L’editor per condividere la tua conoscenza</h1>
+              <a href="#download" class="btn btn-outline btn-xl js-scroll-trigger">Scoprilo subito!</a>
+            </div>
+          </div>
+          <div class="col-lg-5 my-auto">
+            <div class="device-container">
+              <div class="device-mockup iphone6_plus portrait white">
+                <div class="device">
+                  <div class="screen">
+                    <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
+                    <img src="img/demo-screen-1.jpg" class="img-fluid" alt=""/>
+                  </div>
+                  <div class="button">
+                    <!-- You can hook the "home button" to some JavaScript events or just remove it -->
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="card-columns">
-            {{#each workspaces}}
-            <div class="card p-4">
-                <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
-                    <div>{{.name}}</div>
-                    <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
-                </a>
+      </div>
+    </header>
+
+    <section class="download bg-primary text-center" id="download">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 mx-auto">
+            <h2 class="section-heading">Knowledge shaper è software libero!</h2>
+            <p>Guarda la demo di Knowledge Shaper. Prova la base di conoscenza sul Memorandum
+              GDPR! Prova gratuitamente Knowledge Shaper registrandoti.</p>
+            <div class="badges">
+              <a class="btn btn-outline btn-xl" href="https://ks.studiolegale.it/registration">REGISTRATI</a>
+              <a class="btn btn-outline btn-xl ml-5" href="https://github.com/puria/ksweb">SORGENTI</a>
+              <a class="btn btn-outline btn-xl ml-5" href="https://ks.studiolegale.it">DEMO</a>
             </div>
-            {{/each}}
-            <div class="card p-4">
-                <div class="card-body add text-center" data-toggle="modal"
-                     data-target="#createWorkspace">
-                    ${h.material_icon('add_circle_outline')}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-heading text-center">
+          <h2>Knowledge Shaper ti permette di lavorare con le tue basi di conoscenza</h2>
+          <p class="text-muted">Componi le tue basi di conoscenza creando domande, risposte, filtri e output per comporre wizard, formulari ecc.</p>
+          <hr />
+        </div>
+        <div class="row">
+          <div class="col-lg-6 my-auto">
+            <div class="device-container">
+              <div class="device-mockup iphone6_plus portrait white">
+                <div class="device">
+                  <div class="screen">
+                    <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
+                    <img src="${'/img/demo-screen-1.png'}" class="img-fluid" alt=""/>
+                  </div>
+                  <div class="button">
+                    <!-- You can hook the "home button" to some JavaScript events or just remove it -->
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="createWorkspace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <form on-submit="add_category:{{workspace_name}}">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="myModalLabel">${_('Create a new Workspace')}</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                            <input id="form-title" type="text" class="form-control" placeholder="Name"
-                                   value="{{workspace_name}}"/>
-                            {{#if errors.workspace_name}}
-                            <span class="help-block bg-danger">{{errors.workspace_name}}</span>
-                            {{/if}}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-danger"
-                               data-dismiss="modal">${_('Cancel')}</button>
-                            <button type="buttom"
-                                    on-submit="add_category:{{workspace_name}}"
-                                    class="btn btn-outline-success">${_('Save')}
-                            </button>
-                        </div>
-                    </div>
+          </div>
+          <div class="col-lg-6 my-auto">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="feature-item">
+                    <i class="icon-rocket text-primary"></i>
+                    <h3>creare ed editare,</h3>
+                  </div>
                 </div>
-            </form>
+                <div class="col-lg-6">
+                  <div class="feature-item">
+                    <i class="icon-shuffle text-primary"></i>
+                    <h3>importare ed esportare,</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="feature-item">
+                    <i class="icon-list text-primary"></i>
+                    <h3>creare questionari ed usarli,</h3>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="feature-item">
+                    <i class="icon-lock-open text-primary"></i>
+                    <h3>far usare i questionari a chi vuoi tu.</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
+    <section class="cta">
+      <div class="cta-content">
+        <div class="container">
+          <h2>Prova gratuitamente Knowledge Shaper.</h2>
+          <a href="#contact" class="btn btn-outline btn-xl js-scroll-trigger">Guarda la demo di Knowledge Shaper.</a>
+        </div>
+      </div>
+      <div class="overlay"></div>
+    </section>
 
-        ]]>
-    </script>
-</head>
-<body py:block="body" py:strip="True">
-<div id="index-ractive" class="pt-3">
+    <section class="contact bg-primary" id="contact">
+      <div class="container">
+        <h2>Ti incoraggiamo a pubblicare le tue basi di conoscenza con licenza libera
+          (per es, vedi <a href="https://github.com/marco55555/Memorandum-GDPR"
+                           target="_blank">Memorandum GDPR</a>)</h2>
+        <h3>e a metterci una stellina su github</h3>
+        <p>
+          <a class="github-button" href="https://github.com/puria/ksweb" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star puria/ksweb on GitHub">Star</a>
+          <a class="github-button" href="https://github.com/puria/ksweb/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork puria/ksweb on GitHub">Fork</a>
+        </p>
+      </div>
+    </section>
 
-</div>
-<script>
-    var RactiveIndex = Ractive.extend({
-        template: '#index_template',
-        onconstruct: function (options) {
-            var self = this;
-            console.log(options);
-        },
-        oninit: function () {
-            var self = this;
-            self.set('workspaces', self.workspaces);
-            self.on('add_category', function (event, workspace_name) {
-                var params = { 'workspace_name': workspace_name };
-                $.ajax({
-                    type: 'POST',
-                    url: '${tg.url('/category/create')}',
-                    data: JSON.stringify(params),
-                    dataType: "json",
-                    processData: false,
-                    contentType: 'application/json'
-                }).done(function (data) {
-                    window.location.replace("${tg.url('/')}");
-                }).fail(function (jqXHR, ts) {
-                    console.error(jqXHR, ts)
-                    self.set('errors', ts);
-                    self.set('saving', false);
-                });
+    <footer>
+      <div class="container">
+        <p>Made with <i class="fa fa-heart"></i> by AXANT<br/>Studio Legale Ciurcina Tita Ass. Prof. · Torino, Via San Quintino n. 32, cap 10121 · C.F. e P. IVA 09027200014</p>
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <a href="${tg.url('/privacy')}">Privacy Policy</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="${tg.url('/terms')}">Condizioni</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+    <script src="${tg.url('/javascript/vendors/jquery-easing/jquery.easing.min.js')}"></script>
+    <script src="${tg.url('/javascript/vendors/new-age/new-age.min.js')}"></script>
+  </body>
 
-            });
-            self.on('delete_workspace', function (event, workspace_id) {
-                jQuery(".card").blur();
-                var r = confirm("${_('WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover.')} " +
-                        "${_('Are you sure you want to proceed?')}");
-                if (r == true) {
-                    var params = {
-                    'workspace_id': workspace_id
-                    };
-
-                var api_params = JSON.stringify(params);
-                     $.ajax({
-                    type: 'DELETE',
-                    url: '${tg.url('/category/delete')}',
-                    data: api_params,
-                    dataType: "json",
-                    processData: false,
-                    contentType: 'application/json'
-                }).done(function (data) {
-                    window.location.replace("${tg.url('/')}");
-                }).fail(function (jqXHR) {
-                    var data = jQuery.parseJSON(jqXHR.responseText);
-                    console.log("fail");
-                    console.log(data);
-                    self.set('errors', data.errors);
-                    console.log(data.errors);
-                    self.set('saving', false);
-                });
-
-                }
-
-                return false;
-            });
-        }
-
-    });
-</script>
-<script>
-    var ractive_index = new RactiveIndex({
-        el: '#index-ractive',
-        workspaces: ${Markup(h.script_json_encode(workspaces))}
-    });
-</script>
-</body>
 </html>
-

@@ -160,6 +160,10 @@ webassets.plugme(base_config, bundles={
                               filters='cssmin', output='assets/login.css'),
     'index': webassets.Bundle(webassets.Bundle('css/index.scss', filters='libsass', output='assets_debug/index.css'),
                               filters='cssmin', output='assets/index.css'),
+    'new-age': webassets.Bundle(webassets.Bundle('css/vendors/new-age/new-age.scss',
+                                                 filters='libsass',
+                                                 output='assets_debug/new-age.css'),
+                                filters='cssmin', output='assets/new-age.css')
 })
 
 
