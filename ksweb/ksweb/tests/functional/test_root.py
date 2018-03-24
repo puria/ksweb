@@ -26,4 +26,10 @@ class TestRootController(TestController):
 
     def test_index_redirect(self):
         """The front page is working properly"""
-        resp = self.app.get('/', status=302)
+        resp = self.app.get('/', status=200)
+
+    def test_privacy(self):
+        self.app.get('/privacy', status=200)
+
+    def test_terms(self):
+        self.app.get('/terms', status=200)
