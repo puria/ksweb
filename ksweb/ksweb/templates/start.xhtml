@@ -1,0 +1,143 @@
+<html py:extends="master.xhtml" py:strip="True">
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">Welcome to KS Web</title>
+    <link rel="stylesheet" py:for="asset_url in g.webassets['index'].urls()" href="$asset_url"/>
+    <script id="index_template" type="text/html">
+        <![CDATA[
+        <div class="row">
+          <div class="col col-offset-2">
+              <h4 class="type-welcome-text">Hello!</h4>
+              <h1 class="text-uppercase type-welcome-text">${user.display_name}</h1>
+              <p class="type-table-item-title my-4">${_('Select your workspace or create a new one')}:</p>
+          </div>
+        </div>
+        <div class="card-columns">
+            {{#each workspaces}}
+            <div class="card p-4">
+                <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
+                    <div>{{.name}}</div>
+                    <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
+                </a>
+            </div>
+            {{/each}}
+            <div class="card p-4">
+                <div class="card-body add text-center" data-toggle="modal"
+                     data-target="#createWorkspace">
+                    ${h.material_icon('add_circle_outline')}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="createWorkspace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <form on-submit="add_category:{{workspace_name}}">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="myModalLabel">${_('Create a new Workspace')}</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <input id="form-title" type="text" class="form-control" placeholder="Name"
+                                   value="{{workspace_name}}"/>
+                            {{#if errors.workspace_name}}
+                            <span class="help-block bg-danger">{{errors.workspace_name}}</span>
+                            {{/if}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger"
+                               data-dismiss="modal">${_('Cancel')}</button>
+                            <button type="buttom"
+                                    on-submit="add_category:{{workspace_name}}"
+                                    class="btn btn-outline-success">${_('Save')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        ]]>
+    </script>
+</head>
+<body py:block="body" py:strip="True">
+<div id="index-ractive" class="pt-3">
+
+</div>
+<script>
+    var RactiveIndex = Ractive.extend({
+        template: '#index_template',
+        onconstruct: function (options) {
+            var self = this;
+            console.log(options);
+        },
+        oninit: function () {
+            var self = this;
+            self.set('workspaces', self.workspaces);
+            self.on('add_category', function (event, workspace_name) {
+                var params = { 'workspace_name': workspace_name };
+                $.ajax({
+                    type: 'POST',
+                    url: '${tg.url('/category/create')}',
+                    data: JSON.stringify(params),
+                    dataType: "json",
+                    processData: false,
+                    contentType: 'application/json'
+                }).done(function (data) {
+                    window.location.replace("${tg.url('/')}");
+                }).fail(function (jqXHR, ts) {
+                    console.error(jqXHR, ts)
+                    self.set('errors', ts);
+                    self.set('saving', false);
+                });
+
+            });
+            self.on('delete_workspace', function (event, workspace_id) {
+                jQuery(".card").blur();
+                var r = confirm("${_('WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover.')} " +
+                        "${_('Are you sure you want to proceed?')}");
+                if (r == true) {
+                    var params = {
+                    'workspace_id': workspace_id
+                    };
+
+                var api_params = JSON.stringify(params);
+                     $.ajax({
+                    type: 'DELETE',
+                    url: '${tg.url('/category/delete')}',
+                    data: api_params,
+                    dataType: "json",
+                    processData: false,
+                    contentType: 'application/json'
+                }).done(function (data) {
+                    window.location.replace("${tg.url('/')}");
+                }).fail(function (jqXHR) {
+                    var data = jQuery.parseJSON(jqXHR.responseText);
+                    console.log("fail");
+                    console.log(data);
+                    self.set('errors', data.errors);
+                    console.log(data.errors);
+                    self.set('saving', false);
+                });
+
+                }
+
+                return false;
+            });
+        }
+
+    });
+</script>
+<script>
+    var ractive_index = new RactiveIndex({
+        el: '#index-ractive',
+        workspaces: ${Markup(h.script_json_encode(workspaces))}
+    });
+</script>
+</body>
+</html>
+
