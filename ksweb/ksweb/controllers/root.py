@@ -138,11 +138,11 @@ class RootController(BaseController):
 
     @expose('ksweb.templates.terms')
     def terms(self):
-        return ''
+        return dict()
 
     @expose('ksweb.templates.privacy')
     def privacy(self):
-        return ''
+        return dict()
 
     @expose('ksweb.templates.legal')
     def legal(self):
