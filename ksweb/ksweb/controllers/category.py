@@ -55,7 +55,11 @@ class CategoryController(RestController):
     @validate({
         'workspace_id': CategoryExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def delete(self, method=None, workspace_id=None, **kw):
+    def delete(self, workspace_id=None, **kw):
+        workspace = Category.query.get(_id=ObjectId(workspace_id))
+        if not workspace.owner:
+            flash(_('This workspace can not be deleted'), 'warning')
+            return dict(workspaces=self.get_all())
         Qa.query.remove({'_category': ObjectId(workspace_id)})
         Output.query.remove({'_category': ObjectId(workspace_id)})
         Precondition.query.remove({'_category': ObjectId(workspace_id)})

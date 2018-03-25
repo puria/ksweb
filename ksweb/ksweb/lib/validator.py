@@ -27,7 +27,7 @@ class EntityValidator(Validator):
     def _validate_python(self, value, state=None):
         try:
             found = self.entity.query.get(_id=ObjectId(value))
-        except InvalidId:
+        except (InvalidId, TypeError):
             raise ValidationError('not_exists', self)
 
         if found is None:

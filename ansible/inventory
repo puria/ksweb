@@ -9,6 +9,9 @@ ks.studiolegale.it
 
 [all:vars]
 ansible_user=axant
+ansible_become=yes
+ansible_become_method=sudo
+ansible_become_pass={{sudo_pass}}
 ansible_ssh_private_key_file=~/.ssh/axant
 host_key_checking=False
 release_type=test

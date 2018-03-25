@@ -1,6 +1,5 @@
-<html py:extends="master_without_sidebar.xhtml" py:strip="True">
+<html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" py:if="False"/>
     <title py:block="master_title">Register New User</title>
     <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/_pluggable/registration/css/style.css')}" />
     <style>
@@ -11,20 +10,35 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div class="container">
-    <div class="row">
-    <br/>
-    <div id="registration_new" class="form-group col-md-8 col-md-offset-2">
-        ${form.display(value=value, action=action)}
-        <p>By clicking on “Save” you accept the terms [link to ToS], consent to use of your personal data according to the privacy policy [link to privacy policy] and ask to use the Knowledge Shaper.</p>
+  <div class="container">
+    <div class="row mt-4">
+      <div id="registration_new" class="form-group col">
+          ${form.display(value=value, action=action)}
+      </div>
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+          <label class="form-check-label" for="defaultCheck1">
+            You expressly accept these
+            <a target="_blank" href="${tg.url('/legal')}">conditions</a>
+          </label>
+
+          <br/>
+          <br/>
+          By clicking on “Save” you accept the <a target="_blank" href="${tg.url('/terms')}">terms</a>,
+          consent to use of your personal data according to the <a target="_blank" href="${tg.url('/privacy')}">privacy policy</a> and ask to use the Knowledge Shaper.
+          <br/>
+          You will receive e confirmation email.
+        </div>
+      </div>
+      <br/>
     </div>
-</div>
-</div>
-    <script>
-        jQuery(document).ready(function () {
-            jQuery('input').addClass('form-control');
-            jQuery('input[type=submit]').addClass('btn btn-primary pull-left').removeClass('form-control')
-        })
-    </script>
+  </div>
+  <script>
+    jQuery(document).ready(function () {
+      jQuery('input').addClass('form-control');
+      jQuery('input[type=submit]').addClass('btn btn-outline-success').removeClass('form-control')
+    })
+  </script>
 </body>
 </html>
