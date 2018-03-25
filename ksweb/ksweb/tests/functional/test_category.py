@@ -69,22 +69,13 @@ class TestCategory(TestController):
         c = self._get_category("Category")
         assert not c
 
-    def test_category_delete_related_entities(self):
+
+    def test_workspace_without_owner_delete(self):
         self._login_lawyer()
-        self._create_fake_qa(title="fake_qa")
-        category = self._get_category("fake_category")
-
-        self.app.post_json(
-            '/category/delete',
-            params={
-                'workspace_id': str(category._id),
-            }
-        )
-
-        c = self._get_category("fake_category")
-        q = self._get_qa_by_title("fake_qa")
-
-        assert not c
-        assert not q
-
-
+        self.app.post_json('/category/create', params=dict(workspace_name='Category',))
+        category = self._get_category('Category')
+        category._owner = None
+        category.owner = None
+        self.app.post_json('/category/delete', params={'workspace_id': str(category._id)})
+        c = self._get_category("Category")
+        assert c

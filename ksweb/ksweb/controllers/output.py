@@ -20,7 +20,7 @@ from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidat
 class OutputController(RestController):
     def _validate_precondition_with_qa(self, precondition, content):
         if not precondition:
-            return dict()
+            return dict(errors={'content': _('Filter not found')})
         #  Check content precondition element
         precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
         related_qa = precond.response_interested
