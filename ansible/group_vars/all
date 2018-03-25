@@ -15,4 +15,7 @@ circus_host: "{{ groups['circus'][0] }}:{{circus_port}}"
 group_name: "{{name_app}}"
 user_name: "{{name_app}}"
 
-current_branch: default
+current_branch: develop
+
+mail_user: ks@studiolegale.it
+mail_host: studiolegale.it

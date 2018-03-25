@@ -26,7 +26,7 @@
 
 
 - name: Get code from repository
-  git: repo={{repository}} dest={{deploy_path}}/app force=yes
+  git: repo={{repository}} version={{current_branch}} dest={{deploy_path}}/app force=yes
 
 
 - name: Install WebApp Python Dependencies
