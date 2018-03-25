@@ -114,28 +114,28 @@ pagination.items_per_page = 20
 # http://docs.python.org/lib/logging-config-fileformat.html
 
 #tgext.mailer data:
-mail.host = mail.axantweb.com
-mail.username = no-reply@axantweb.com
-mail.password = ********
+mail.host = {{mail_host}}
+mail.username = {{mail_user}}
+mail.password = {{mail_pass}}
 mail.tls = true
 
 #tgapp-registration
-registration.email_sender = no-reply@axantweb.com
-registration.smtp_host = mail.axantweb.com
-registration.smtp_login = no-reply@axantweb.com
-registration.smtp_passwd = ********
+registration.email_sender = {{mail_user}}
+registration.smtp_host = {{mail_host}}
+registration.smtp_login = {{mail_user}}
+registration.smtp_passwd = {{mail_pass}}
 
 #Reset password
-resetpassword.email_sender = no-reply@axantweb.it
-resetpassword.smtp_host = mail.axantweb.com
-resetpassword.smtp_login = no-reply@axantweb.com
-resetpassword.smtp_passwd = ********
+resetpassword.email_sender = {{mail_user}}
+resetpassword.smtp_host = {{mail_host}}
+resetpassword.smtp_login = {{mail_user}}
+resetpassword.smtp_passwd = {{mail_pass}}
 
 #tgapp-userprofile
-userprofile.email_sender = no-reply@axantweb.it
-userprofile.smtp_host = mail.axantweb.com
-userprofile.smtp_login = no-reply@axantweb.com
-userprofile.smtp_passwd = ********
+userprofile.email_sender = {{mail_user}}
+userprofile.smtp_host = {{mail_host}}
+userprofile.smtp_login = {{mail_user}}
+userprofile.smtp_passwd = {{mail_pass}}
 
 [loggers]
 keys = root, ksweb, auth
