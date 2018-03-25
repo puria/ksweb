@@ -70,11 +70,7 @@ class RootController(BaseController):
 
     error = ErrorController()
 
-    def _before(self, *args, **kw):
-        tmpl_context.project_name = "ksweb"
-
-    @expose()
-    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    @expose('ksweb.templates.index')
     def index(self):
         if predicates.has_any_permission('manage', 'lawyer'):
             redirect('/start')
@@ -121,7 +117,7 @@ class RootController(BaseController):
             user.groups = [group]
         return dict()
 
-    @expose('ksweb.templates.index')
+    @expose('ksweb.templates.start')
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def start(self):
         user = request.identity['user']
@@ -137,11 +133,11 @@ class RootController(BaseController):
 
     @expose('ksweb.templates.terms')
     def terms(self):
-        return ''
+        return dict()
 
     @expose('ksweb.templates.privacy')
     def privacy(self):
-        return ''
+        return dict()
 
     @expose('ksweb.templates.legal')
     def legal(self):

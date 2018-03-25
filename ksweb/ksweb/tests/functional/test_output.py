@@ -29,6 +29,19 @@ class TestOutput(TestController):
         resp_admin = self.app.get('/output/new', params=dict(workspace=self.category._id))
         assert resp_admin.status_code == 200
 
+    def test_creation_error_check_without_precondition(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+        output_params = {
+            'title': 'Title of Output',
+            'category': str(workspace._id),
+            'content': []
+        }
+        resp = self.app.post_json('/output/post', params=output_params, status=412).json
+        output = model.Output.query.get(title=output_params['title'])
+        assert not output
+        assert resp['errors']
+
     def test_creation_output(self):
         self._login_lawyer()
 
@@ -109,6 +122,27 @@ class TestOutput(TestController):
         assert output_updated._id == output1._id
         assert output_updated.title == output_params['title']
         assert output_updated.content == output_params['content']
+
+    def test_output_post_without_filter(self):
+        self._login_lawyer()
+        workspace = self._get_category('Area 1')
+
+        output_params = {
+            'title': 'Title of Output',
+            'category': str(workspace._id),
+            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'content': []
+        }
+
+        resp = self.app.post_json(
+            '/output/post', params=output_params,
+            status=200
+        ).json
+
+        assert resp, resp
+        assert resp['errors'], resp
+        assert resp['errors']['content'] == 'Filter not found'
+
 
     def test_put_output_with_fake_qa_related(self):
         self.test_creation_output()
