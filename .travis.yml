@@ -8,7 +8,7 @@ before_script: cd ksweb
 install:
   - "pip install nose"
   - "pip install coveralls"
-  - "pip install codeconv"
+  - "pip install codecov"
   - "pip install --no-use-wheel -e ksweb[testing]"
 
 script:
