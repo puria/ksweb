@@ -30,7 +30,8 @@ testpkgs = [
     'WebTest == 1.4.3',
     'nose',
     'coverage',
-    'gearbox'
+    'gearbox',
+    'pyquery'
 ]
 
 install_requires = [
