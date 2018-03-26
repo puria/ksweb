@@ -1,7 +1,6 @@
 language: python
 python:
   - "2.7"
-  - "3.6"
   - "pypy"
 
 before_script: cd ksweb
@@ -9,6 +8,7 @@ before_script: cd ksweb
 install:
   - "pip install nose"
   - "pip install coveralls"
+  - "pip install codeconv"
   - "pip install --no-use-wheel -e ksweb[testing]"
 
 script:
@@ -16,3 +16,4 @@ script:
 
 after_success:
   - coveralls
+  - codecov
