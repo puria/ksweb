@@ -12,7 +12,7 @@ install:
   - "pip install --no-use-wheel -e ksweb[testing]"
 
 script:
-  - "nosetests -v"
+  - "nosetests -v --with-coverage"
 
 after_success:
   - coveralls
