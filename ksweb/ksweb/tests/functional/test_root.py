@@ -22,8 +22,16 @@ class TestRootController(TestController):
     """Tests for the method in the root controller."""
     def test_index(self):
         self._login_lawyer()
-        resp = self.app.get('/')
+        self.app.get('/')
 
     def test_index_redirect(self):
         """The front page is working properly"""
-        resp = self.app.get('/', status=302)
+        self.app.get('/', status=200)
+
+    def test_privacy(self):
+        response = self.app.get('/privacy', status=200)
+        assert 'PRIVACY POLICY' in response
+
+    def test_terms(self):
+        response = self.app.get('/terms', status=200)
+        assert 'CONDIZIONI DI SERVIZIO' in response
