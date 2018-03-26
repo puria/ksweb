@@ -50,8 +50,8 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-danger"
                                data-dismiss="modal">${_('Cancel')}</button>
-                            <button type="buttom"
-                                    on-submit="add_category:{{workspace_name}}"
+                            <button type="button"
+                                    on-click="add_category:{{workspace_name}}"
                                     class="btn btn-outline-success">${_('Save')}
                             </button>
                         </div>
@@ -73,13 +73,13 @@
         template: '#index_template',
         onconstruct: function (options) {
             var self = this;
-            console.log(options);
         },
         oninit: function () {
             var self = this;
             self.set('workspaces', self.workspaces);
             self.on('add_category', function (event, workspace_name) {
                 var params = { 'workspace_name': workspace_name };
+                console.log(params, workspace_name)
                 $.ajax({
                     type: 'POST',
                     url: '${tg.url('/category/create')}',
@@ -94,7 +94,6 @@
                     self.set('errors', ts);
                     self.set('saving', false);
                 });
-
             });
             self.on('delete_workspace', function (event, workspace_id) {
                 jQuery(".card").blur();
