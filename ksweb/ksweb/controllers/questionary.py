@@ -21,7 +21,7 @@ from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidato
 from ksweb.model import DBSession
 try:
     basestring
-except NameError:
+except NameError: # pragma: no cover
     basestring = str
 
 
@@ -64,9 +64,8 @@ class QuestionaryController(BaseController):
     def create(self, questionary_title=None, document_id=None, email_to_share=None, **kw):
         #  create questionary for himself
         owner = request.identity['user']
-        if (email_to_share):
+        if email_to_share:
             user = model.User.by_email_address(email_to_share)
-
 
             if not user:
                 user = model.User(
@@ -84,7 +83,7 @@ class QuestionaryController(BaseController):
             _document=ObjectId(document_id),
         )
 
-        if (email_to_share):
+        if email_to_share:
             from tgext.mailer import get_mailer
             from tgext.mailer import Message
             mailer = get_mailer(request)
@@ -204,7 +203,7 @@ class QuestionaryController(BaseController):
 
         for output_dict in questionary.document.content:
             _id = ObjectId(output_dict['content'])
-            if questionary.output_values[output_dict['content']]:
+            if questionary.output_values.get(output_dict['content']):
                 output = model.Output.query.get(_id=_id)
                 output_values['output_' + str(_id)] = output.render(questionary.output_values)
             else:
@@ -230,6 +229,7 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def previous_question(self, _id=None, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
+        previous_response = {}
 
         if questionary.qa_values:
             last_order_number = max([questionary.qa_values[qa_val]['order_number'] for qa_val in questionary.qa_values])

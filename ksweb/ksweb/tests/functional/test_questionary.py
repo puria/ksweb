@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-from unittest import SkipTest
+
+import zipfile
+from StringIO import StringIO
 
 from ksweb.tests import TestController
-from ksweb import model
 
 
 class TestQuestionaryController(TestController):
@@ -36,6 +37,20 @@ class TestQuestionaryController(TestController):
             'workspace':  str(self.category._id)
         })
         assert resp
+
+    def test_questionary_create_with_share(self):
+        self._login_lawyer()
+        email_to_share = 'test@example.com'
+        document = self._create_fake_document('Fake1')
+        self.app.post_json('/questionary/create', params={
+            'questionary_title': 'TestQuestionary',
+            'document_id': str(document._id),
+            'workspace':  str(self.category._id),
+            'email_to_share': email_to_share
+        })
+
+        user = self._get_user(email_to_share)
+        assert user
 
     def test_compile_questionary(self):
         self._login_lawyer()
@@ -226,19 +241,36 @@ class TestQuestionaryController(TestController):
             'qa_response': qa_response[rel_qa.title]['response']
         }, status=qa_response[rel_qa.title]['status']).json
 
-        print("=====", resp)
-
         assert resp['quest_compiled']['completed'] is True, resp
 
-        # rel_qa = self._get_qa(resp['quest_compiled']['qa'])
-        #
-        # resp = self.app.post_json('/questionary/responde', params={
-        #     '_id': str(questionary._id),
-        #     'qa_id': resp['quest_compiled']['qa'],
-        #     'qa_response': qa_response[rel_qa.title]['response']
-        # }, status=qa_response[rel_qa.title]['status']).json
-        #
-        # assert resp['quest_compiled']['completed'] == True, resp
+
+    def test_download(self):
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        response = self.app.get('/questionary/download', params=dict(_id=str(form._id)))
+
+        assert response
+        assert b"mimetypeapplication/vnd.oasis.opendocument.text" in response
+        assert zipfile.is_zipfile(StringIO(response.testbody))
+
+        archive = zipfile.ZipFile(StringIO(response.testbody))
+        content = archive.read('content.xml')
+        assert content
+
+
+    def test_completed(self):
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        response = self.app.get('/questionary/completed',
+                                params=dict(_id=str(form._id), workspace=self.category._id),
+                                status=200)
+        assert response, response
+
+    def test_previous_question(self):
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        response = self.app.get('/questionary/previous_question', params=dict(_id=str(form._id)))
+        assert response
 
 """ FIXME:
     def test_hack_response_multi(self):

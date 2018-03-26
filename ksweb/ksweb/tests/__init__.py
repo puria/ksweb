@@ -98,7 +98,7 @@ class TestController(object):
     def _create_category(self, name, visible=True):
         c = model.Category(
                 name=name,
-                visible=visible
+                visible=visible,
         )
         DBSession.flush(c)
         return c
