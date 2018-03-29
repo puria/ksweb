@@ -83,7 +83,7 @@ class PreconditionAdvancedController(RestController):
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
-            return dict(redirect_url=tg.url('/resolve'))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
         precondition = model.Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
