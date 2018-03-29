@@ -9,6 +9,7 @@ from tg.configuration import AppConfig
 from tg import milestones
 
 import ksweb
+from evolutions import evolutions
 from ksweb import model, lib
 
 base_config = AppConfig()
@@ -178,7 +179,7 @@ webassets.plugme(base_config, bundles={
 from tgext.pluggable import plug
 plug(base_config, 'tgext.mailer')
 plug(base_config, 'registration', global_models=True)
-
+plug(base_config, 'tgext.evolve', global_models=True, evolutions=evolutions)
 from ksweb.config.registration_hooks import RegistrationHooks
 RegistrationHooks.register(base_config)
 plug(base_config,
