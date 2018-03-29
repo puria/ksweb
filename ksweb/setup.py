@@ -31,7 +31,7 @@ testpkgs = [
     'nose',
     'coverage',
     'gearbox',
-    'pyquery'
+    'pyquery',
 ]
 
 install_requires = [
