@@ -140,8 +140,7 @@ class TestOutput(TestController):
         ).json
 
         assert resp, resp
-        assert resp['errors'], resp
-        assert resp['errors']['content'] == 'Filter not found'
+        assert not resp['errors']
 
 
     def test_put_output_with_fake_qa_related(self):

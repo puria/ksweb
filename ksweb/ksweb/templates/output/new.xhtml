@@ -37,7 +37,7 @@
                 <div class="col-4">
                     <select id="form-precondition" class="custom-select {{errors.precondition ? 'is-invalid' : ''}}"
                             value="{{create.precondition}}">
-                        <option value="" disabled selected>${_('Choose a filter (select a Q/A)')}</option>
+                        <option value="" selected>${_('Choose a filter (select a Q/A)')}</option>
                         {{#each preconditions}}
                             <option value="{{._id}}">{{.title}}</option>
                         {{/each}}

@@ -20,7 +20,7 @@ from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValida
 class OutputController(RestController):
     def _validate_precondition_with_qa(self, precondition, content):
         if not precondition:
-            return dict(errors={'content': _('Filter not found')})
+            return
         #  Check content precondition element
         precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
         related_qa = precond.response_interested
@@ -30,7 +30,6 @@ class OutputController(RestController):
                 if elem['content'] not in related_qa.keys():
                     response.status_code = 412
                     return dict(errors={'content': _('The question %s is not related to the filter') % elem['title']})
-        return dict()
 
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "outputs"
@@ -69,19 +68,19 @@ class OutputController(RestController):
         'category': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
-    def post(self, title, content, category, precondition, **kw):
+    def post(self, title, content, category, precondition=None, **kw):
         content = content or []
-
-        #  Check content precondition element
-        error = self._validate_precondition_with_qa(precondition, content)
-        if error:
-            return error
+        if precondition:
+            error = self._validate_precondition_with_qa(precondition, content)
+            if error:
+                response.status_code = 412
+                return error
 
         user = request.identity['user']
         model.Output(
             _owner=user._id,
             _category=ObjectId(category),
-            _precondition=ObjectId(precondition),
+            _precondition=ObjectId(precondition) if precondition else None,
             title=title,
             content=content,
             public=True,
@@ -100,13 +99,14 @@ class OutputController(RestController):
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
-    def put(self, _id, title, content, category, precondition, **kw):
+    def put(self, _id, title, content, category, precondition=None, **kw):
         content = content or []
 
-        #  Check content precondition element
-        error = self._validate_precondition_with_qa(precondition, content)
-        if error:
-            return error
+        if precondition:
+            error = self._validate_precondition_with_qa(precondition, content)
+            if error:
+                response.status_code = 412
+                return error
 
         check = self.get_related_entities(_id)
 
@@ -116,7 +116,7 @@ class OutputController(RestController):
                 title=title,
                 content=content,
                 _category=category,
-                _precondition=precondition,
+                _precondition=precondition if precondition else None,
                 entity='output',
                 html=kw['ks_editor']
             )
@@ -127,7 +127,7 @@ class OutputController(RestController):
         output = model.Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
         output._category = ObjectId(category)
-        output._precondition = ObjectId(precondition)
+        output._precondition = ObjectId(precondition) if precondition else None
         output.content = content
         output.html = kw['ks_editor']
 
