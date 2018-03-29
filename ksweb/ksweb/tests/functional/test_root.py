@@ -1,17 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Functional test suite for the root controller.
-
-This is an example of how functional tests can be written for controllers.
-
-As opposed to a unit-test, which test a small unit of functionality,
-functional tests exercise the whole application and its WSGI stack.
-
 Please read http://pythonpaste.org/webtest/ for more information.
-
 """
 from ksweb import model
-from nose.tools import ok_
 
 from ksweb.tests import TestController
 
@@ -51,8 +43,7 @@ class TestRootController(TestController):
     def test_start_sidebar_is_hidden(self):
         self._login_lawyer()
         response = self.app.get('/start', status=200)
-        pq = response.pyquery
-        assert not pq('.sidebar')
+        assert 'sidebar' not in response
 
     def test_legal(self):
         response = self.app.get('/legal', status=200)
