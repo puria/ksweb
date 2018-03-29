@@ -342,7 +342,7 @@ class TestPreconditionAdvanced(TestController):
         response = self.app.put_json('/precondition/advanced/put', params=precond_advanced).json
         assert response['redirect_url']
 
-        self.app.get(response['redirect_url'], params=dict(workspace=str(workspace._id)))
+        self.app.get(response['redirect_url'])
         response = self.app.get('/resolve/original_edit',
                                 params=dict(workspace=str(workspace._id)))
         response.follow()

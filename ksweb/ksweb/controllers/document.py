@@ -17,7 +17,7 @@ from tg.decorators import paginate, decode_params, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
 from tw2.core import StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, DocumentExistValidator,\
+from ksweb.lib.validator import WorkspaceExistValidator, DocumentExistValidator,\
     DocumentContentValidator
 
 
@@ -30,7 +30,7 @@ class DocumentController(RestController):
 
     @expose('ksweb.templates.document.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def get_all(self, workspace, **kw):
         return dict(
             page='document-index',
@@ -46,7 +46,7 @@ class DocumentController(RestController):
         )
 
     @expose('ksweb.templates.document.new')
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def new(self, workspace, **kw):
         tmpl_context.sidebar_document = "document-new"
         return dict(document={}, workspace=workspace, errors=None)
@@ -55,7 +55,7 @@ class DocumentController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'content': DocumentContentValidator(),
         'description': StringLengthValidator(min=0),
         'licence': StringLengthValidator(min=0, max=100),
@@ -86,7 +86,7 @@ class DocumentController(RestController):
     @validate({
         '_id': DocumentExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'content': DocumentContentValidator(),
         'description': StringLengthValidator(min=0),
         'licence': StringLengthValidator(min=0, max=100),
@@ -117,7 +117,7 @@ class DocumentController(RestController):
     @expose('ksweb.templates.document.new')
     @validate({
         '_id': DocumentExistValidator(required=True),
-        'workspace': CategoryExistValidator(required=True)
+        'workspace': WorkspaceExistValidator(required=True)
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'),
                                   field='_id',
@@ -157,7 +157,7 @@ class DocumentController(RestController):
 
     @expose()
     @validate({
-        'workspace': CategoryExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def import_document(self, workspace, file_import):
         owner = user = request.identity['user']._id
