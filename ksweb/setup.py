@@ -30,7 +30,7 @@ testpkgs = [
     'WebTest == 1.4.3',
     'nose',
     'coverage',
-    'gearbox'
+    'gearbox',
 ]
 
 install_requires = [
@@ -51,6 +51,7 @@ install_requires = [
     "tgapp-userprofile==0.2.0",
     "axf==0.0.19",
     "tgext.odt",
+    "tgext.evolve",
 ]
 
 if py_version != (3, 2):

@@ -6,10 +6,9 @@ python:
 before_script: cd ksweb
 
 install:
-  - "pip install nose"
+  - "pip install -e ksweb[testing]"
   - "pip install coveralls"
   - "pip install codecov"
-  - "pip install --no-use-wheel -e ksweb[testing]"
 
 script:
   - "nosetests -v --with-coverage"
