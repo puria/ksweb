@@ -1,17 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Functional test suite for the root controller.
-
-This is an example of how functional tests can be written for controllers.
-
-As opposed to a unit-test, which test a small unit of functionality,
-functional tests exercise the whole application and its WSGI stack.
-
 Please read http://pythonpaste.org/webtest/ for more information.
-
 """
-
-from nose.tools import ok_
+from ksweb import model
 
 from ksweb.tests import TestController
 
@@ -35,3 +27,36 @@ class TestRootController(TestController):
     def test_terms(self):
         response = self.app.get('/terms', status=200)
         assert 'CONDIZIONI DI SERVIZIO' in response
+
+    def test_start_without_login(self):
+        self.app.get('/start', status=302)
+
+    def test_start(self):
+        self._login_lawyer()
+        lawyer = self._get_user('lawyer1@ks.axantweb.com')
+        response = self.app.get('/start', status=200)
+        workspaces = model.Category.per_user(lawyer._id)
+        workspaces_names = [__.name for __ in workspaces]
+
+        assert all(name in response for name in workspaces_names)
+
+    def test_start_sidebar_is_hidden(self):
+        self._login_lawyer()
+        response = self.app.get('/start', status=200)
+        assert 'sidebar' not in response
+
+    def test_legal(self):
+        response = self.app.get('/legal', status=200)
+        assert "ACCETTAZIONE ESPRESSA" in response
+
+    def test_source(self):
+        response = self.app.get('/source', status=200)
+        assert 'puria' in response
+
+    def test_login_not_found_user(self):
+        response = self.app.get('/login', params=dict(failure='user-not-found'))
+        assert 'User not found' in response
+
+    def test_login_user_created(self):
+        response = self.app.get('/login', params=dict(failure='user-created'))
+        assert 'User successfully created' in response
