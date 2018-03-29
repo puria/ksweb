@@ -13,7 +13,7 @@ from tg import require
 from tg import session
 from tw2.core import OneOfValidator, StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import QAExistValidator, CategoryExistValidator, PreconditionExistValidator
+from ksweb.lib.validator import QAExistValidator, WorkspaceExistValidator, PreconditionExistValidator
 
 
 class PreconditionSimpleController(RestController):
@@ -22,7 +22,7 @@ class PreconditionSimpleController(RestController):
 
 
     @expose('ksweb.templates.precondition.simple.new')
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def new(self, workspace, **kw):
         return dict(page='precondition-new', workspace=workspace, qa_value=kw.get('qa_value'),
                     precondition={'question_content': kw.get('question_content', None),
@@ -31,7 +31,7 @@ class PreconditionSimpleController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
     }, error_handler=validation_errors_response)
@@ -102,7 +102,7 @@ class PreconditionSimpleController(RestController):
     @validate({
         '_id': PreconditionExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'what_response'], required=True),
     }, error_handler=validation_errors_response)
@@ -141,7 +141,7 @@ class PreconditionSimpleController(RestController):
     @expose('ksweb.templates.precondition.simple.new')
     @validate({
         '_id': PreconditionExistValidator(),
-        'workspace': CategoryExistValidator()
+        'workspace': WorkspaceExistValidator()
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id', entity_model=model.Precondition))
     def edit(self, _id, workspace, **kw):

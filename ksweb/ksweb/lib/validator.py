@@ -39,7 +39,7 @@ class QAExistValidator(EntityValidator):
     msgs = dict(not_exists=l_(u'Question does not exists'))
 
 
-class CategoryExistValidator(EntityValidator):
+class WorkspaceExistValidator(EntityValidator):
     entity = model.Category
     msgs = dict(not_exists=l_(u'Work Area does not exists'))
 

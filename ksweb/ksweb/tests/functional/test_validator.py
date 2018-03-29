@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from ksweb import model
 from ksweb.model import DBSession
 from ksweb.tests import TestController
-from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, DocumentExistValidator, \
+from ksweb.lib.validator import WorkspaceExistValidator, QAExistValidator, DocumentExistValidator, \
     PreconditionExistValidator, DocumentContentValidator, OutputExistValidator, OutputContentValidator, \
     QuestionaryExistValidator
 from tg.util.webtest import test_context
@@ -57,7 +57,7 @@ class TestValidators(TestController):
 
     def test_category_exist_validator(self):
         category1 = self._get_category('Area 1')
-        validator = CategoryExistValidator()
+        validator = WorkspaceExistValidator()
         try:
             res = validator._validate_python(str(category1._id))
         except ValidationError:
@@ -67,7 +67,7 @@ class TestValidators(TestController):
 
     def test_category_exist_validator_with_obj_not_valid(self):
         with test_context(self.app):
-            validator = CategoryExistValidator()
+            validator = WorkspaceExistValidator()
             try:
                 res = validator._validate_python('not_obj_id')
             except ValidationError:
@@ -77,7 +77,7 @@ class TestValidators(TestController):
 
     def test_category_exist_validator_with_not_existing_category(self):
         with test_context(self.app):
-            validator = CategoryExistValidator()
+            validator = WorkspaceExistValidator()
             try:
                 res = validator._validate_python('5757ce79c42d752bde919318')
             except ValidationError:

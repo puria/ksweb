@@ -14,7 +14,7 @@ from tg import session
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tw2.core import LengthValidator, StringLengthValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator
+from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValidator
 
 
 class PreconditionAdvancedController(RestController):
@@ -23,7 +23,7 @@ class PreconditionAdvancedController(RestController):
         tmpl_context.sidebar_precondition_advanced = "preconditions-advanced"
 
     @expose('ksweb.templates.precondition.advanced.new')
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def new(self, workspace, **kw):
         return dict(precondition={}, workspace=workspace)
 
@@ -31,7 +31,7 @@ class PreconditionAdvancedController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
     def post(self, title, category, conditions, **kw):
@@ -57,7 +57,7 @@ class PreconditionAdvancedController(RestController):
     @validate({
         '_id': PreconditionExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
     @require(
@@ -83,7 +83,7 @@ class PreconditionAdvancedController(RestController):
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
-            return dict(redirect_url=tg.url('/resolve'))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
         precondition = model.Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
@@ -95,7 +95,7 @@ class PreconditionAdvancedController(RestController):
     @expose('ksweb.templates.precondition.advanced.new')
     @validate({
         '_id': PreconditionExistValidator(),
-        'workspace': CategoryExistValidator(),
+        'workspace': WorkspaceExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id',
                                   entity_model=model.Precondition))

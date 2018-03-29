@@ -13,7 +13,7 @@ from tg.i18n import lazy_ugettext as l_, ugettext as _
 from tg import predicates
 from tw2.core import StringLengthValidator, LengthValidator, All
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, PreconditionExistValidator, \
+from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
 
 
@@ -40,7 +40,7 @@ class OutputController(RestController):
 
     @expose('ksweb.templates.output.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def get_all(self, workspace, **kw):
         return dict(
             page='output-index',
@@ -55,7 +55,7 @@ class OutputController(RestController):
 
     @expose('json')
     @expose('ksweb.templates.output.new')
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def new(self, workspace, **kw):
         tmpl_context.sidebar_output = "output-new"
         return dict(output={'_precondition': kw.get('precondition_id', None)}, workspace=workspace, errors=None)
@@ -66,7 +66,7 @@ class OutputController(RestController):
         'title': StringLengthValidator(min=2),
         'content': OutputContentValidator(),
         'ks_editor': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
     def post(self, title, content, category, precondition, **kw):
@@ -96,7 +96,7 @@ class OutputController(RestController):
         '_id': OutputExistValidator(required=True),
         'title': StringLengthValidator(min=2),
         'content': OutputContentValidator(),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
@@ -136,7 +136,7 @@ class OutputController(RestController):
     @expose('ksweb.templates.output.new')
     @validate({
         '_id': OutputExistValidator(required=True),
-        'workspace': CategoryExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
     def edit(self, _id, workspace, **kw):
