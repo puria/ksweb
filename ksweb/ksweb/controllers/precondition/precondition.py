@@ -8,7 +8,7 @@ from tg.decorators import paginate, decode_params, validate
 from tg.i18n import lazy_ugettext as l_
 from tg import expose, predicates, tmpl_context, validation_errors_response
 from ksweb import model
-from ksweb.lib.validator import PreconditionExistValidator, CategoryExistValidator
+from ksweb.lib.validator import PreconditionExistValidator, WorkspaceExistValidator
 from ksweb.model import Precondition
 from .simple import PreconditionSimpleController
 from .advanced import PreconditionAdvancedController
@@ -26,7 +26,7 @@ class PreconditionController(BaseController):
 
     @expose('ksweb.templates.precondition.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def index(self, workspace, **kw):
         return dict(
             page='precondition-index',

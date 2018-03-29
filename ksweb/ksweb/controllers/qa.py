@@ -13,7 +13,7 @@ from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
 from ksweb import model
-from ksweb.lib.validator import CategoryExistValidator, QAExistValidator, PreconditionExistValidator
+from ksweb.lib.validator import WorkspaceExistValidator, QAExistValidator, PreconditionExistValidator
 
 
 class QaController(RestController):
@@ -24,7 +24,7 @@ class QaController(RestController):
 
     @expose('ksweb.templates.qa.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    @validate({'workspace': CategoryExistValidator(required=True),},
+    @validate({'workspace': WorkspaceExistValidator(required=True), },
               error_handler=validation_errors_response)
     def get_all(self, workspace=None, **kw):
         return dict(
@@ -47,7 +47,7 @@ class QaController(RestController):
         return dict(qa=qa)
 
     @expose('json')
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def get_single_or_multi_question(self, workspace):
         questions = model.Qa.query.find({
             'type': {'$in': ['single', 'multi']},
@@ -58,7 +58,7 @@ class QaController(RestController):
 
     @expose('json')
     @expose('ksweb.templates.qa.new')
-    @validate({'workspace': CategoryExistValidator(required=True),})
+    @validate({'workspace': WorkspaceExistValidator(required=True), })
     def new(self, workspace, **kw):
         return dict(errors=None, workspace=workspace, referrer=kw.get('referrer'),
                     qa={'question': kw.get('question_content', None),
@@ -69,7 +69,7 @@ class QaController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
@@ -105,7 +105,7 @@ class QaController(RestController):
     @validate({
         '_id': QAExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': CategoryExistValidator(required=True),
+        'category': WorkspaceExistValidator(required=True),
         'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),

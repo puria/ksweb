@@ -17,7 +17,7 @@ from tw2.core import StringLengthValidator, EmailValidator
 from ksweb import model
 from ksweb.lib.base import BaseController
 from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator, \
-    CategoryExistValidator
+    WorkspaceExistValidator
 from ksweb.model import DBSession
 try:
     basestring
@@ -33,7 +33,7 @@ class QuestionaryController(BaseController):
 
     @expose('ksweb.templates.questionary.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def index(self, workspace, **kw):
         user = request.identity['user']
         documents_id = [ObjectId(documents._id) for documents in
@@ -101,7 +101,7 @@ class QuestionaryController(BaseController):
     @expose('json')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
-        'workspace': CategoryExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id',
                                   entity_model=model.Questionary))
@@ -190,7 +190,7 @@ class QuestionaryController(BaseController):
     @expose('ksweb.templates.questionary.completed')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
-        'workspace': CategoryExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def completed(self, _id=None, workspace=None):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))

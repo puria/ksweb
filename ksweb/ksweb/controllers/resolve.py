@@ -4,7 +4,7 @@ import tg
 from bson import ObjectId
 from ksweb.lib.base import BaseController
 from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
-from ksweb.lib.validator import CategoryExistValidator
+from ksweb.lib.validator import WorkspaceExistValidator
 from tg import expose, decode_params, flash, redirect, session
 from ksweb import model
 from tg import validate
@@ -24,13 +24,13 @@ class ResolveController(BaseController):
     @decode_params('json')
     @expose('ksweb.templates.resolve.index')
     @with_entity_session
-    @validate({'workspace': CategoryExistValidator(required=True),})
+    @validate({'workspace': WorkspaceExistValidator(required=True), })
     def index(self, workspace, **kw):
         return dict(workspace=workspace,**kw)
 
     @expose()
     @with_entity_session
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def original_edit(self, workspace, **kw):
         entity = self._original_edit()
         flash(_(u'Entity %s successfully edited!') % entity.title)
@@ -39,7 +39,7 @@ class ResolveController(BaseController):
 
     @expose()
     @with_entity_session
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def clone_object(self, workspace, **kw):
         entity = self._clone_object()
         flash(_("%s successfully created!") % entity.title)
@@ -47,7 +47,7 @@ class ResolveController(BaseController):
         return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
 
     @expose('')
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def discard_changes(self, workspace, **kw):
         session.delete()
         flash(_(u'All the edits are discarded'))
@@ -56,7 +56,7 @@ class ResolveController(BaseController):
 
     @expose('ksweb.templates.resolve.manually_resolve')
     @with_entity_session
-    @validate({'workspace': CategoryExistValidator(required=True)})
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
     def manually_resolve(self, workspace, **kw):
 
         # fetch params from session

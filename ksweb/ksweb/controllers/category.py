@@ -4,7 +4,7 @@ from bson import ObjectId
 from ksweb.model import Category, Qa, Output, Precondition, Document, Questionary
 from tg import decode_params, predicates, request
 from tg import expose, validate, RestController, validation_errors_response
-from ksweb.lib.validator import CategoryExistValidator
+from ksweb.lib.validator import WorkspaceExistValidator
 from tg import flash
 from tg import response
 from tw2.core import StringLengthValidator
@@ -17,7 +17,7 @@ class CategoryController(RestController):
 
     @expose('json')
     @validate({
-        'id': CategoryExistValidator(required=True),
+        'id': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def get_one(self, id, **kw):
         qa = Category.query.get(_id=ObjectId(id))
@@ -53,7 +53,7 @@ class CategoryController(RestController):
     @decode_params('json')
     @expose('json')
     @validate({
-        'workspace_id': CategoryExistValidator(required=True),
+        'workspace_id': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def delete(self, workspace_id=None, **kw):
         workspace = Category.query.get(_id=ObjectId(workspace_id))
