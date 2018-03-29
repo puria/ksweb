@@ -67,7 +67,9 @@ class TestCategory(TestController):
             params={'workspace_id': str(category._id)}
         )
         c = self._get_category("Category")
+        response = self.app.get('/category/get_all')
         assert not c
+        assert category._id not in response
 
 
     def test_workspace_without_owner_delete(self):
