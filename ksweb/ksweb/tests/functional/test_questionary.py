@@ -2,6 +2,8 @@
 from __future__ import print_function
 
 import zipfile
+import pytz
+from datetime import datetime
 from StringIO import StringIO
 
 from ksweb.tests import TestController
@@ -271,6 +273,27 @@ class TestQuestionaryController(TestController):
         form = self._get_questionary_by_title('TestQuestionary')
         response = self.app.get('/questionary/previous_question', params=dict(_id=str(form._id)))
         assert response
+
+    def test_creation_date(self):
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        utcnow = datetime.now(tz=pytz.UTC)
+        delta = utcnow - form.creation_date
+        print(delta)
+        assert delta.total_seconds() < 3
+
+    def test_owner_name(self):
+        from ksweb.model.questionary import _owner_name as on
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        assert 'Lawyer' == on(form)
+
+    def test_user_shared_with(self):
+        from ksweb.model.questionary import _shared_with as sw
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        assert u"lawyer1@ks.axantweb.com" == sw(form)
+
 
 """ FIXME:
     def test_hack_response_multi(self):
