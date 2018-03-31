@@ -23,6 +23,7 @@ pip-log.txt
 .idea
 venv
 env
+.env
 *.swp
 *.DS_Store
 ksweb/ksweb/public/.webassets-cache/*
