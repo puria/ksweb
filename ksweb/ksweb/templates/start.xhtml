@@ -16,7 +16,9 @@
             <div class="card p-4">
                 <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
                     <div>{{.name}}</div>
-                    <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
+                    {{#._owner}}
+                        <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
+                    {{/}}
                 </a>
             </div>
             {{/each}}

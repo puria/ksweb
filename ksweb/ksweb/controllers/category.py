@@ -12,8 +12,7 @@ from tg.i18n import ugettext as _, lazy_ugettext as l_
 
 
 class CategoryController(RestController):
-    allow_only = predicates.has_any_permission('manage',
-                                               'lawyer', msg=l_('Only for admin or lawyer'))
+    allow_only = predicates.has_any_permission('manage', 'lawyer', msg=l_('Only for admin or lawyer'))
 
     @expose('json')
     @validate({
