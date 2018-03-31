@@ -151,7 +151,7 @@ webassets.plugme(base_config, bundles={
                                'javascript/vendors/toastr.min.js',
                                'javascript/vendors/popper.min.js',
                                'javascript/vendors/bootstrap.min.js',
-                               'javascript/vendors/ractive.js',
+                               'javascript/vendors/ractive.min.js',
                                filters='rjsmin', output='assets/js_all.js'),
     'css_all': webassets.Bundle('css/vendors/toastr.min.css',
                                 'css/vendors/material-icons.css',
