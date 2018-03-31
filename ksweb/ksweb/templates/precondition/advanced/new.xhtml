@@ -54,17 +54,17 @@
                 <span class="editor-element-operator">
                         <img src="{{.img_uri}}" alt="{{.content}}"/>
                     <span id="delete_elem" class="cursor-pointer"
-                          on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+                          on-click="['deleteElem', i]">${h.material_icon('add_circle_outline_rotate')}</span>
                     </span>
                 {{/if}}
                 {{#if .type == 'precondition'}}
                 <span class="editor-element-precondition">
-                    <span on-click="selectElem:{{.}}">{{.title}}</span>
+                    <span on-click="['selectElem', .]">{{.title}}</span>
                      <span id="delete_elem" class="cursor-pointer"
-                           on-click="deleteElem:{{i}}">${h.material_icon('add_circle_outline_rotate')}</span>
+                           on-click="['deleteElem', i]">${h.material_icon('add_circle_outline_rotate')}</span>
                     </span>
                 {{/if}}
-                {{/items}}
+                {{/conditions}}
 
                 {{#if errors.conditions}}
                 <span class="help-block">{{errors.conditions}}</span>
@@ -76,23 +76,8 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="qa-ractive"></div>
+<div id="target"></div>
 <script>
-    /*
-        Ractive in `conditions` contiene la struttura dati dei filtri e degli operatori:
-
-        Gli elementi che può contenere sono di due tipologie:
-        -  Filtri
-        -  Operatori logici
-
-        Percio dovro differenziare i due casi tipo:
-        type: [operator, precondition]
-        content: [AND, OR, NOT, ( , ) , ObjId('filtro')
-        img_uri: uri of image
-
-        Devo fare poi solo il template che deve visualizzare tutti i vari elementi del template
-    */
-
     <![CDATA[
 
     var PreconditionSimple = Ractive.extend({
@@ -254,7 +239,7 @@
 </script>
 <script>
     var ractive_precondition_simple = new PreconditionSimple({
-        el: '#qa-ractive',
+        target: '#target',
         precondition: ${Markup(h.script_json_encode(precondition))},
         workspace: '${workspace}'
     });

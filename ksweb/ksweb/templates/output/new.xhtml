@@ -135,15 +135,6 @@
             //self.loadCategories();
             self.loadPrecondition();
         },
-        /*loadCategories: function(callback) {
-          var self = this;
-          jQuery.get("${tg.url('/category/get_all')}",
-          function(data) {
-            self.set('categories', data['categories']);
-            if (callback)
-              callback();
-          });
-    },*/
         loadPrecondition: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/precondition/available_preconditions', params=dict(workspace=workspace))}",

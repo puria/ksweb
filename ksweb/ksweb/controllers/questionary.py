@@ -127,7 +127,7 @@ class QuestionaryController(BaseController):
         questionary_compiled = Template(questionary.document.html)
 
         output_values, qa_values = dict(), dict()
-
+        if not questionary.document.content: return
         for output_dict in questionary.document.content:
             _id = ObjectId(output_dict['content'])
             if output_dict['content'] in questionary.output_values and \
