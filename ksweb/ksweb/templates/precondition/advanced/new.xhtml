@@ -1,7 +1,7 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
     <title py:block="master_title">KS | Filters</title>
-    <script id="PreconditionSimpleForm_template" type="text/html">
+    <script id="template" type="text/html">
         <![CDATA[
         <form id="precondition-simple-form" class="form-horizontal" on-submit="submit-form">
             <div class="row mt-2 pb-3 mb-3 border-bottom">
@@ -88,10 +88,9 @@
     <![CDATA[
 
     var PreconditionSimple = Ractive.extend({
-        template: '#PreconditionSimpleForm_template',
-        onconstruct: function (options) {
+        template: '#template',
+        onconstruct: function (ctx, options) {
             var self = this;
-            console.log(self)
             self.precondition = options['precondition'];
             self.edit_mode = false;
             self.submit_url = "${tg.url('/precondition/advanced/post')}";
@@ -105,8 +104,7 @@
             self.set('categories', []);
             self.set('conditions', []);
             self.set('create.category', self.workspace);
-            var load_conditions = function () {
-            };
+            var load_conditions = function() {};
 
             //  Check if document is provided
             if (!jQuery.isEmptyObject(self.precondition)) {
@@ -114,7 +112,6 @@
                 self.submit_url = '${tg.url('/precondition/advanced/put')}';
                 self.set('edit_mode', true);
                 self.set('create.title', self.precondition['title']);
-
                 self.set('create._id', self.precondition['_id']);
 
                 load_conditions = function () {
@@ -139,17 +136,13 @@
                             }
                         }
                     }
+
                 };
             }
 
-
             self.on('submit-form', function (event) {
                 var all_var = self.get('create');
-                console.log("Sending...");
-                console.log(all_var);
                 all_var['conditions'] = self.get('conditions');
-                console.log("add the conditions");
-                console.log(all_var)
                 self.createPreconditionAdvanced(all_var);
                 return false;
             });
@@ -158,22 +151,12 @@
             self.loadQuestion();
             self.loadPreconditions(load_conditions);
         },
-        /*loadCategory: function (callback) {
-            var self = this;
-            jQuery.get("${tg.url('/category/get_all')}",
-                    function (data) {
-                        self.set('categories', data['categories']);
-                        if (callback)
-                            callback();
-                    });
-        },*/
         loadQuestion: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/qa/get_single_or_multi_question', params=dict(workspace=workspace))}",
                     function (data) {
                         self.set('questions', data['questions']);
-                        if (callback)
-                            callback();
+                        if (callback) callback();
                     });
         },
         loadPreconditions: function (callback) {
@@ -181,39 +164,30 @@
             jQuery.get("${tg.url('/precondition/sidebar_precondition', params=dict(workspace=workspace))}",
                     function (data) {
                         self.set('preconditions', data['precond']);
-                        console.log(self.get('preconditions'));
-                        if (callback)
-                            callback();
+                        if (callback) callback();
                     });
         },
         addOperator: function (operator, img_uri) {
             var self = this;
-            console.log("add operator:" + operator);
             var elem = {
                 'type': 'operator',
                 'content': operator,
                 'img_uri': img_uri
             };
-
-            self.get('conditions').push(elem);
+            self.push('conditions', elem)
         },
         addPrecondition: function (id, title) {
             var self = this;
-            console.log("add _id:" + id);
-            console.log("add title:" + title);
             var elem = {
                 'type': 'precondition',
                 'content': id,
                 'title': title
             };
-
-            self.get('conditions').push(elem);
+            self.push('conditions', elem)
         },
         createPreconditionAdvanced: function (field) {
             var self = this;
             self.set('saving', true);
-            console.log("Sending:");
-            console.log(JSON.stringify(field));
 
             var api_params = JSON.stringify(field);
             $.ajax({
@@ -254,13 +228,10 @@
 
     ractive_precondition_simple.on('selectElem', function (event, elem) {
         var self = this;
-        console.log("Selected element: " + elem);
-        console.log(elem);
     });
 
     ractive_precondition_simple.on('deleteElem', function (event, elem) {
         var self = this;
-        console.log("Element to remove: " + elem);
         self.splice('conditions', elem, 1)
     });
 
