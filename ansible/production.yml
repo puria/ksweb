@@ -87,19 +87,3 @@
   become: yes
   roles:
     - nginx
-
-
-- name: Notify Release
-  hosts: 127.0.0.1
-  become: no
-  connection: local
-  tasks:
-    - name: Notify Release to Projects
-      when: notify_projects
-      local_action: shell curl https://projects.axantweb.com/api/release
-                    --insecure
-                    -d project={{project_id}}
-                    -d repository={{repository_id}}
-                    -d revision=`hg id -i`
-                    -d branch=`hg branch`
-                    -d releasetype={{release_type}}

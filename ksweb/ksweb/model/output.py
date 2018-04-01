@@ -79,9 +79,11 @@ class Output(MappedClass):
 
     created_at = FieldProperty(s.DateTime, if_missing=datetime.utcnow())
 
+
     @classmethod
     def output_available_for_user(cls, user_id, workspace=None):
         return User.query.get(_id=user_id).owned_entities(cls, workspace)
+
 
     @property
     def human_readbale_content(self):
@@ -93,9 +95,11 @@ class Output(MappedClass):
             # else mostra una stringa di dettaglio del filtro
         return self.content
 
+
     @property
     def entity(self):
         return 'output'
+
 
     @property
     def upcast(self):
@@ -109,6 +113,7 @@ class Output(MappedClass):
         <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
         """
         return _upcast(self)
+
 
     def render(self, evaluations_dict):
         html = Template(self.html)
@@ -125,6 +130,16 @@ class Output(MappedClass):
                 nested_output_html['output_' + elem['content']] = nested_output.render(evaluations_dict)
 
         return html.safe_substitute(**nested_output_html)
+
+
+    @classmethod
+    def update_content_titles_with(cls, entity):
+        related = cls.query.find({'content.content': str(entity._id)}, ).all()
+        for document in related:
+            for i, item in enumerate(document.content):
+                if item.content == str(entity._id):
+                    document.content[i].title = entity.title
+
 
     def __json__(self):
         from ksweb.lib.utils import to_dict

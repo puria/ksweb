@@ -2,7 +2,7 @@
 <head py:block="head" py:strip="True">
     <title py:block="master_title">Welcome to KS Web</title>
     <link rel="stylesheet" py:for="asset_url in g.webassets['index'].urls()" href="$asset_url"/>
-    <script id="index_template" type="text/html">
+    <script id="template" type="text/html">
         <![CDATA[
         <div class="row">
           <div class="col col-offset-2">
@@ -16,7 +16,9 @@
             <div class="card p-4">
                 <a class="card-body" href="${tg.url('/welcome?workspace={{._id}}')}">
                     <div>{{.name}}</div>
-                    <aside on-click="delete_workspace:{{._id}}">${h.material_icon('delete')}</aside>
+                    {{#._owner}}
+                        <aside on-click="['delete_workspace', ._id]">${h.material_icon('delete')}</aside>
+                    {{/}}
                 </a>
             </div>
             {{/each}}
@@ -31,7 +33,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="createWorkspace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <form on-submit="add_category:{{workspace_name}}">
+            <form on-submit="['create_workspace', workspace_name]">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -51,7 +53,7 @@
                             <button type="button" class="btn btn-outline-danger"
                                data-dismiss="modal">${_('Cancel')}</button>
                             <button type="button"
-                                    on-click="add_category:{{workspace_name}}"
+                                    on-click="['create_workspace', workspace_name]"
                                     class="btn btn-outline-success">${_('Save')}
                             </button>
                         </div>
@@ -65,19 +67,19 @@
     </script>
 </head>
 <body py:block="body" py:strip="True">
-<div id="index-ractive" class="pt-3">
+<div id="target" class="pt-3">
 
 </div>
 <script>
     var RactiveIndex = Ractive.extend({
-        template: '#index_template',
+        template: '#template',
         onconstruct: function (options) {
             var self = this;
         },
         oninit: function () {
             var self = this;
             self.set('workspaces', self.workspaces);
-            self.on('add_category', function (event, workspace_name) {
+            self.on('create_workspace', function (event, workspace_name) {
                 var params = { 'workspace_name': workspace_name };
                 console.log(params, workspace_name)
                 $.ajax({
@@ -133,7 +135,7 @@
 </script>
 <script>
     var ractive_index = new RactiveIndex({
-        el: '#index-ractive',
+        target: '#target',
         workspaces: ${Markup(h.script_json_encode(workspaces))}
     });
 </script>

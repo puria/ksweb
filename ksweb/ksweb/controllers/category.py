@@ -12,8 +12,7 @@ from tg.i18n import ugettext as _, lazy_ugettext as l_
 
 
 class CategoryController(RestController):
-    allow_only = predicates.has_any_permission('manage',
-                                               'lawyer', msg=l_('Only for admin or lawyer'))
+    allow_only = predicates.has_any_permission('manage', 'lawyer', msg=l_('Only for admin or lawyer'))
 
     @expose('json')
     @validate({
@@ -55,7 +54,7 @@ class CategoryController(RestController):
     @validate({
         'workspace_id': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def delete(self, workspace_id=None, **kw):
+    def delete(self, method=None, workspace_id=None, **kw):
         workspace = Category.query.get(_id=ObjectId(workspace_id))
         if not workspace.owner:
             flash(_('This workspace can not be deleted'), 'warning')

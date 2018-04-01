@@ -37,7 +37,7 @@
                 <div class="col-4">
                     <select id="form-precondition" class="custom-select {{errors.precondition ? 'is-invalid' : ''}}"
                             value="{{create.precondition}}">
-                        <option value="" disabled selected>${_('Choose a filter (select a Q/A)')}</option>
+                        <option value="" selected>${_('Choose a filter (select a Q/A)')}</option>
                         {{#each preconditions}}
                             <option value="{{._id}}">{{.title}}</option>
                         {{/each}}
@@ -135,15 +135,6 @@
             //self.loadCategories();
             self.loadPrecondition();
         },
-        /*loadCategories: function(callback) {
-          var self = this;
-          jQuery.get("${tg.url('/category/get_all')}",
-          function(data) {
-            self.set('categories', data['categories']);
-            if (callback)
-              callback();
-          });
-    },*/
         loadPrecondition: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/precondition/available_preconditions', params=dict(workspace=workspace))}",

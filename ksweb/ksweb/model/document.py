@@ -73,13 +73,16 @@ class Document(MappedClass):
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
 
+
     @classmethod
     def document_available_for_user(cls, user_id, workspace=None):
         return User.query.get(_id=user_id).owned_entities(cls, workspace)
 
+
     @property
     def entity(self):
         return 'document'
+
 
     @property
     def upcast(self):
@@ -93,6 +96,16 @@ class Document(MappedClass):
         <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
         """
         return _upcast(self)
+
+
+    @classmethod
+    def update_content_titles_with(cls, entity):
+        related = cls.query.find({'content.content': str(entity._id)}, ).all()
+        for document in related:
+            for i, item in enumerate(document.content):
+                if item.content == str(entity._id):
+                    document.content[i].title = entity.title
+
 
     def __json__(self):
         from ksweb.lib.utils import to_dict

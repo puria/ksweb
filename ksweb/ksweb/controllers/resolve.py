@@ -10,6 +10,8 @@ from ksweb import model
 from tg import validate
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 
+from ksweb.model import Output, Document
+
 
 class ResolveController(BaseController):
 
@@ -110,8 +112,13 @@ class ResolveController(BaseController):
             setattr(entity, k, v)
 
         # TODO: update..
-        # self._find_and_modify(kw)
+        self._find_and_modify(entity)
         return entity
+
+    def _find_and_modify(self, entity):
+        if isinstance(entity, Output):
+            Document.update_content_titles_with(entity)
+            Output.update_content_titles_with(entity)
 
     def _clone_object(self):
         params = session.get('entity')

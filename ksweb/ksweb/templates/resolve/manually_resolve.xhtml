@@ -36,16 +36,16 @@
           {{#if related_entities.length > 0}}
           <div class="col-md-5">
             <div class="well">
-              <a href="#" on-click="showDetails:{{related_entities[0].entity}},{{related_entities[0]._id}}">{{related_entities[0].title}}</a>
+              <a href="#" on-click="['showDetails', related_entities[0].entity, related_entities[0]._id]">{{related_entities[0].title}}</a>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <button class="btn btn-warning" on-click="addToList:{{related_entities[0]}},'new'">${_('Modify with new version')}</button>
+                <button class="btn btn-warning" on-click="['addToList', related_entities[0], 'new']">${_('Modify with new version')}</button>
                 <br/>
                 ${_('This object is modified and keeps the previous reference')}
               </div>
               <div class="col-md-6">
-                <button class="btn btn-info" on-click="addToList:{{related_entities[0]}},'old'">${_('Use the previous version')}</button>
+                <button class="btn btn-info" on-click="['addToList', related_entities[0], 'old']">${_('Use the previous version')}</button>
                 <br/>
                 ${_('Create a new modified object and use the previous reference')}
               </div>
@@ -71,7 +71,7 @@
 
 
           {{#if related_entities.length == 0}}
-          <button class="btn btn-success" on-click="apply:{{}}">${_('Apply')}</button>
+          <button class="btn btn-success" on-click="['apply', {{}}]">${_('Apply')}</button>
           {{/if}}
 
         </div>

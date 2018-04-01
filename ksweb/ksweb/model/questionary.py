@@ -135,6 +135,7 @@ class Questionary(MappedClass):
         self.output_values = {}
         self.generate_expression()
 
+        if not self.document.content: return { 'completed': False }
         # document contains outputs only
         for output in self.document.content:
             output_id = output['content']
@@ -157,6 +158,9 @@ class Questionary(MappedClass):
     def generate_expression(self):
         log.debug("generate_expression")
         from . import Output
+        if not self.document.content:
+            self.expressions = []
+            return
         for o in self.document.content:
             output = Output.query.get(_id=ObjectId(o['content']))
             self.expressions[str(output._id)] = self._generate(output.precondition)
