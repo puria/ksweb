@@ -34,40 +34,47 @@
             <div class="form-group row">
                 <div class="col">
                     ${_('Operators')}:
-                    <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')"><img
-                            class="cursor-pointer" src="${tg.url('/img/and.png')}"></span>
-                    <span onclick="ractive_precondition_simple.addOperator('or','${tg.url("/img/or_dark.png")}')"><img
-                            class="cursor-pointer" src="${tg.url('/img/or.png')}"></span>
-                    <span onclick="ractive_precondition_simple.addOperator('not', '${tg.url("/img/not_dark.png")}')"><img
-                            class="cursor-pointer" src="${tg.url('/img/not.png')}"></span>
-                    <span onclick="ractive_precondition_simple.addOperator('(', '${tg.url("/img/bracket_open_dark.png")}')"><img
-                            class="cursor-pointer" src="${tg.url('/img/bracket_open.png')}"></span>
-                    <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')"><img
-                            class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}"></span>
+                    <span onclick="ractive_precondition_simple.addOperator('and', '${tg.url("/img/and_dark.png")}')">
+                        <img class="cursor-pointer" src="${tg.url('/img/and.png')}">
+                    </span>
+                    <span onclick="ractive_precondition_simple.addOperator('or','${tg.url("/img/or_dark.png")}')">
+                        <img class="cursor-pointer" src="${tg.url('/img/or.png')}">
+                    </span>
+                    <span onclick="ractive_precondition_simple.addOperator('not', '${tg.url("/img/not_dark.png")}')">
+                        <img class="cursor-pointer" src="${tg.url('/img/not.png')}">
+                    </span>
+                    <span onclick="ractive_precondition_simple.addOperator('(', '${tg.url("/img/bracket_open_dark.png")}')">
+                        <img class="cursor-pointer" src="${tg.url('/img/bracket_open.png')}">
+                    </span>
+                    <span onclick="ractive_precondition_simple.addOperator(')', '${tg.url("/img/bracket_close_dark.png")}')">
+                        <img class="cursor-pointer" src="${tg.url('/img/bracket_close.png')}">
+                    </span>
                 </div>
 
             </div>
 
             <div class="col form-group {{errors.conditions ? 'has-error' : ''}}">
                 {{#conditions:i}}
-                {{#if .type == 'operator'}}
-                <span class="editor-element-operator">
-                        <img src="{{.img_uri}}" alt="{{.content}}"/>
-                    <span id="delete_elem" class="cursor-pointer"
-                          on-click="['deleteElem', i]">${h.material_icon('add_circle_outline_rotate')}</span>
-                    </span>
-                {{/if}}
-                {{#if .type == 'precondition'}}
-                <span class="editor-element-precondition">
-                    <span on-click="['selectElem', .]">{{.title}}</span>
-                     <span id="delete_elem" class="cursor-pointer"
-                           on-click="['deleteElem', i]">${h.material_icon('add_circle_outline_rotate')}</span>
-                    </span>
-                {{/if}}
+                    {{#if .type == 'operator'}}
+                        <span class="editor-element-operator">
+                            <img src="{{.img_uri}}" alt="{{.content}}"/>
+                            <span id="delete_elem" class="cursor-pointer" on-click="['deleteElem', i]">
+                                ${h.material_icon('add_circle_outline_rotate')}
+                            </span>
+                        </span>
+                    {{/if}}
+                    {{#if .type == 'precondition'}}
+                        <span class="editor-element-precondition">
+                            <span on-click="['selectElem', .]">{{.title}}</span>
+                            <span id="delete_elem" class="cursor-pointer" on-click="['deleteElem', i]">
+                                ${h.material_icon('add_circle_outline_rotate')}
+                            </span>
+                        </span>
+                    {{/if}}
                 {{/conditions}}
 
                 {{#if errors.conditions}}
-                <span class="help-block">{{errors.conditions}}</span>
+                    <span class="help-block">{{errors.conditions}}</span>
                 {{/if}}
             </div>
         </form>
@@ -84,6 +91,7 @@
         template: '#PreconditionSimpleForm_template',
         onconstruct: function (options) {
             var self = this;
+            console.log(self)
             self.precondition = options['precondition'];
             self.edit_mode = false;
             self.submit_url = "${tg.url('/precondition/advanced/post')}";

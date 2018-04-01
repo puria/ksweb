@@ -39,8 +39,7 @@
         </li>
     </ul>
 
-    <div id="precondition-ractive" class="row" style="padding-top: 50%;"
-         py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'"/>
+    <div id="precondition-ractive" class="row p-2" py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'"/>
 
     <!-- Precondition Advanced -->
     <script id="PreconditionSimpleList" type="text/html">
@@ -49,19 +48,19 @@
             ${_('Filters')}
         </div>
         {{#each preconditions}}
-        <div class="col-md-12 category-name">
-            {{.category_name}}
-            <hr class="category-name-separator">
-        </div>
+            <div class="col-md-12 category-name">
+                {{.category_name}}
+                <hr class="category-name-separator">
+            </div>
 
-        {{#each precondition}}
-        <div class="col-md-12">
-            {{.title}}
-            <span id="add_circle_outline"
-                  onclick="ractive_precondition_simple.addPrecondition('{{._id}}', {{JSON.stringify(.title)}})"
-                  class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
-        </div>
-        {{/each}}
+            {{#each precondition}}
+            <div class="col-md-12">
+                {{.title}}
+                <span id="add_circle_outline"
+                      onclick="ractive_precondition_simple.addPrecondition('{{._id}}', {{JSON.stringify(.title)}})"
+                      class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+            </div>
+            {{/each}}
         {{/each}}
         ]]>
     </script>
@@ -69,8 +68,7 @@
     <script>
         const PreconditionSimpleList = Ractive.extend({
             template: '#PreconditionSimpleList',
-            onconstruct: () => {},
-
+            onconstruct: function(options) {},
             oninit:function() {
                 const self = this
                 self.set('errors', {})
@@ -84,9 +82,9 @@
                 const self = this
                 jQuery.get("${tg.url('/precondition/sidebar_precondition', params=dict(workspace=workspace))}",
                     data => {self.set('preconditions', data['precond'])}
-                );
+                )
             },
-        });
+        })
     </script>
 
     <div py:if="getattr(tmpl_context, 'sidebar_document', '') == 'document-new'"
@@ -109,20 +107,20 @@
             <hr class="category-name-separator">
         </div>
         {{#each outputs}}
-        {{#each output}}
-        <div class="col-md-12">
-            {{.title}}
-            {{#if div == '#output-ractive'}}
-            <span id="add_circle_outline"
-                  onclick="ractive_document.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')"
-                  class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
-            {{else}}
-            <span id="add_circle_outline"
-                  onclick="ractive_output.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')"
-                  class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
-            {{/if}}
-        </div>
-        {{/each}}
+            {{#each output}}
+            <div class="col-md-12">
+                {{.title}}
+                {{#if div == '#output-ractive'}}
+                <span id="add_circle_outline"
+                      onclick="ractive_document.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')"
+                      class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                {{else}}
+                <span id="add_circle_outline"
+                      onclick="ractive_output.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')"
+                      class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                {{/if}}
+            </div>
+            {{/each}}
         {{/each}}
         ]]>
     </script>
@@ -139,11 +137,11 @@
                 self.set('div', self.el);
             },
             set_outputs: function(callback) {
-                const self = this;
+                const self = this
                 let url = "${tg.url('/output/sidebar_output',params=dict(_id=getattr(tmpl_context, 'id_obj', None), workspace=workspace))}"
                 jQuery.get(url,
-                    data => {self.set('outputs', data['outputs'])}
-                );
+                    data => { self.set('outputs', data['outputs']) }
+                )
             },
         });
     </script>
@@ -151,9 +149,9 @@
     <!-- End Output  -->
 
     <script>
-        var ractive_precondition_simple_list = new PreconditionSimpleList({el: '#precondition-ractive'});
-        var ractive_output_list = new OutputList({el: '#output-ractive'});
-        var ractive_nested_output_list = new OutputList({el: '#nested-output-ractive'});
+        const ractive_precondition_simple_list = new PreconditionSimpleList({el: '#precondition-ractive'})
+        const ractive_output_list = new OutputList({el: '#output-ractive'})
+        const ractive_nested_output_list = new OutputList({el: '#nested-output-ractive'})
     </script>
 
 </div>
