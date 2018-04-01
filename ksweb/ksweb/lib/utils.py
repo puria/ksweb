@@ -198,7 +198,3 @@ def get_related_entities_for_filters(_id):
         'entities': entities,
         'len': len(entities)
     }
-
-
-
-
