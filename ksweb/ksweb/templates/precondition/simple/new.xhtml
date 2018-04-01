@@ -106,7 +106,7 @@
   <![CDATA[
   var PreconditionSimple = Ractive.extend({
     template: '#PreconditionSimpleForm_template',
-    onconstruct: function(options) {
+    onconstruct: function(ctx, options) {
       var self = this;
       self.precondition = options['precondition'];
       self.edit_mode = false;
