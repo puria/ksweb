@@ -9,7 +9,7 @@ from tg.configuration import AppConfig
 from tg import milestones
 
 import ksweb
-from evolutions import evolutions
+from .evolutions import evolutions
 from ksweb import model, lib
 
 base_config = AppConfig()
@@ -166,14 +166,6 @@ webassets.plugme(base_config, bundles={
                                                  output='assets_debug/new-age.css'),
                                 filters='cssmin', output='assets/new-age.css')
 })
-
-
-# try:
-#     # Enable DebugBar if available, install tgext.debugbar to turn it on
-#     from tgext.debugbar import enable_debugbar
-#     enable_debugbar(base_config)
-# except ImportError:
-#     pass
 
 
 from tgext.pluggable import plug
