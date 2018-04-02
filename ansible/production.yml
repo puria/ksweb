@@ -87,3 +87,15 @@
   become: yes
   roles:
     - nginx
+
+- name: Github release
+  hosts: localhost
+  tasks:
+    - name: Create Release
+      github_release:
+        token: "{{gh_token}}"
+        user: puria
+        repo: ksweb
+        action: create_release
+        tag: "{{ansible_date_time.iso8601_basic_short}}"
+        target: "{{current_branch}}"
