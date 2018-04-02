@@ -1,15 +1,17 @@
 [nginx]
 ks.studiolegale.it
+ansible_become=yes
 
 [circus]
 ks.studiolegale.it
+ansible_become=yes
 
 [databases]
 ks.studiolegale.it
+ansible_become=yes
 
 [all:vars]
 ansible_user=axant
-ansible_become=yes
 ansible_become_method=sudo
 ansible_become_pass={{sudo_pass}}
 ansible_ssh_private_key_file=~/.ssh/axant
