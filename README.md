@@ -4,30 +4,28 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 
-This file is for you to describe the ksweb application. Typically
-you would include information such as the information below:
-
-Installation and Setup
+1min installation
 ======================
+
+GNU/Linux and macOS
+---------
+
+[![asciicast](https://asciinema.org/a/yImfeZTmmoGWvXV93k3g0OtaO.png)](https://asciinema.org/a/yImfeZTmmoGWvXV93k3g0OtaO)
+
 
 Install ``ksweb`` using the setup.py script::
 
     $ cd ksweb
+    $ virtualenv -p python2 venv
+    $ source venv/bin/activate
     $ pip install -e .
-
-Create the project database for any model classes defined::
-
     $ gearbox setup-app
 
-Start the paste http server::
+Start the http server::
 
-    $ gearbox serve
+    $ gearbox serve --reload
 
-While developing you may want the server to reload after changes in package files (or its dependencies) are saved. This can be achieved easily by adding the --reload option::
-
-    $ gearbox serve --reload --debug
-
-Then you are ready to go.
+Then you are ready to go :tada:
 
 
 Example Account
