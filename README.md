@@ -13,7 +13,7 @@ GNU/Linux and macOS
 [![asciicast](https://asciinema.org/a/yImfeZTmmoGWvXV93k3g0OtaO.png)](https://asciinema.org/a/yImfeZTmmoGWvXV93k3g0OtaO)
 
 
-Install ``ksweb`` using the setup.py script::
+Install ``ksweb`` using the setup.py script
 
     $ cd ksweb
     $ virtualenv -p python2 venv
@@ -21,7 +21,7 @@ Install ``ksweb`` using the setup.py script::
     $ pip install -e .
     $ gearbox setup-app
 
-Start the http server::
+Start the http server
 
     $ gearbox serve --reload
 
