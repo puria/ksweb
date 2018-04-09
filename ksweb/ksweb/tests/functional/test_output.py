@@ -263,7 +263,7 @@ class TestOutputPlus(TestController):
             workspace=str(self.category._id),
         ), status=200)
 
-        assert self._get_output_by_title('Output output_plus')
+        assert self._get_output_by_title('output_plus')
 
     def test_output_plus_with_nested_output(self):
         self._login_lawyer()
@@ -274,4 +274,4 @@ class TestOutputPlus(TestController):
             list_=["output_%s" % str(nested_output._id)],
         ), status=200)
 
-        assert self._get_output_by_title('Output output_plus')
+        assert self._get_output_by_title('output_plus')
