@@ -85,7 +85,7 @@
             <div class="form-group row align-items-center">
                 <div class="col-4">
                     <input id="extra-fields-form-title" type="text" class="form-control {{errors.title ? 'is-invalid' : ''}}"
-                           placeholder="${_('Label')}" value="{{create.title}}"/>
+                           placeholder="${_('Label')}" value="{{{create.title}}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
@@ -206,9 +206,7 @@
 
     }
   });
-  ]]>
-</script>
-<script>
+
   var ractive_precondition_simple = new PreconditionSimple({
       el: '#qa-ractive',
       precondition: ${Markup(h.script_json_encode(precondition))},
@@ -240,9 +238,10 @@
       var question = questions.filter(by_id);
       if (!question.length) return;
       var q_title = question[0].title;
-      var suffix = (value.length) ? " -> " + value : '${_(" ANSWERED")}';
+      var suffix = (value.length) ? " &rArr; " + value : '${_(" was compiled")}';
       ractive_precondition_simple.set('create.title', q_title+suffix);
   });
+  ]]>
 </script>
 </body>
 </html>
