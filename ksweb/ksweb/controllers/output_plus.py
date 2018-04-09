@@ -29,7 +29,7 @@ class OutputPlusController(RestController):
                 'content': _id
             })
 
-        title = _(u'Output ') + first_5_words
+        title = first_5_words
         output = model.Output(
             _owner=user._id,
             _category=workspace,
@@ -37,6 +37,7 @@ class OutputPlusController(RestController):
             content=content,
             public=True,
             visible=True,
-            html=highlighted_text
+            html=highlighted_text,
+            auto_generated=True
         )
         return dict(_id=str(output._id), title=title)

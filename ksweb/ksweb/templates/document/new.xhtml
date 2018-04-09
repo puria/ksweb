@@ -309,13 +309,11 @@
         processData: false,
         contentType: 'application/json'
       }).done(function(resp) {
-        console.log("DONE", resp);
-        alert('Output+ created');
+        alert("${_('An Output without filter was automatically created from ')} '" + res['text'] +"'.");
         var range = selector.getRanges()[0];
         range.deleteContents();
         range.select();
         self.add_widget_to_editor(resp['_id'], resp['title'], 'output');
-        //location.reload();
       }).fail(function(jqXHR) {
         var data = jQuery.parseJSON(jqXHR.responseText);
         console.log("fail");
