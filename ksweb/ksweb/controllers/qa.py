@@ -194,8 +194,9 @@ class QaController(RestController):
                         model.Precondition(
                             _owner=user._id,
                             _category=ObjectId(qa._category),
-                            title=qa.title + _(' -> ANSWERED'),
+                            title=qa.title + _(' &rArr; was compiled'),
                             type='simple',
+                            auto_generated=True,
                             condition=[qa._id, ''])
         else:
             base_precond = []
@@ -203,8 +204,9 @@ class QaController(RestController):
                 prec = model.Precondition(
                     _owner=user._id,
                     _category=ObjectId(qa._category),
-                    title=qa.title + ' -> %s' % answer,
+                    title=qa.title + ' &rArr; %s' % answer,
                     type='simple',
+                    auto_generated=True,
                     condition=[qa._id, answer],
                 )
                 base_precond.append(prec)
@@ -219,8 +221,9 @@ class QaController(RestController):
             created_precondition = model.Precondition(
                 _owner=user._id,
                 _category=ObjectId(qa._category),
-                title=qa.title + _(' -> ANSWERED'),
+                title=qa.title + _(' &rArr; was compiled'),
                 type='advanced',
+                auto_generated=True,
                 condition=condition
             )
 

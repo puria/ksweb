@@ -11,12 +11,10 @@ import tg
 
 
 def _custom_title(obj):
-    return Markup(
-        "<a href='%s'>%s</a>" % (
-            tg.url(
-                '/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
-                params=dict(_id=obj._id, workspace=obj._category)),
-            obj.title))
+    url = tg.url('/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
+                 params=dict(_id=obj._id, workspace=obj._category))
+    cls = 'bot' if obj.auto_generated else ''
+    return Markup("<a href='%s' class='%s'>%s</a>" % (url, cls, obj.title))
 
 
 def _content_preview(obj):
@@ -50,6 +48,7 @@ class Precondition(MappedClass):
 
     title = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*PRECONDITION_TYPE), required=True)
+    auto_generated = FieldProperty(s.Bool, if_missing=False)
     condition = FieldProperty(s.Anything)
     """
     In case of type: simple
@@ -129,10 +128,6 @@ class Precondition(MappedClass):
 
     @property
     def simple_text_response(self):
-        """
-        Usato per verificare i filtri di tipo testo che abbiano risposta
-        :return:
-        """
         return self.type == "simple" and self.condition[1] == ""
 
     @property
