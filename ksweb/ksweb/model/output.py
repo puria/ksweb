@@ -13,7 +13,9 @@ from ksweb.model import DBSession, User
 
 
 def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category)), obj.title))
+    url = tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category))
+    cls = 'bot' if obj.auto_generated else ''
+    return Markup("<a href='%s' class='%s'>%s</a>" % (url, cls, obj.title))
 
 
 def _content_preview(obj):
@@ -76,8 +78,8 @@ class Output(MappedClass):
 
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
-
     created_at = FieldProperty(s.DateTime, if_missing=datetime.utcnow())
+    auto_generated = FieldProperty(s.Bool, if_missing=False)
 
 
     @classmethod

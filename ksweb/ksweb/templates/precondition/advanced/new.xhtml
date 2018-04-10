@@ -65,7 +65,7 @@
                     {{/if}}
                     {{#if .type == 'precondition'}}
                         <span class="editor-element-precondition">
-                            <span on-click="['selectElem', .]">{{.title}}</span>
+                            <span on-click="['selectElem', .]">{{{.title}}}</span>
                             <span id="delete_elem" class="cursor-pointer" on-click="['deleteElem', i]">
                                 ${h.material_icon('add_circle_outline_rotate')}
                             </span>
