@@ -15,3 +15,4 @@
 
 .ws { &:hover { @extend .cursor-pointer, .text-primary; } }
 .help-text { color: $grey; }
+.cke_widget_inline { margin: 6px, 2px; }
