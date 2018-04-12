@@ -158,6 +158,7 @@ class QuestionaryController(BaseController):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         #  Check if the qa response is valid
         qa = model.Qa.query.get(_id=ObjectId(qa_id))
+
         if qa.type == "single" and not qa_response in qa.answers:
             response.status_code = 412
             return dict(errors={'qa_response': _('Invalid answer')})

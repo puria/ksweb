@@ -13,7 +13,7 @@ class OutputPlusController(RestController):
     @decode_params('json')
     def post(self, highlighted_text=u'', workspace=None, list_=[]):
         first_5_words = u' '.join(highlighted_text.split())
-        first_5_words = u' '.join(first_5_words.split(" ")[:5])
+        title = u' '.join(first_5_words.split(" ")[:5])
 
         user = request.identity['user']
 
@@ -28,7 +28,6 @@ class OutputPlusController(RestController):
                 'content': _id
             })
 
-        title = first_5_words
         output = Output(
             _owner=user._id,
             _category=workspace,
