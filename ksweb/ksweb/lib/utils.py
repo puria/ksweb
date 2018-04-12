@@ -48,7 +48,7 @@ def _upcast(obj):
     if obj.content:
         for c in obj.content:
             if c['type'] == 'output':
-                c['filtered'] = obj.is_filtered
+                c['filtered'] = getattr(obj, 'is_filtered', '')
                 values['output_' + c['content']] = \
                     editor_widget_template_for_output(id_=c['content'],
                                                       title=c['title'],
