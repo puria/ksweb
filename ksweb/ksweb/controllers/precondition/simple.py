@@ -123,6 +123,7 @@ class PreconditionSimpleController(RestController):
                 title=title,
                 condition=[question, interested_response],
                 _category=category,
+                auto_generated=False,
                 entity='precondition/simple'
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts

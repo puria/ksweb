@@ -83,6 +83,7 @@ class PreconditionAdvancedController(RestController):
                 title=title,
                 condition=list(map(str, condition)),
                 _category=category,
+                auto_generated=False,
                 entity='precondition/advanced',
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts

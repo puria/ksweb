@@ -16,7 +16,7 @@ def _custom_title(obj):
     url = tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category))
     auto = 'bot' if obj.auto_generated else ''
     status = obj.status
-    return Markup("<a href='%s' class='%s %s'>%s</a>" % (url, auto, status, obj.title))
+    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, auto, obj.title))
 
 
 def _content_preview(obj):

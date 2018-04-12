@@ -191,13 +191,14 @@ class QaController(RestController):
     def _autofill_qa_filters(self, qa):
         user = request.identity['user']
         if qa.type == 'text':   # model.Qa.QA_TYPE[0]
-                        model.Precondition(
-                            _owner=user._id,
-                            _category=ObjectId(qa._category),
-                            title=qa.title + _(' &rArr; was compiled'),
-                            type='simple',
-                            auto_generated=True,
-                            condition=[qa._id, ''])
+            autogen_filter = model.Precondition(
+                                _owner=user._id,
+                                _category=ObjectId(qa._category),
+                                title=qa.title + _(' &rArr; was compiled'),
+                                type='simple',
+                                auto_generated=True,
+                                status=model.Precondition.STATUS.UNREAD,
+                                condition=[qa._id, ''])
         else:
             base_precond = []
             for answer in qa.answers:
@@ -207,6 +208,7 @@ class QaController(RestController):
                     title=qa.title + ' &rArr; %s' % answer,
                     type='simple',
                     auto_generated=True,
+                    status=model.Precondition.STATUS.UNREAD,
                     condition=[qa._id, answer],
                 )
                 base_precond.append(prec)
@@ -218,13 +220,26 @@ class QaController(RestController):
 
             condition.append(base_precond[-1]._id)
 
-            created_precondition = model.Precondition(
+            autogen_filter = model.Precondition(
                 _owner=user._id,
                 _category=ObjectId(qa._category),
                 title=qa.title + _(' &rArr; was compiled'),
                 type='advanced',
                 auto_generated=True,
+                status=model.Precondition.STATUS.UNREAD,
                 condition=condition
+            )
+
+        if autogen_filter:
+            model.Output(
+                _owner=user._id,
+                _category=ObjectId(qa._category),
+                _precondition=ObjectId(autogen_filter._id),
+                title=qa.title + ' &rArr; output',
+                auto_generated=True,
+                html='${qa_%s}' % qa._id,
+                status=model.Precondition.STATUS.UNREAD,
+                content= [dict(content=str(qa._id), type='qa_response', title=qa.title)]
             )
 
     def _are_answers_valid(self, answer_type, answers):

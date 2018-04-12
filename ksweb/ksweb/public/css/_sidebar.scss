@@ -25,6 +25,8 @@
       a { @extend .text-white }
     }
   }
+
+  .badge { vertical-align: text-bottom; }
 }
 
 .sidebar-sticky {

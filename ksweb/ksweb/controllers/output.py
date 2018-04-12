@@ -39,7 +39,6 @@ class OutputController(RestController):
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def get_all(self, workspace, **kw):
-        Output.mark_as_read()
         return dict(
             page='output-index',
             fields={
