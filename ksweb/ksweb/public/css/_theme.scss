@@ -16,6 +16,8 @@
 .ws { &:hover { @extend .cursor-pointer, .text-primary; } }
 .help-text { color: $grey; }
 .cke_widget_inline { margin: 6px, 2px; }
+#compile_questionary pre { white-space: pre-wrap; }
+.answer pre { vertical-align: top; }
 
 a.bot {
     background-position: left center;
@@ -25,8 +27,6 @@ a.bot {
     padding-left: 25px;
     color: $dark-grey;
 }
-
-.answer pre { vertical-align: top; }
 
 .UNREAD {
   height: 7px;
