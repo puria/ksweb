@@ -117,6 +117,7 @@ class OutputController(RestController):
                 _category=category,
                 _precondition=precondition if precondition else None,
                 entity='output',
+                auto_generated=False,
                 html=kw['ks_editor']
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
