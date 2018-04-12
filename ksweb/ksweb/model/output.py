@@ -100,6 +100,9 @@ class Output(MappedEntity):
         """
         return _upcast(self)
 
+    @property
+    def is_filtered(self):
+        return True if self._precondition else False
 
     def render(self, evaluations_dict):
         html = Template(self.html)

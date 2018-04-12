@@ -42,14 +42,17 @@ def with_entity_session(func):
 
 def _upcast(obj):
     from ksweb.lib.helpers import editor_widget_template_for_output, editor_widget_template_for_qa
-
     values = dict()
 
     # qa_response and output only
     if obj.content:
         for c in obj.content:
             if c['type'] == 'output':
-                values['output_' + c['content']] = editor_widget_template_for_output(id_=c['content'], title=c['title'])
+                c['filtered'] = obj.is_filtered
+                values['output_' + c['content']] = \
+                    editor_widget_template_for_output(id_=c['content'],
+                                                      title=c['title'],
+                                                      filtered=c['filtered'])
             else:
                 # qa_response
                 values['qa_' + c['content']] = editor_widget_template_for_qa(id_=c['content'], title=c['title'])
