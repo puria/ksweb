@@ -106,15 +106,15 @@
                 <div class="form-group col">
                     {{#each available_response:i}}
                         {{#if .display}}
-                            <div class="col-md-12" class="answer">
+                            <div class="answer">
                                 <input type="{{input_type}}" name="example_response">
                                     {{#if .editable}}
                                         <textarea id="{{.answer}}" class="form-control d-inline-block response response-text" autofocus
                                                                value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
 
                                     {{else}}
-                                        <div id={{.answer}} class="response d-inline-block"
-                                             onclick="ractive_qa.makeEditable('{{i}}')"> {{.answer}}</div>
+                                        <pre id={{.answer}} class="response d-inline-block m-0"
+                                             onclick="ractive_qa.makeEditable('{{i}}')">{{.answer}}</pre>
                                     {{/if}}
                                 {{#if ! edit_mode}}
                                     <label onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</label>

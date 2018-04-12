@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Precondition model module."""
 from __future__ import print_function
+
+import pymongo
 from bson import ObjectId
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
-from ming.odm.declarative import MappedClass
+from ming.odm import FieldProperty
 from markupsafe import Markup
 from ksweb.model import DBSession, Qa
 import tg
@@ -54,8 +55,18 @@ class Precondition(MappedEntity):
     @classmethod
     def precondition_available_for_user(cls, user_id, workspace=None):
         if workspace:
-            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)}).sort('title')
-        return cls.query.find({'_owner': user_id, 'visible': True}).sort('title')
+            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
+                            .sort([
+                                    ('auto_generated', pymongo.ASCENDING),
+                                    ('status', pymongo.DESCENDING),
+                                    ('title', pymongo.ASCENDING),
+                            ])
+        return cls.query.find({'_owner': user_id, 'visible': True})\
+                        .sort([
+                                ('auto_generated', pymongo.ASCENDING),
+                                ('status', pymongo.DESCENDING),
+                                ('title', pymongo.ASCENDING),
+                        ])
 
     @property
     def evaluate(self):
@@ -96,6 +107,8 @@ class Precondition(MappedEntity):
         res_dict = {}
         if self.type == 'simple':
             qa = Qa.query.get(_id=self.condition[0])
+            if not qa:
+                return res_dict
             res_dict[str(qa._id)] = qa
             if qa.parent_precondition:
                 res_dict.update(qa.parent_precondition.response_interested)

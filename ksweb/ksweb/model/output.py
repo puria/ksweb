@@ -2,6 +2,7 @@
 """Output model module."""
 from string import Template
 
+import pymongo
 import tg
 from bson import ObjectId
 from markupsafe import Markup
@@ -22,6 +23,8 @@ def _custom_title(obj):
 def _content_preview(obj):
     return " ".join(Markup(obj.html).striptags().split()[:5])
 
+def _custom_filter(o):
+    return Markup(o.precondition)
 
 class Output(MappedEntity):
 
@@ -34,6 +37,7 @@ class Output(MappedEntity):
 
     __ROW_COLUM_CONVERTERS__ = {
         'title': _custom_title,
+        'precondition': _custom_filter,
         'content': _content_preview
     }
 
@@ -68,7 +72,11 @@ class Output(MappedEntity):
 
     @classmethod
     def output_available_for_user(cls, user_id, workspace=None):
-        return User.query.get(_id=user_id).owned_entities(cls, workspace)
+        return User.query.get(_id=user_id).owned_entities(cls, workspace).sort([
+                                ('auto_generated', pymongo.ASCENDING),
+                                ('status', pymongo.DESCENDING),
+                                ('title', pymongo.ASCENDING),
+                        ])
 
 
     @property
