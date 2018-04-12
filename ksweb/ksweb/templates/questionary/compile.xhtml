@@ -6,6 +6,16 @@
         <![CDATA[
         <div class="row mt-2">
             <h1 class="col type-page-title">${_('Complete the questionary')}: {{questionary.title}}</h1>
+            <div class="col-md-auto text-right">
+            {{#if quest_compiled.completed}}
+                <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
+                   class="btn btn-outline-success">${h.material_icon('download')}
+                </a>
+                <button type="button" class="btn btn-outline-success" on-click="print_questionary">${h.material_icon('print')}</button>
+            {{else}}
+                <button type="button" class="btn btn-outline disabled" on-click="print_questionary" disabled>${h.material_icon('print')} Print result</button>
+            {{/if}}
+            </div>
         </div>
 
         <div class="row border-bottom">
@@ -53,14 +63,6 @@
         </div>
 
         <div class="form-group" style="padding-top: 40px;">
-            {{#if quest_compiled.completed}}
-                       <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
-                          class="btn btn-primary">${h.material_icon('download')}</a>
-                       <button type="button" class="btn btn-primary" on-click="print_questionary">${h.material_icon('print')}</button>
-
-            {{else}}
-            <button type="button" class="btn btn-primary disabled" on-click="print_questionary" disabled>${h.material_icon('print')}</button>
-            {{/if}}
             <div class="col-md-6 text-left ks-section-name">
                 ${_('Questionary')}: {{questionary.title}}
             </div>
