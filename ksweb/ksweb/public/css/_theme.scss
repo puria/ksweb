@@ -26,9 +26,11 @@ a.bot {
     color: $dark-grey;
 }
 
+.answer pre { vertical-align: top; }
+
 .UNREAD {
-  height: 10px;
-  width: 10px;
+  height: 7px;
+  width: 7px;
   background-color: $green;
   border-radius: 50%;
   display: inline-block;
