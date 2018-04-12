@@ -109,15 +109,15 @@
         {{#each outputs}}
             {{#each output}}
             <div class="col-md-12">
-                {{.title}}
+                {{{.title}}}
                 {{#if div == '#output-ractive'}}
-                <span id="add_circle_outline"
-                      onclick="ractive_document.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')"
-                      class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    <span id="add_circle_outline"
+                          onclick="ractive_document.add_widget_to_editor('{{._id}}', {{{JSON.stringify(.title)}}}, 'output')"
+                          class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                 {{else}}
-                <span id="add_circle_outline"
-                      onclick="ractive_output.add_widget_to_editor('{{._id}}', {{JSON.stringify(.title)}}, 'output')"
-                      class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    <span id="add_circle_outline"
+                          onclick="ractive_output.add_widget_to_editor('{{._id}}', {{{JSON.stringify(.title)}}}, 'output')"
+                          class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                 {{/if}}
             </div>
             {{/each}}

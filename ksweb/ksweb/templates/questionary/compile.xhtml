@@ -1,21 +1,23 @@
-  <html py:extends="master.xhtml" py:strip="True">
+<html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
     <title py:block="master_title">KS | Questionary</title>
 
     <script id="compile_questionary_template" type="text/html">
         <![CDATA[
-        <div class="form-group" style="padding-top: 20px">
-            <div class="col-md-6 ks-section-name">
-                ${_('Complete the questionary')}: {{questionary.title}}
-            </div>
-
+        <div class="row mt-2">
+            <h1 class="col type-page-title">${_('Complete the questionary')}: {{questionary.title}}</h1>
         </div>
+
+        <div class="row border-bottom">
+            <p class="col">Please answer to the questions below</p>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 {{#if !quest_compiled.completed}}
-                <div class="form-group">
-                    {{qa.question}}
-                </div>
+                <pre class="form-group pt-5 h3 font-weight-bold">
+                    {{{qa.question}}}
+                </pre>
 
                 <div class="form-group {{errors.qa_response ? 'has-error' : ''}}">
                     {{#if qa.type == 'text'}}
@@ -72,10 +74,8 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="compile_questionary" style="padding-top: 20px">
 
-</div>
-
+<div id="compile_questionary" class="pt-2"></div>
 
 <script>
     var CompileQuestionary = Ractive.extend({
