@@ -39,7 +39,7 @@
                             value="{{create.precondition}}">
                         <option value="" selected>${_('Choose a filter (select a Q/A)')}</option>
                         {{#each preconditions}}
-                            <option value="{{._id}}">{{.title}}</option>
+                            <option value="{{._id}}">{{{.title}}}</option>
                         {{/each}}
                     </select>
                     {{#if errors.precondition}}<span class="help-block">{{errors.precondition}}</span>{{/if}}

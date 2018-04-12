@@ -9,6 +9,8 @@ from markupsafe import Markup
 from ksweb.model import DBSession, Qa
 import tg
 
+from ksweb.model.mapped_entity import MappedEntity
+
 
 def _custom_title(obj):
     url = tg.url('/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
@@ -21,7 +23,7 @@ def _content_preview(obj):
     return Markup("Little preview of: %s" % obj._id)
 
 
-class Precondition(MappedClass):
+class Precondition(MappedEntity):
     PRECONDITION_TYPE = [u"simple", u"advanced"]
     PRECONDITION_OPERATOR = ['and', 'or', 'not', '(', ')']
     PRECONDITION_CONVERTED_OPERATOR = ['&', '|', 'not', '(', ')']
@@ -38,17 +40,7 @@ class Precondition(MappedClass):
         'content': _content_preview
     }
 
-    _id = FieldProperty(s.ObjectId)
-
-    _owner = ForeignIdProperty('User')
-    owner = RelationProperty('User')
-
-    _category = ForeignIdProperty('Category')
-    category = RelationProperty('Category')
-
-    title = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*PRECONDITION_TYPE), required=True)
-    auto_generated = FieldProperty(s.Bool, if_missing=False)
     condition = FieldProperty(s.Anything)
     """
     In case of type: simple
@@ -57,9 +49,6 @@ class Precondition(MappedClass):
     In case of type advanced
     the condition is like: [ObjectId(precond_1), &, ObjectId(precond_2), | , ObjectId(precond_3)]
     """
-
-    public = FieldProperty(s.Bool, if_missing=True)
-    visible = FieldProperty(s.Bool, if_missing=True)
 
     @classmethod
     def precondition_available_for_user(cls, user_id, workspace=None):
@@ -147,13 +136,6 @@ class Precondition(MappedClass):
     @property
     def entity(self):
         return 'precondition/simple' if self.is_simple else 'precondition/advanced'
-
-
-    def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
-        _dict['entity'] = self.entity
-        return _dict
 
 
 __all__ = ['Precondition']

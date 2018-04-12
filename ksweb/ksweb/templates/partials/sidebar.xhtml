@@ -16,19 +16,19 @@
 
         <li class="nav-item ${('', 'sidebar-active')[sidebar_section == 'preconditions']}">
             <a href="${tg.url('/precondition',params=dict(workspace=workspace))}" class="nav-link">
-                ${h.material_icon('low_priority')} FILTERS
+                ${h.material_icon('low_priority')} FILTERS <span class="ml-2 badge badge-primary">${unread_filters}</span>
             </a>
         </li>
 
         <li class="nav-item ${('', 'sidebar-active')[sidebar_section == 'outputs']}">
             <a href="${tg.url('/output', params=dict(workspace=workspace))}" class="nav-link">
-                ${h.material_icon('view_day')} OUTPUTS
+                ${h.material_icon('view_day')} OUTPUTS <span class="ml-2 badge badge-primary">${unread_outputs}</span>
             </a>
         </li>
 
         <li class="nav-item ${('', 'sidebar-active')[sidebar_section == 'documents']}">
             <a href="${tg.url('/document', params=dict(workspace=workspace))}" class="nav-link">
-                ${h.material_icon('insert_drive_file')} DOCUMENTS
+                ${h.material_icon('insert_drive_file')} DOCUMENTS <span class="ml-2 badge badge-primary">${unread_documents}</span>
             </a>
         </li>
 
