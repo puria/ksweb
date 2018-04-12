@@ -16,7 +16,8 @@ def _custom_title(obj):
     url = tg.url('/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
                  params=dict(_id=obj._id, workspace=obj._category))
     cls = 'bot' if obj.auto_generated else ''
-    return Markup("<a href='%s' class='%s'>%s</a>" % (url, cls, obj.title))
+    status = obj.status
+    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, cls, obj.title))
 
 
 def _content_preview(obj):
