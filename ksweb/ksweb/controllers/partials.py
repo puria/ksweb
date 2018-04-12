@@ -9,9 +9,9 @@ def user_menu(section=None, **kw):
 
 
 def sidebar(section=None, workspace=None, **kw):
-    unread_outputs = Output.unread_count()
-    unread_filters = Precondition.unread_count()
-    unread_documents = Document.unread_count()
+    unread_outputs = Output.unread_count(workspace)
+    unread_filters = Precondition.unread_count(workspace)
+    unread_documents = Document.unread_count(workspace)
     return render_template(dict(workspace=workspace,
                                 unread_outputs=unread_outputs,
                                 unread_filters=unread_filters,

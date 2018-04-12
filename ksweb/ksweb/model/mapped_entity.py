@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty, FieldPropertyWithMissingNone
 
@@ -28,12 +30,12 @@ class MappedEntity(MappedClass):
     auto_generated = FieldProperty(s.Bool, if_missing=False)
 
     @classmethod
-    def unread_count(cls):
-        return cls.query.find({'status': cls.STATUS.UNREAD}).count() or ''
+    def unread_count(cls, workspace_id):
+        return cls.query.find({'status': cls.STATUS.UNREAD, '_category': ObjectId(workspace_id)}).count() or ''
 
     @classmethod
-    def mark_as_read(cls):
-        cls.query.update({'status': cls.STATUS.UNREAD}, {'$set': {'status': cls.STATUS.READ}})
+    def mark_as_read(cls, workspace_id):
+        cls.query.update({'status': cls.STATUS.UNREAD, '_category': ObjectId(workspace_id)}, {'$set': {'status': cls.STATUS.READ}})
 
     def __json__(self):
         from ksweb.lib.utils import to_dict
