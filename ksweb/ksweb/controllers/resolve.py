@@ -35,6 +35,7 @@ class ResolveController(BaseController):
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def original_edit(self, workspace, **kw):
         entity = self._original_edit()
+
         flash(_(u'Entity %s successfully edited!') % entity.title)
         session.delete()
         return redirect(base_url=tg.url('/%s' % entity.entity, params=dict(workspace=workspace)))

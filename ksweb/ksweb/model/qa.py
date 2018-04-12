@@ -8,6 +8,7 @@ from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
 from ming.odm.icollection import InstrumentedList
 from ksweb.model import DBSession, User
+from ksweb.model.mapped_entity import MappedEntity
 
 
 def _format_instrumented_list(l):
@@ -19,7 +20,7 @@ def _custom_title(obj):
         "<a href='%s'>%s</a>" % (tg.url('/qa/edit', params=dict(_id=obj._id,workspace=obj._category)), obj.title))
 
 
-class Qa(MappedClass):
+class Qa(MappedEntity):
     QA_TYPE = [u"text", u"single", u"multi"]
 
     class __mongometa__:
@@ -41,27 +42,15 @@ class Qa(MappedClass):
         'title': _custom_title,
     }
 
-    _id = FieldProperty(s.ObjectId)
-
-    _owner = ForeignIdProperty('User')
-    owner = RelationProperty('User')
-
-    _category = ForeignIdProperty('Category')
-    category = RelationProperty('Category')
-
     _parent_precondition = ForeignIdProperty('Precondition')
     parent_precondition = RelationProperty('Precondition')
 
-    title = FieldProperty(s.String, required=True)
     question = FieldProperty(s.String, required=True)
     tooltip = FieldProperty(s.String, required=False)
     link = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*QA_TYPE), required=True)
 
     answers = FieldProperty(s.Anything)
-
-    public = FieldProperty(s.Bool, if_missing=True)
-    visible = FieldProperty(s.Bool, if_missing=True)
 
     @classmethod
     def qa_available_for_user(cls, user_id, workspace=None):
@@ -82,12 +71,6 @@ class Qa(MappedClass):
     @property
     def is_multi(self):
         return self.type == self.QA_TYPE[2]
-
-    def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
-        _dict['entity'] = self.entity
-        return _dict
 
 
 __all__ = ['Qa']

@@ -20,6 +20,9 @@ class PreconditionSimpleController(RestController):
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "preconditions"
 
+    @expose()
+    def get_all(self, workspace, **kw):
+        tg.redirect('/precondition', params=dict(workspace=workspace))
 
     @expose('ksweb.templates.precondition.simple.new')
     @validate({'workspace': WorkspaceExistValidator(required=True)})

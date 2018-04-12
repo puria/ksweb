@@ -22,6 +22,10 @@ class PreconditionAdvancedController(RestController):
         tmpl_context.sidebar_section = "preconditions"
         tmpl_context.sidebar_precondition_advanced = "preconditions-advanced"
 
+    @expose()
+    def get_all(self, workspace, **kw):
+        tg.redirect('/precondition', params=dict(workspace=workspace))
+
     @expose('ksweb.templates.precondition.advanced.new')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def new(self, workspace, **kw):

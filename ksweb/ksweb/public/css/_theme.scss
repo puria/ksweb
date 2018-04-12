@@ -16,7 +16,6 @@
 .ws { &:hover { @extend .cursor-pointer, .text-primary; } }
 .help-text { color: $grey; }
 
-
 a.bot {
     background-position: left center;
     background-repeat: no-repeat;
@@ -24,4 +23,12 @@ a.bot {
     background-size: contain;
     padding-left: 25px;
     color: $dark-grey;
+}
+
+a.UNREAD {
+  height: 15px;
+  width: 15px;
+  background-color: $green;
+  border-radius: 50%;
+  display: inline-block;
 }

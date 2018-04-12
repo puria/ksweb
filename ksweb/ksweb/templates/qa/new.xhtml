@@ -5,56 +5,6 @@
         .form-check-inline > input { display: none; }
         input:checked + label img { border: 2px solid #0072e5; }
         label img { border: 2px solid transparent; cursor: pointer; }
-
-        /*label > input { !*HIDE RADIO*!*/
-            /*display: none;*/
-        /*}*/
-
-        /*label > input + img { !*IMAGE STYLES*!*/
-            /*cursor: pointer;*/
-            /*border: 2px solid transparent;*/
-        /*}*/
-
-
-
-        /*input[type="radio"], input[type="checkbox"] {*/
-            /*vertical-align: middle;*/
-            /*height: 24px;*/
-            /*width: 24px;*/
-            /*margin: 2px 2px 0;*/
-            /*line-height: normal;*/
-        /*}*/
-
-        /*input[name="example_response"] {*/
-            /*height: 12px;*/
-            /*width: 12px;*/
-            /*vertical-align: top;*/
-            /*margin-top: 6px;*/
-        /*}*/
-
-        /*.response + label {*/
-            /*display: none;*/
-        /*}*/
-
-        /*.answer:hover label {*/
-            /*display: inline;*/
-        /*}*/
-
-        /*.answer {*/
-            /*min-height: 34px;*/
-        /*}*/
-
-        /*label i.material-icons {*/
-            /*font-size: 18px;*/
-            /*color: #a0a0a0;*/
-        /*}*/
-
-        /*label i.material-icons:hover {*/
-            /*color: black;*/
-        /*}*/
-        /*.media-middle.material-icon-add_circle_outline {*/
-            /*font-size: 40px;*/
-        /*}*/
     </style>
     <script id="QAForm_template" type="text/html">
         <![CDATA[
@@ -99,7 +49,7 @@
                     <select id="form-precondition" class="custom-select {{errors.precondition ? 'is-invalid' : ''}}" value="{{create.precondition}}">
                         <option value="" selected>${_("Add an optional filter to this Q/A")}</option>
                         {{#each preconditions}}
-                        <option value="{{._id}}">{{.title}}</option>
+                            <option value="{{._id}}">{{{.title}}}</option>
                         {{/each}}
                     </select>
 
