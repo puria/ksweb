@@ -1,29 +1,34 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">KS | Questionary</title>
+<title py:block="master_title">KS | Questionary</title>
 
-    <script id="compile_questionary_template" type="text/html">
-        <![CDATA[
-        <div class="row mt-2">
-            <h1 class="col type-page-title">${_('Complete the questionary')}: {{questionary.title}}</h1>
-            <div class="col-md-auto text-right">
-            {{#if quest_compiled.completed}}
-                <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
-                   class="btn btn-outline-success">${h.material_icon('download')}
-                </a>
-                <button type="button" class="btn btn-outline-success" on-click="print_questionary">${h.material_icon('print')}</button>
-            {{else}}
-                <button type="button" class="btn btn-outline disabled" on-click="print_questionary" disabled>${h.material_icon('print')} Print result</button>
-            {{/if}}
-            </div>
+<script id="compile_questionary_template" type="text/html">
+<![CDATA[
+    <div class="row mt-2">
+        <h1 class="col type-page-title">${_('Complete the questionary')}: {{questionary.title}}</h1>
+        <div class="col-md-auto text-right">
+            <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
+               class-disabled='!quest_compiled.completed'
+               class-btn-outline-success="quest_compiled.completed"
+               class="btn btn-outline">
+                    ${h.material_icon('download')} Download
+            </a>
+            <button type="button" class="btn btn-outline"
+                    class-disabled='!quest_compiled.completed'
+                    class-btn-outline-success="quest_compiled.completed"
+                    {{#if !quest_compiled.completed}}disabled{{/if}}
+                    on-click="print_questionary">
+                        ${h.material_icon('print')} Print result
+            </button>
         </div>
+    </div>
 
-        <div class="row border-bottom">
-            <p class="col">Please answer to the questions below</p>
-        </div>
+    <div class="row border-bottom">
+        <p class="col">Please answer to the questions below</p>
+    </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col">
                 {{#if !quest_compiled.completed}}
                 <pre class="form-group pt-5 h3 font-weight-bold">
                     {{{qa.question}}}
@@ -31,7 +36,7 @@
 
                 <div class="form-group answer {{errors.qa_response ? 'has-error' : ''}}">
                     {{#if qa.type == 'text'}}
-                      <textarea class="form-control" placeholder="" value="{{qa_response}}">{{qa_response}}</textarea>
+                      <textarea class="form-control">{{qa_response}}</textarea>
                     {{else}}
                       {{#each qa.answers}}
                         {{#if qa.type == 'single'}}
@@ -82,6 +87,7 @@
 <script>
     var CompileQuestionary = Ractive.extend({
         template: '#compile_questionary_template',
+
         onconstruct: function (options) {
             var self = this;
             self.questionary = options['questionary'];
@@ -90,7 +96,6 @@
         },
         oninit: function () {
             var self = this;
-            self.set('qa_response', null);
             self.set('questionary', self.questionary);
             self.set('quest_compiled', self.quest_compiled);
             self.set('html', self.html);
@@ -215,13 +220,13 @@
     });
     compile_questionary.on('print_questionary', function () {
         var self = this;
-        <![CDATA[
+<![CDATA[
         var mywindow = window.open('', '_blank');
 
         mywindow.document.write('<html><head><link rel="stylesheet" href="${tg.url('/css/print.css', qualified=True)}" type="text/css" />' +
                 '<title>' + self.questionary.title + '</title>');
         mywindow.document.write('</head><body >');
-        mywindow.document.write('<div class="text-left ks-section-name">' + self.questionary.title + '</div>');
+        mywindow.document.write('<div class="text-left">' + self.questionary.title + '</div>');
         mywindow.document.write($('#html').html());
 
         mywindow.document.write('</body></html>');
@@ -233,10 +238,9 @@
             var self = this;
             self.print();
             self.close();
-
         };
         return true;
-        ]]>
+]]>
     });
 
 </script>
