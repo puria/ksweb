@@ -79,17 +79,22 @@ class RootController(BaseController):
     @expose('ksweb.templates.questionary.index')
     @paginate('entities', items_per_page=int(config.get('pagination.items_per_page')))
     def dashboard(self, share_id):
+        entities = {}
         user = model.User.query.find({'_id': ObjectId(share_id)}).first()
 
         if not user:
             response.status_code = 403
             flash(_('You are not allowed to operate in this page'))
-            return dict()
+            redirect('/start')
 
         entities = model.Questionary.query.find({'$or': [
             {'_user': ObjectId(user._id)},
             {'_owner': ObjectId(user._id)}
         ]}).sort('title')
+
+        if not entities.count():
+            flash(_('You don\'t have any form associated to %s' % user.email_address))
+            redirect('/start')
 
         return dict(
             page='questionary-index',
