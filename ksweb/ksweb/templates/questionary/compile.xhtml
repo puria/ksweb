@@ -47,20 +47,28 @@
                       {{/each}}
                     {{/if}}
                     {{#if errors.qa_response}}
-                    <span class="help-block">{{errors.qa_response}}</span>
+                        <span class="help-block">{{errors.qa_response}}</span>
                     {{/if}}
                 </div>
                 {{else}}
                 <div style="margin: 20px 0">Questionary completed</div>
                 {{/if}}
-                <button type="button" class="btn btn-{{previous_class}} questionary_control {{previous}}"
-                        on-click="previous_question" {{previous}}>${_('Prev')}
+                <button type="button" 
+                        {{previous_disabled_attr}}
+                        class-disabled="previous_disabled" 
+                        class-btn-outline-success="!previous_disabled" 
+                        class="btn questionary_control"
+                        on-click="previous_question">${_('Prev')}
                 </button>
                 {{#if saving}}
-                <button type="button" class="btn btn-default questionary_control disabled">${_('Saving...')}</button>
+                <button type="button" class="btn btn-disabled questionary_control disabled">${_('Saving...')}</button>
                 {{else}}
-                <button type="button" class="btn btn-{{next_class}} questionary_control {{next}}"
-                        on-click="submit_response" {{next}}>${_('Next')}
+                <button type="button" 
+                        class-disabled="next_disabled" 
+                        class-btn-outline-success="!next_disabled" 
+                        class="btn questionary_control"
+                        {{next_disabled_attr}}
+                        on-click="submit_response">${_('Next')}
                 </button>
                 {{/if}}
             </div>
@@ -92,7 +100,7 @@
             self.questionary = options['questionary'];
             self.quest_compiled = options['quest_compiled'];
             self.html = options['html'];
-            self.qa_response = [''];
+            self.qa_response = [];
         },
         oninit: function () {
             var self = this;
@@ -104,46 +112,35 @@
             self.set('errors', {});
             self.next_qa();
         },
-        loadQa: function (qa_id) {
-            var self = this;
-            jQuery.get("${tg.url('/qa/get_one')}", {'id': qa_id}, function (data) {
-                self.set('qa', data['qa']);
-            });
-        },
         next_qa: function () {
             var self = this;
 
             if (!self.get('quest_compiled.completed')) {
-                self.loadQa(self.get('quest_compiled.qa'));
+                var qa_id = self.get('quest_compiled.qa');
+                jQuery.get("${tg.url('/qa/get_one')}", {'id': qa_id}, function (data) {
+                    self.set('qa', data['qa']);
+                });
             }
         },
         questionary_completed: function () {
-            var _url = '${tg.url('/questionary/completed', params=dict(_id=questionary._id, workspace=workspace))}';
+            var _url = "${tg.url('/questionary/completed', params=dict(_id=questionary._id, workspace=workspace))}";
             window.location.replace(_url);
-        },
-        isEmpty: function (obj) {
-            return Object.keys(obj).length == 0;
         },
         checkButtons: function () {
             var self = this;
-            <![CDATA[
-            if (self.isEmpty(self.questionary.qa_values) && !self.quest_compiled.completed) {
-                self.set('previous', 'disabled');
-                self.set('previous_class', 'info');
-            }
-            else {
-                self.set('previous', '');
-                self.set('previous_class', 'default');
-            }
-            if (self.quest_compiled.completed) {
-                self.set('next', 'disabled');
-                self.set('next_class', 'info');
-            }
-            else {
-                self.set('next', '');
-                self.set('next_class', 'default');
-            }
-            ]]>
+//<![CDATA[
+            self.set('previous_disabled_attr', undefined)
+            self.set('next_disabled_attr', undefined)
+            var previous_disabled = $.isEmptyObject(self.get('questionary.qa_values')) 
+                                    && !self.get('quest_compiled.completed')
+            var next_disabled = self.get('quest_compiled.completed');
+            
+            self.set('previous_disabled', previous_disabled);
+            (previous_disabled) ? self.set('previous_disabled_attr', 'disabled') : null;
+            
+            self.set('next_disabled', next_disabled);
+            (next_disabled) ? self.set('next_disabled_attr', 'disabled') : null;
+//]]>
         }
     });
 </script>
@@ -164,13 +161,12 @@
 
         var api_params = JSON.stringify(params);
 
-        $.ajax({
-            type: "POST",
+        $.post({
+            dataType: "json",
+            contentType: 'application/json',
+            processData: false,
             url: '${tg.url('/questionary/previous_question')}',
             data: api_params,
-            dataType: "json",
-            processData: false,
-            contentType: 'application/json'
         }).done(function (data) {
             self.set('saving', false);
             self.set('questionary', data['questionary']);
@@ -187,25 +183,25 @@
         });
 
     });
+
     compile_questionary.on('submit_response', function (event) {
         var self = this;
         var params = {
             '_id': self.get('questionary._id'),
             'qa_id': self.get('quest_compiled.qa'),
-            'qa_response': self.get('qa_response') || ['']
+            'qa_response': self.get('qa_response')
         };
         self.set('saving', true);
         var api_params = JSON.stringify(params);
 
-        $.ajax({
-            type: "POST",
-            url: '${tg.url('/questionary/responde')}',
-            data: api_params,
+        $.post({
             dataType: "json",
             processData: false,
-            contentType: 'application/json'
+            contentType: 'application/json',
+            url: '${tg.url('/questionary/responde')}',
+            data: api_params,
         }).done(function (data) {
-            self.set('qa_response', null);
+            self.set('qa_response', undefined);
             self.set('saving', false);
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
