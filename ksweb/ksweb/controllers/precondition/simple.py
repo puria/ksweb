@@ -20,6 +20,9 @@ class PreconditionSimpleController(RestController):
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "preconditions"
 
+    @expose()
+    def get_all(self, workspace, **kw):
+        tg.redirect('/precondition', params=dict(workspace=workspace))
 
     @expose('ksweb.templates.precondition.simple.new')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
@@ -120,6 +123,7 @@ class PreconditionSimpleController(RestController):
                 title=title,
                 condition=[question, interested_response],
                 _category=category,
+                auto_generated=False,
                 entity='precondition/simple'
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts

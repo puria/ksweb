@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """Questionary model module."""
+import logging
+
+import tg
 from bson import ObjectId
-from ksweb.model import Document
+from ksweb.model import DBSession, Document, User, Output, Precondition
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
 
-from ksweb.model import DBSession
-import tg
-import logging
 try:
     basestring
 except NameError:
@@ -25,15 +25,11 @@ def _compile_questionary(obj):
 
 
 def _owner_name(o):
-    from ksweb.model import User
-    owner = User.query.find({'_id': o._owner}).first()
-    return owner.display_name
+    return User.query.find({'_id': o._owner}).first().display_name
 
 
 def _shared_with(o):
-    from ksweb.model import User
-    shared_with = User.query.find({'_id': o._user}).first()
-    return shared_with.email_address
+    return User.query.find({'_id': o._user}).first().email_address
 
 
 class Questionary(MappedClass):
@@ -68,6 +64,7 @@ class Questionary(MappedClass):
     _document = ForeignIdProperty('Document')
     document = RelationProperty('Document')
 
+    completed = FieldProperty(s.Bool, if_missing=False)
     # document_values = FieldProperty(s.Anything, if_missing=[])
     """
     A list with a compiled document values
@@ -110,8 +107,7 @@ class Questionary(MappedClass):
 
     @property
     def completion(self):
-        log.error(self.evaluate_questionary)
-        if self.evaluate_questionary.get('completed', False):
+        if self.completed:
             return "100 %"
         if not len(self.expressions):
             return "0 %"
@@ -135,7 +131,8 @@ class Questionary(MappedClass):
         self.output_values = {}
         self.generate_expression()
 
-        if not self.document.content: return { 'completed': False }
+        if not self.document.content:
+            return {'completed': False}
         # document contains outputs only
         for output in self.document.content:
             output_id = output['content']
@@ -150,14 +147,12 @@ class Questionary(MappedClass):
                     # for example when output uses some response to a certain questions
                     if res:
                         return res
-
+        self.completed = True
         return {
             'completed': True
         }
 
     def generate_expression(self):
-        log.debug("generate_expression")
-        from . import Output
         if not self.document.content:
             self.expressions = []
             return
@@ -166,7 +161,6 @@ class Questionary(MappedClass):
             self.expressions[str(output._id)] = self._generate(output.precondition)
 
     def _generate(self, precondition):
-        log.debug("_generate")
         parent_expression, expression = '', ''
         if not precondition:
             return "()"
@@ -191,7 +185,6 @@ class Questionary(MappedClass):
                 if isinstance(item, basestring):
                     advanced_expression += ' %s ' % item
                 elif isinstance(item, ObjectId):
-                    from . import Precondition
                     p = Precondition.query.get(_id=item)
                     advanced_expression += '( %s )' % self._generate(p)
 

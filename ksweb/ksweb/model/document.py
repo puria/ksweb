@@ -7,6 +7,7 @@ from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
 from ksweb.model import DBSession, User
+from ksweb.model.mapped_entity import MappedEntity
 
 
 def _custom_title(obj):
@@ -17,7 +18,7 @@ def _content_preview(obj):
     return " ".join(Markup(obj.html).striptags().split()[:5])
 
 
-class Document(MappedClass):
+class Document(MappedEntity):
     class __mongometa__:
         session = DBSession
         name = 'documents'
@@ -32,16 +33,6 @@ class Document(MappedClass):
         'title': _custom_title,
         'content': _content_preview
     }
-
-    _id = FieldProperty(s.ObjectId)
-
-    _owner = ForeignIdProperty('User')
-    owner = RelationProperty('User')
-
-    _category = ForeignIdProperty('Category')
-    category = RelationProperty('Category')
-
-    title = FieldProperty(s.String, required=True)
 
     html = FieldProperty(s.String, required=True, if_missing='')
 
@@ -69,10 +60,6 @@ class Document(MappedClass):
             },
         ]
     """
-
-    public = FieldProperty(s.Bool, if_missing=True)
-    visible = FieldProperty(s.Bool, if_missing=True)
-
 
     @classmethod
     def document_available_for_user(cls, user_id, workspace=None):
@@ -105,13 +92,6 @@ class Document(MappedClass):
             for i, item in enumerate(document.content):
                 if item.content == str(entity._id):
                     document.content[i].title = entity.title
-
-
-    def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
-        _dict['entity'] = self.entity
-        return _dict
 
 
 __all__ = ['Document']

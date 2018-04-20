@@ -1,67 +1,86 @@
-  <html py:extends="master.xhtml" py:strip="True">
+<html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-    <title py:block="master_title">KS | Questionary</title>
-
-    <script id="compile_questionary_template" type="text/html">
-        <![CDATA[
-        <div class="form-group" style="padding-top: 20px">
-            <div class="col-md-6 ks-section-name">
-                ${_('Complete the questionary')}: {{questionary.title}}
-            </div>
-
+<title py:block="master_title">KS | Questionary</title>
+<script id="compile_questionary_template" type="text/html">
+<![CDATA[
+    <div class="row mt-2">
+        <h1 class="col type-page-title">${_('Complete the questionary')}: {{questionary.title}}</h1>
+        <div class="col-md-auto text-right">
+            <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
+               class-disabled='!quest_compiled.completed'
+               class-btn-outline-success="quest_compiled.completed"
+               class="btn btn-outline">
+                    ${h.material_icon('download')} Download
+            </a>
+            <button type="button" class="btn btn-outline"
+                    class-disabled='!quest_compiled.completed'
+                    class-btn-outline-success="quest_compiled.completed"
+                    {{#if !quest_compiled.completed}}disabled{{/if}}
+                    on-click="print_questionary">
+                        ${h.material_icon('print')} Print result
+            </button>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                {{#if !quest_compiled.completed}}
-                <div class="form-group">
-                    {{qa.question}}
-                </div>
+    </div>
 
-                <div class="form-group {{errors.qa_response ? 'has-error' : ''}}">
+    <div class="row border-bottom">
+        <p class="col">Please answer to the questions below</p>
+    </div>
+
+        <div class="row">
+            <div class="col">
+                {{#if !quest_compiled.completed}}
+                <pre class="form-group pt-5 h3 font-weight-bold">
+                    {{{qa.question}}}
+                </pre>
+
+                <div class="form-group form-check answer">
                     {{#if qa.type == 'text'}}
-                      <textarea class="form-control" placeholder="" value="{{qa_response}}">{{qa_response}}</textarea>
+                      <textarea class="form-control" class-is-invalid="errors.qa_response">{{qa_response}}</textarea>
                     {{else}}
                       {{#each qa.answers}}
                         {{#if qa.type == 'single'}}
-                        <input type="radio" name="{{qa_response}}" value="{{.}}"/> {{.}} <br/>
+                            <input type="radio" 
+                                class-is-invalid="errors.qa_response"
+                                class="mr-2 form-check-input" name="{{qa_response}}" value="{{.}}"/><pre class="m-0">{{.}}</pre>
                         {{/if}}
                         {{#if qa.type == 'multi'}}
-                        <input type="checkbox" name="{{qa_response}}" value="{{.}}"> {{.}} <br/>
+                            <input type="checkbox" 
+                                class-is-invalid="errors.qa_response"
+                                class="form-check-input mr-2" name="{{qa_response}}" value="{{.}}"><pre class="m-0">{{.}}</pre>
                         {{/if}}
                       {{/each}}
                     {{/if}}
                     {{#if errors.qa_response}}
-                    <span class="help-block">{{errors.qa_response}}</span>
+                        <span class="invalid-feedback">{{errors.qa_response}}</span>
                     {{/if}}
                 </div>
                 {{else}}
-                <div style="margin: 20px 0">Questionary completed</div>
+                <div class="alert alert-success my-5" role="alert">
+                    <h4 class="alert-heading">Questionary completed</h4>
+                </div>
                 {{/if}}
-                <button type="button" class="btn btn-{{previous_class}} questionary_control {{previous}}"
-                        on-click="previous_question" {{previous}}>${_('Prev')}
+                <button type="button" 
+                        {{previous_disabled_attr}}
+                        class-disabled="previous_disabled" 
+                        class-btn-outline-light="!previous_disabled" 
+                        class="btn questionary_control mr-5"
+                        on-click="previous_question">${_('Prev')}
                 </button>
                 {{#if saving}}
-                <button type="button" class="btn btn-default questionary_control disabled">${_('Saving...')}</button>
+                <button type="button" class="btn btn-disabled text-right questionary_control disabled">${_('Saving...')}</button>
                 {{else}}
-                <button type="button" class="btn btn-{{next_class}} questionary_control {{next}}"
-                        on-click="submit_response" {{next}}>${_('Next')}
+                <button type="button" 
+                        class-disabled="next_disabled"
+                        class-btn-outline-success="!next_disabled" 
+                        class="btn  questionary_control ml-5"
+                        {{next_disabled_attr}}
+                        on-click="submit_response">${_('Next')}
                 </button>
                 {{/if}}
             </div>
         </div>
 
         <div class="form-group" style="padding-top: 40px;">
-            {{#if quest_compiled.completed}}
-                       <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
-                          class="btn btn-primary">${h.material_icon('download')}</a>
-                       <button type="button" class="btn btn-primary" on-click="print_questionary">${h.material_icon('print')}</button>
-
-            {{else}}
-            <button type="button" class="btn btn-primary disabled" on-click="print_questionary" disabled>${h.material_icon('print')}</button>
-            {{/if}}
-            <div class="col-md-6 text-left ks-section-name">
-                ${_('Questionary')}: {{questionary.title}}
-            </div>
             <div id="html" class="col-md-12 pt-3">
                 {{{html}}}
             </div>
@@ -72,70 +91,59 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="compile_questionary" style="padding-top: 20px">
 
-</div>
-
+<div id="compile_questionary" class="pt-2"></div>
 
 <script>
     var CompileQuestionary = Ractive.extend({
         template: '#compile_questionary_template',
+
         onconstruct: function (options) {
             var self = this;
             self.questionary = options['questionary'];
             self.quest_compiled = options['quest_compiled'];
             self.html = options['html'];
+            self.qa_response = [];
         },
         oninit: function () {
             var self = this;
-            self.set('qa_response', null);
             self.set('questionary', self.questionary);
             self.set('quest_compiled', self.quest_compiled);
             self.set('html', self.html);
+            self.set('qa_response', self.qa_response);
             self.checkButtons();
             self.set('errors', {});
             self.next_qa();
-        },
-        loadQa: function (qa_id) {
-            var self = this;
-            jQuery.get("${tg.url('/qa/get_one')}", {'id': qa_id}, function (data) {
-                self.set('qa', data['qa']);
-            });
         },
         next_qa: function () {
             var self = this;
 
             if (!self.get('quest_compiled.completed')) {
-                self.loadQa(self.get('quest_compiled.qa'));
+                var qa_id = self.get('quest_compiled.qa');
+                jQuery.get("${tg.url('/qa/get_one')}", {'id': qa_id}, function (data) {
+                    self.set('qa', data['qa']);
+                });
             }
         },
         questionary_completed: function () {
-            var _url = '${tg.url('/questionary/completed', params=dict(_id=questionary._id, workspace=workspace))}';
+            var _url = "${tg.url('/questionary/completed', params=dict(_id=questionary._id, workspace=workspace))}";
             window.location.replace(_url);
-        },
-        isEmpty: function (obj) {
-            return Object.keys(obj).length == 0;
         },
         checkButtons: function () {
             var self = this;
-            <![CDATA[
-            if (self.isEmpty(self.questionary.qa_values) && !self.quest_compiled.completed) {
-                self.set('previous', 'disabled');
-                self.set('previous_class', 'info');
-            }
-            else {
-                self.set('previous', '');
-                self.set('previous_class', 'default');
-            }
-            if (self.quest_compiled.completed) {
-                self.set('next', 'disabled');
-                self.set('next_class', 'info');
-            }
-            else {
-                self.set('next', '');
-                self.set('next_class', 'default');
-            }
-            ]]>
+//<![CDATA[
+            self.set('previous_disabled_attr', undefined)
+            self.set('next_disabled_attr', undefined)
+            var previous_disabled = $.isEmptyObject(self.get('questionary.qa_values')) 
+                                    && !self.get('quest_compiled.completed')
+            var next_disabled = self.get('quest_compiled.completed');
+            
+            self.set('previous_disabled', previous_disabled);
+            (previous_disabled) ? self.set('previous_disabled_attr', 'disabled') : null;
+            
+            self.set('next_disabled', next_disabled);
+            (next_disabled) ? self.set('next_disabled_attr', 'disabled') : null;
+//]]>
         }
     });
 </script>
@@ -156,13 +164,12 @@
 
         var api_params = JSON.stringify(params);
 
-        $.ajax({
-            type: "POST",
+        $.post({
+            dataType: "json",
+            contentType: 'application/json',
+            processData: false,
             url: '${tg.url('/questionary/previous_question')}',
             data: api_params,
-            dataType: "json",
-            processData: false,
-            contentType: 'application/json'
         }).done(function (data) {
             self.set('saving', false);
             self.set('questionary', data['questionary']);
@@ -179,25 +186,25 @@
         });
 
     });
+
     compile_questionary.on('submit_response', function (event) {
         var self = this;
         var params = {
             '_id': self.get('questionary._id'),
             'qa_id': self.get('quest_compiled.qa'),
-            'qa_response': self.get('qa_response') || ['']
+            'qa_response': self.get('qa_response')
         };
         self.set('saving', true);
         var api_params = JSON.stringify(params);
 
-        $.ajax({
-            type: "POST",
-            url: '${tg.url('/questionary/responde')}',
-            data: api_params,
+        $.post({
             dataType: "json",
             processData: false,
-            contentType: 'application/json'
+            contentType: 'application/json',
+            url: '${tg.url('/questionary/responde')}',
+            data: api_params,
         }).done(function (data) {
-            self.set('qa_response', null);
+            self.set('qa_response', undefined);
             self.set('saving', false);
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
@@ -211,15 +218,16 @@
             self.set('saving', false);
         });
     });
+
+<![CDATA[
     compile_questionary.on('print_questionary', function () {
         var self = this;
-        <![CDATA[
         var mywindow = window.open('', '_blank');
 
         mywindow.document.write('<html><head><link rel="stylesheet" href="${tg.url('/css/print.css', qualified=True)}" type="text/css" />' +
                 '<title>' + self.questionary.title + '</title>');
         mywindow.document.write('</head><body >');
-        mywindow.document.write('<div class="text-left ks-section-name">' + self.questionary.title + '</div>');
+        mywindow.document.write('<div class="text-left">' + self.questionary.title + '</div>');
         mywindow.document.write($('#html').html());
 
         mywindow.document.write('</body></html>');
@@ -231,10 +239,9 @@
             var self = this;
             self.print();
             self.close();
-
         };
         return true;
-        ]]>
+]]>
     });
 
 </script>

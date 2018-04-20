@@ -6,6 +6,7 @@ Please read http://pythonpaste.org/webtest/ for more information.
 from ksweb import model
 
 from ksweb.tests import TestController
+from bson import ObjectId
 
 
 class TestRootController(TestController):
@@ -39,6 +40,17 @@ class TestRootController(TestController):
         workspaces_names = [__.name for __ in workspaces]
 
         assert all(name in response for name in workspaces_names)
+
+    def test_dashboard_access(self):
+        resp = self.app.get('/dashboard', params={'share_id': ObjectId()}).follow()
+        resp = resp.follow()
+        assert 'Login' in resp, resp.body
+
+    def test_dashboard_no_forms(self):
+        self._login_lawyer()
+        lawyer = self._get_user('lawyer1@ks.axantweb.com')
+        resp = self.app.get('/dashboard', params={'share_id': str(lawyer._id)}, status=302).follow()
+        assert 'Select your workspace or create a new one' in resp, resp.body
 
     def test_start_sidebar_is_hidden(self):
         self._login_lawyer()

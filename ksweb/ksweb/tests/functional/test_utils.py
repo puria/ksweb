@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 
 from bson import ObjectId
@@ -19,22 +20,24 @@ class TestUtils(TestController):
         self.document = {'qa': {}, 'advanced_preconditions': {}, 'simple_preconditions': {}, 'outputs': {}}
         self.qa = self._create_qa('title', self.ws._id, 'question', 'tooltip', 'link', 'single', ['a', 'b'])
         self.qa_struct = {str(self.qa._id): {'_parent_precondition': None, 'title': u'title', 'question': u'question',
-                                             'tooltip': u'tooltip',
+                                             'tooltip': u'tooltip', 'status': None,
                                              'visible': True, 'link': u'link', 'answers': [u'a', u'b'],
                                              '_id': ObjectId(self.qa._id),
+                                             'auto_generated': False,
                                              'type': u'single', 'public': True}
                           }
         self.qa_multi = self._create_qa('title1', self.ws._id, 'question1', 'tooltip1', 'link1', 'multi', ['a', 'b'])
         self.qa_multi_struct = {
             str(self.qa_multi._id): {'_parent_precondition': None, 'title': u'title1', 'question': u'question1',
-                                     'tooltip': u'tooltip1',
+                                     'tooltip': u'tooltip1', 'status': None, 'auto_generated': False,
                                      'visible': True, 'link': u'link1', 'answers': [u'a', u'b'],
                                      '_id': ObjectId(self.qa_multi._id),
                                      'type': u'multi', 'public': True}
         }
         self.prec = self._create_simple_precondition('title', self.ws._id, self.qa._id, interested_response=['a'])
         self.prec_struct = {str(self.prec._id): {'title': u'title', 'visible': True, '_id': ObjectId(self.prec._id),
-                                                 'type': u'simple', 'public': True,
+                                                 'type': u'simple', 'public': True, 'status': None,
+                                                 'auto_generated': False,
                                                  'condition': [ObjectId(self.qa._id), u'a']}}
         self.imported_document = json.load(open('ksweb/tests/functional/document_to_import.json'))
         self.imported_document_advanced = json.load(open('ksweb/tests/functional/document_to_import_advanced.json'))
@@ -47,14 +50,14 @@ class TestUtils(TestController):
     def test_export_qa_multi(self):
         self._login_admin()
         export_qa(self.qa_multi._id, self.document)
-        assert self.document['qa'] == self.qa_multi_struct, self.document['qa']
+        assert self.document['qa'] == self.qa_multi_struct, ('>>>>>', self.document['qa'], self.qa_multi_struct, '<<<<<')
 
     def test_export_qa_text(self):
         self._login_admin()
         qa = self._create_qa('title2', self.ws._id, 'question2', 'tooltip2', 'link2', 'text', None)
         export_qa(qa._id, self.document)
         expected = {str(qa._id): {'_parent_precondition': None, 'title': u'title2', 'question': u'question2',
-                                  'tooltip': u'tooltip2',
+                                  'tooltip': u'tooltip2', u'status': None, 'auto_generated': False,
                                   'visible': True, 'link': u'link2', 'answers': None, '_id': ObjectId(qa._id),
                                   'type': u'text', 'public': True}
                     }
@@ -87,9 +90,9 @@ class TestUtils(TestController):
         export_preconditions(a_prec._id, self.document)
         assert self.document['qa'] == self.qa_struct, self.document['qa']
         assert self.document['simple_preconditions'] == self.prec_struct, self.document['simple_preconditions']
-        expected = {str(a_prec._id): {'title': u'title2', 'visible': True, '_id': ObjectId(a_prec._id),
-                                      'type': u'advanced', 'public': True, 'condition': [ObjectId(self.prec._id), u'or',
-                                                                                         ObjectId(self.prec._id)]}}
+        expected = {str(a_prec._id): {'title': u'title2', 'visible': True, '_id': ObjectId(a_prec._id), 'auto_generated': False,
+                                      'type': u'advanced', 'public': True, 'auto_generated': False, 'status': None,
+                                      'condition': [ObjectId(self.prec._id), u'or', ObjectId(self.prec._id)]}}
         assert self.document['advanced_preconditions'] == expected, (self.document['advanced_preconditions'], expected)
 
     def test_export_output(self):
@@ -124,7 +127,7 @@ class TestUtils(TestController):
                                                       u'type': u'output',
                                                       u'title': u'output'}
                                                      ],
-                    'visible': True, 'html': u'html',
+                    'visible': True, 'html': u'html', 'status': model.Output.STATUS.UNREAD, 'auto_generated': False,
                     '_precondition': ObjectId(self.prec._id), '_id': ObjectId(o1._id),
                     'public': True}
         assert self.document['outputs'][str(o1._id)] == expected, (expected, self.document['outputs'][str(o1._id)])

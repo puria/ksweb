@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
 """Precondition model module."""
 from __future__ import print_function
+
+import pymongo
 from bson import ObjectId
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
-from ming.odm.declarative import MappedClass
+from ming.odm import FieldProperty
 from markupsafe import Markup
 from ksweb.model import DBSession, Qa
 import tg
 
+from ksweb.model.mapped_entity import MappedEntity
+
 
 def _custom_title(obj):
-    return Markup(
-        "<a href='%s'>%s</a>" % (
-            tg.url(
-                '/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
-                params=dict(_id=obj._id, workspace=obj._category)),
-            obj.title))
+    url = tg.url('/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
+                 params=dict(_id=obj._id, workspace=obj._category))
+    cls = 'bot' if obj.auto_generated else ''
+    status = obj.status
+    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, cls, obj.title))
 
 
 def _content_preview(obj):
     return Markup("Little preview of: %s" % obj._id)
 
 
-class Precondition(MappedClass):
+class Precondition(MappedEntity):
     PRECONDITION_TYPE = [u"simple", u"advanced"]
     PRECONDITION_OPERATOR = ['and', 'or', 'not', '(', ')']
     PRECONDITION_CONVERTED_OPERATOR = ['&', '|', 'not', '(', ')']
@@ -40,15 +42,6 @@ class Precondition(MappedClass):
         'content': _content_preview
     }
 
-    _id = FieldProperty(s.ObjectId)
-
-    _owner = ForeignIdProperty('User')
-    owner = RelationProperty('User')
-
-    _category = ForeignIdProperty('Category')
-    category = RelationProperty('Category')
-
-    title = FieldProperty(s.String, required=False)
     type = FieldProperty(s.OneOf(*PRECONDITION_TYPE), required=True)
     condition = FieldProperty(s.Anything)
     """
@@ -59,14 +52,21 @@ class Precondition(MappedClass):
     the condition is like: [ObjectId(precond_1), &, ObjectId(precond_2), | , ObjectId(precond_3)]
     """
 
-    public = FieldProperty(s.Bool, if_missing=True)
-    visible = FieldProperty(s.Bool, if_missing=True)
-
     @classmethod
     def precondition_available_for_user(cls, user_id, workspace=None):
         if workspace:
-            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)}).sort('title')
-        return cls.query.find({'_owner': user_id, 'visible': True}).sort('title')
+            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
+                            .sort([
+                                    ('auto_generated', pymongo.ASCENDING),
+                                    ('status', pymongo.DESCENDING),
+                                    ('title', pymongo.ASCENDING),
+                            ])
+        return cls.query.find({'_owner': user_id, 'visible': True})\
+                        .sort([
+                                ('auto_generated', pymongo.ASCENDING),
+                                ('status', pymongo.DESCENDING),
+                                ('title', pymongo.ASCENDING),
+                        ])
 
     @property
     def evaluate(self):
@@ -107,6 +107,8 @@ class Precondition(MappedClass):
         res_dict = {}
         if self.type == 'simple':
             qa = Qa.query.get(_id=self.condition[0])
+            if not qa:
+                return res_dict
             res_dict[str(qa._id)] = qa
             if qa.parent_precondition:
                 res_dict.update(qa.parent_precondition.response_interested)
@@ -129,10 +131,6 @@ class Precondition(MappedClass):
 
     @property
     def simple_text_response(self):
-        """
-        Usato per verificare i filtri di tipo testo che abbiano risposta
-        :return:
-        """
         return self.type == "simple" and self.condition[1] == ""
 
     @property
@@ -152,13 +150,6 @@ class Precondition(MappedClass):
     @property
     def entity(self):
         return 'precondition/simple' if self.is_simple else 'precondition/advanced'
-
-
-    def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
-        _dict['entity'] = self.entity
-        return _dict
 
 
 __all__ = ['Precondition']

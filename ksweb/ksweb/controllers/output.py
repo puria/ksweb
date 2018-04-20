@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Output controller module"""
-import json
-
-from bson import ObjectId
-from ksweb.lib.predicates import CanManageEntityOwner
-from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
-    response, flash, lurl
 import tg
+from bson import ObjectId
+from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
+    response
+from tg import predicates
 from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
-from tg import predicates
-from tw2.core import StringLengthValidator, LengthValidator, All
-from ksweb import model
+from tw2.core import StringLengthValidator
+
+from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
+from ksweb.model import Precondition, Output, Document, Category as Workspace
 
 
 class OutputController(RestController):
@@ -22,7 +20,7 @@ class OutputController(RestController):
         if not precondition:
             return
         #  Check content precondition element
-        precond = model.Precondition.query.find({'_id': ObjectId(precondition)}).first()
+        precond = Precondition.query.find({'_id': ObjectId(precondition)}).first()
         related_qa = precond.response_interested
         #  Check elem['content'] contain the obj id of the related
         for elem in content:
@@ -47,7 +45,7 @@ class OutputController(RestController):
                 'columns_name': [_('Label'), _('Filter'), _('Content')],
                 'fields_name': ['title', 'precondition', 'content']
             },
-            entities=model.Output.output_available_for_user(request.identity['user']._id, workspace),
+            entities=Output.output_available_for_user(request.identity['user']._id, workspace),
             actions=False,
             workspace=workspace
         )
@@ -77,7 +75,7 @@ class OutputController(RestController):
                 return error
 
         user = request.identity['user']
-        model.Output(
+        Output(
             _owner=user._id,
             _category=ObjectId(category),
             _precondition=ObjectId(precondition) if precondition else None,
@@ -85,7 +83,8 @@ class OutputController(RestController):
             content=content,
             public=True,
             visible=True,
-            html=kw['ks_editor']
+            status=Output.STATUS.UNREAD,
+            html=kw['ks_editor'],
         )
         return dict(errors=None)
 
@@ -98,7 +97,7 @@ class OutputController(RestController):
         'category': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=Output))
     def put(self, _id, title, content, category, precondition=None, **kw):
         content = content or []
 
@@ -118,13 +117,14 @@ class OutputController(RestController):
                 _category=category,
                 _precondition=precondition if precondition else None,
                 entity='output',
+                auto_generated=False,
                 html=kw['ks_editor']
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
-        output = model.Output.query.find({'_id': ObjectId(_id)}).first()
+        output = Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
         output._category = ObjectId(category)
         output._precondition = ObjectId(precondition) if precondition else None
@@ -138,16 +138,16 @@ class OutputController(RestController):
         '_id': OutputExistValidator(required=True),
         'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=model.Output))
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=Output))
     def edit(self, _id, workspace, **kw):
-        output = model.Output.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
+        output = Output.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
         tmpl_context.sidebar_output = "output-edit"
         return dict(output=output, workspace=workspace, errors=None)
 
 
     @expose('json')
     def sidebar_output(self, _id=None, workspace=None): #pragma: no cover
-        res = list(model.Output.query.aggregate([
+        res = list(Output.query.aggregate([
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
@@ -166,7 +166,7 @@ class OutputController(RestController):
 
         #  Insert category name into res
         for e in res:
-            e['category_name'] = model.Category.query.get(_id=ObjectId(e['_id'])).name
+            e['category_name'] = Workspace.query.get(_id=ObjectId(e['_id'])).name
 
         return dict(outputs=res)
 
@@ -176,7 +176,7 @@ class OutputController(RestController):
         '_id': OutputExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id,  **kw):
-        output = model.Output.query.get(_id=ObjectId(_id))
+        output = Output.query.get(_id=ObjectId(_id))
 
         return dict(output={
             '_id': output._id,
@@ -202,7 +202,7 @@ class OutputController(RestController):
         :param _id:
         :return:
         """
-        output_related = model.Output.query.find({"content.type": "output", "content.content": _id}).all()
-        documents_related = model.Document.query.find({"content.type": "output", "content.content": _id}).all()
+        output_related = Output.query.find({"content.type": "output", "content.content": _id}).all()
+        documents_related = Document.query.find({"content.type": "output", "content.content": _id}).all()
         entities = list(output_related + documents_related)
         return dict(entities=entities, len=len(entities))

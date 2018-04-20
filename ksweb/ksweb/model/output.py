@@ -2,25 +2,31 @@
 """Output model module."""
 from string import Template
 
+import pymongo
 import tg
 from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
-from ming.odm.declarative import MappedClass
 from datetime import datetime
 from ksweb.model import DBSession, User
+from ksweb.model.mapped_entity import MappedEntity
 
 
 def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category)), obj.title))
+    url = tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category))
+    auto = 'bot' if obj.auto_generated else ''
+    status = obj.status
+    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, auto, obj.title))
 
 
 def _content_preview(obj):
     return " ".join(Markup(obj.html).striptags().split()[:5])
 
+def _custom_filter(o):
+    return Markup(o.precondition)
 
-class Output(MappedClass):
+class Output(MappedEntity):
 
     class __mongometa__:
         session = DBSession
@@ -31,12 +37,11 @@ class Output(MappedClass):
 
     __ROW_COLUM_CONVERTERS__ = {
         'title': _custom_title,
+        'precondition': _custom_filter,
         'content': _content_preview
     }
 
-    _id = FieldProperty(s.ObjectId)
-
-    title = FieldProperty(s.String, required=True)
+    html = FieldProperty(s.String, required=True, if_missing='')
     content = FieldProperty(s.Anything, required=True)
     """
     Possible content of the output is a list with two elements type:
@@ -62,27 +67,16 @@ class Output(MappedClass):
     ]
 
     """
-
-    html = FieldProperty(s.String, required=True, if_missing='')
-
-    _owner = ForeignIdProperty('User')
-    owner = RelationProperty('User')
-
     _precondition = ForeignIdProperty('Precondition')
     precondition = RelationProperty('Precondition')
 
-    _category = ForeignIdProperty('Category')
-    category = RelationProperty('Category')
-
-    public = FieldProperty(s.Bool, if_missing=True)
-    visible = FieldProperty(s.Bool, if_missing=True)
-
-    created_at = FieldProperty(s.DateTime, if_missing=datetime.utcnow())
-
-
     @classmethod
     def output_available_for_user(cls, user_id, workspace=None):
-        return User.query.get(_id=user_id).owned_entities(cls, workspace)
+        return User.query.get(_id=user_id).owned_entities(cls, workspace).sort([
+                                ('auto_generated', pymongo.ASCENDING),
+                                ('status', pymongo.DESCENDING),
+                                ('title', pymongo.ASCENDING),
+                        ])
 
 
     @property
@@ -114,6 +108,9 @@ class Output(MappedClass):
         """
         return _upcast(self)
 
+    @property
+    def is_filtered(self):
+        return True if self._precondition else False
 
     def render(self, evaluations_dict):
         html = Template(self.html)
@@ -139,13 +136,6 @@ class Output(MappedClass):
             for i, item in enumerate(document.content):
                 if item.content == str(entity._id):
                     document.content[i].title = entity.title
-
-
-    def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
-        _dict['entity'] = self.entity
-        return _dict
 
 
 __all__ = ['Output']

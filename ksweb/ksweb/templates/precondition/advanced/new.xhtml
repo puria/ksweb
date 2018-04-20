@@ -8,12 +8,12 @@
                 <h1 class="col type-page-title">${_('Advanced Filters')}</h1>
                 <div class="col-md-auto text-right">
                     {{#if saving}}
-                    ${_("Saving...")}
+                        ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-outline-success">
-                        ${h.material_icon('save')}
-                        ${_("Save")}
-                    </button>
+                        <button type="submit" class="btn btn-outline-success">
+                            ${h.material_icon('save')}
+                            ${_("Save")}
+                        </button>
                     {{/if}}
                 </div>
             </div>
@@ -23,9 +23,9 @@
                     <input id="extra-fields-form-title" type="text"
                            class="form-control {{errors.title ? 'is-invalid' : ''}}"
                            placeholder="${_('Label')}"
-                           value="{{create.title}}"/>
+                           value="{{{create.title}}}"/>
                     {{#if errors.title}}
-                    <span class="invalid-feedback">{{errors.title}}</span>
+                        <span class="invalid-feedback">{{errors.title}}</span>
                     {{/if}}
                 </div>
                 <label for="extra-fields-form-title" class="help-text col">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
@@ -65,7 +65,7 @@
                     {{/if}}
                     {{#if .type == 'precondition'}}
                         <span class="editor-element-precondition">
-                            <span on-click="['selectElem', .]">{{.title}}</span>
+                            <span on-click="['selectElem', .]">{{{.title}}}</span>
                             <span id="delete_elem" class="cursor-pointer" on-click="['deleteElem', i]">
                                 ${h.material_icon('add_circle_outline_rotate')}
                             </span>
@@ -85,7 +85,7 @@
 <body py:block="body" py:strip="True">
 <div id="target"></div>
 <script>
-    <![CDATA[
+<![CDATA[
 
     var PreconditionSimple = Ractive.extend({
         template: '#template',
@@ -147,25 +147,24 @@
                 return false;
             });
 
-            //self.loadCategory();
             self.loadQuestion();
             self.loadPreconditions(load_conditions);
         },
         loadQuestion: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/qa/get_single_or_multi_question', params=dict(workspace=workspace))}",
-                    function (data) {
-                        self.set('questions', data['questions']);
-                        if (callback) callback();
-                    });
+                        function (data) {
+                            self.set('questions', data['questions']);
+                            if (callback) callback();
+                        });
         },
         loadPreconditions: function (callback) {
             var self = this;
             jQuery.get("${tg.url('/precondition/sidebar_precondition', params=dict(workspace=workspace))}",
-                    function (data) {
-                        self.set('preconditions', data['precond']);
-                        if (callback) callback();
-                    });
+                        function (data) {
+                            self.set('preconditions', data['precond']);
+                            if (callback) callback();
+                        });
         },
         addOperator: function (operator, img_uri) {
             var self = this;
@@ -188,8 +187,8 @@
         createPreconditionAdvanced: function (field) {
             var self = this;
             self.set('saving', true);
-
             var api_params = JSON.stringify(field);
+
             $.ajax({
                 type: self.submit_type,
                 url: self.submit_url,
@@ -203,10 +202,8 @@
                 self.set('saving', false);
                 self.set('editing', false);
 
-                if (resp.redirect_url)
-                    redirect_to = resp.redirect_url;
+                if (resp.redirect_url) redirect_to = resp.redirect_url;
                 window.location.replace(redirect_to);
-
             }).fail(function (jqXHR) {
                 var data = jQuery.parseJSON(jqXHR.responseText);
                 console.log("fail");
@@ -214,12 +211,9 @@
                 self.set('errors', data.errors);
                 self.set('saving', false);
             });
-
         }
     });
-    ]]>
-</script>
-<script>
+
     var ractive_precondition_simple = new PreconditionSimple({
         target: '#target',
         precondition: ${Markup(h.script_json_encode(precondition))},
@@ -234,8 +228,7 @@
         var self = this;
         self.splice('conditions', elem, 1)
     });
-
-
+]]>
 </script>
 </body>
 </html>

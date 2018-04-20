@@ -99,7 +99,7 @@ def editor_widget_template_for_output(**kw):
     #   output: used for easily identify widget -> widget.hasClass('output')
     #   output-widget: used by KS for stylize (CSS) widget
     #   ks_id-output_{id_}: used for to generate unique placeholder
-    return u'<span class="objplaceholder output output-widget ks_id-output_{id_}">{title}</span>'.format(**kw)
+    return u'<span class="objplaceholder output output-widget -filtered-{filtered} ks_id-output_{id_}">{title}</span>'.format(**kw)
 
 
 def editor_widget_template_for_qa(**kw):
@@ -133,7 +133,4 @@ except SyntaxError:
 
 def get_workspace_name(workspace_id):
     ws = model.Category.query.get(_id=ObjectId(workspace_id))
-    if ws:
-        return ws.name.upper()
-    else:
-        return l_('UNKNOWN WORKSPACE')
+    return ws.name.upper() if ws else l_('UNKNOWN WORKSPACE')

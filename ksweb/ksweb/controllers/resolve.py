@@ -35,9 +35,10 @@ class ResolveController(BaseController):
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def original_edit(self, workspace, **kw):
         entity = self._original_edit()
+
         flash(_(u'Entity %s successfully edited!') % entity.title)
         session.delete()
-        return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
+        return redirect(base_url=tg.url('/%s' % entity.entity, params=dict(workspace=workspace)))
 
     @expose()
     @with_entity_session
@@ -46,7 +47,7 @@ class ResolveController(BaseController):
         entity = self._clone_object()
         flash(_("%s successfully created!") % entity.title)
         session.delete()
-        return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
+        return redirect(base_url=tg.url('/%s' % entity.entity, params=dict(workspace=workspace)))
 
     @expose('')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
@@ -60,8 +61,6 @@ class ResolveController(BaseController):
     @with_entity_session
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def manually_resolve(self, workspace, **kw):
-
-        # fetch params from session
         entity = session.get('entity')
 
         return dict(
@@ -74,7 +73,6 @@ class ResolveController(BaseController):
     @expose('json')
     @with_entity_session
     def mark_resolved(self, list_to_new=None, list_to_old=None, **kw):
-
         entity = session.get('entity')
 
         if len(list_to_new) >= 1:
@@ -93,25 +91,14 @@ class ResolveController(BaseController):
         return dict(errors=None)
 
     def _original_edit(self):
-
-        # fetch params from session
         params = session.get('entity')
-
-        # transform to ObjectId here because ObjectId is not JSON serializable
         params['_category'] = to_object_id(params.get('_category'))
         params['_precondition'] = to_object_id(params.get('_precondition'))
-
-        # retrieve original object
         entity = self._get_entity(params['entity'], params['_id'])
-
-        # popping non-related values
         params.pop('entity', None)
-
-        # true edit
         for k, v in params.items():
             setattr(entity, k, v)
 
-        # TODO: update..
         self._find_and_modify(entity)
         return entity
 

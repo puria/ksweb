@@ -5,15 +5,41 @@ $element_radius: 2rem;
   border-radius: $element_radius;
   background-color: $carbon;
   font-size: 12px;
-  padding: 4px 0px 4px 8px;
+  padding: 4px 36px 4px 8px;
   color: white;
   border: $carbon solid 2px;
-  margin: 10px 2px;
+  white-space: nowrap;
+  position: relative;
+  margin: 2px;
+  display: inline-block;
+  height: 28px;
+  line-height: 1;
+  vertical-align: bottom;
 
   .media-middle {
     vertical-align: top;
   }
-  .material-icons { margin-bottom: 2px; }
+
+  img {
+    vertical-align: bottom;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .material-icons {
+    position: absolute;
+    right: 1px;
+    top: 0px;
+    margin: 0;
+    font-size: 22px;
+    margin-bottom: 2px;
+  }
+}
+
+
+.editor-element {
+
 }
 
 .editor-element-operator {
@@ -35,6 +61,8 @@ $element_radius: 2rem;
 .editor-element-output, .output-widget {
   @extend .editor-element, .bg-primary;
   border: $dark-blue solid 2px;
+  display: inline-block !important;
+  margin: 0px 6px !important;
 }
 
 .editor-element-text {
@@ -53,4 +81,7 @@ $element_radius: 2rem;
   width: 50px;
   color: white;
   padding: 8px;
+  display: inline-block;
+  margin: 2px;
+  padding: 0 5px;
 }
