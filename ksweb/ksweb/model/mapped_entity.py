@@ -26,8 +26,11 @@ class MappedEntity(MappedClass):
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
     status = FieldProperty(s.OneOf(*STATUS.values()), required=True, if_missing=STATUS.UNREAD)
-    created_at = FieldProperty(s.DateTime, if_missing=datetime.utcnow())
     auto_generated = FieldProperty(s.Bool, if_missing=False)
+
+    @property
+    def created_at(self):
+        return self._id.generation_time
 
     @classmethod
     def unread_count(cls, workspace_id):
