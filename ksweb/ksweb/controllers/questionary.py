@@ -11,6 +11,7 @@ from tg import redirect
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_
 import tg
+import pymongo
 from tg.i18n import ugettext as _
 from tw2.core import StringLengthValidator, EmailValidator
 
@@ -41,7 +42,9 @@ class QuestionaryController(BaseController):
         entities = model.Questionary.query.find({'$or': [
             {'_user': ObjectId(user._id)},
             {'_owner': ObjectId(user._id)}
-        ], '_document': {'$in': documents_id}}).sort('title')
+        ], '_document': {'$in': documents_id}}).sort([('_id', pymongo.DESCENDING),
+                                                      ('completed', pymongo.ASCENDING),
+                                                      ('title', pymongo.ASCENDING)])
         return dict(
             page='questionary-index',
             fields={
@@ -127,7 +130,8 @@ class QuestionaryController(BaseController):
         questionary_compiled = Template(questionary.document.html)
 
         output_values, qa_values = dict(), dict()
-        if not questionary.document.content: return
+        if not questionary.document.content:
+            return
         for output_dict in questionary.document.content:
             _id = ObjectId(output_dict['content'])
             if output_dict['content'] in questionary.output_values and \
