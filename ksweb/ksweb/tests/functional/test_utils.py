@@ -20,7 +20,7 @@ class TestUtils(TestController):
         self.document = {'qa': {}, 'advanced_preconditions': {}, 'simple_preconditions': {}, 'outputs': {}}
         self.qa = self._create_qa('title', self.ws._id, 'question', 'tooltip', 'link', 'single', ['a', 'b'])
         self.qa_struct = {str(self.qa._id): {'_parent_precondition': None, 'title': u'title', 'question': u'question',
-                                             'tooltip': u'tooltip', 'status': None, 'created_at': None,
+                                             'tooltip': u'tooltip', 'status': None,
                                              'visible': True, 'link': u'link', 'answers': [u'a', u'b'],
                                              '_id': ObjectId(self.qa._id),
                                              'auto_generated': False,
@@ -45,13 +45,11 @@ class TestUtils(TestController):
     def test_export_qa_simple(self):
         self._login_admin()
         export_qa(self.qa._id, self.document)
-        self.qa_struct[str(self.qa._id)]['created_at'] = self.document['qa'][str(self.qa._id)]['created_at']
         assert self.document['qa'] == self.qa_struct, self.document['qa']
 
     def test_export_qa_multi(self):
         self._login_admin()
         export_qa(self.qa_multi._id, self.document)
-        self.qa_multi_struct[str(self.qa_multi._id)]['created_at'] = self.document['qa'][str(self.qa_multi._id)]['created_at']
         assert self.document['qa'] == self.qa_multi_struct, ('>>>>>', self.document['qa'], self.qa_multi_struct, '<<<<<')
 
     def test_export_qa_text(self):
@@ -60,7 +58,6 @@ class TestUtils(TestController):
         export_qa(qa._id, self.document)
         expected = {str(qa._id): {'_parent_precondition': None, 'title': u'title2', 'question': u'question2',
                                   'tooltip': u'tooltip2', u'status': None, 'auto_generated': False,
-                                  'created_at': qa.created_at,
                                   'visible': True, 'link': u'link2', 'answers': None, '_id': ObjectId(qa._id),
                                   'type': u'text', 'public': True}
                     }
@@ -69,9 +66,7 @@ class TestUtils(TestController):
     def test_export_simple_precondition(self):
         self._login_admin()
         export_preconditions(precondition_id=self.prec._id, document=self.document)
-        self.qa_struct[str(self.qa._id)]['created_at'] = self.document['qa'][str(self.qa._id)]['created_at']
         assert self.document['qa'] == self.qa_struct, self.document['qa']
-        self.prec_struct[str(self.prec._id)]['created_at'] = self.document['simple_preconditions'][str(self.prec._id)]['created_at']
         assert self.document['simple_preconditions'] == self.prec_struct, self.document['simple_preconditions']
 
     def test_export_advanced_precondition(self):
@@ -93,13 +88,10 @@ class TestUtils(TestController):
 
         a_prec = self._create_advanced_precondition('title2', category_id=self.ws._id, conditions=conditions)
         export_preconditions(a_prec._id, self.document)
-        self.qa_struct[str(self.qa._id)]['created_at'] = self.document['qa'][str(self.qa._id)]['created_at']
         assert self.document['qa'] == self.qa_struct, self.document['qa']
-        self.prec_struct[str(self.prec._id)]['created_at'] = self.document['simple_preconditions'][str(self.prec._id)]['created_at']
         assert self.document['simple_preconditions'] == self.prec_struct, self.document['simple_preconditions']
         expected = {str(a_prec._id): {'title': u'title2', 'visible': True, '_id': ObjectId(a_prec._id), 'auto_generated': False,
                                       'type': u'advanced', 'public': True, 'auto_generated': False, 'status': None,
-                                      'created_at': self.document['advanced_preconditions'][str(a_prec._id)]['created_at'],
                                       'condition': [ObjectId(self.prec._id), u'or', ObjectId(self.prec._id)]}}
         assert self.document['advanced_preconditions'] == expected, (self.document['advanced_preconditions'], expected)
 
@@ -126,9 +118,7 @@ class TestUtils(TestController):
         ]
         o1 = self._create_output('output1', self.ws._id, self.prec._id, content=content1, html='html')
         export_outputs(o1._id, self.document)
-        self.qa_struct[str(self.qa._id)]['created_at'] = self.document['qa'][str(self.qa._id)]['created_at']
         assert self.document['qa'] == self.qa_struct, self.document['qa']
-        self.prec_struct[str(self.prec._id)]['created_at'] = self.document['simple_preconditions'][str(self.prec._id)]['created_at']
         assert self.document['simple_preconditions'] == self.prec_struct, self.document['simple_preconditions']
         expected = {'title': u'output1', 'content': [{u'content': str(self.qa._id),
                                                       u'type': u'qa_response',
