@@ -18,20 +18,29 @@ Install ``ksweb`` using the setup.py script
 ```bash
     # Enter into the first project folder
     $ cd ksweb
+    
     # Create a virtual environment for python2 (important)
     $ virtualenv -p python2 venv
+    
     # Activate your virtual environment (very important)
     $ source venv/bin/activate
+    
     # Enter the subproject folder
     $ cd ksweb
+    
     # Install all the dependencies
     $ pip install -e .
+    
     # Populate the mandatory data (TO RUN JUST AT THE FIRST USAGE OF A DATABASE)
     $ gearbox setup-app
 ```
+
 Start the http server
-    # Start a local webserver (NOT SUITABLE FOR PRODUCTION)
-    $ gearbox serve --reload
+
+```bash
+ # Start a local webserver (NOT SUITABLE FOR PRODUCTION) 
+ $ gearbox serve --reload
+```
 
 Then you are ready to go :tada:
 
