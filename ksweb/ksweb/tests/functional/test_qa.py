@@ -47,7 +47,7 @@ class TestQaController(TestController):
         ).json
         qa_text = model.Qa.query.get(title=qa_text_params['title'])
         auto_precondition = model.Precondition.query.get(
-            title=qa_text_params['title'] + ' &rArr; was compiled')
+            title=qa_text_params['title'] + u' \u21d2 was compiled')
 
         assert qa_text
         assert resp['errors'] is None

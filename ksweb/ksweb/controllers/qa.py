@@ -12,7 +12,7 @@ from tg.decorators import paginate, require
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
-from ksweb import model
+from ksweb.model import Category, Output, Precondition, Qa
 from ksweb.lib.validator import WorkspaceExistValidator, QAExistValidator, PreconditionExistValidator
 
 
@@ -33,7 +33,7 @@ class QaController(RestController):
                 'columns_name': [_('Label'), _('Question'), _('Filter')],
                 'fields_name': ['title', 'question', 'parent_precondition']
             },
-            entities=model.Qa.qa_available_for_user(request.identity['user']._id, workspace),
+            entities=Qa.qa_available_for_user(request.identity['user']._id, workspace),
             actions=False,
             workspace=workspace
         )
@@ -43,13 +43,13 @@ class QaController(RestController):
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def get_one(self, id,  **kw):
-        qa = model.Qa.query.find({'_id': ObjectId(id), '_owner': request.identity['user']._id}).first()
+        qa = Qa.query.find({'_id': ObjectId(id), '_owner': request.identity['user']._id}).first()
         return dict(qa=qa)
 
     @expose('json')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def get_single_or_multi_question(self, workspace):
-        questions = model.Qa.query.find({
+        questions = Qa.query.find({
             'type': {'$in': ['single', 'multi']},
             '_owner': request.identity['user']._id,
             '_category': ObjectId(workspace)
@@ -73,7 +73,7 @@ class QaController(RestController):
         'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
-        'answer_type': OneOfValidator(values=model.Qa.QA_TYPE, required=True),
+        'answer_type': OneOfValidator(values=Qa.QA_TYPE, required=True),
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
     def post(self, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
@@ -83,7 +83,7 @@ class QaController(RestController):
 
         user = request.identity['user']
 
-        qa = model.Qa(
+        qa = Qa(
                 _owner=user._id,
                 _category=ObjectId(category),
                 _parent_precondition=ObjectId(precondition) if precondition else None,
@@ -109,7 +109,7 @@ class QaController(RestController):
         'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
-        'answer_type': OneOfValidator(values=model.Qa.QA_TYPE, required=True),
+        'answer_type': OneOfValidator(values=Qa.QA_TYPE, required=True),
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
     def put(self, _id, title, category, question, tooltip, link, answer_type,
@@ -137,7 +137,7 @@ class QaController(RestController):
 
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
-        qa = model.Qa.query.get(_id=ObjectId(_id))
+        qa = Qa.query.get(_id=ObjectId(_id))
         qa._category = ObjectId(category)
         qa._parent_precondition = to_object_id(precondition)
         qa.title = title
@@ -155,12 +155,12 @@ class QaController(RestController):
     @validate({
         '_id': QAExistValidator(model=True)
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You can not edit this Q/A'), field='_id', entity_model=model.Qa))
+    @require(CanManageEntityOwner(msg=l_(u'You can not edit this Q/A'), field='_id', entity_model=Qa))
     def edit(self, _id, workspace=None, **kw):
-        ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()
+        ws = Category.query.find({'_id': ObjectId(workspace)}).first()
         if not ws:
             return tg.abort(404)
-        qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
+        qa = Qa.query.find({'_id': ObjectId(_id)}).first()
         return dict(qa=qa, workspace=ws._id, errors=None)
 
     @expose('json')
@@ -169,7 +169,7 @@ class QaController(RestController):
         '_id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id, **kw):
-        qa = model.Qa.query.find({'_id': ObjectId(_id)}).first()
+        qa = Qa.query.find({'_id': ObjectId(_id)}).first()
         return dict(qa=qa)
 
     @decode_params('json')
@@ -181,7 +181,7 @@ class QaController(RestController):
         :return:
         """
 
-        preconditions_related = model.Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)})
+        preconditions_related = Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)})
         entities = list(preconditions_related)
         return {
             'entities': entities,
@@ -190,25 +190,25 @@ class QaController(RestController):
 
     def _autofill_qa_filters(self, qa):
         user = request.identity['user']
-        if qa.type == 'text':   # model.Qa.QA_TYPE[0]
-            autogen_filter = model.Precondition(
+        if qa.type == 'text':   # Qa.QA_TYPE[0]
+            autogen_filter = Precondition(
                                 _owner=user._id,
                                 _category=ObjectId(qa._category),
-                                title=qa.title + _(' &rArr; was compiled'),
+                                title=qa.title + _(u' \u21d2 was compiled'),
                                 type='simple',
                                 auto_generated=True,
-                                status=model.Precondition.STATUS.UNREAD,
+                                status=Precondition.STATUS.UNREAD,
                                 condition=[qa._id, ''])
         else:
             base_precond = []
             for answer in qa.answers:
-                prec = model.Precondition(
+                prec = Precondition(
                     _owner=user._id,
                     _category=ObjectId(qa._category),
-                    title=qa.title + ' &rArr; %s' % answer,
+                    title=qa.title + u' \u21d2 %s' % answer,
                     type='simple',
                     auto_generated=True,
-                    status=model.Precondition.STATUS.UNREAD,
+                    status=Precondition.STATUS.UNREAD,
                     condition=[qa._id, answer],
                 )
                 base_precond.append(prec)
@@ -220,25 +220,25 @@ class QaController(RestController):
 
             condition.append(base_precond[-1]._id)
 
-            autogen_filter = model.Precondition(
+            autogen_filter = Precondition(
                 _owner=user._id,
                 _category=ObjectId(qa._category),
-                title=qa.title + _(' &rArr; was compiled'),
+                title=qa.title + _(u' \u21d2 was compiled'),
                 type='advanced',
                 auto_generated=True,
-                status=model.Precondition.STATUS.UNREAD,
+                status=Precondition.STATUS.UNREAD,
                 condition=condition
             )
 
         if autogen_filter:
-            model.Output(
+            Output(
                 _owner=user._id,
                 _category=ObjectId(qa._category),
                 _precondition=ObjectId(autogen_filter._id),
-                title=qa.title + ' &rArr; output',
+                title=qa.title + u' \u21d2 output',
                 auto_generated=True,
                 html='${qa_%s}' % qa._id,
-                status=model.Precondition.STATUS.UNREAD,
+                status=Precondition.STATUS.UNREAD,
                 content= [dict(content=str(qa._id), type='qa_response', title=qa.title)]
             )
 
