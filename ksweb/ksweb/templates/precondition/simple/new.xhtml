@@ -85,7 +85,7 @@
             <div class="form-group row align-items-center">
                 <div class="col-4">
                     <input id="extra-fields-form-title" type="text" class="form-control {{errors.title ? 'is-invalid' : ''}}"
-                           placeholder="${_('Label')}" value="{{{create.title}}}"/>
+                           placeholder="${_('Label')}" name="{{create.title}}" value="{{create.title}}"/>
                     {{#if errors.title}}
                     <span class="help-block">{{errors.title}}</span>
                     {{/if}}
@@ -103,7 +103,7 @@
 <body py:block="body" py:strip="True">
 <div id="qa-ractive"></div>
 <script>
-  <![CDATA[
+//<![CDATA[
   var PreconditionSimple = Ractive.extend({
     template: '#PreconditionSimpleForm_template',
     onconstruct: function(ctx, options) {
@@ -184,7 +184,7 @@
           var redirect_to;
           if(self.question_content || self.question_title){
               redirect_to = "${tg.url('/qa/new', params=dict(workspace=workspace))}&question_content="
-                      + self.question_content + "&question_title=" + self.question_title + "&precondition_id=" + resp['precondition_id'];
+                      + self.get('question_content') + "&question_title=" + self.get('question_title') + "&precondition_id=" + resp['precondition_id'];
           }
           else{
                redirect_to = "${tg.url('/precondition/', params=dict(workspace=workspace))}";
@@ -225,9 +225,9 @@
   });
 
   ractive_precondition_simple.observe('create.answer_type', function ( int_resp, oldValue ) {
-    if(int_resp == 'have_response')
+    if (int_resp == 'have_response')
       jQuery("#interested_response").hide();
-    if(int_resp == 'what_response')
+    if (int_resp == 'what_response')
       jQuery("#interested_response").show();
   });
 
@@ -238,10 +238,10 @@
       var question = questions.filter(by_id);
       if (!question.length) return;
       var q_title = question[0].title;
-      var suffix = (value.length) ? " &rArr; " + value : '${_(" was compiled")}';
+      var suffix = (value.length) ? " ⇒ " + value : '${_(" was compiled")}';
       ractive_precondition_simple.set('create.title', q_title+suffix);
   });
-  ]]>
+//]]>
 </script>
 </body>
 </html>
