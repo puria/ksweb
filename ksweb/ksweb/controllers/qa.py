@@ -20,7 +20,7 @@ class QaController(RestController):
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "qas"
 
-    allow_only = predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer'))
+    allow_only = predicates.not_anonymous(msg=l_('Only for admin or lawyer'))
 
     @expose('ksweb.templates.qa.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
@@ -43,7 +43,7 @@ class QaController(RestController):
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def get_one(self, id,  **kw):
-        qa = Qa.query.find({'_id': ObjectId(id), '_owner': request.identity['user']._id}).first()
+        qa = Qa.query.find({'_id': ObjectId(id)}).first()
         return dict(qa=qa)
 
     @expose('json')
