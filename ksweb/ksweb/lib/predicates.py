@@ -14,11 +14,13 @@ class CanManageEntityOwner(Predicate):
         entity_id = request.params.get(self.field)
 
         if not entity_id and hasattr(request, 'json_body'):
-            #  Try to find commercial_farm_id into body if request are a post
             entity_id = request.json_body.get(self.field, None)
 
         entity = self.entity_model.query.find({'_id': ObjectId(entity_id)}).first()
         if entity and entity._owner == credentials['user']._id:
+            return
+
+        if entity and entity._user == credentials['user']._id:
             return
 
         self.unmet()
