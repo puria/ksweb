@@ -26,6 +26,7 @@ from tg.decorators import paginate, decode_params
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
+from tg.controllers.util import auth_force_login
 from ksweb import model
 from bson import ObjectId
 from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
@@ -96,6 +97,7 @@ class RootController(BaseController):
             flash(_('You don\'t have any form associated to %s' % user.email_address))
             redirect('/start')
 
+        auth_force_login(user.user_name)
         return dict(
             page='questionary-index',
             fields={

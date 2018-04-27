@@ -30,7 +30,7 @@ class QuestionaryController(BaseController):
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "questionaries"
 
-    allow_only = predicates.has_any_permission('manage', 'lawyer', msg=l_('Only for admin or lawyer'))
+    allow_only = predicates.not_anonymous(msg=l_('Only for admin or lawyer'))
 
     @expose('ksweb.templates.questionary.index')
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
@@ -171,14 +171,6 @@ class QuestionaryController(BaseController):
             #  check each qa_response if is in qa.answers
             if isinstance(qa_response, basestring):
                 qa_response = [qa_response]
-
-                # This comment is needed for to allow users to 'not response' a question
-                # For disable this, just uncomment followings rows
-
-                # for elem in qa_response:
-                #     if not elem in qa.answers:
-                #         response.status_code = 412
-                #         return dict(errors={'qa_response': _('Invalid answer')})
 
         if not questionary.qa_values:
             order_number = 0
