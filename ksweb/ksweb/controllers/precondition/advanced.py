@@ -7,13 +7,13 @@ import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import get_related_entities_for_filters
+from ksweb.model import Precondition
 from tg import expose, validate, RestController, decode_params, \
     validation_errors_response, request, response, tmpl_context, flash, lurl
 from tg import require
 from tg import session
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tw2.core import LengthValidator, StringLengthValidator
-from ksweb import model
 from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValidator
 
 
@@ -45,7 +45,7 @@ class PreconditionAdvancedController(RestController):
             return dict(errors=error)
 
         user = request.identity['user']
-        model.Precondition(
+        Precondition(
             _owner=user._id,
             _category=ObjectId(category),
             title=title,
@@ -68,7 +68,7 @@ class PreconditionAdvancedController(RestController):
         CanManageEntityOwner(
             msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
-            entity_model=model.Precondition))
+            entity_model=Precondition))
     def put(self, _id, title, category, conditions, **kw):
         error, condition = self._marshall_complex_filter(conditions)
         if error:
@@ -90,7 +90,7 @@ class PreconditionAdvancedController(RestController):
             session.save()
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
-        precondition = model.Precondition.query.get(_id=ObjectId(_id))
+        precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
         precondition.condition = condition
         precondition._category = category
@@ -103,9 +103,9 @@ class PreconditionAdvancedController(RestController):
         'workspace': WorkspaceExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id',
-                                  entity_model=model.Precondition))
+                                  entity_model=Precondition))
     def edit(self, _id, workspace=None, **kw):
-        precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
+        precondition = Precondition.query.find({'_id': ObjectId(_id)}).first()
         return dict(precondition=precondition, workspace=workspace, errors=None)
 
     @decode_params('json')
@@ -119,12 +119,12 @@ class PreconditionAdvancedController(RestController):
 
         for _f in filters:
             if _f['type'] == 'precondition':
-                p = model.Precondition.query.get(_id=ObjectId(_f['content']))
+                p = Precondition.query.get(_id=ObjectId(_f['content']))
                 error = None if p else {'conditions': _('Filter not found.')}
                 boolean_str += "True "
                 marshalled_filter.append(ObjectId(_f['content']))
             elif _f['type'] == 'operator':
-                o = _f['content'] in model.Precondition.PRECONDITION_OPERATOR
+                o = _f['content'] in Precondition.PRECONDITION_OPERATOR
                 error = None if o else {'conditions': _('Filter not found.')}
                 boolean_str += _f['content'] + " "
                 marshalled_filter.append(_f['content'])
