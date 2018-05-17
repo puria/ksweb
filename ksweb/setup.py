@@ -45,7 +45,7 @@ install_requires = [
     "WebHelpers2",
     "tgext.webassets==0.0.2",
     "libsass==0.14.5",
-    "tgapp-registration==0.9.0",
+    "tgapp-registration==0.9.1",
     "tgext.mailer==0.2.0",
     "tgapp-resetpassword",
     "tgapp-userprofile==0.2.0",
