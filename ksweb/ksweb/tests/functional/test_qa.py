@@ -326,7 +326,7 @@ class TestQaController(TestController):
         self._login_lawyer()
         qa = self._create_fake_qa("fake_qa")
         resp = self.app.get('/qa/human_readable_details', params={'_id': qa._id})
-        assert qa._id in resp
+        assert str(qa._id) in resp
 
     def test_qa_edit_no_workspace(self):
         self._login_lawyer()
@@ -344,4 +344,4 @@ class TestQaController(TestController):
             _id=qa._id,
             workspace=qa.category._id
         ), status=200)
-        assert qa._id in response
+        assert str(qa._id) in response
