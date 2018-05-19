@@ -35,7 +35,7 @@ class CategoryController(RestController):
     }, error_handler=validation_errors_response)
     def create(self, workspace_name=None, **kw):
         user = request.identity['user']
-        ws = Category.query.find({'name': workspace_name.encode('utf-8'), '_owner': user._id}).first()
+        ws = Category.query.find({'name': workspace_name, '_owner': user._id}).first()
         if ws:
             response.status_code = 412
             return dict(errors={'workspace_name': 'This category already exists'})

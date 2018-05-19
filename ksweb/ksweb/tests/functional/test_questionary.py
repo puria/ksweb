@@ -3,8 +3,12 @@ from __future__ import print_function
 
 import zipfile
 import pytz
+import io
 from datetime import datetime
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from ksweb.tests import TestController
 
@@ -244,20 +248,6 @@ class TestQuestionaryController(TestController):
         }, status=qa_response[rel_qa.title]['status']).json
 
         assert resp['quest_compiled']['completed'] is True, resp
-
-
-    def test_download(self):
-        self.test_questionary_create()
-        form = self._get_questionary_by_title('TestQuestionary')
-        response = self.app.get('/questionary/download', params=dict(_id=str(form._id)))
-
-        assert response
-        assert b"mimetypeapplication/vnd.oasis.opendocument.text" in response
-        assert zipfile.is_zipfile(StringIO(response.testbody))
-
-        archive = zipfile.ZipFile(StringIO(response.testbody))
-        content = archive.read('content.xml')
-        assert content
 
 
     def test_completed(self):
