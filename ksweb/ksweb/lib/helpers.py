@@ -133,4 +133,4 @@ except SyntaxError:
 
 def get_workspace_name(workspace_id):
     ws = model.Category.query.get(_id=ObjectId(workspace_id))
-    return ws.name.upper() if ws else l_('UNKNOWN WORKSPACE')
+    return ws.name.upper() if ws else l_('HOME')

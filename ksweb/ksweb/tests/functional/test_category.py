@@ -25,7 +25,7 @@ class TestCategory(TestController):
         self._login_lawyer()
         category1 = self._get_category('Area 1')
         resp = self.app.get('/category/get_one', params={'id': str(category1._id)})
-        assert category1._id in resp
+        assert str(category1._id) in resp
 
     def test_get_all(self):
         self._login_lawyer()
@@ -34,9 +34,9 @@ class TestCategory(TestController):
         category3 = self._get_category('Not Visible Category')
 
         resp = self.app.get('/category/get_all')
-        assert category1._id in resp
-        assert category2._id in resp
-        assert category3._id not in resp
+        assert str(category1._id) in resp
+        assert str(category2._id) in resp
+        assert str(category3._id) not in resp
 
     def test_create_category(self):
         self._login_lawyer()
@@ -69,7 +69,7 @@ class TestCategory(TestController):
         c = self._get_category("Category")
         response = self.app.get('/category/get_all')
         assert not c
-        assert category._id not in response
+        assert str(category._id) not in response
 
 
     def test_workspace_without_owner_delete(self):

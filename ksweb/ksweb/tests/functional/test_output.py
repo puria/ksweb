@@ -207,7 +207,7 @@ class TestOutput(TestController):
         resp = self.app.get(
             '/output/edit', params={'_id': str(out._id), 'workspace': out._category}
         )
-        assert out._id in resp
+        assert str(out._id) in resp
 
     def test_creation_output_with_errors(self):
         self._login_lawyer()
@@ -247,7 +247,7 @@ class TestOutput(TestController):
         out1 = self._create_fake_output("Out1")
         resp = self.app.get('/output/human_readable_details', params={'_id': out1._id})
         assert 'human_readbale_content' in resp
-        assert out1._id in resp
+        assert str(out1._id) in resp
 
 class TestOutputPlus(TestController):
     application_under_test = 'main'
