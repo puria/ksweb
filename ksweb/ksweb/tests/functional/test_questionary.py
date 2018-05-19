@@ -249,6 +249,14 @@ class TestQuestionaryController(TestController):
 
         assert resp['quest_compiled']['completed'] is True, resp
 
+    def test_download(self):
+        self.test_compile_advanced_questionary()	
+        form = self._get_questionary_by_title('Advanced_Questionary')	
+        response = self.app.get('/questionary/download', params=dict(_id=str(form._id)))	
+	
+        assert response
+        assert str(form._id) in response.content_disposition	
+
 
     def test_completed(self):
         self.test_questionary_create()
