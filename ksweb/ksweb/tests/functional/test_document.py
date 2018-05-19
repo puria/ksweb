@@ -64,7 +64,7 @@ class TestDocument(TestController):
             '_id': str(doc1._id),
             'workspace': doc1._category
         })
-        assert doc1._id in resp
+        assert str(doc1._id) in resp
 
     def test_document_put(self):
         self.test_creation_document()
@@ -92,7 +92,7 @@ class TestDocument(TestController):
         self._login_lawyer()
         document = self._create_fake_document("Document")
         resp = self.app.get('/document/human_readable_details', params={'_id': document._id})
-        assert document._id in resp
+        assert str(document._id) in resp
 
     def test_document_export(self):
         self._login_lawyer()
