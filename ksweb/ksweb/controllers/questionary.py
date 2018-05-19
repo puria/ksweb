@@ -113,7 +113,7 @@ class QuestionaryController(BaseController):
         return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary,
                     html=self.get_questionary_html(_id), workspace=workspace)
 
-    @expose('odt:ksweb.templates.questionary.questionary', content_type='application/vnd.oasis.opendocument.text')
+    @expose(content_type='text/html')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
     }, error_handler=validation_errors_response)
@@ -121,8 +121,8 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def download(self, _id):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.odt' % questionary._id))
-        return dict(content=self.get_questionary_html(_id).striptags())
+        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.html' % questionary._id))
+        return self.get_questionary_html(_id)
 
     @staticmethod
     def get_questionary_html(quest_id):
