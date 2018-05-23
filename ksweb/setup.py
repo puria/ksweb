@@ -34,24 +34,22 @@ testpkgs = [
 ]
 
 install_requires = [
-    "TurboGears2 >= 2.3.10",
-    "Beaker >= 1.8.0",
-    "Genshi",
-    "Kajiki >= 0.6.0",
+    "TurboGears2==2.3.12",
+    "Beaker==1.9.1",
+    "Kajiki==0.7.2",
     "Ming==0.6.5",
-    "repoze.who",
-    "tw2.forms",
-    "tgext.admin >= 0.6.1",
-    "WebHelpers2",
+    "repoze.who==2.3",
+    "tw2.forms==2.2.5",
+    "tgext.admin==0.7.4",
+    "WebHelpers2==2.0",
     "tgext.webassets==0.0.2",
     "libsass==0.14.5",
-    "tgapp-registration==0.9.2",
+    "tgapp-registration==0.9.3",
     "tgext.mailer==0.2.0",
     "tgapp-resetpassword==0.2.4",
-    "tgapp-userprofile>=0.3.4",
+    "tgapp-userprofile==0.3.4",
     "axf==0.0.19",
-    "tgext.odt",
-    "tgext.evolve",
+    "tgext.evolve==0.0.4",
 ]
 
 if py_version != (3, 2):
@@ -81,7 +79,6 @@ setup(
     message_extractors={'ksweb': [
         ('**.py', 'python', None),
         ('templates/**.xhtml', 'kajiki', {'extract_python': True}),
-        ('templates/**.html', 'genshi', None),
         ('public/**', 'ignore', None)
     ]},
     entry_points={
