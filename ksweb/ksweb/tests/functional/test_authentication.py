@@ -89,3 +89,11 @@ class TestAuthentication(TestController):
         resp = resp.follow(status=200)
         ok_('Invalid Password' in resp, resp)
         eq_(resp.form['login'].value, 'admin')
+
+    def test_user_not_found(self):
+        resp = self.app.get('/login_handler?login=badadmin&password=badpassword',
+                            status=302)
+        resp = resp.follow(status=200)
+        ok_('User not found' in resp, resp)
+        eq_(resp.form['login'].value, 'badadmin')
+
