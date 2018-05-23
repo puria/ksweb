@@ -47,7 +47,7 @@ install_requires = [
     "libsass==0.14.5",
     "tgapp-registration==0.9.2",
     "tgext.mailer==0.2.0",
-    "tgapp-resetpassword",
+    "tgapp-resetpassword==0.2.4",
     "tgapp-userprofile>=0.3.4",
     "axf==0.0.19",
     "tgext.odt",
