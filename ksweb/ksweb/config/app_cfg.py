@@ -185,7 +185,6 @@ replace_template(base_config,
                  'resetpassword.templates.index',
                  'ksweb.templates.resetpassword.index')
 
-plug(base_config, 'tgextodt')
 plug(base_config, 'userprofile')
 replace_template(base_config, 'registration.templates.register', 'ksweb.templates.registration.register')
 # replace_template(base_config, 'userprofile.templates.index', 'ksweb.templates.userprofile.index')
