@@ -62,15 +62,6 @@ class Precondition(MappedEntity):
                         ])
 
     @property
-    def evaluate(self):
-        if self.type == 'simple':
-            print("evaluate simple precondition")
-            return
-        if self.type == 'advanced':
-            print("evaluate advanced precondition")
-            return
-
-    @property
     def is_simple(self):
         return self.type == 'simple'
 
