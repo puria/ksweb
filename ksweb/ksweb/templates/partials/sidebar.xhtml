@@ -42,7 +42,7 @@
     <div id="precondition-ractive" class="row p-2" py:if="getattr(tmpl_context, 'sidebar_precondition_advanced', '') == 'preconditions-advanced'"/>
 
     <!-- Precondition Advanced -->
-    <script id="PreconditionSimpleList" type="text/html">
+    <script id="filtersTemplate" type="text/html">
         <![CDATA[
         <div class="col-md-12">
             ${_('Filters')}
@@ -55,10 +55,10 @@
 
             {{#each precondition}}
             <div class="col-md-12">
-                {{{.title}}}
-                <span id="add_circle_outline"
+                <span id="{{._id}}"
                       onclick="ractive_precondition_simple.addPrecondition('{{._id}}', {{JSON.stringify(.title)}})"
-                      class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                      class="add_circle_outline cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                {{{.title}}}
             </div>
             {{/each}}
         {{/each}}
@@ -66,8 +66,8 @@
     </script>
 
     <script>
-        const PreconditionSimpleList = Ractive.extend({
-            template: '#PreconditionSimpleList',
+        const FilterSimpleList = Ractive.extend({
+            template: '#filtersTemplate',
             onconstruct: function(options) {},
             oninit:function() {
                 const self = this
@@ -109,16 +109,19 @@
         {{#each outputs}}
             {{#each output}}
             <div class="col-md-12">
-                {{{.title}}}
                 {{#if div == '#output-ractive'}}
-                    <span id="add_circle_outline"
-                          onclick="ractive_document.add_widget_to_editor('{{._id}}', {{{JSON.stringify(.title)}}}, 'output')"
-                          class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                    <a id="{{._id}}"
+                          onclick="ractive_document.add_widget_to_editor('{{._id}}')"
+                          class="add_circle_outline cursor-pointer">
+                            ${h.material_icon('add_circle_outline')}
+                            <span>{{{.title}}}</span>
+                    </a>
                 {{else}}
                     <span id="add_circle_outline"
-                          onclick="ractive_output.add_widget_to_editor('{{._id}}', {{{JSON.stringify(.title)}}}, 'output')"
+                          onclick="ractive_output.add_widget_to_editor('{{._id}}')"
                           class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                 {{/if}}
+                
             </div>
             {{/each}}
         {{/each}}
@@ -149,9 +152,9 @@
     <!-- End Output  -->
 
     <script>
-        const ractive_precondition_simple_list = new PreconditionSimpleList({el: '#precondition-ractive'})
-        const ractive_output_list = new OutputList({el: '#output-ractive'})
-        const ractive_nested_output_list = new OutputList({el: '#nested-output-ractive'})
+        const ractive_precondition_simple_list = new FilterSimpleList({target: '#precondition-ractive'})
+        const ractive_output_list = new OutputList({target: '#output-ractive'})
+        const ractive_nested_output_list = new OutputList({target: '#nested-output-ractive'})
     </script>
 
 </div>

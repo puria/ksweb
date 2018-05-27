@@ -39,7 +39,7 @@ class Document(MappedEntity):
     content = FieldProperty(s.Anything, required=True)
 
     description = FieldProperty(s.String, required=False)
-    licence = FieldProperty(s.String, required=False)
+    license = FieldProperty(s.String, required=False)
     version = FieldProperty(s.String, required=False)
     tags = FieldProperty(s.Anything, required=False)
     """
@@ -74,14 +74,6 @@ class Document(MappedEntity):
     @property
     def upcast(self):
         from ksweb.lib.utils import _upcast
-
-        """
-        This property replace widget placeholder into html widget
-
-        {output_589066e6179280afa788035e}
-            ->
-        <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
-        """
         return _upcast(self)
 
 

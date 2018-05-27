@@ -36,7 +36,7 @@ class DocumentController(RestController):
             page='document-index',
             fields={
                 'columns_name': [_('Title'), _('Description'), _('Version'), _('License')],
-                'fields_name': ['title', 'description', 'version', 'licence']
+                'fields_name': ['title', 'description', 'version', 'license']
             },
             entities=model.Document.document_available_for_user(request.identity['user']._id,
                                                                 workspace=workspace),
@@ -58,11 +58,11 @@ class DocumentController(RestController):
         'category': WorkspaceExistValidator(required=True),
         'content': DocumentContentValidator(),
         'description': StringLengthValidator(min=0),
-        'licence': StringLengthValidator(min=0, max=100),
+        'license': StringLengthValidator(min=0, max=100),
         'version': StringLengthValidator(min=0, max=100),
         'tags': StringLengthValidator(min=0, max=100)
     }, error_handler=validation_errors_response)
-    def post(self, title, category, description, licence, version, tags, content=[], **kw):
+    def post(self, title, category, description, license, version, tags, content=[], **kw):
         user = request.identity['user']
         tags = tags.strip().split(',') if tags else []
 
@@ -75,7 +75,7 @@ class DocumentController(RestController):
             visible=True,
             html=kw['ks_editor'],
             description=description,
-            licence=licence,
+            license=license,
             version=version,
             tags=tags
         )
@@ -89,14 +89,14 @@ class DocumentController(RestController):
         'category': WorkspaceExistValidator(required=True),
         'content': DocumentContentValidator(),
         'description': StringLengthValidator(min=0),
-        'licence': StringLengthValidator(min=0, max=100),
+        'license': StringLengthValidator(min=0, max=100),
         'version': StringLengthValidator(min=0, max=100),
         'tags': StringLengthValidator(min=0),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'),
                                   field='_id',
                                   entity_model=model.Document))
-    def put(self, _id, title, content, category, description, licence, version, tags, **kw):
+    def put(self, _id, title, content, category, description, license, version, tags, **kw):
 
         if not content:
             content = []
@@ -109,7 +109,7 @@ class DocumentController(RestController):
         document.html = kw['ks_editor']
         document.tags = tags
         document.description = description
-        document.licence = licence
+        document.license = license
         document.version = version
 
         return dict(errors=None)
@@ -186,7 +186,7 @@ class DocumentController(RestController):
             html=html,
             version=imported_document['version'],
             description=imported_document['description'],
-            licence=imported_document['licence'],
+            license=imported_document['license'],
             tags=imported_document['tags']
         )
         model.DBSession.flush_all()

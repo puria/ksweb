@@ -86,7 +86,7 @@
 	"visible": true,
 	"_owner": "59158069c42d753f623388c4",
 	"html": "<p>Del testo prima:&nbsp;${output_5922aa30c42d753c2d932674}${output_5922aa1dc42d753c2d93266f}&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>${output_5922aa07c42d753c2d93266a}&nbsp;E va be ogni tanto ci sta!</p>\n\n<p>Provaci Quel bellissimo testo</p>\n",
-	"licence": null,
+	"license": null,
 	"simple_preconditions": {
 		"5922a971c42d753c2d932646": {
 			"title": "Ragione sociale -> Spa",

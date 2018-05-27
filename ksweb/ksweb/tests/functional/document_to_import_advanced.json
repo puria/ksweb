@@ -79,7 +79,7 @@
 	"visible": true,
 	"_owner": "59158069c42d753f623388c4",
 	"html": "<p>${output_5926ad64c42d75ff9668f290}</p>\n",
-	"licence": "Licenza",
+	"license": "Licenza",
 	"simple_preconditions": {
 		"5922a971c42d753c2d932646": {
 			"title": "Ragione sociale -> Spa",

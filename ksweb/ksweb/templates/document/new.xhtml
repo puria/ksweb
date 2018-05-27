@@ -3,24 +3,16 @@
     <title py:block="master_title">KS | Documents</title>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" />
     <script src="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-
-    <style>
-    .CodeMirror-fullscreen,
-    .editor-toolbar.fullscreen {
-        z-index: 1100;
-    }
-    </style>
-    <script id="DocumentForm_template" type="text/html">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
+    <script id="template" type="text/html">
         <![CDATA[
         <form id="document-form" class="form-horizontal" on-submit="submit-form">
             <div class="row mt-2 pb-3 mb-3 border-bottom">
                 <h1 class="col type-page-title">${_("New Document")}</h1>
                 <div class="col-md-auto text-right">
-                    {{#if edit_mode }}
-                        <button type="button" class="btn btn-outline-warning"
-                            onclick='ractive_document.create_output_plus();'>${h.material_icon('create')} ${_('Create Output+')}
-                        </button>
-                    {{/if}}
+                    <button type="button" class="btn btn-outline-warning"
+                        onclick='ractive_document.create_output_plus();'>${h.material_icon('create')} ${_('Create Output+')}
+                    </button>
                     {{#if saving}}
                         ${_("Saving...")}
                     {{else}}
@@ -37,7 +29,9 @@
                     {{#if errors.title}}<span class="invalid-feedback">{{errors.title}}</span>{{/if}}
                 </div>
                 <div class="col">
-                    <label for="extra-fields-form-title" class="help-text">${h.material_icon('help_outline')} ${_('Title your document (eg. Privacy Policy).')}</label>
+                    <label for="extra-fields-form-title" class="help-text">
+                        ${h.material_icon('help_outline')} ${_('Title your document (eg. Privacy Policy).')}
+                    </label>
                 </div>
             </div>
 
@@ -46,72 +40,35 @@
 
             <div id="metadata" class="collapse">
                 <br/>
-                <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                    <div class="col-md-3">
-                        {{#if edit_mode}}
-                        <label for="extra-fields-form-description">${_('Description')}</label>
-                        {{/if}}
-                        <textarea id="extra-fields-form-description" class="form-control"
-                                  placeholder="${_('Description')}"
-                                  value="{{create.description}}"> {{create.description}} </textarea>
-                        {{#if errors.description}}
-                        <span class="help-block">{{errors.description}}</span>
-                        {{/if}}
-                    </div>
-                    <label for="extra-fields-form-description" class="help-text">${h.material_icon('help_outline')}
-                        Give a short description of the problem that your document solves.</label>
-                </div>
-                <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                    <div class="col-md-3">
-                        {{#if edit_mode}}
-                        <label for="extra-fields-form-licence">${_("Licence")}</label>
-                        {{/if}}
-                        <input id="extra-fields-form-licence" type="text" class="form-control"
-                               placeholder="${_('License')}"
-                               value="{{create.licence}}"/>
-                        {{#if errors.licence}}
-                        <span class="help-block">{{errors.licence}}</span>
-                        {{/if}}
-                    </div>
-                    <label for="extra-fields-form-licence" class="help-text">${h.material_icon('help_outline')}
-                        Choose the license under which you allow use of your knowledge tool (eg.
-                        MIT, LGPL, CC-xx...).</label>
 
+                <div class="form-group">
+                    <textarea class="form-control" id="extra-fields-form-description" aria-describedby="description-help" placeholder="${_('Description')}" value="{{create.description}}">{{create.description}}</textarea>
+                    <label for="extra-fields-form-description" class="help-text">${h.material_icon('help_outline')} Give a short description of the problem that your document solves.</label>
                 </div>
-                <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                    <div class="col-md-3">
-                        {{#if edit_mode}}
-                        <label for="extra-fields-form-version">${_("Version")}</label>
-                        {{/if}}
-                        <input id="extra-fields-form-version" type="text" class="form-control"
-                               placeholder="${_('Version')}"
-                               value="{{create.version}}"/>
-                        {{#if errors.version}}
-                        <span class="help-block">{{errors.version}}</span>
-                        {{/if}}
-                    </div>
+
+
+                <div class="form-group">
+                    <input id="extra-fields-form-license" type="text" class="form-control" placeholder="${_('License')}" value="{{create.license}}"/>
+                    <label for="extra-fields-form-license" class="help-text">${h.material_icon('help_outline')}
+                        Choose the license under which you allow use of your knowledge tool (eg. MIT, LGPL, CC-xx...).</label>
+                </div>
+
+                <div class="form-group">
+                    <input id="extra-fields-form-version" type="text" class="form-control" placeholder="${_('Version')}" value="{{create.version}}"/>
                     <label for="extra-fields-form-version" class="help-text">${h.material_icon('help_outline')}
                         Insert a sequential versioning number (eg. 1.0).</label>
-
                 </div>
-                <div class="form-group {{errors.title ? 'has-error' : ''}}">
-                    <div class="col-md-3">
-                        {{#if edit_mode}}
-                        <label for="extra-fields-form-tags">${_("Tags")}</label>
-                        {{/if}}
-                        <input id="extra-fields-form-tags" type="text" class="form-control"
-                               placeholder="${_('Tags')}"
-                               value="{{create.tags}}"/>
-                        {{#if errors.tags}}
-                        <span class="help-block">{{errors.tags}}</span>
-                        {{/if}}
-                    </div>
+
+                <div class="form-group">
+                    <input id="extra-fields-form-tags" type="text" class="form-control" placeholder="${_('Tags')}" value="{{create.tags}}"/>
                     <label for="extra-fields-form-tags" class="help-text">${h.material_icon('help_outline')}
                         Comma separated values tags.</label>
                 </div>
             </div>
             <br/>
+
             <h5 class="text-primary">Document editor</h5>
+
             <div class="row">
                 <div class="form-group col">
                     <textarea id="ks_editor"></textarea>
@@ -123,33 +80,25 @@
 </head>
 
 <body py:block="body" py:strip="True">
-<div id="document-ractive"></div>
+<div id="target"></div>
 <script>
-
-    <![CDATA[
+    //<![CDATA[
 
     var Document = Ractive.extend({
-        template: '#DocumentForm_template',
+        template: '#template',
         on: {
             init() {
                 var self = this;
-                self.set("edit_mode", false);
-                self.set('create.category', self.workspace);
 
                 //  Check if document is provided
                 if (!jQuery.isEmptyObject(self.document)) {
-                    self.submit_type = 'PUT';
-                    self.submit_url = '${tg.url('/document/put')}';
-                    self.set("edit_mode", true);
+                    self.submit_url = '${tg.url("/document/put")}';
                     //Set the document value as default
-                    self.set('create.title', self.document['title']);
-                    self.set('create.licence', self.document['licence']);
-                    self.set('create.version', self.document['version']);
-                    self.set('create.description', self.document['description']);
+                    self.set('create', self.document)
                     self.set('create.tags', self.document['tags'].toString());
-                    self.set('create._id', self.document['_id']);
                 }
 
+                self.set('create.category', self.workspace);
                 //clear array
                 self.set('create.content', []);
                 self.set('errors', {});
@@ -167,178 +116,73 @@
             construct(options) {
                 var self = this;
                 //  Default settings
-                self.submit_type = 'POST';
                 self.submit_url = '${tg.url("/document/post")}';
                 self.document = options['document'];
                 self.workspace = options['workspace'];
-            },
+            }, 
             render() {
-                var editor = new SimpleMDE({ 
-                    element: jQuery("#ks_editor")[0],
-                    renderingConfig: {
-                        singleLineBreaks: true
-                    }
-                });
+                var editor = KS.editor(jQuery("#ks_editor")[0]);
                 editor.value(${Markup(h.script_json_encode(document.upcast if document else ''))});
                 this.set('editor', editor);
-            },
+                editor.codemirror.on('change', function() {
+                    jQuery(window).bind('beforeunload', function(){
+                        return "${_('Unsaved data! Are you sure you want to leave?')}";
+                    });
+                });
+            }
         },
 
-        add_widget_to_editor: function(id, title, type){
-          //var editor = new SimpleMDE({ element: jQuery("#ks_editor")[0] });
-          var ks_id = 'ks_id-' + type + '_' + id;
-          var class_ = 'objplaceholder ' + type + ' ' + type + '-widget ' + ks_id;
-
-        //   var element =  editor.document.createElement( 'span', {attributes: {'class': class_}});
-        //   element.setText(title);
-          console.log(this.get('editor').codemirror.getCursor())
-          console.log(this.get('editor').getState())
-          var cm = this.get('editor').codemirror;
-          cm.replaceSelection("@@"+title+"@@")
-          
-
-        //   if (type == 'output'){
-        //     element.on("click", function(){
-        //       var url = "${tg.url('/output/edit', params=dict(workspace=workspace))}"+"&_id="+id;
-        //       var win = window.open(url, '_blank');
-        //       win.focus();
-        //     });
-        //   }
-
-          //editor.insertElement(element);
+        add_widget_to_editor: function(id) {
+            KS.addEntityToEditor(id, this.get('editor'))
         },
-        createDocument: function (field) {
+
+        createDocument: function(field) {
             var self = this;
             self.set('saving', true);
-            console.log("Sending:");
-            console.log(JSON.stringify(field));
-
             field['ks_editor'] = self.get('editor').value();
 
-            var api_params = JSON.stringify(field);
-            $.ajax({
-                type: self.submit_type,
-                url: self.submit_url,
-                data: api_params,
-                dataType: "json",
-                processData: false,
-                contentType: 'application/json'
-            }).done(function (data) {
-                self.set('create', {});
-                self.set('saving', false);
-                self.set('editing', false);
-                console.log(data);
-                window.location.replace("${tg.url('/document/', params=dict(workspace=workspace))}");
-
-            }).fail(function (jqXHR) {
-                var data = jQuery.parseJSON(jqXHR.responseText);
-                console.log("fail");
-                console.log(data);
-                self.set('errors', data.errors);
-                self.set('saving', false);
-                self.set('create.content', []);
-            });
+            KS.ajax(self.submit_url, 
+                    JSON.stringify(field), 
+                    function(data){
+                        self.set('create', {});
+                        self.set('saving', false);
+                        self.set('editing', false);
+                        window.location.replace("${tg.url('/document/', params=dict(workspace=workspace))}");
+                    }, 
+                    function() {
+                        self.set('errors', data.errors);
+                        self.set('saving', false);
+                        self.set('create.content', []);
+                    });
         },
-    parse_selected: function(html) {
-      var _html = jQuery(jQuery.parseHTML(html));
-      var placeholders_ids = [];
-      var spans = _html.find(".objplaceholder").replaceWith(function() {
-        var class_name = $.grep(this.className.split(" "), function(v, i){
-          return v.indexOf('ks_id-') === 0;
-        }).join();
-        placeholders_ids.push(class_name.split("ks_id-")[1]);
-        return "$${" + class_name.split("ks_id-")[1] + "}";
-      });
-      return {
-        'text': _html.text(),
-        'list': placeholders_ids
-      };
-    },
-    create_output_plus: function () {
-      var self = this;
-      var selector = CKEDITOR.instances.ks_editor.getSelection();
-      var highlighted_text = selector.getSelectedText();
-
-      if(highlighted_text == ''){
-        alert('${_("ATTENTION: you dont have highlighted any text.")}');
-        return;
-      }
-
-      var res = this.parse_selected(CKEDITOR.instances.ks_editor.getSelectedHtml().getHtml());
-      var api_params = JSON.stringify({
-        'highlighted_text': res['text'],
-        'list_': res['list'],
-          'workspace': self.workspace
-      });
-
-      $.ajax({
-        type: 'POST',
-        url: "${tg.url('/output_plus')}",
-        data: api_params,
-        dataType: "json",
-        processData: false,
-        contentType: 'application/json'
-      }).done(function(resp) {
-        alert("${_('An Output without filter was automatically created from ')} '" + res['text'] +"'.");
-        var range = selector.getRanges()[0];
-        range.deleteContents();
-        range.select();
-        self.add_widget_to_editor(resp['_id'], resp['title'], 'output');
-      }).fail(function(jqXHR) {
-        var data = jQuery.parseJSON(jqXHR.responseText);
-        console.log("fail");
-        console.log(data);
-      });
-    }
-    });
-    ]]>
-</script>
-<script>
- //<![CDATA[
     
-var ractive_document = new Document({
-    el: '#document-ractive',
-    document: ${Markup(h.script_json_encode(document))},
-    workspace: '${workspace}'
-});
+        create_output_plus: function() {
+            var self = this;
+            var highlighted_text = self.get('editor').codemirror.getSelection();
 
-ractive_document.on('showOutputDetails', function (event, elem) {
-    $.get("${tg.url('/output/human_readable_details', qualified=True)}", {_id: elem.content}, function (data) {
-        alert(JSON.stringify(data['output'], null, 2));
+            if (highlighted_text === ''){
+                alert('${_("ATTENTION: you dont have highlighted any text.")}');
+                return;
+            }
+
+            KS.ajax("${tg.url('/output_plus')}", 
+                    JSON.stringify({
+                        'highlighted_text': highlighted_text,
+                        'list_': KS.getEntitiesList(highlighted_text),
+                        'workspace': self.workspace
+                    }),
+                    function(resp) {
+                        alert("${_('An Output without filter was automatically created from ')} '" + highlighted_text +"'.");
+                        self.add_widget_to_editor(resp['_id']);
+                    });
+        }
     });
 
-});
-//     CKEDITOR.replace( 'ks_editor', {
-//       extraPlugins: 'objplaceholder'
-//     });
-//     CKEDITOR.instances.ks_editor.setData(${Markup(h.script_json_encode(document.upcast if document else '' ))},
-//     {
-//     callback: function() {
-//       jQuery( CKEDITOR.instances.ks_editor.window.getFrame().$ ).contents().find( '.objplaceholder' ).each(function( index ) {
-//         var class_name = $.grep(this.className.split(" "), function(v, i){
-//           return v.indexOf('ks_id-') === 0;
-//         }).join();
-
-//         var placeholder = class_name.slice('ks_id-'.length);
-
-//         if (placeholder.startsWith('output_')){
-//           var _id = placeholder.split('_')[1];
-//           this.onclick =  function(){
-//             var url = "${tg.url('/output/edit', params=dict(workspace=workspace))}"+"&_id="+_id;
-//             var win = window.open(url, '_blank');
-//             win.focus();
-//           };
-//         }
-//       });
-//      }
-//     }
-//   );
-
-//     CKEDITOR.instances.ks_editor.on('change', function(){
-//         jQuery(window).bind('beforeunload', function(){
-//             return "${_('Unsaved data! Are you sure you want to leave?')}";
-//         });
-//     });
+    var ractive_document = new Document({
+        target: '#target',
+        document: ${Markup(h.script_json_encode(document))},
+        workspace: '${workspace}'
+    });
 //]]>
 </script>
 </body>
