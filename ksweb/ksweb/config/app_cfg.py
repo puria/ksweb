@@ -43,11 +43,7 @@ class ApplicationAuthMetadata(TGAuthMetadata):
             login = None
 
         if login is None:
-            try:
-                from urllib.parse import parse_qs, urlencode
-            except ImportError:
-                from urlparse import parse_qs
-                from urllib import urlencode
+            from urllib.parse import parse_qs, urlencode
             from tg.exceptions import HTTPFound
 
             params = parse_qs(environ['QUERY_STRING'])
