@@ -53,15 +53,8 @@ class Precondition(MappedEntity):
     """
 
     @classmethod
-    def precondition_available_for_user(cls, user_id, workspace=None):
-        if workspace:
-            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
-                            .sort([
-                                    ('auto_generated', pymongo.ASCENDING),
-                                    ('status', pymongo.DESCENDING),
-                                    ('title', pymongo.ASCENDING),
-                            ])
-        return cls.query.find({'_owner': user_id, 'visible': True})\
+    def precondition_available_for_user(cls, user_id, workspace):
+        return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
                         .sort([
                                 ('auto_generated', pymongo.ASCENDING),
                                 ('status', pymongo.DESCENDING),
