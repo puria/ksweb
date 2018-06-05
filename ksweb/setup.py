@@ -35,7 +35,7 @@ testpkgs = [
 
 install_requires = [
     "TurboGears2==2.3.12",
-    "Beaker==1.9.1",
+    "Beaker==1.10.0",
     "Kajiki==0.7.2",
     "Ming==0.6.5",
     "repoze.who==2.3",
