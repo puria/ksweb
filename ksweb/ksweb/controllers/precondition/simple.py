@@ -30,6 +30,7 @@ class PreconditionSimpleController(RestController):
         return dict(page='precondition-new', workspace=workspace, qa_value=kw.get('qa_value'),
                     precondition={'question_content': kw.get('question_content', None),
                                   'question_title': kw.get('question_title', None)})
+
     @decode_params('json')
     @expose('json')
     @validate({
@@ -95,8 +96,6 @@ class PreconditionSimpleController(RestController):
                 type='advanced',
                 condition=condition
             )
-
-        #flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
 
         return dict(precondition_id=str(created_precondition._id),errors=None)
 

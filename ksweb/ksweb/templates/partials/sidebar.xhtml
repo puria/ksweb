@@ -117,9 +117,12 @@
                             <span>{{{.title}}}</span>
                     </a>
                 {{else}}
-                    <span id="add_circle_outline"
-                          onclick="ractive_output.add_widget_to_editor('{{._id}}')"
-                          class="cursor-pointer">${h.material_icon('add_circle_outline')}</span>
+                <a id="{{._id}}"
+                onclick="ractive_document.add_widget_to_editor('{{._id}}')"
+                class="add_circle_outline cursor-pointer">
+                  ${h.material_icon('add_circle_outline')}
+                  <span>{{{.title}}}</span>
+          </a>
                 {{/if}}
                 
             </div>

@@ -206,3 +206,10 @@ class OutputController(RestController):
         documents_related = Document.query.find({"content.type": "output", "content.content": _id}).all()
         entities = list(output_related + documents_related)
         return dict(entities=entities, len=len(entities))
+
+    @expose('json')
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
+    def mark_as_read(self, workspace, **kw):
+        outputs=Output.output_available_for_user(request.identity['user']._id, workspace)
+        [o.mark_as_read(workspace) for o in outputs]
+            

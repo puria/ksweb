@@ -2,9 +2,6 @@ Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
 var KS = (function() {
     var _entityRegex = /(\\)?@@([^\W]+)\b/g;
-    //var _entityRegex =  /\B(\\)?\${([^}]+)\b/g;
-    //var _entityRegex =   /\${([^}]+)}/g;
-    //var _entityRegex = new RegExp('\\\\\\$', 'g') //\$/g;
 
     var ajax = function(url, params, callback, fail=()=>{}) {
         $.ajax({
@@ -40,11 +37,11 @@ var KS = (function() {
                     }
                 }
             },
-            // {
-            //     type: 'lang',
-            //     regex: '\\\\@',
-            //     replace: '@'
-            // }
+            {
+                type: 'lang',
+                regex: '\\\\@',
+                replace: '@'
+            }
         ];
 
         var converter = new showdown.Converter({
