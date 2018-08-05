@@ -81,6 +81,7 @@
 
 <body py:block="body" py:strip="True">
 <div id="target"></div>
+
 <script>
     //<![CDATA[
 
@@ -90,40 +91,27 @@
             init() {
                 var self = this;
 
-                //  Check if document is provided
                 if (!jQuery.isEmptyObject(self.document)) {
-                    self.submit_url = '${tg.url("/document/put")}';
-                    //Set the document value as default
                     self.set('create', self.document)
+                    self.set('submit_url', '${tg.url("/document/put")}')
                     self.set('create.tags', self.document['tags'].toString());
                 }
 
-                self.set('create.category', self.workspace);
-                //clear array
-                self.set('create.content', []);
                 self.set('errors', {});
                 self.set('saving', false);
-                self.set('categories', []);
-
                 self.on('submit-form', function (event) {
-                    jQuery(window).unbind('beforeunload');
-                    var all_var = self.get('create');
-                    all_var['content'] = self.get('create.content');
-                    self.createDocument(all_var);
-                    return false;
+                    return self.createDocument();
                 });
             },
             construct(options) {
-                var self = this;
-                //  Default settings
-                self.submit_url = '${tg.url("/document/post")}';
-                self.document = options['document'];
-                self.workspace = options['workspace'];
+                this.set('document', options['document']);
+                this.set('create.workspace', options['workspace']);
+                this.set('submit_url', '${tg.url("/document/post")}');
             }, 
             render() {
                 var editor = KS.editor(jQuery("#ks_editor")[0]);
-                editor.value(${Markup(h.script_json_encode(document.upcast if document else ''))});
                 this.set('editor', editor);
+                editor.value(${Markup(h.script_json_encode(document.upcast if document else ''))});
                 editor.codemirror.on('change', function() {
                     jQuery(window).bind('beforeunload', function(){
                         return "${_('Unsaved data! Are you sure you want to leave?')}";
@@ -136,24 +124,26 @@
             KS.addEntityToEditor(id, this.get('editor'))
         },
 
-        createDocument: function(field) {
+        createDocument: function() {
             var self = this;
             self.set('saving', true);
-            field['ks_editor'] = self.get('editor').value();
+            jQuery(window).unbind('beforeunload');
+            var params = self.get('create');
+            params['content'] = self.get('editor').value();
 
             KS.ajax(self.submit_url, 
-                    JSON.stringify(field), 
+                    JSON.stringify(params), 
                     function(data){
                         self.set('create', {});
                         self.set('saving', false);
-                        self.set('editing', false);
                         window.location.replace("${tg.url('/document/', params=dict(workspace=workspace))}");
                     }, 
-                    function() {
+                    function(data) {
                         self.set('errors', data.errors);
                         self.set('saving', false);
-                        self.set('create.content', []);
                     });
+
+            return false;
         },
     
         create_output_plus: function() {
@@ -169,7 +159,7 @@
                     JSON.stringify({
                         'highlighted_text': highlighted_text,
                         'list_': KS.getEntitiesList(highlighted_text),
-                        'workspace': self.workspace
+                        'workspace': self.create.workspace
                     }),
                     function(resp) {
                         alert("${_('An Output without filter was automatically created from ')} '" + highlighted_text +"'.");

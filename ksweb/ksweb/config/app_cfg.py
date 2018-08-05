@@ -86,6 +86,7 @@ base_config['flash.template'] = '''
 
 
 from tgext import webassets
+from webassets.filter import get_filter
 
 webassets.plugme(base_config, bundles={
     'js_all': webassets.Bundle('javascript/vendors/jquery-3.3.1.min.js',
