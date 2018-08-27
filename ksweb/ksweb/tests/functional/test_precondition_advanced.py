@@ -42,7 +42,7 @@ class TestPreconditionAdvanced(TestController):
 
         precondition1_params = {
             'title': 'Have resp1',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': ['Risposta1']
@@ -65,7 +65,7 @@ class TestPreconditionAdvanced(TestController):
 
         precondition2_params = {
             'title': 'Have resp2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa2._id),
             'answer_type': 'what_response',
             'interested_response': ['Risposta2']

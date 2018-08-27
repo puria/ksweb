@@ -46,7 +46,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': [qa_params['answers'][0]]
@@ -79,7 +79,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': [qa_params['answers'][0], qa_params['answers'][1]]
@@ -112,7 +112,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa._id),
             'answer_type': 'have_response',
             'interested_response': []

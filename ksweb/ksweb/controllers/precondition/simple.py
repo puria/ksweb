@@ -36,9 +36,9 @@ class PreconditionSimpleController(RestController):
         'title': StringLengthValidator(min=2),
         'workspace': WorkspaceExistValidator(required=True),
         'question': QAExistValidator(required=True),
-        # 'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
+        'answer_type': OneOfValidator(values=[u'have_response', u'what_response']),
     }, error_handler=validation_errors_response)
-    def post(self, title, workspace, question, interested_response=[], **kw):
+    def post(self, title, workspace, question, answer_type, interested_response=[], **kw):
         user = request.identity['user']
         qa = Qa.query.get(_id=ObjectId(question))
         _type = Precondition.TYPES.SIMPLE
@@ -46,6 +46,8 @@ class PreconditionSimpleController(RestController):
         if qa.is_text:
             _condition = [ObjectId(question), '']
         else:
+            if answer_type == 'have_response':
+                interested_response = qa.answers
             answers_len = len(interested_response)
             if answers_len < 1:
                 response.status_code = 412
@@ -55,17 +57,17 @@ class PreconditionSimpleController(RestController):
                 _condition = [ObjectId(question), interested_response[0]]
             else:
                 advanced_condition = []
-                for answer in qa.answers:
+                for answer in interested_response:
                     ___ = Precondition(
                         _owner=user._id,
                         _category=ObjectId(workspace),
                         title="%s_%s" % (qa.title.upper(), answer.upper()),
                         type=_type,
-                        condition=[ObjectId(question), answer],
+                        condition=[qa._id, answer],
                         public=True,
                         visible=False
                     )
-                    advanced_condition.append(___)
+                    advanced_condition.append(___._id)
                     advanced_condition.append('or')
                 del advanced_condition[-1]
 
