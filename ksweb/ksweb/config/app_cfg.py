@@ -14,7 +14,6 @@ base_config.dispatch_path_translator = True
 base_config.prefer_toscawidgets2 = True
 base_config.package = ksweb
 base_config.renderers.append('json')
-#base_config.renderers.append('genshi')
 base_config.default_renderer = 'kajiki'
 base_config.renderers.append('kajiki')
 base_config['session.enabled'] = True
@@ -86,16 +85,28 @@ base_config['flash.template'] = '''
 
 
 from tgext import webassets
-from webassets.filter import get_filter
+from webassets.filter import register_filter
+from dukpy.webassets import BabelJSX
+register_filter(BabelJSX)
 
-webassets.plugme(base_config, bundles={
-    'js_all': webassets.Bundle('javascript/vendors/jquery-3.3.1.min.js',
+
+webassets.plugme(base_config,
+                 options={'babel_modules_loader': 'umd'},
+                 bundles={
+    'js_all': webassets.Bundle('javascript/vendors/react.production.min.js',
+                               'javascript/vendors/react-dom.production.min.js',
+                               'javascript/vendors/ractive.js',
                                'javascript/vendors/toastr.min.js',
                                'javascript/vendors/popper.min.js',
+                               'javascript/vendors/jquery-3.3.1.min.js',
                                'javascript/vendors/bootstrap.min.js',
-                               'javascript/vendors/ractive.min.js',
                                'javascript/app.js',
-                               filters='rjsmin', output='assets/js_all.js'),
+                               webassets.Bundle(
+                                   'javascript/jsx/**',
+                                   filters='babeljsx',
+                               ),
+                               # filters='rjsmin',
+                               output='assets/js_all.js'),
     'css_all': webassets.Bundle('css/vendors/toastr.min.css',
                                 'css/vendors/material-icons.css',
                                 webassets.Bundle('css/style.scss', 

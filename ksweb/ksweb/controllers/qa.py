@@ -3,6 +3,7 @@
 import json
 
 from bson import ObjectId
+from itertools import chain, repeat
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
@@ -26,14 +27,14 @@ class QaController(RestController):
     @paginate('entities', items_per_page=int(tg.config.get('pagination.items_per_page')))
     @validate({'workspace': WorkspaceExistValidator(required=True), },
               error_handler=validation_errors_response)
-    def get_all(self, workspace=None, **kw):
+    def get_all(self, workspace, **kw):
         return dict(
             page='qa-index',
             fields={
                 'columns_name': [_('Label'), _('Question'), _('Filter')],
                 'fields_name': ['title', 'question', 'parent_precondition']
             },
-            entities=Qa.qa_available_for_user(request.identity['user']._id, workspace),
+            entities=Qa.available_for_user(request.identity['user']._id, workspace),
             actions=False,
             workspace=workspace
         )
@@ -48,12 +49,8 @@ class QaController(RestController):
 
     @expose('json')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
-    def get_single_or_multi_question(self, workspace):
-        questions = Qa.query.find({
-            'type': {'$in': ['single', 'multi']},
-            '_owner': request.identity['user']._id,
-            '_category': ObjectId(workspace)
-        }).all()
+    def valid_options(self, workspace):
+        questions = Qa.available_for_user(request.identity['user']._id, workspace)
         return dict(questions=[{'_id': qa._id, 'title': qa.title} for qa in questions])
 
     @expose('json')
@@ -181,7 +178,7 @@ class QaController(RestController):
         :return:
         """
 
-        preconditions_related = Precondition.query.find({'type': 'simple', 'condition': ObjectId(_id)})
+        preconditions_related = Precondition.query.find({'type': Precondition.TYPES.SIMPLE, 'condition': ObjectId(_id)})
         entities = list(preconditions_related)
         return {
             'entities': entities,
@@ -190,60 +187,55 @@ class QaController(RestController):
 
     def _autofill_qa_filters(self, qa):
         user = request.identity['user']
-        if qa.type == 'text':   # Qa.QA_TYPE[0]
+
+        common_precondition_params = dict(
+            _owner=user._id,
+            _category=ObjectId(qa._category),
+            auto_generated=True,
+            status=Precondition.STATUS.UNREAD
+        )
+
+        if qa.type == Qa.TYPES.TEXT:
             autogen_filter = Precondition(
-                                _owner=user._id,
-                                _category=ObjectId(qa._category),
-                                title=qa.title + _(u' \u21d2 was compiled'),
-                                type='simple',
-                                auto_generated=True,
-                                status=Precondition.STATUS.UNREAD,
-                                condition=[qa._id, ''])
+                                **common_precondition_params,
+                                title=_(u'%s \u21d2 was compiled' % qa.title),
+                                type=Precondition.TYPES.SIMPLE,
+                                answer_type="have_response",
+                                condition=[qa._id, ""]
+                            )
         else:
             base_precond = []
             for answer in qa.answers:
-                prec = Precondition(
-                    _owner=user._id,
-                    _category=ObjectId(qa._category),
-                    title=qa.title + u' \u21d2 %s' % answer,
-                    type='simple',
-                    auto_generated=True,
-                    status=Precondition.STATUS.UNREAD,
+                precondition = Precondition(
+                    **common_precondition_params,
+                    title=u'%s \u21d2 %s' % (qa.title, answer),
+                    type=Precondition.TYPES.SIMPLE,
                     condition=[qa._id, answer],
                 )
-                base_precond.append(prec)
+                base_precond.append(precondition)
 
-            condition = []
-            for prc in base_precond[:-1]:
-                condition.append(prc._id)
-                condition.append('or')
-
+            condition = [prc._id for prc in base_precond[:-1]]
+            condition = list(chain.from_iterable(zip(condition, repeat('or'))))
             condition.append(base_precond[-1]._id)
 
             autogen_filter = Precondition(
-                _owner=user._id,
-                _category=ObjectId(qa._category),
+                **common_precondition_params,
                 title=qa.title + _(u' \u21d2 was compiled'),
-                type='advanced',
-                auto_generated=True,
-                status=Precondition.STATUS.UNREAD,
+                type=Precondition.TYPES.ADVANCED,
                 condition=condition
             )
 
         if autogen_filter:
             Output(
-                _owner=user._id,
-                _category=ObjectId(qa._category),
+                **common_precondition_params,
                 _precondition=ObjectId(autogen_filter._id),
                 title=qa.title + u' \u21d2 output',
-                auto_generated=True,
                 html='${qa_%s}' % qa._id,
-                status=Precondition.STATUS.UNREAD,
                 content= [dict(content=str(qa._id), type='qa_response', title=qa.title)]
             )
 
     def _are_answers_valid(self, answer_type, answers):
-        if (answer_type == "single" and len(answers) < 2) or\
-           (answer_type == "multi" and len(answers) < 1):
+        if (answer_type == Qa.TYPES.SINGLE and len(answers) < 2) or\
+           (answer_type == Qa.TYPES.MULTI and len(answers) < 1):
             return False
         return True

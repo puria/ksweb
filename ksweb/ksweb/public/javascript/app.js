@@ -3,7 +3,7 @@ Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 var KS = (function() {
     var _entityRegex = /(\\)?@@([^\W]+)\b/g;
 
-    var ajax = function(url, params, callback, fail=()=>{}) {
+    var ajax = function(url, params, callback, fail) {
         $.ajax({
             type: 'POST',
             url: url,
@@ -14,9 +14,9 @@ var KS = (function() {
         })
         .done(callback)
         .fail(function(jqXHR) {
-              console.error(`FAILED call for ${url}: ${jQuery.parseJSON(jqXHR.responseText)}`);
-              if(typeof fail === 'function') {
-                  fail();
+              console.error('FAILED call for', url, jqXHR.responseText);
+              if (typeof fail === 'function') {
+                  fail(jqXHR);
               }
         });
     }

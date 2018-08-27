@@ -5,8 +5,6 @@ from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
-from ming.odm.declarative import MappedClass
-from ming.odm.icollection import InstrumentedList
 from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity
 
@@ -21,7 +19,12 @@ def _custom_title(obj):
 
 
 class Qa(MappedEntity):
-    QA_TYPE = [u"text", u"single", u"multi"]
+    class TYPES:
+        TEXT=u'text'
+        SINGLE=u'single'
+        MULTI=u'multi'
+
+    QA_TYPE = [TYPES.TEXT, TYPES.SINGLE, TYPES.MULTI]
 
     class __mongometa__:
         session = DBSession
@@ -32,11 +35,6 @@ class Qa(MappedEntity):
             ('_category',),
             ('type', 'public',),
         ]
-
-    # __ROW_TYPE_CONVERTERS__ = {
-    #     #InstrumentedObj: _format_instrumented_obj,
-    #     InstrumentedList: _format_instrumented_list,
-    # }
 
     __ROW_COLUM_CONVERTERS__ = {
         'title': _custom_title,
@@ -53,7 +51,7 @@ class Qa(MappedEntity):
     answers = FieldProperty(s.Anything)
 
     @classmethod
-    def qa_available_for_user(cls, user_id, workspace=None):
+    def available_for_user(cls, user_id, workspace=None):
         return User.query.get(_id=user_id).owned_entities(cls, workspace)
 
     @property
@@ -62,15 +60,14 @@ class Qa(MappedEntity):
 
     @property
     def is_text(self):
-        return self.type == self.QA_TYPE[0]
+        return self.type == self.TYPES.TEXT
 
     @property
     def is_single(self):
-        return self.type == self.QA_TYPE[1]
+        return self.type == self.TYPES.SINGLE
 
     @property
     def is_multi(self):
-        return self.type == self.QA_TYPE[2]
-
+        return self.type == self.TYPES.MULTI
 
 __all__ = ['Qa']

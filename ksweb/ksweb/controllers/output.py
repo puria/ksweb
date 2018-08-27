@@ -146,7 +146,7 @@ class OutputController(RestController):
 
 
     @expose('json')
-    def sidebar_output(self, _id=None, workspace=None): #pragma: no cover
+    def sidebar_output(self, _id=None, workspace=None):  # pragma: no cover
         res = list(Output.query.aggregate([
             {
                 '$match': {
@@ -159,7 +159,7 @@ class OutputController(RestController):
             {
                 '$group': {
                     '_id': '$_category',
-                    'output': {'$push': "$$ROOT",}
+                    'output': {'$push': "$$ROOT", }
                 }
             }
         ]))
@@ -209,7 +209,5 @@ class OutputController(RestController):
 
     @expose('json')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
-    def mark_as_read(self, workspace, **kw):
-        outputs=Output.output_available_for_user(request.identity['user']._id, workspace)
-        [o.mark_as_read(workspace) for o in outputs]
-            
+    def mark_as_read(self, workspace):
+        Output.mark_as_read(request.identity['user']._id, workspace)

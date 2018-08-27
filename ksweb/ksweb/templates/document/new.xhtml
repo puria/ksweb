@@ -85,11 +85,12 @@
 <script>
     //<![CDATA[
 
-    var Document = Ractive.extend({
+    var KSDocument = Ractive.extend({
         template: '#template',
         on: {
             init() {
                 var self = this;
+                self.set('create.workspace', this.get('workspace'))
 
                 if (!jQuery.isEmptyObject(self.document)) {
                     self.set('create', self.document)
@@ -102,12 +103,9 @@
                 self.on('submit-form', function (event) {
                     return self.createDocument();
                 });
+
+                console.log(this.get('document'))
             },
-            construct(options) {
-                this.set('document', options['document']);
-                this.set('create.workspace', options['workspace']);
-                this.set('submit_url', '${tg.url("/document/post")}');
-            }, 
             render() {
                 var editor = KS.editor(jQuery("#ks_editor")[0]);
                 this.set('editor', editor);
@@ -168,10 +166,13 @@
         }
     });
 
-    var ractive_document = new Document({
+    var ractive_document = new KSDocument({
         target: '#target',
-        document: ${Markup(h.script_json_encode(document))},
-        workspace: '${workspace}'
+        data: {
+            document: ${Markup(h.script_json_encode(document))},
+            workspace: '${workspace}',
+            submit_url: '${tg.url("/document/post")}'
+        }
     });
 //]]>
 </script>

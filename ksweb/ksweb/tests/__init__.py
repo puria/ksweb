@@ -163,7 +163,7 @@ class TestController(object):
         self.app.post_json(
             '/precondition/simple/post', params={
                 'title': title,
-                'category': str(category_id),
+                'workspace': str(category_id),
                 'question': str(qa_id),
                 'answer_type': answer_type,
                 'interested_response': interested_response
@@ -213,7 +213,7 @@ class TestController(object):
 
         prec_red_color = {
             'title': 'Red is Favourite',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa_color._id),
             'answer_type': 'what_response',
             'interested_response': ['Red']
@@ -235,7 +235,7 @@ class TestController(object):
 
         prec_animal_liked_pig_dog = {
             'title': 'Like pig and dog',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa_animal_liked._id),
             'answer_type': 'what_response',
             'interested_response': ['Pig', 'Dog']

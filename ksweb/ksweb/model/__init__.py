@@ -13,6 +13,7 @@ def init_model(engine):
     for mapper in ming.odm.Mapper.all_mappers():
         mainsession.ensure_indexes(mapper.collection)
 
+
 # Import your model modules here.
 from ksweb.model.auth import User, Group, Permission
 from ksweb.model.category import Category
@@ -22,4 +23,4 @@ from ksweb.model.output import Output
 from ksweb.model.document import Document
 from ksweb.model.questionary import Questionary
 
-__all__ = ('User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output', 'Document', 'Questionary')
+__all__ = ['User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output', 'Document', 'Questionary']

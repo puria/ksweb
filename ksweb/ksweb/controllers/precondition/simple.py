@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 """Precondition/simple controller module"""
-import json
 
 import tg
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import to_object_id, get_related_entities_for_filters
+from ksweb.lib.utils import get_related_entities_for_filters
+from ksweb.model import Qa, Precondition
 from tg import expose, validate, RestController, decode_params, request, \
-    validation_errors_response,  response, tmpl_context, flash, lurl
+    validation_errors_response,  response, tmpl_context
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg import require
 from tg import session
 from tw2.core import OneOfValidator, StringLengthValidator
-from ksweb import model
 from ksweb.lib.validator import QAExistValidator, WorkspaceExistValidator, PreconditionExistValidator
 
 
@@ -35,69 +34,54 @@ class PreconditionSimpleController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'question': QAExistValidator(required=True),
-        'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
+        # 'answer_type': OneOfValidator(values=[u'have_response', u'what_response'], required=True),
     }, error_handler=validation_errors_response)
-    def post(self, title, category, question, answer_type, interested_response, **kw):
+    def post(self, title, workspace, question, interested_response=[], **kw):
         user = request.identity['user']
+        qa = Qa.query.get(_id=ObjectId(question))
+        _type = Precondition.TYPES.SIMPLE
 
-        qa = model.Qa.query.get(_id=ObjectId(question))
-
-        #  CASO BASE in cui risco a creare un filtro semplice per definizione e' quella di che venga solamente selezionata una risposta
-        if len(interested_response) == 1:
-            #  La risposta e' solo una creo un filtro semplice
-            created_precondition = model.Precondition(
-                _owner=user._id,
-                _category=ObjectId(category),
-                title=title,
-                type='simple',
-                condition=[ObjectId(question), interested_response[0]]
-            )
+        if qa.is_text:
+            _condition = [ObjectId(question), '']
         else:
-            #  CASO AVANZATO sono state selezionate piu' risposte, devo prima creare tutte i filtri semplici e poi creare quella complessa
-            if answer_type == "have_response":
-                #  Create one precondition simple for all possibility answer to question
-                #  After that create a complex precondition with previous simple precondition
-                interested_response = qa.answers
+            answers_len = len(interested_response)
+            if answers_len < 1:
+                response.status_code = 412
+                return dict(errors={'interested_response': _('Please select at least one answer')})
 
-            if answer_type == "what_response":
-                #  Create one precondition simple for all selected answer to question
-                #  After that create a complex precondition with previous simple precondition
+            if answers_len == 1:
+                _condition = [ObjectId(question), interested_response[0]]
+            else:
+                advanced_condition = []
+                for answer in qa.answers:
+                    ___ = Precondition(
+                        _owner=user._id,
+                        _category=ObjectId(workspace),
+                        title="%s_%s" % (qa.title.upper(), answer.upper()),
+                        type=_type,
+                        condition=[ObjectId(question), answer],
+                        public=True,
+                        visible=False
+                    )
+                    advanced_condition.append(___)
+                    advanced_condition.append('or')
+                del advanced_condition[-1]
 
-                if len(interested_response) <= 1:
-                    response.status_code = 412
-                    return dict(errors={'interested_response': _('Please select at least one answer')})
+                _condition = advanced_condition
+                _type = Precondition.TYPES.ADVANCED
 
-            base_precond = []
-            for resp in interested_response:
-                prec = model.Precondition(
-                    _owner=user._id,
-                    _category=ObjectId(category),
-                    title="%s_%s" % (qa.title.upper(), resp.upper()),
-                    type='simple',
-                    condition=[ObjectId(question), resp],
-                    public=True,
-                    visible=False
-                )
-                base_precond.append(prec)
+        new_filter = Precondition(
+            _owner=user._id,
+            _category=ObjectId(workspace),
+            title=title,
+            type=_type,
+            condition=_condition
+        )
 
-            condition = []
-            for prc in base_precond[:-1]:
-                condition.append(prc._id)
-                condition.append('or')
 
-            condition.append(base_precond[-1]._id)
-
-            created_precondition = model.Precondition(
-                _owner=user._id,
-                _category=ObjectId(category),
-                title=title,
-                type='advanced',
-                condition=condition
-            )
-
-        return dict(precondition_id=str(created_precondition._id),errors=None)
+        return dict(precondition_id=str(new_filter._id), errors=None)
 
     @decode_params('json')
     @expose('json')
@@ -112,9 +96,8 @@ class PreconditionSimpleController(RestController):
         CanManageEntityOwner(
             msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
-            entity_model=model.Precondition))
-    def put(self, _id, title, category, question, answer_type, interested_response, **kw):
-
+            entity_model=Precondition))
+    def put(self, _id, title, category, question, interested_response, **kw):
         check = self.get_related_entities(_id)
         if check.get("entities"):
             entity = dict(
@@ -129,7 +112,7 @@ class PreconditionSimpleController(RestController):
             session.save()
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
 
-        precondition = model.Precondition.query.get(_id=ObjectId(_id))
+        precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
         precondition.condition = [ObjectId(question), interested_response]
         precondition._category = category
@@ -146,9 +129,9 @@ class PreconditionSimpleController(RestController):
         '_id': PreconditionExistValidator(),
         'workspace': WorkspaceExistValidator()
     }, error_handler=validation_errors_response)
-    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id', entity_model=model.Precondition))
-    def edit(self, _id, workspace, **kw):
-        precondition = model.Precondition.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
+    @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id', entity_model=Precondition))
+    def edit(self, _id, workspace):
+        precondition = Precondition.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
         return dict(precondition=precondition, workspace=workspace, errors=None)
 
 
@@ -157,6 +140,6 @@ class PreconditionSimpleController(RestController):
     @validate({
         '_id': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def human_readable_details(self, _id, **kw):
-        precondition = model.Precondition.query.find({'_id': ObjectId(_id)}).first()
+    def human_readable_details(self, _id):
+        precondition = Precondition.query.find({'_id': ObjectId(_id)}).first()
         return dict(precondition=precondition)

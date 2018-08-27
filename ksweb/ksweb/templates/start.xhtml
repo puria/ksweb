@@ -73,8 +73,9 @@
 <script>
     var RactiveIndex = Ractive.extend({
         template: '#template',
-        onconstruct: function (options) {
+        onconstruct: function (ctx, options) {
             var self = this;
+			console.log(options)
         },
         oninit: function () {
             var self = this;

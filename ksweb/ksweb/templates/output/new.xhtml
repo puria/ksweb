@@ -94,14 +94,6 @@
     //<![CDATA[
     var OutputEditor = Ractive.extend({
         template: '#OutputForm_template',
-        onconstruct: function (options) {
-            var self = this;
-            //  Default settings
-            self.submit_type = 'POST';
-            self.submit_url = '${tg.url('/output/post')}';
-            self.output = options['output'];
-            self.workspace = options['workspace'];
-        },
         oninit: function () {
             var self = this;
             self.set('edit_mode', false);
@@ -263,9 +255,13 @@
 </script>
 <script>
     var ractive_output = new OutputEditor({
-        el: '#output-ractive',
-        output: ${Markup(h.script_json_encode(output))},
-        workspace: '${workspace}'
+        target: '#output-ractive',
+        data: {
+            output: ${Markup(h.script_json_encode(output))},
+            workspace: '${workspace}',
+            submit_type: 'POST',
+            submit_url: '${tg.url('/output/post')}'
+        }
     });
 
     ractive_output.on('showQaDetails', function (event, elem) {
