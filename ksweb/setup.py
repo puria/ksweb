@@ -50,6 +50,7 @@ install_requires = [
     "tgapp-userprofile==0.3.6",
     "axf==0.0.19",
     "tgext.evolve==0.0.4",
+    "dukpy",
 ]
 
 if py_version != (3, 2):
