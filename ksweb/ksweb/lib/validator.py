@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+from ksweb.lib.utils import get_entities_from_str
+
 try:
     import HTMLParser
 except ImportError:
     from html.parser import HTMLParser
-import ast
 
 from bson import ObjectId
 from bson.errors import InvalidId
-from tw2.core import ListLengthValidator
 from tw2.core import Validator, ValidationError
 from tg.i18n import lazy_ugettext as l_
 
@@ -64,34 +64,17 @@ class QuestionaryExistValidator(EntityValidator):
     msgs = dict(not_exists=l_(u'Questionary does not exists'))
 
 
-class OutputContentValidator(ListLengthValidator):
+class OutputContentValidator(Validator):
     def _validate_python(self, value, state=None):
-        for cond in value:
-            if cond['type'] == 'qa_response':
-                qa = model.Qa.query.get(_id=ObjectId(cond['content']))
-                if not qa:
-                    raise ValidationError(l_(u'Question not found.'), self)
-            elif cond['type'] == 'output':
-                out = model.Output.query.get(_id=ObjectId(cond['content']))
-                if not out:
-                    raise ValidationError(l_(u'Output not found'), self)
-            else:
-                raise ValidationError(l_(u'Invalid Filter.'), self)
-
-    def _convert_to_python(self, value, state=None):
-        if isinstance(value, basestring):
-            # need transform from string to list
-            return ast.literal_eval(value)
-        return value
+        outputs, answers = get_entities_from_str(value)
+        if None in outputs:
+            raise ValidationError(l_(u'Output not found.'), self)
+        if None in answers:
+            raise ValidationError(l_(u'Question not found.'), self)
 
 
 class DocumentContentValidator(Validator):
     def _validate_python(self, value, state=None):
-        document_accepted_type = ['output']
-        for cond in value:
-            if cond['type'] == 'output':
-                output = model.Output.query.get(_id=ObjectId(cond['content']))
-                if not output:
-                    raise ValidationError(l_(u'Output not found.'), self)
-            else:
-                raise ValidationError(l_(u'Invalid Filter.'), self)
+        outputs, __ = get_entities_from_str(value)
+        if None in outputs:
+            raise ValidationError(l_(u'Output not found.'), self)

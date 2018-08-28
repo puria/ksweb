@@ -61,23 +61,22 @@
                 <div class="form-group form-check-inline">
                     {{#each available_reponse}}
                         {{#if !edit_mode}}
-                        <input class="form-control ml-4 {{errors.interested_response ? 'is-invalid' : ''}}" type="checkbox" name="{{create.interested_response}}" value="{{.}}" id="{{.}}">
-                        {{.}}
+                            <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
+                                   type="checkbox" name="{{create.interested_response}}" value="{{.}}" id="{{.}}"> {{.}}
                         {{else}}
-                        {{#if create.interested_response == .}}
-                        <input class="form-control ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
-                               type="radio" name="{{create.interested_response}}" value="{{.}}"
-                               checked>
-                        {{.}}
-                        {{else}}
-                        <input class="form-control ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
-                               type="radio" name="{{create.interested_response}}" value="{{.}}"> {{.}}
-                        {{/if}}
+                            {{#if create.interested_response == .}}
+                                <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
+                                       type="radio" name="{{create.interested_response}}" value="{{.}}"
+                                       checked> {{.}}
+                            {{else}}
+                                <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
+                                       type="radio" name="{{create.interested_response}}" value="{{.}}"> {{.}}
+                            {{/if}}
                         {{/if}}
                     {{/each}}
 
                     {{#if errors.interested_response}}
-                    <span class="ml-4 invalid-feedback">{{errors.interested_response}}</span>
+                        <span class="ml-4 invalid-feedback">{{errors.interested_response}}</span>
                     {{/if}}
                 </div>
             </div>

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import re
+
 import tg
 from bson import ObjectId
+from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 from tg import predicates
@@ -16,18 +19,16 @@ from ksweb.model import Precondition, Output, Document, Category as Workspace
 
 
 class OutputController(RestController):
-    def _validate_precondition_with_qa(self, precondition, content):
+    def _validate_precondition_with_qa(self, precondition, html):
         if not precondition:
             return
-        #  Check content precondition element
-        precond = Precondition.query.find({'_id': ObjectId(precondition)}).first()
-        related_qa = precond.response_interested
-        #  Check elem['content'] contain the obj id of the related
-        for elem in content:
-            if elem['type'] == 'qa_response':
-                if elem['content'] not in related_qa.keys():
-                    response.status_code = 412
-                    return dict(errors={'content': _('The question %s is not related to the filter') % elem['title']})
+
+        _filter = Precondition.query.get(_id=ObjectId(precondition))
+        answers = re.findall(r'%%([^\W]+)\b', html)
+        problematic = set(answers) - set(_filter.response_interested)
+        if len(problematic):
+            response.status_code = 412
+            return dict(errors={'content': _('The question/s %s is not related to the filter') % problematic})
 
     def _before(self, *args, **kw):
         tmpl_context.sidebar_section = "outputs"
@@ -55,37 +56,35 @@ class OutputController(RestController):
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def new(self, workspace, **kw):
         tmpl_context.sidebar_output = "output-new"
-        return dict(output={'_precondition': kw.get('precondition_id', None)}, workspace=workspace, errors=None)
+        return dict(output={'_precondition': kw.get('precondition_id', None), 'html': ''}, workspace=workspace, errors=None)
 
     @decode_params('json')
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'content': OutputContentValidator(),
-        'ks_editor': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'html': StringLengthValidator(min=2, required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
-    def post(self, title, content, category, precondition=None, **kw):
-        content = content or []
+    def post(self, title, workspace, html, precondition=None, **kw):
         if precondition:
-            error = self._validate_precondition_with_qa(precondition, content)
+            error = self._validate_precondition_with_qa(precondition, html)
             if error:
                 response.status_code = 412
                 return error
 
         user = request.identity['user']
-        Output(
+        o = Output(
             _owner=user._id,
-            _category=ObjectId(category),
-            _precondition=ObjectId(precondition) if precondition else None,
+            _category=ObjectId(workspace),
+            _precondition=to_object_id(precondition),
             title=title,
-            content=content,
             public=True,
             visible=True,
             status=Output.STATUS.UNREAD,
-            html=kw['ks_editor'],
+            html=html,
         )
+        o.update_content()
         return dict(errors=None)
 
     @expose('json')
@@ -93,16 +92,14 @@ class OutputController(RestController):
     @validate({
         '_id': OutputExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'content': OutputContentValidator(),
-        'category': WorkspaceExistValidator(required=True),
+        'html': OutputContentValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=Output))
-    def put(self, _id, title, content, category, precondition=None, **kw):
-        content = content or []
-
+    def put(self, _id, title, html, workspace, precondition=None, **kw):
         if precondition:
-            error = self._validate_precondition_with_qa(precondition, content)
+            error = self._validate_precondition_with_qa(precondition, html)
             if error:
                 response.status_code = 412
                 return error
@@ -113,23 +110,22 @@ class OutputController(RestController):
             entity = dict(
                 _id=_id,
                 title=title,
-                content=content,
-                _category=category,
-                _precondition=precondition if precondition else None,
+                _category=to_object_id(workspace),
+                _precondition=to_object_id(precondition),
                 entity='output',
                 auto_generated=False,
-                html=kw['ks_editor']
+                html=html
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
-            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         output = Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
-        output._category = ObjectId(category)
-        output._precondition = ObjectId(precondition) if precondition else None
-        output.content = content
-        output.html = kw['ks_editor']
+        output._category = ObjectId(workspace)
+        output._precondition = to_object_id(precondition)
+        output.html = html
+        output.update_content()
 
         return dict(errors=None, redirect_url=None)
 
@@ -182,7 +178,7 @@ class OutputController(RestController):
             '_id': output._id,
             'title': output.title,
             'content': output.human_readbale_content,
-            'human_readbale_content': output.human_readbale_content,
+            'human_readable_content': output.human_readable_content,
             '_owner': output._owner,
             'owner': output.owner.display_name,
             '_precondition': output._precondition,

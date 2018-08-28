@@ -83,28 +83,21 @@
 <div id="target"></div>
 
 <script>
-    //<![CDATA[
+//<![CDATA[
 
     var KSDocument = Ractive.extend({
         template: '#template',
         on: {
             init() {
-                var self = this;
-                self.set('create.workspace', this.get('workspace'))
-
-                if (!jQuery.isEmptyObject(self.document)) {
-                    self.set('create', self.document)
-                    self.set('submit_url', '${tg.url("/document/put")}')
-                    self.set('create.tags', self.document['tags'].toString());
+                if (!jQuery.isEmptyObject(this.get('document'))) {
+                    this.set('create', this.get('document'))
+                    this.set('submit_url', '${tg.url("/document/put")}')
+                    this.set('create.tags', this.get('document')['tags'].toString());
                 }
-
-                self.set('errors', {});
-                self.set('saving', false);
-                self.on('submit-form', function (event) {
-                    return self.createDocument();
-                });
-
-                console.log(this.get('document'))
+                this.set('create.workspace', this.get('workspace'))
+                this.set('errors', {});
+                this.set('saving', false);
+                this.on('submit-form', event => this.createDocument());
             },
             render() {
                 var editor = KS.editor(jQuery("#ks_editor")[0]);
@@ -118,8 +111,8 @@
             }
         },
 
-        add_widget_to_editor: function(id) {
-            KS.addEntityToEditor(id, this.get('editor'))
+        add_output_to_editor: function(id) {
+            KS.addOutputToEditor(id, this.get('editor'))
         },
 
         createDocument: function() {
@@ -127,9 +120,9 @@
             self.set('saving', true);
             jQuery(window).unbind('beforeunload');
             var params = self.get('create');
-            params['content'] = self.get('editor').value();
+            params['html'] = self.get('editor').value();
 
-            KS.ajax(self.submit_url, 
+            KS.ajax(self.get('submit_url'),
                     JSON.stringify(params), 
                     function(data){
                         self.set('create', {});
@@ -161,7 +154,7 @@
                     }),
                     function(resp) {
                         alert("${_('An Output without filter was automatically created from ')} '" + highlighted_text +"'.");
-                        self.add_widget_to_editor(resp['_id']);
+                        self.add_output_to_editor(resp['_id']);
                     });
         }
     });

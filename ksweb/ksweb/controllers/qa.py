@@ -195,7 +195,7 @@ class QaController(RestController):
             status=Precondition.STATUS.UNREAD
         )
 
-        if qa.type == Qa.TYPES.TEXT:
+        if qa.is_text:
             autogen_filter = Precondition(
                                 **common_precondition_params,
                                 title=_(u'%s \u21d2 was compiled' % qa.title),
@@ -204,7 +204,7 @@ class QaController(RestController):
                                 condition=[qa._id, ""]
                             )
         else:
-            base_precond = []
+            condition = []
             for answer in qa.answers:
                 precondition = Precondition(
                     **common_precondition_params,
@@ -212,11 +212,9 @@ class QaController(RestController):
                     type=Precondition.TYPES.SIMPLE,
                     condition=[qa._id, answer],
                 )
-                base_precond.append(precondition)
-
-            condition = [prc._id for prc in base_precond[:-1]]
-            condition = list(chain.from_iterable(zip(condition, repeat('or'))))
-            condition.append(base_precond[-1]._id)
+                condition.append(precondition._id)
+                condition.append('or')
+            del condition[-1]
 
             autogen_filter = Precondition(
                 **common_precondition_params,
@@ -230,7 +228,7 @@ class QaController(RestController):
                 **common_precondition_params,
                 _precondition=ObjectId(autogen_filter._id),
                 title=qa.title + u' \u21d2 output',
-                html='${qa_%s}' % qa._id,
+                html='%%%%%s' % qa._id,
                 content= [dict(content=str(qa._id), type='qa_response', title=qa.title)]
             )
 

@@ -55,30 +55,30 @@ class DocumentController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
-        'content': DocumentContentValidator(),
+        'workspace': WorkspaceExistValidator(required=True),
+        'html': DocumentContentValidator(),
         'description': StringLengthValidator(min=0),
         'license': StringLengthValidator(min=0, max=100),
         'version': StringLengthValidator(min=0, max=100),
         'tags': StringLengthValidator(min=0, max=100)
     }, error_handler=validation_errors_response)
-    def post(self, title, category, description, license, version, tags, content=[], **kw):
+    def post(self, title, workspace, description, license, version, tags, html, **kw):
         user = request.identity['user']
-        tags = tags.strip().split(',') if tags else []
+        tags = {__.strip() for __ in tags.split(',')} if tags else []
 
-        model.Document(
+        doc = model.Document(
             _owner=user._id,
-            _category=ObjectId(category),
+            _category=ObjectId(workspace),
             title=title,
-            content=content,
             public=True,
             visible=True,
-            html=kw['ks_editor'],
+            html=html,
             description=description,
             license=license,
             version=version,
-            tags=tags
+            tags=list(tags)
         )
+        doc.update_content()
         return dict(errors=None)
 
     @decode_params('json')
@@ -86,8 +86,8 @@ class DocumentController(RestController):
     @validate({
         '_id': DocumentExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
-        'content': DocumentContentValidator(),
+        'workspace': WorkspaceExistValidator(required=True),
+        'html': DocumentContentValidator(),
         'description': StringLengthValidator(min=0),
         'license': StringLengthValidator(min=0, max=100),
         'version': StringLengthValidator(min=0, max=100),
@@ -96,21 +96,17 @@ class DocumentController(RestController):
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this document.'),
                                   field='_id',
                                   entity_model=model.Document))
-    def put(self, _id, title, content, category, description, license, version, tags, **kw):
-
-        if not content:
-            content = []
-        tags = tags.strip().split(',') if tags else []
+    def put(self, _id, title, html, workspace, description, license, version, tags, **kw):
+        tags = {__.strip() for __ in tags.split(',')} if tags else []
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
-
         document.title = title
-        document._category = ObjectId(category)
-        document.content = content
-        document.html = kw['ks_editor']
-        document.tags = tags
+        document._category = ObjectId(workspace)
+        document.html = html
+        document.tags = list(tags)
         document.description = description
         document.license = license
         document.version = version
+        document.update_content()
 
         return dict(errors=None)
 

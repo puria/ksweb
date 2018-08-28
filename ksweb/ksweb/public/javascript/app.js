@@ -2,6 +2,7 @@ Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
 var KS = (function() {
     var _entityRegex = /(\\)?@@([^\W]+)\b/g;
+    var _answerRegex = /(\\)?%%([^\W]+)\b/g;
 
     var ajax = function(url, params, callback, fail) {
         $.ajax({
@@ -21,6 +22,10 @@ var KS = (function() {
         });
     }
 
+    var getTitle = function(id) {
+        return $(`#${id} > span`).text()
+    }
+
     var editor = function(element) {
         var showdownExtensions = [
             {
@@ -31,7 +36,7 @@ var KS = (function() {
                         return match;
                     } else {
                         var id = match.split(/([_\W])/)[4]
-                        var title = $(`#${id} > span`).text()
+                        var title = getTitle(id)
                         var cls = (title) ? "badge-primary" : "badge-danger"
                         return `<span class="badge badge-pill ${cls} entity">${title||id}</span>`;
                     }
@@ -41,7 +46,22 @@ var KS = (function() {
                 type: 'lang',
                 regex: '\\\\@',
                 replace: '@'
-            }
+            },
+            {
+                type: 'lang',
+                regex: _answerRegex,
+                replace: function (match, leadingSlash, entity) {
+                    if (leadingSlash === '\\') {
+                        return match;
+                    } else {
+                        var id = match.split(/([_\W])/)[4]
+                        var title = getTitle(id)
+                        var cls = (title) ? "badge-success" : "badge-danger"
+                        return `<span class="badge badge-pill ${cls} entity">${title||id}</span>`;
+                    }
+                }
+            },
+
         ];
 
         var converter = new showdown.Converter({
@@ -67,8 +87,12 @@ var KS = (function() {
         });
     }
 
-    var addEntityToEditor = function(id, editor) {
-        editor.codemirror.replaceSelection(`@@${id}`+" ")
+    var addOutputToEditor = function(id, editor) {
+        editor.codemirror.replaceSelection(`@@${id} `)
+    }
+
+    var addAnswerToEditor = function (id, editor) {
+        editor.codemirror.replaceSelection(`%%${id} `)
     }
 
     var getEntitiesList = function(text) {
@@ -79,6 +103,8 @@ var KS = (function() {
         ajax: ajax,
         editor: editor,
         getEntitiesList: getEntitiesList,
-        addEntityToEditor: addEntityToEditor,
+        addOutputToEditor: addOutputToEditor,
+        addAnswerToEditor: addAnswerToEditor,
+        getTitle: getTitle,
     }
 })();

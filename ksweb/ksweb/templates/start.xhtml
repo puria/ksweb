@@ -73,68 +73,49 @@
 <script>
     var RactiveIndex = Ractive.extend({
         template: '#template',
-        onconstruct: function (ctx, options) {
-            var self = this;
-			console.log(options)
-        },
         oninit: function () {
             var self = this;
             self.set('workspaces', self.workspaces);
             self.on('create_workspace', function (event, workspace_name) {
                 var params = { 'workspace_name': workspace_name };
-                console.log(params, workspace_name)
-                $.ajax({
-                    type: 'POST',
-                    url: '${tg.url('/category/create')}',
-                    data: JSON.stringify(params),
-                    dataType: "json",
-                    processData: false,
-                    contentType: 'application/json'
-                }).done(function (data) {
-                    window.location.replace("${tg.url('/')}");
-                }).fail(function (jqXHR, ts) {
-                    console.error(jqXHR, ts)
-                    self.set('errors', ts);
-                    self.set('saving', false);
-                });
+                KS.ajax("${tg.url('/category/create')}",
+                        JSON.stringify(params),
+                        () => { window.location.replace("${tg.url('/')}") },
+                        data => {
+                            self.set('errors', data.errors)
+                            self.set('saving', false)
+                        }
+                )
             });
+
+
             self.on('delete_workspace', function (event, workspace_id) {
                 jQuery(".card").blur();
                 var r = confirm("${_('WARNING: Deleting a workspace you will delete all entities associated, with no chance of recover.')} " +
                         "${_('Are you sure you want to proceed?')}");
                 if (r == true) {
-                    var params = {
-                    'workspace_id': workspace_id
-                    };
-
-                var api_params = JSON.stringify(params);
-                     $.ajax({
-                    type: 'DELETE',
-                    url: '${tg.url('/category/delete')}',
-                    data: api_params,
-                    dataType: "json",
-                    processData: false,
-                    contentType: 'application/json'
-                }).done(function (data) {
-                    window.location.replace("${tg.url('/')}");
-                }).fail(function (jqXHR) {
-                    var data = jQuery.parseJSON(jqXHR.responseText);
-                    console.log("fail");
-                    console.log(data);
-                    self.set('errors', data.errors);
-                    console.log(data.errors);
-                    self.set('saving', false);
-                });
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '${tg.url("/category/delete")}',
+                        data: JSON.stringify({'workspace_id': workspace_id}),
+                        dataType: "json",
+                        processData: false,
+                        contentType: 'application/json'
+                    }).done(function() {
+                        window.location.replace("${tg.url('/')}");
+                    }).fail(function (jqXHR) {
+                        var data = jQuery.parseJSON(jqXHR.responseText);
+                        self.set('errors', data.errors);
+                        self.set('saving', false);
+                    });
 
                 }
 
                 return false;
             });
         }
-
     });
-</script>
-<script>
+
     var ractive_index = new RactiveIndex({
         target: '#target',
         workspaces: ${Markup(h.script_json_encode(workspaces))}

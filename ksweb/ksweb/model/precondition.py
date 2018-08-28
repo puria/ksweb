@@ -5,9 +5,9 @@ from __future__ import print_function
 import pymongo
 from bson import ObjectId
 from ming import schema as s
-from ming.odm import FieldProperty, Mapper
+from ming.odm import FieldProperty
 from markupsafe import Markup
-from ksweb.model import DBSession, Qa
+from ksweb.model import DBSession
 import tg
 
 from ksweb.model.mapped_entity import MappedEntity
@@ -26,8 +26,6 @@ def _content_preview(obj):
 
 
 class Precondition(MappedEntity):
-    """:type: ming.odm.Mapper"""
-
     class TYPES:
         SIMPLE = u'simple'
         ADVANCED = u'advanced'
@@ -105,7 +103,7 @@ class Precondition(MappedEntity):
         if self.is_simple:
             qa = self.get_qa()
             if not qa:
-                return res_dict
+                return dict()
             res_dict[str(qa._id)] = qa
             if qa.parent_precondition:
                 res_dict.update(qa.parent_precondition.response_interested)
