@@ -47,11 +47,6 @@ class Document(MappedEntity):
     def entity(self):
         return 'document'
 
-    @property
-    def upcast(self):
-        from ksweb.lib.utils import _upcast
-        return _upcast(self)
-
     def update_content(self):
         from ksweb.lib.utils import get_entities_from_str
         outputs, __ = get_entities_from_str(self.html)

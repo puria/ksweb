@@ -102,7 +102,7 @@
             render() {
                 var editor = KS.editor(jQuery("#ks_editor")[0]);
                 this.set('editor', editor);
-                editor.value(${Markup(h.script_json_encode(document.upcast if document else ''))});
+                editor.value(${Markup(h.script_json_encode(document['html'])) if document else ''});
                 editor.codemirror.on('change', function() {
                     jQuery(window).bind('beforeunload', function(){
                         return "${_('Unsaved data! Are you sure you want to leave?')}";

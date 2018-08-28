@@ -108,22 +108,17 @@
         {{#each outputs}}
             {{#each output}}
             <div class="col-md-12">
-                {{#if div == '#nested-output-ractive'}}
-                    <a id="{{._id}}"
-                       onclick="ractive_output.add_output_to_editor('{{._id}}')"
-                       class="add_circle_outline cursor-pointer">
-                            ${h.material_icon('add_circle_outline')}
-                            <span>{{{.title}}}</span>
-                    </a>
-                {{else}}
-                    <a id="{{._id}}"
+                <a id="{{._id}}"
+                   {{#if div == '#nested-output-ractive'}}
+                        onclick="ractive_output.add_output_to_editor('{{._id}}')"
+                   {{else}}
                         onclick="ractive_document.add_output_to_editor('{{._id}}')"
-                        class="add_circle_outline cursor-pointer">
-                            ${h.material_icon('add_circle_outline')}
-                            <span>{{{.title}}}</span>
-                    </a>
-                {{/if}}
-                
+                   {{/if}}
+                   class="add_circle_outline cursor-pointer">
+                        ${h.material_icon('add_circle_outline')}
+                        <span>{{{.title}}}</span>
+                </a>
+
             </div>
             {{/each}}
         {{/each}}

@@ -64,11 +64,6 @@ class Output(MappedEntity):
         return 'output'
 
     @property
-    def upcast(self):
-        from ksweb.lib.utils import _upcast
-        return _upcast(self)
-
-    @property
     def is_filtered(self):
         return True if self._precondition else False
 

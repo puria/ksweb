@@ -83,7 +83,7 @@ class QaController(RestController):
         qa = Qa(
                 _owner=user._id,
                 _category=ObjectId(category),
-                _parent_precondition=ObjectId(precondition) if precondition else None,
+                _parent_precondition=to_object_id(precondition),
                 title=title,
                 question=question,
                 tooltip=tooltip,

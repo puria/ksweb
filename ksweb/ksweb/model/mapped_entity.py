@@ -6,6 +6,7 @@ from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 
 from ming.odm.declarative import MappedClass
 from tg.util import Bunch
+from tg.util.ming import dictify
 
 
 class MappedEntity(MappedClass):
@@ -46,7 +47,6 @@ class MappedEntity(MappedClass):
                                update={'$set': {'status': cls.STATUS.READ}})
 
     def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
+        _dict = dictify(self)
         _dict['entity'] = self.entity
         return _dict
