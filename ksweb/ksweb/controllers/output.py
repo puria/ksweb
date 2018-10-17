@@ -7,10 +7,8 @@ from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 from tg import predicates
-from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
-from tg.util.ming import dictify
 from tw2.core import StringLengthValidator
 
 from ksweb.lib.predicates import CanManageEntityOwner

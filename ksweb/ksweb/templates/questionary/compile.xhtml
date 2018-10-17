@@ -1,11 +1,11 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
-<title py:block="master_title">KS | Questionary</title>
+<title py:block="master_title">KS | Form</title>
 <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
 <script id="compile_questionary_template" type="text/html">
 <![CDATA[
     <div class="row mt-2">
-        <h1 class="col type-page-title">${_('Complete the questionary')}: {{questionary.title}}</h1>
+        <h1 class="col type-page-title">${_('Complete the form')}: {{questionary.title}}</h1>
         <div class="col-md-auto text-right">
             <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
                class-disabled='!quest_compiled.completed'
@@ -56,7 +56,7 @@
                 </div>
                 {{else}}
                 <div class="alert alert-success my-5" role="alert">
-                    <h4 class="alert-heading">Questionary completed</h4>
+                    <h4 class="alert-heading">Form completed</h4>
                 </div>
                 {{/if}}
                 <button type="button" 
