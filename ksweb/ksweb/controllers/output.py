@@ -3,7 +3,7 @@ import re
 
 import tg
 from bson import ObjectId
-from ksweb.lib.utils import to_object_id, to_dict
+from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 from tg import predicates
