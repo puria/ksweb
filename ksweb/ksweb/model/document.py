@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """Document model module."""
 import tg
-from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
-from ming.odm.declarative import MappedClass
+from ming.odm import FieldProperty
 from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity
 
@@ -35,55 +33,24 @@ class Document(MappedEntity):
     }
 
     html = FieldProperty(s.String, required=True, if_missing='')
-
-    content = FieldProperty(s.Anything, required=True)
-
+    content = FieldProperty(s.Anything, if_missing=[])
     description = FieldProperty(s.String, required=False)
-    licence = FieldProperty(s.String, required=False)
+    license = FieldProperty(s.String, required=False)
     version = FieldProperty(s.String, required=False)
     tags = FieldProperty(s.Anything, required=False)
-    """
-    Possible content of the document is a list with two elements type:
-        - text
-        - output
-
-        If the type is text the content contain the text
-        If the type is output the content contain the obj id of the related output
-
-
-        An example of the content is this
-        "content" : [
-            {
-                "content" : "575eb879c42d7518bb972256",
-                "type" : "output",
-                "title" : "ciao"
-            },
-        ]
-    """
 
     @classmethod
     def document_available_for_user(cls, user_id, workspace=None):
         return User.query.get(_id=user_id).owned_entities(cls, workspace)
 
-
     @property
     def entity(self):
         return 'document'
 
-
-    @property
-    def upcast(self):
-        from ksweb.lib.utils import _upcast
-
-        """
-        This property replace widget placeholder into html widget
-
-        {output_589066e6179280afa788035e}
-            ->
-        <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
-        """
-        return _upcast(self)
-
+    def update_content(self):
+        from ksweb.lib.utils import get_entities_from_str
+        outputs, __ = get_entities_from_str(self.html)
+        self.content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs]
 
     @classmethod
     def update_content_titles_with(cls, entity):

@@ -2,13 +2,16 @@ from datetime import datetime
 
 from bson import ObjectId
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty, FieldPropertyWithMissingNone
+from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 
 from ming.odm.declarative import MappedClass
 from tg.util import Bunch
+from tg.util.ming import dictify
 
 
 class MappedEntity(MappedClass):
+    """:type: ming.odm.Mapper"""
+
     STATUS = Bunch(
         READ="READ",
         UNREAD="UNREAD"
@@ -37,11 +40,13 @@ class MappedEntity(MappedClass):
         return cls.query.find({'status': cls.STATUS.UNREAD, '_category': ObjectId(workspace_id)}).count() or ''
 
     @classmethod
-    def mark_as_read(cls, workspace_id):
-        cls.query.update({'status': cls.STATUS.UNREAD, '_category': ObjectId(workspace_id)}, {'$set': {'status': cls.STATUS.READ}})
+    def mark_as_read(cls, user_oid, workspace_id):
+        from ming.odm import mapper
+        collection = mapper(cls).collection.m.collection
+        collection.update_many({'_owner': user_oid, 'status': cls.STATUS.UNREAD, '_category': ObjectId(workspace_id)},
+                               update={'$set': {'status': cls.STATUS.READ}})
 
     def __json__(self):
-        from ksweb.lib.utils import to_dict
-        _dict = to_dict(self)
+        _dict = dictify(self)
         _dict['entity'] = self.entity
         return _dict

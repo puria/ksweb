@@ -1,0 +1,15 @@
+#!/bin/bash
+
+activate() {
+  source "./venv/bin/activate"
+}
+
+python3 -m venv venv
+activate
+python -c 'import sys; print(sys.version_info[:])'
+cd ksweb
+pip install tg.devtools
+pip install -e .
+gearbox setup-app
+
+

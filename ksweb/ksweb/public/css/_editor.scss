@@ -37,11 +37,6 @@ $element_radius: 2rem;
   }
 }
 
-
-.editor-element {
-
-}
-
 .editor-element-operator {
   @extend .editor-element, .bg-primary;
   border: $blue solid 2px;
@@ -52,7 +47,6 @@ $element_radius: 2rem;
 }
 
 .editor-element-answer,
-.objplaceholder.qa.qa-widget.cke_widget_element,
 .qa-widget {
   @extend .editor-element, .bg-success;
   border: darkgreen solid 2px;
@@ -84,4 +78,14 @@ $element_radius: 2rem;
   display: inline-block;
   margin: 2px;
   padding: 0 5px;
+}
+
+.CodeMirror-fullscreen,
+.editor-toolbar.fullscreen {
+    z-index: 1100 !important;
+}
+
+.badge { 
+  font-size: 100%;
+  font-weight: normal; 
 }

@@ -311,16 +311,16 @@ class TestQaController(TestController):
 
         assert resp['qa']['_id'] == str(qa._id), "%s - %s" % (resp['qa']['_id'], qa._id)
 
-    def test_get_single_or_multi_question(self):
+    def test_valid_options(self):
         self._login_lawyer()
 
         self.test_post_valid_qa_text()
         self.test_post_valid_qa_multi()
         self.test_post_valid_qa_single()
 
-        resp = self.app.get('/qa/get_single_or_multi_question',
+        resp = self.app.get('/qa/valid_options',
                             params=dict(workspace=self.category._id)).json
-        assert len(resp['questions']) == 2
+        assert len(resp['questions']) == 3
 
     def test_human_readable_details(self):
         self._login_lawyer()

@@ -8,7 +8,6 @@ from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
-from datetime import datetime
 from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity
 
@@ -21,6 +20,8 @@ def _custom_title(obj):
 
 
 def _content_preview(obj):
+    if not obj:
+        return " "
     return " ".join(Markup(obj.html).striptags().split()[:5])
 
 def _custom_filter(o):
@@ -42,31 +43,7 @@ class Output(MappedEntity):
     }
 
     html = FieldProperty(s.String, required=True, if_missing='')
-    content = FieldProperty(s.Anything, required=True)
-    """
-    Possible content of the output is a list with two elements type:
-        - text
-        - precondition_response
-
-    If the type is text the content contain the text
-    If the type is qa_response the content contain the obj id of the related precondition/response
-
-
-    An example of the content is this
-    "content" : [
-        {
-            "content" : "Simple text",
-            "type" : "text",
-            "title" : ""
-        },
-        {
-            "content" : "57723171c42d7513bb31e17d",
-            "type" : "qa_response",
-            "title" : "Colori"
-        }
-    ]
-
-    """
+    content = FieldProperty(s.Anything, if_missing=[])
     _precondition = ForeignIdProperty('Precondition')
     precondition = RelationProperty('Precondition')
 
@@ -78,35 +55,13 @@ class Output(MappedEntity):
                                 ('title', pymongo.ASCENDING),
                         ])
 
-
     @property
-    def human_readbale_content(self):
-        #  TODO: Non appena saranno aggiornati gli output, bisogna modificare questa property affinche restituisca dei valori leggibili
-
-        #res = []
-        #for elem in self.content:
-            #if elem is testo ok
-            # else mostra una stringa di dettaglio del filtro
+    def human_readable_content(self):
         return self.content
-
 
     @property
     def entity(self):
         return 'output'
-
-
-    @property
-    def upcast(self):
-        from ksweb.lib.utils import _upcast
-
-        """
-        This property replace widget placeholder into html widget
-
-        {output_589066e6179280afa788035e}
-            ->
-        <span class="objplaceholder output-widget output_589066e6179280afa788035e"></span>
-        """
-        return _upcast(self)
 
     @property
     def is_filtered(self):
@@ -128,6 +83,11 @@ class Output(MappedEntity):
 
         return html.safe_substitute(**nested_output_html)
 
+    def update_content(self):
+        from ksweb.lib.utils import get_entities_from_str
+        outputs, answers = get_entities_from_str(self.html)
+        self.content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs]
+        self.content.extend([{'content': str(__._id), 'title': __.title, 'type': 'qa_response'} for __ in answers])
 
     @classmethod
     def update_content_titles_with(cls, entity):

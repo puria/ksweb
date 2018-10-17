@@ -7,14 +7,14 @@ from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty
 from markupsafe import Markup
-from ksweb.model import DBSession, Qa
+from ksweb.model import DBSession
 import tg
 
 from ksweb.model.mapped_entity import MappedEntity
 
 
 def _custom_title(obj):
-    url = tg.url('/precondition/%s/edit' % ('simple' if obj.is_simple else 'advanced'),
+    url = tg.url('/precondition/%s/edit' % (Precondition.TYPES.SIMPLE if obj.is_simple else Precondition.TYPES.ADVANCED),
                  params=dict(_id=obj._id, workspace=obj._category))
     cls = 'bot' if obj.auto_generated else ''
     status = obj.status
@@ -26,7 +26,11 @@ def _content_preview(obj):
 
 
 class Precondition(MappedEntity):
-    PRECONDITION_TYPE = [u"simple", u"advanced"]
+    class TYPES:
+        SIMPLE = u'simple'
+        ADVANCED = u'advanced'
+
+    PRECONDITION_TYPE = [TYPES.SIMPLE, TYPES.ADVANCED]
     PRECONDITION_OPERATOR = ['and', 'or', 'not', '(', ')']
     PRECONDITION_CONVERTED_OPERATOR = ['&', '|', 'not', '(', ')']
 
@@ -47,21 +51,17 @@ class Precondition(MappedEntity):
     """
     In case of type: simple
     the condition is like: [ObjectId('qa'), 'String_response']
+    
+    A special case of a simple filter is when the string is empty, that means 'Question just answered'
+    the condition is like: [ObjectId('qa'), '']
 
     In case of type advanced
-    the condition is like: [ObjectId(precond_1), &, ObjectId(precond_2), | , ObjectId(precond_3)]
+    the condition is like: [ObjectId(precond_1), 'and', ObjectId(precond_2), 'or' , ObjectId(precond_3)]
     """
 
     @classmethod
-    def precondition_available_for_user(cls, user_id, workspace=None):
-        if workspace:
-            return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
-                            .sort([
-                                    ('auto_generated', pymongo.ASCENDING),
-                                    ('status', pymongo.DESCENDING),
-                                    ('title', pymongo.ASCENDING),
-                            ])
-        return cls.query.find({'_owner': user_id, 'visible': True})\
+    def available_for_user(cls, user_id, workspace):
+        return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
                         .sort([
                                 ('auto_generated', pymongo.ASCENDING),
                                 ('status', pymongo.DESCENDING),
@@ -69,17 +69,12 @@ class Precondition(MappedEntity):
                         ])
 
     @property
-    def evaluate(self):
-        if self.type == 'simple':
-            print("evaluate simple precondition")
-            return
-        if self.type == 'advanced':
-            print("evaluate advanced precondition")
-            return
+    def is_simple(self):
+        return self.type == self.TYPES.SIMPLE
 
     @property
-    def is_simple(self):
-        return self.type == 'simple'
+    def is_advanced(self):
+        return self.type == self.TYPES.ADVANCED
 
     @property
     def response_interested(self):
@@ -102,54 +97,51 @@ class Precondition(MappedEntity):
               _id=ObjectId('57723171c42d7513bb31e17d') type=u'multi'
               public=True>
         }
-        :return:
         """
         res_dict = {}
-        if self.type == 'simple':
-            qa = Qa.query.get(_id=self.condition[0])
+
+        if self.is_simple:
+            qa = self.get_qa()
             if not qa:
-                return res_dict
+                return dict()
             res_dict[str(qa._id)] = qa
             if qa.parent_precondition:
                 res_dict.update(qa.parent_precondition.response_interested)
             return res_dict
-        for cond in self.condition:
-            if cond in Precondition.PRECONDITION_OPERATOR:
+
+        for ___ in self.condition:
+            if ___ in Precondition.PRECONDITION_OPERATOR:
                 continue
             else:
-                rel_ent = Precondition.query.get(_id=ObjectId(cond))
-                print(cond)
+                rel_ent = Precondition.query.get(_id=ObjectId(___))
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict
 
     def get_qa(self):
-        from . import Qa
-        if not self.is_simple:
+        if self.is_advanced:
             return None
+        from . import Qa
         return Qa.query.get(_id=ObjectId(self.condition[0]))
 
     @property
     def simple_text_response(self):
-        return self.type == "simple" and self.condition[1] == ""
+        return self.type == self.TYPES.SIMPLE and self.condition[1] == ""
 
     @property
     def multiple_choice_response(self):
-        if self.is_simple:
-            qa = self.get_qa()
-            return qa.is_multi
-        return False
+        if self.is_advanced: return False
+        qa = self.get_qa()
+        return qa.is_multi
 
     @property
     def single_choice_response(self):
-        if self.is_simple:
-            qa = self.get_qa()
-            return qa.is_single
-        return False
+        if self.is_advanced: return False
+        qa = self.get_qa()
+        return qa.is_single
 
     @property
     def entity(self):
         return 'precondition/simple' if self.is_simple else 'precondition/advanced'
-
 
 __all__ = ['Precondition']

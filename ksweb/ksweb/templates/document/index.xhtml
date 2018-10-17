@@ -71,6 +71,8 @@
                                 <input id="form-email" type="email" class="form-control"
                                        placeholder="email@test.com"/>
 
+                                <input type="hidden" name="rowid" id="rowid" value=""/>
+
                                 <span class="help-block bg-danger" id="email-error"
                                       style="display: none"></span>
 
@@ -87,18 +89,20 @@
 <script>
     <![CDATA[
     jQuery(document).ready(function () {
-        $(document).on("click", ".export,.esporta", function(){
-            var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
-           window.location = "${tg.url("/document/export")}?_id=" + row_id;
+        $(document).on("click", ".export,.esporta", function() {
+            var row_id = jQuery(this).data("row-id");
+            window.location = "${tg.url("/document/export")}?_id=" + row_id;
         });
-        $(document).on("click", ".create_questionary, .crea_questionario", function(){
-            $('#createQuestionary').modal();
+        $(document).on("click", ".create_form, .crea_questionario", function(){
+            $('#createQuestionary').modal('show', this);
         });
-        $(document).on("click", "#submit-questionary", function(){
+        $('#createQuestionary').on('show.bs.modal', function(e) {
+            var rowid = $(e.relatedTarget).data('row-id');
+            $(e.currentTarget).find('input[name="rowid"]').val(rowid);
+        });
+        $(document).on("click", "#submit-questionary", function() {
             var self = this;
-            var row_id = jQuery('.create_questionary, .crea_questionario').parent().parent().parent().parent().find
-            (".actions").data("row-id");
-
+            var row_id = jQuery('#rowid').val();
 
             var questionary_params = {
                 'questionary_title': $('#form-title').val(),

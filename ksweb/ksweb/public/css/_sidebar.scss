@@ -11,7 +11,7 @@
   .category-name-separator { @extend .m-0 }
   a:hover { @extend .text-white }
   a:link { text-decoration: none; }
-  #add_circle_outline:hover { @extend .text-primary; }
+  .add_circle_outline:hover { @extend .text-primary; }
 
   .nav-item {
     @extend .mb-1;

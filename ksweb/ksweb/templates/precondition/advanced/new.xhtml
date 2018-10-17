@@ -152,7 +152,7 @@
         },
         loadQuestion: function (callback) {
             var self = this;
-            jQuery.get("${tg.url('/qa/get_single_or_multi_question', params=dict(workspace=workspace))}",
+            jQuery.get("${tg.url('/qa/valid_options', params=dict(workspace=workspace))}",
                         function (data) {
                             self.set('questions', data['questions']);
                             if (callback) callback();

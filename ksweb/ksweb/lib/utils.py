@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from string import Template
-
 from bson import ObjectId
-import ming
 from tg.util.ming import dictify
-
 from ksweb import model
 
 
@@ -12,14 +9,10 @@ def to_object_id(s):
     return ObjectId(s) if s else None
 
 
-def to_dict(obj):
-    return dictify(obj)
-
-
 def clone_obj(class_, original_obj, params):
     values = params.copy()
 
-    for k, v in to_dict(original_obj).items():
+    for k, v in dictify(original_obj).items():
         if k not in values:
             values[k] = v
 
@@ -38,26 +31,6 @@ def with_entity_session(func):
             return redirect(base_url='/')
         return func(*args, **kw)
     return wrapper
-
-
-def _upcast(obj):
-    from ksweb.lib.helpers import editor_widget_template_for_output, editor_widget_template_for_qa
-    values = dict()
-
-    # qa_response and output only
-    if obj.content:
-        for c in obj.content:
-            if c['type'] == 'output':
-                c['filtered'] = getattr(obj, 'is_filtered', '')
-                values['output_' + c['content']] = \
-                    editor_widget_template_for_output(id_=c['content'],
-                                                      title=c['title'],
-                                                      filtered=c['filtered'])
-            else:
-                # qa_response
-                values['qa_' + c['content']] = editor_widget_template_for_qa(id_=c['content'], title=c['title'])
-
-    return Template(obj.html).safe_substitute(**values)
 
 
 def import_qa(imported_document, qa_id, owner, workspace_id):
@@ -189,6 +162,7 @@ def export_preconditions(precondition_id, document):
         if precondition['_id'] not in document['advanced_preconditions']:
             document['advanced_preconditions'][str(precondition['_id'])] = precondition
 
+
 def get_related_entities_for_filters(_id):
     outputs_related = model.Output.query.find({'_precondition': ObjectId(_id)}).all()
     preconditions_related = model.Precondition.query.find(
@@ -201,3 +175,21 @@ def get_related_entities_for_filters(_id):
         'entities': entities,
         'len': len(entities)
     }
+
+
+def get_entities_from_str(html):
+    import re
+    outputs_ids = re.findall(r'#{([^\W]+)\b}', html)
+    answers_ids = re.findall(r'@{([^\W]+)\b}', html)
+    outputs = [model.Output.query.get(_id=ObjectId(__)) for __ in outputs_ids]
+    answers = [model.Qa.query.get(_id=ObjectId(__)) for __ in answers_ids]
+    return (outputs, answers)
+
+
+class TemplateOutput(Template):
+# https://stackoverflow.com/questions/34360603/python-template-safe-substitution-with-the-custom-double-braces-format
+    delimiter = '#'
+
+
+class TemplateAnswer(Template):
+    delimiter = '@'

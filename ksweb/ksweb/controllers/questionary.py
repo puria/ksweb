@@ -4,6 +4,7 @@ from string import Template
 
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
+from ksweb.lib.utils import TemplateOutput, TemplateAnswer
 from markupsafe import Markup
 from tg import expose, response, validate, flash, url, predicates, validation_errors_response, decode_params, request, \
     tmpl_context
@@ -121,31 +122,32 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def download(self, _id):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.html' % questionary._id))
+        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.html' % questionary.title))
         return self.get_questionary_html(_id)
 
     @staticmethod
     def get_questionary_html(quest_id):
         questionary = model.Questionary.query.get(_id=ObjectId(quest_id))
-        questionary_compiled = Template(questionary.document.html)
-
-        output_values, qa_values = dict(), dict()
+        questionary_compiled = TemplateOutput(questionary.document.html)
         if not questionary.document.content:
             return
+
+        output_values, qa_values = dict(), dict()
+
         for output_dict in questionary.document.content:
             _id = ObjectId(output_dict['content'])
             if output_dict['content'] in questionary.output_values and \
                     questionary.output_values[output_dict['content']]['evaluation']:
                 output = model.Output.query.get(_id=_id)
-                output_values['output_' + str(_id)] = output.render(questionary.output_values)
+                output_values[str(_id)] = output.render(questionary.output_values)
             else:
                 # this clear useless output placeholder
-                output_values['output_' + str(_id)] = ''
+                output_values[str(_id)] = ''
         questionary_compiled = questionary_compiled.safe_substitute(**output_values)
-        questionary_compiled = Template(questionary_compiled)
+        questionary_compiled = TemplateAnswer(questionary_compiled)
 
         for qa_id, resp in questionary.qa_values.items():
-            qa_values['qa_' + qa_id] = Markup.escape(resp['qa_response'])
+            qa_values[qa_id] = Markup.escape(resp['qa_response'])
 
         return Markup(questionary_compiled.safe_substitute(**qa_values))
 

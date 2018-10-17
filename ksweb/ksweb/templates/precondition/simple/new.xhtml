@@ -8,12 +8,12 @@
                 <h1 class="col type-page-title">${_('Simple filter')}</h1>
                 <div class="col-md-auto text-right">
                     {{#if saving}}
-                    ${_("Saving...")}
+                        ${_("Saving...")}
                     {{else}}
-                    <button type="submit" class="btn btn-outline-success">
-                        ${h.material_icon('save')}
-                        ${_("Save")}
-                    </button>
+                        <button type="submit" class="btn btn-outline-success">
+                            ${h.material_icon('save')}
+                            ${_("Save")}
+                        </button>
                     {{/if}}
                 </div>
             </div>
@@ -24,7 +24,7 @@
                             class="custom-select {{errors.question ? 'is-invalid' : ''}}">
                         <option value="" disabled selected>${_('Select a question')}</option>
                         {{#each questions}}
-                        <option value="{{._id}}">{{.title}}</option>
+                            <option value="{{._id}}">{{.title}}</option>
                         {{/each}}
                     </select>
                     {{#if errors.question}}<span class="invalid-feedback">{{errors.question}}</span>{{/if}}
@@ -46,7 +46,7 @@
                     </label>
                 </div>
 
-                <div class="form-check">
+                <div class="form-group form-check">
                     <input type="radio" name="{{create.answer_type}}" value="what_response" id="what_response"
                            class="form-check-input {{errors.answer_type ? 'is-invalid' : ''}}" checked=""/>
                     <label class="form-check-label" for="what_response">
@@ -57,27 +57,26 @@
             </div>
 
 
-            <div id="interested_response" style="display: none">
-                <div class="form-check form-check-inline">
+            <div id="interested_response">
+                <div class="form-group form-check-inline">
                     {{#each available_reponse}}
                         {{#if !edit_mode}}
-                        <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}" type="checkbox" name="{{create.interested_response}}" value="{{.}}" id="{{.}}">
-                        {{.}}
+                            <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
+                                   type="checkbox" name="{{create.interested_response}}" value="{{.}}" id="{{.}}"> {{.}}
                         {{else}}
-                        {{#if create.interested_response == .}}
-                        <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
-                               type="radio" name="{{create.interested_response}}" value="{{.}}"
-                               checked>
-                        {{.}}
-                        {{else}}
-                        <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
-                               type="radio" name="{{create.interested_response}}" value="{{.}}"> {{.}}
-                        {{/if}}
+                            {{#if create.interested_response == .}}
+                                <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
+                                       type="radio" name="{{create.interested_response}}" value="{{.}}"
+                                       checked> {{.}}
+                            {{else}}
+                                <input class="form-check-input ml-4 {{errors.interested_response ? 'is-invalid' : ''}}"
+                                       type="radio" name="{{create.interested_response}}" value="{{.}}"> {{.}}
+                            {{/if}}
                         {{/if}}
                     {{/each}}
 
                     {{#if errors.interested_response}}
-                    <span class="ml-4 invalid-feedback">{{errors.interested_response}}</span>
+                        <span class="ml-4 invalid-feedback">{{errors.interested_response}}</span>
                     {{/if}}
                 </div>
             </div>
@@ -87,10 +86,10 @@
                     <input id="extra-fields-form-title" type="text" class="form-control {{errors.title ? 'is-invalid' : ''}}"
                            placeholder="${_('Label')}" name="{{create.title}}" value="{{create.title}}"/>
                     {{#if errors.title}}
-                    <span class="help-block">{{errors.title}}</span>
+                    <span class="invalid-feedback">{{errors.title}}</span>
                     {{/if}}
                 </div>
-                <label for="extra-fields-form-question" class="help-text">
+                <label for="extra-fields-form-title" class="help-text">
                     ${h.material_icon('help_outline')}
                     ${_('This is a unique name that you will use to refer to this object in this workspace.')}
                 </label>
@@ -106,140 +105,99 @@
 //<![CDATA[
   var PreconditionSimple = Ractive.extend({
     template: '#PreconditionSimpleForm_template',
-    onconstruct: function(ctx, options) {
-      var self = this;
-      self.precondition = options['precondition'];
-      self.edit_mode = false;
-      self.submit_url = "${tg.url('/precondition/simple/post')}";
-      self.submit_type = 'POST';
-      self.workspace=options['workspace'];
-      self.question_content=self.precondition['question_content'];
-      self.question_title=self.precondition['question_title'];
-      self.qa_value=options['qa_value'];
-    },
     oninit: function() {
       var self = this;
-      self.set('create.category', self.workspace);
+      var precondition = self.get('precondition');
+
+      self.set('question_content', precondition['question_content']);
+      self.set('question_title', precondition['question_title']);
+      self.set('create.workspace', self.get('workspace'));
 
       //  Check if document is provided
-      if (self.precondition['_id']) {
-        self.submit_type = 'PUT';
-        self.submit_url = "${tg.url('/precondition/simple/put')}";
+      if (precondition['_id']) {
+        self.set('submit_type', 'PUT');
+        self.set('submit_url', "${tg.url('/precondition/simple/put')}");
         self.set('edit_mode', true);
-        self.set('create.title', self.precondition['title']);
-        self.set('create.question', self.precondition['condition'][0]);
-        self.set('create.interested_response', self.precondition['condition'][1]);
-        self.set('create._id', self.precondition['_id']);
+        self.set('create.title', precondition['title']);
+        self.set('create.question', precondition['condition'][0]);
+        self.set('create.interested_response', precondition['condition'][1]);
+        self.set('create._id', precondition['_id']);
       } else {
-          self.set('create.question', self.qa_value);
+          self.set('create.question', self.get('qa_value'));
       }
-
 
       self.set('errors', {});
       self.set('saving', false);
       self.set('response_type', null);
-      self.set('categories', []);
       self.set('available_reponse', []);
 
       self.on('submit-form', function(event) {
-        var all_var = self.get('create');
-        self.createPreconditionSimple(all_var);
+        self.createPreconditionSimple();
         return false;
       });
 
-      self.loadCategory();
-      self.loadQuestion();
+      jQuery.get("${tg.url('/qa/valid_options', params=dict(workspace=workspace))}",
+                 function(data) {
+                    self.set('questions', data['questions']);
+                 });
     },
-    loadCategory: function(callback) {
+    createPreconditionSimple: function() {
       var self = this;
-      jQuery.get("${tg.url('/category/get_all')}",
-          function(data) {
-            self.set('categories', data['categories']);
-            if (callback)
-              callback();
-          });
-    },
-    loadQuestion: function(callback) {
-      var self = this;
-      jQuery.get("${tg.url('/qa/get_single_or_multi_question', params=dict(workspace=workspace))}",
-          function(data) {
-            self.set('questions', data['questions']);
-            if (callback)
-              callback();
-          });
-    },
-    createPreconditionSimple: function(field) {
-      var self = this;
-      var api_params = JSON.stringify(field);
+      var api_params = JSON.stringify(self.get('create'));
 
-      $.ajax({
-        type: self.submit_type,
-        url: self.submit_url,
-        data: api_params,
-        dataType: "json",
-        processData: false,
-        contentType: 'application/json'
-      }).done(function(resp) {
+      KS.ajax(self.get('submit_url'), api_params, function(resp) {
+          if (resp.redirect_url)
+              window.location.replace(resp.redirect_url);
 
           var redirect_to;
-          if(self.question_content || self.question_title){
+          if (self.get('question_content') || self.get('question_title')) {
               redirect_to = "${tg.url('/qa/new', params=dict(workspace=workspace))}&question_content="
                       + self.get('question_content') + "&question_title=" + self.get('question_title') + "&precondition_id=" + resp['precondition_id'];
-          }
-          else{
+          } else {
                redirect_to = "${tg.url('/precondition/', params=dict(workspace=workspace))}";
           }
-
-        self.set('create', {});
-        self.set('saving', false);
-        self.set('editing', false);
-
-        if (resp.redirect_url)
-          redirect_to = resp.redirect_url;
-        window.location.replace(redirect_to);
-
-      }).fail(function(jqXHR) {
-        var data = jQuery.parseJSON(jqXHR.responseText);
-        self.set('errors', data.errors);
-        self.set('saving', false);
+          self.set('create', {});
+          self.set('saving', false);
+          self.set('editing', false);
+          window.location.replace(redirect_to);
+      }, function(data) {
+          self.set('errors', jQuery.parseJSON(data.responseText).errors);
+          self.set('saving', false);
       });
-
     }
   });
 
-  var ractive_precondition_simple = new PreconditionSimple({
-      el: '#qa-ractive',
-      precondition: ${Markup(h.script_json_encode(precondition))},
-      workspace: '${workspace}',
-      qa_value: "${value_of('qa_value', '')}"
-  });
-
-  ractive_precondition_simple.observe('create.question', function ( resp_id, oldValue ) {
-    var self = this;
-    if (!resp_id) return;
-
-    self.set('available_reponse', []);
-    jQuery.get("${tg.url('/qa/get_one')}", {'id':resp_id}, function(data) {
-      self.set('available_reponse', data['qa']['answers'])
-    })
-  });
-
-  ractive_precondition_simple.observe('create.answer_type', function ( int_resp, oldValue ) {
-    if (int_resp == 'have_response')
-      jQuery("#interested_response").hide();
-    if (int_resp == 'what_response')
-      jQuery("#interested_response").show();
-  });
-
-  ractive_precondition_simple.observe('create.interested_response', function (value) {
-      var questions = ractive_precondition_simple.get('questions');
-      if (typeof questions === "undefined") return;
-      var by_id = function(v) { return v._id == ractive_precondition_simple.get('create.question'); };
-      var question = questions.filter(by_id);
-      if (!question.length) return;
-      var q_title = question[0].title;
-      var suffix = (value.length) ? " ⇒ " + value : '${_(" was compiled")}';
-      ractive_precondition_simple.set('create.title', q_title+suffix);
+  new PreconditionSimple({
+      target: '#qa-ractive',
+      data: {
+          precondition: ${Markup(h.script_json_encode(precondition))},
+          workspace: '${workspace}',
+          edit_mode: false,
+          submit_url: "${tg.url('/precondition/simple/post')}",
+          submit_type: 'POST',
+          qa_value: "${value_of('qa_value', '')}"
+      },
+      observe: {
+          'create.question'(__) {
+              this.set('available_response', [])
+              jQuery.get("${tg.url('/qa/get_one')}", {'id': __}, data => {
+                  this.set('available_reponse', data['qa']['answers'])
+              });
+          },
+          'create.answer_type'(__) {
+              if (__ == 'have_response') jQuery("#interested_response").hide();
+              if (__ == 'what_response') jQuery("#interested_response").show();
+          },
+          'create.interested_response'(__) {
+              var questions = this.get('questions');
+              if (typeof questions === "undefined") return;
+              var question = questions.filter(v => v._id === this.get('create.question'));
+              if (!question.length) return;
+              var q_title = question[0].title;
+              var suffix = (__.length) ? " ⇒ " + __ : '${_(" was compiled")}';
+              this.set('create.title', q_title+suffix);
+          }
+      }
   });
 //]]>
 </script>
