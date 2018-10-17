@@ -228,7 +228,7 @@ class QaController(RestController):
                 **common_precondition_params,
                 _precondition=ObjectId(autogen_filter._id),
                 title=qa.title + u' \u21d2 output',
-                html='%%%%%s' % qa._id,
+                html='@{%s}' % qa._id,
                 content= [dict(content=str(qa._id), type='qa_response', title=qa.title)]
             )
 

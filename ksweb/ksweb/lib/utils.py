@@ -162,6 +162,7 @@ def export_preconditions(precondition_id, document):
         if precondition['_id'] not in document['advanced_preconditions']:
             document['advanced_preconditions'][str(precondition['_id'])] = precondition
 
+
 def get_related_entities_for_filters(_id):
     outputs_related = model.Output.query.find({'_precondition': ObjectId(_id)}).all()
     preconditions_related = model.Precondition.query.find(
@@ -175,10 +176,20 @@ def get_related_entities_for_filters(_id):
         'len': len(entities)
     }
 
+
 def get_entities_from_str(html):
     import re
-    outputs_ids = re.findall(r'@@([^\W]+)\b', html)
-    answers_ids = re.findall(r'%%([^\W]+)\b', html)
+    outputs_ids = re.findall(r'#{([^\W]+)\b}', html)
+    answers_ids = re.findall(r'@{([^\W]+)\b}', html)
     outputs = [model.Output.query.get(_id=ObjectId(__)) for __ in outputs_ids]
     answers = [model.Qa.query.get(_id=ObjectId(__)) for __ in answers_ids]
     return (outputs, answers)
+
+
+class TemplateOutput(Template):
+# https://stackoverflow.com/questions/34360603/python-template-safe-substitution-with-the-custom-double-braces-format
+    delimiter = '#'
+
+
+class TemplateAnswer(Template):
+    delimiter = '@'

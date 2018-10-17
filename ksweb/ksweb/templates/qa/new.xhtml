@@ -116,7 +116,7 @@
                                         <pre id={{.answer}} class="response d-inline-block m-0"
                                              onclick="ractive_qa.makeEditable('{{i}}')">{{.answer}}</pre>
                                     {{/if}}
-                                {{#if ! edit_mode}}
+                                {{#if !edit_mode}}
                                     <label onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</label>
                                 {{/if}}
                             </div>
@@ -125,7 +125,7 @@
 
                     <div class="row">
                         <div class="form-inline col-4">
-                            <textarea id="response_text" class="form-control {{errors.answers ? 'is-invalid' : ''}}" placeholder="${_('Insert an option of Answer and click on +')}"> </textarea>
+                            <textarea id="response_text" class="form-control {{errors.answers ? 'is-invalid' : ''}}" placeholder="${_('Insert an option of Answer and click on +')}"></textarea>
                             <label for="response_text" class="displ"
                                    onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
                             {{#if errors.answers}}
@@ -241,20 +241,19 @@
                     available_response[i]['display'] = false;
                 }
             }
-            jQuery("#insert_answer").empty();
 
             self.set('answer_type', section);
             self.set('available_response', available_response);
         },
         addResponse: function () {
             var self = this;
-            jQuery("#insert_answer").empty();
+
             var resp = jQuery("#response_text").val();
             if (!resp || 0 === resp.length || /^\s*$/.test(resp)) {
-                alert("Risposta non valida");
+                alert("${_('Invalid answer')}");
                 return;
             }
-            jQuery("#response_text").val("");
+            jQuery("#response_text").val('');
             self.push('available_response', {
                 'answer': resp,
                 'editable': false,

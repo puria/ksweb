@@ -1,6 +1,7 @@
 <html py:extends="master.xhtml" py:strip="True">
 <head py:block="head" py:strip="True">
 <title py:block="master_title">KS | Questionary</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
 <script id="compile_questionary_template" type="text/html">
 <![CDATA[
     <div class="row mt-2">
@@ -29,11 +30,8 @@
         <div class="row">
             <div class="col">
                 {{#if !quest_compiled.completed}}
-                <pre class="form-group pt-5 h3 font-weight-bold">
-                    {{{qa.question}}}
-                </pre>
-
-                <div class="form-group form-check answer">
+                <pre class="form-group pt-5 h3 font-weight-bold">{{{qa.question}}}</pre>
+                <div class="form-group form-check answer pl-0">
                     {{#if qa.type == 'text'}}
                       <textarea class="form-control" class-is-invalid="errors.qa_response">{{qa_response}}</textarea>
                     {{else}}
@@ -41,12 +39,14 @@
                         {{#if qa.type == 'single'}}
                             <input type="radio" 
                                 class-is-invalid="errors.qa_response"
-                                class="mr-2 form-check-input" name="{{qa_response}}" value="{{.}}"/><pre class="m-0">{{.}}</pre>
+                                class="form-check-input mx-2 px-2" name="{{qa_response}}" value="{{.}}"/>
+                            <pre class="mx-5 pt-1">{{.}}</pre>
                         {{/if}}
                         {{#if qa.type == 'multi'}}
                             <input type="checkbox" 
                                 class-is-invalid="errors.qa_response"
-                                class="form-check-input mr-2" name="{{qa_response}}" value="{{.}}"><pre class="m-0">{{.}}</pre>
+                                class="form-check-input mx-2 px-2" name="{{qa_response}}" value="{{.}}">
+                            <pre class="mx-5 pt-1">{{.}}</pre>
                         {{/if}}
                       {{/each}}
                     {{/if}}
@@ -174,7 +174,7 @@
             self.set('saving', false);
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
-            self.set('html', data['html']);
+            self.set('html', KS.getMDConverter().makeHtml(data['html']));
             self.set('qa_response', data['previous_response']);
             self.set('errors', {});
             self.checkButtons();
@@ -208,7 +208,7 @@
             self.set('saving', false);
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
-            self.set('html', data['html']);
+            self.set('html', KS.getMDConverter().makeHtml(data['html']));
             self.set('errors', {});
             self.checkButtons();
             self.next_qa();
@@ -245,5 +245,12 @@
     });
 
 </script>
+<div style="display: none;">
+    <div py:for="(id, response) in questionary.qa_values.items()">
+        <div id="${id}">
+            <span>${response.qa_response}</span>
+        </div>
+    </div>
+</div>
 </body>
 </html>

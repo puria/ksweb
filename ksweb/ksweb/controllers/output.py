@@ -10,6 +10,7 @@ from tg import predicates
 from tg import session
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
+from tg.util.ming import dictify
 from tw2.core import StringLengthValidator
 
 from ksweb.lib.predicates import CanManageEntityOwner
@@ -116,7 +117,7 @@ class OutputController(RestController):
                 auto_generated=False,
                 html=html
             )
-            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session['entity'] = dictify(entity)  # overwrite always same key for avoiding conflicts
             session.save()
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 

@@ -1,8 +1,8 @@
 Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
 var KS = (function() {
-    var _entityRegex = /(\\)?@@([^\W]+)\b/g;
-    var _answerRegex = /(\\)?%%([^\W]+)\b/g;
+    var _entityRegex = /(\\)?#{([^\W]+)\b}/g;
+    var _answerRegex = /(\\)?@{([^\W]+)\b}/g;
 
     var ajax = function(url, params, callback, fail) {
         $.ajax({
@@ -26,7 +26,7 @@ var KS = (function() {
         return $(`#${id} > span`).text()
     }
 
-    var editor = function(element) {
+    let getMDConverter = function() {
         var showdownExtensions = [
             {
                 type: 'lang',
@@ -64,7 +64,7 @@ var KS = (function() {
 
         ];
 
-        var converter = new showdown.Converter({
+        return new showdown.Converter({
             emoji: true,
             table: true,
             simplifiedAutoLink: true,
@@ -74,7 +74,9 @@ var KS = (function() {
             simpleLineBreaks: true,
             extensions: showdownExtensions,
         });
+    }
 
+    var editor = function(element) {
         return new SimpleMDE({ 
             element: element,
             renderingConfig: {
@@ -82,17 +84,17 @@ var KS = (function() {
             },
             spellChecker: false,
             previewRender: function(text) {
-                return converter.makeHtml(text);
+                return getMDConverter().makeHtml(text);
             },
         });
     }
 
     var addOutputToEditor = function(id, editor) {
-        editor.codemirror.replaceSelection(`@@${id} `)
+        editor.codemirror.replaceSelection(`#{${id}}`)
     }
 
     var addAnswerToEditor = function (id, editor) {
-        editor.codemirror.replaceSelection(`%%${id} `)
+        editor.codemirror.replaceSelection(`@{${id}}`)
     }
 
     var getEntitiesList = function(text) {
@@ -106,5 +108,6 @@ var KS = (function() {
         addOutputToEditor: addOutputToEditor,
         addAnswerToEditor: addAnswerToEditor,
         getTitle: getTitle,
+        getMDConverter: getMDConverter,
     }
 })();
