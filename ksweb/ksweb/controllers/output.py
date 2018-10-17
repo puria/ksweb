@@ -3,7 +3,7 @@ import re
 
 import tg
 from bson import ObjectId
-from ksweb.lib.utils import to_object_id
+from ksweb.lib.utils import to_object_id, to_dict
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response
 from tg import predicates
@@ -107,25 +107,27 @@ class OutputController(RestController):
 
         check = self.get_related_entities(_id)
 
-        if check.get("entities"):
-            entity = dict(
-                _id=_id,
-                title=title,
-                _category=to_object_id(workspace),
-                _precondition=to_object_id(precondition),
-                entity='output',
-                auto_generated=False,
-                html=html
-            )
-            session['entity'] = dictify(entity)  # overwrite always same key for avoiding conflicts
-            session.save()
-            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
+        # if check.get("entities"):
+        #     entity = dict(
+        #         _id=_id,
+        #         title=title,
+        #         _category=to_object_id(workspace),
+        #         _precondition=to_object_id(precondition),
+        #         entity='output',
+        #         auto_generated=False,
+        #         html=html
+        #     )
+        #     session['entity'] = entity  # overwrite always same key for avoiding conflicts
+        #     session.save()
+        #     return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         output = Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
         output._category = ObjectId(workspace)
         output._precondition = to_object_id(precondition)
         output.html = html
+        output.auto_generated = False
+        output.status = Output.STATUS.UNREAD
         output.update_content()
 
         return dict(errors=None, redirect_url=None)

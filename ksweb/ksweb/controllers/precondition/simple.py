@@ -90,7 +90,7 @@ class PreconditionSimpleController(RestController):
     @validate({
         '_id': PreconditionExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'question': QAExistValidator(required=True),
         'answer_type': OneOfValidator(values=[u'what_response'], required=True),
     }, error_handler=validation_errors_response)
@@ -99,25 +99,27 @@ class PreconditionSimpleController(RestController):
             msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
             entity_model=Precondition))
-    def put(self, _id, title, category, question, interested_response, **kw):
+    def put(self, _id, title, workspace, question, interested_response, **kw):
         check = self.get_related_entities(_id)
-        if check.get("entities"):
-            entity = dict(
-                _id=_id,
-                title=title,
-                condition=[question, interested_response],
-                _category=category,
-                auto_generated=False,
-                entity='precondition/simple'
-            )
-            session['entity'] = entity  # overwrite always same key for avoiding conflicts
-            session.save()
-            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
+        # if check.get("entities"):
+        #     entity = dict(
+        #         _id=_id,
+        #         title=title,
+        #         condition=[question, interested_response],
+        #         _category=workspace,
+        #         auto_generated=False,
+        #         entity='precondition/simple'
+        #     )
+        #     session['entity'] = entity  # overwrite always same key for avoiding conflicts
+        #     session.save()
+        #     return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
         precondition.condition = [ObjectId(question), interested_response]
-        precondition._category = category
+        precondition.auto_generated = False
+        precondition.status = Precondition.STATUS.UNREAD
+        precondition._category = workspace
 
         return dict(errors=None, redirect_url=None)
 
