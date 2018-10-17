@@ -56,7 +56,7 @@ class DocumentController(RestController):
     @validate({
         'title': StringLengthValidator(min=2),
         'workspace': WorkspaceExistValidator(required=True),
-        'html': DocumentContentValidator(),
+        'html': DocumentContentValidator(strip=False),
         'description': StringLengthValidator(min=0),
         'license': StringLengthValidator(min=0, max=100),
         'version': StringLengthValidator(min=0, max=100),
@@ -87,7 +87,7 @@ class DocumentController(RestController):
         '_id': DocumentExistValidator(required=True),
         'title': StringLengthValidator(min=2),
         'workspace': WorkspaceExistValidator(required=True),
-        'html': DocumentContentValidator(),
+        'html': DocumentContentValidator(strip=False),
         'description': StringLengthValidator(min=0),
         'license': StringLengthValidator(min=0, max=100),
         'version': StringLengthValidator(min=0, max=100),

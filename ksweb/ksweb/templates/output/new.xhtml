@@ -105,7 +105,6 @@
                 self.set('create.precondition', self.get('output')['_precondition']);
 
                 if (self.get('output')['_id']) {
-                    console.log("SONO IN EDIT", self.get('output')['_id'])
                     self.set('edit_mode', true);
                     self.set('submit_url', '${tg.url("/output/put")}');
                     self.set('create.title', self.get('output')['title']);
@@ -142,7 +141,7 @@
 
             let params = this.get('create');
             params['html'] = this.get('editor').value();
-
+            
             KS.ajax(this.get('submit_url'),
                     JSON.stringify(params),
                     result => {
@@ -207,7 +206,7 @@
                       {id: ___},
                       function (data) {
                         self.set('qas', data['qas']);
-                        // TODO: if qas do not match withint the md editor content, should highlight them in some way
+                        // TODO: if qas do not match within the md editor content, should highlight them in some way
                       });
             }
         }

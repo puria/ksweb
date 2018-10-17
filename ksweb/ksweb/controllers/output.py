@@ -61,7 +61,7 @@ class OutputController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'html': StringLengthValidator(min=2, required=True),
+        'html': StringLengthValidator(min=2, required=True, strip=False),
         'workspace': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
@@ -91,7 +91,7 @@ class OutputController(RestController):
     @validate({
         '_id': OutputExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'html': OutputContentValidator(required=True),
+        'html': OutputContentValidator(required=True, strip=False),
         'workspace': WorkspaceExistValidator(required=True),
         'precondition': PreconditionExistValidator(),
     }, error_handler=validation_errors_response)
