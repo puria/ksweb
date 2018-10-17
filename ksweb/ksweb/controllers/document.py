@@ -138,8 +138,9 @@ class DocumentController(RestController):
         '_id': DocumentExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def export(self, _id):
-        document = model.Document.query.get(_id=ObjectId(_id)).__json__()
-        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % _id)))
+        _document = model.Document.query.get(_id=ObjectId(_id))
+        document = _document.__json__()
+        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % _document.title)))
         document.pop('_category', None)
         document.pop('_id', None)
         document.pop('entity', None)
