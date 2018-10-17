@@ -78,9 +78,8 @@
             {{/if}}
             <div class="row">
                 <div class="form-group col">
-                    <textarea id="ks_editor" name="ks_editor"
-                              class="form-control {{errors.ks_editor ? 'is-invalid' : ''}}"></textarea>
-                    {{#if errors.ks_editor}}<span class="invalid-feedback">{{errors.ks_editor}}</span>{{/if}}
+                    <textarea id="ks_editor" name="ks_editor" class="form-control {{errors.html ? 'is-invalid' : ''}}"></textarea>
+                    {{#if errors.html}}<span class="invalid-feedback">{{errors.html}}</span>{{/if}}
                 </div>
             </div>
             <label for="ks_editor" class="help-text">${h.material_icon('help_outline')} ${_('To create an Output from a text, highlight it with your mouse and click on the orange button Create Output+')}</label>
@@ -156,7 +155,7 @@
                         window.location.replace(redirect_to);
                     },
                     data => {
-                        this.set('errors', data.errors);
+                        this.set('errors', data.responseJSON.errors);
                         this.set('saving', false);
                     });
             return false;

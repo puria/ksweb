@@ -30,11 +30,11 @@
 <![CDATA[
 jQuery(document).ready(function () {
   $(document).on("click", ".new_qa", function(){
-    var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
+    var row_id = jQuery(this).data("row-id");
     window.location = "${tg.url('/qa/new', params=dict(workspace=workspace))}&precondition_id=" + row_id;
   });
   $(document).on("click", ".new_output", function(){
-    var row_id = jQuery(this).parent().parent().parent().parent().find(".actions").data("row-id");
+    var row_id = jQuery(this).data("row-id");
     window.location = "${tg.url('/output/new', params=dict(workspace=workspace))}&precondition_id=" + row_id;
   });
 
