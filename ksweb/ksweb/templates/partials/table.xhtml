@@ -16,8 +16,10 @@
                         <a class="btn btn-primary export"
                            href='${tg.url("/document/export", params=dict(_id=entity._id))}'>${h.material_icon('download')}</a>
                     </td>
-                    <td py:if="value_of('actions_content', False)">
-                        <a class="actions" data-toggle="popover" data-trigger="focus" data-row-id="${entity._id}" href="#">${h.material_icon('more_horiz')}</a>
+                    <td py:if="value_of('actions_content', False)" class="float-right">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a py:for="action in actions_content" href="#" data-row-id="${entity._id}" class="${h.underscore(action)} btn btn-outline-secondary">${action}</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -26,17 +28,6 @@
     <div class="pull-right">${h.bootstrap_pager(tmpl_context.paginators.entities)}</div>
 
     <div py:if="value_of('actions_content', False)" id="actions-popover-content" class="d-none">
-        <div py:for="action in actions_content" class="my-2">
-            <a href="#" class="${h.underscore(action)}">${action}</a>
-        </div>
+
     </div>
-    <script>
-    $(document).ready(function () {
-        $('.actions').popover({
-            html: true,
-            content: () => $("#actions-popover-content").html(),
-            placement: 'bottom'
-        }).click(e => {e.preventDefault()})
-    })
-    </script>
 </div>
