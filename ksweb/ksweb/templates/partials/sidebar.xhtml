@@ -10,7 +10,7 @@
     <ul class="nav flex-column mb-2">
         <li class="nav-item ${('', 'sidebar-active')[sidebar_section == 'qas']}">
             <a href="${tg.url('/qa', params=dict(workspace=workspace))}" class="nav-link">
-                ${h.material_icon('question_answer')} Q/A
+                ${h.material_icon('question_answer')} Q/A <span class="ml-2 badge badge-primary">${unread_qas}</span>
             </a>
         </li>
 

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa model module."""
+import pymongo
+
 import tg
 from bson import ObjectId
 from markupsafe import Markup
@@ -14,8 +16,10 @@ def _format_instrumented_list(l):
 
 
 def _custom_title(obj):
-    return Markup(
-        "<a href='%s'>%s</a>" % (tg.url('/qa/edit', params=dict(_id=obj._id,workspace=obj._category)), obj.title))
+    url = tg.url('/qa/edit', params=dict(_id=obj._id, workspace=obj._category))
+    auto = 'bot' if obj.auto_generated else ''
+    status = obj.status
+    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, auto, obj.title))
 
 
 class Qa(MappedEntity):
@@ -52,7 +56,11 @@ class Qa(MappedEntity):
 
     @classmethod
     def available_for_user(cls, user_id, workspace=None):
-        return User.query.get(_id=user_id).owned_entities(cls, workspace)
+        return User.query.get(_id=user_id).owned_entities(cls, workspace).sort([
+                                ('auto_generated', pymongo.ASCENDING),
+                                ('status', pymongo.DESCENDING),
+                                ('title', pymongo.ASCENDING),
+                        ])
 
     @property
     def entity(self):

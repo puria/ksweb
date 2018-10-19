@@ -6,7 +6,7 @@ from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import TemplateOutput, TemplateAnswer
 from markupsafe import Markup
-from tg import expose, response, validate, flash, url, predicates, validation_errors_response, decode_params, request, \
+from tg import expose, response, validate, flash, predicates, validation_errors_response, decode_params, request, \
     tmpl_context
 from tg import redirect
 from tg.decorators import paginate, require
@@ -66,7 +66,6 @@ class QuestionaryController(BaseController):
         'email_to_share': EmailValidator(),
     }, error_handler=validation_errors_response)
     def create(self, questionary_title=None, document_id=None, email_to_share=None, **kw):
-        #  create questionary for himself
         owner = request.identity['user']
         if email_to_share:
             user = model.User.by_email_address(email_to_share)
@@ -93,7 +92,7 @@ class QuestionaryController(BaseController):
             mailer = get_mailer(request)
             share_url = tg.url('/dashboard', params={'share_id':user._id}, qualified=True)
             message = Message(subject=_("Invite to a KSWEB document"),
-                              sender="admin@ksweb.com",
+                              sender="admin@ks.studiolegale.it",
                               recipients=[user.email_address],
                               body=_("Hi, you were invited to compile the following document %s "
                                      "at the following url %s" % (questionary_title, share_url)))
@@ -111,8 +110,10 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def compile(self, _id, workspace, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        return dict(questionary=questionary, quest_compiled=questionary.evaluate_questionary,
-                    html=self.get_questionary_html(_id), workspace=workspace)
+        return dict(questionary=questionary,
+                    quest_compiled=questionary.evaluate_questionary,
+                    html=self.get_questionary_html(_id),
+                    workspace=workspace)
 
     @expose(content_type='text/html')
     @validate({
@@ -122,13 +123,12 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def download(self, _id):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.html' % questionary.title))
+        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.md' % questionary.title))
         return self.get_questionary_html(_id)
 
     @staticmethod
     def get_questionary_html(quest_id):
         questionary = model.Questionary.query.get(_id=ObjectId(quest_id))
-        questionary_compiled = TemplateOutput(questionary.document.html)
         if not questionary.document.content:
             return
 
@@ -139,17 +139,18 @@ class QuestionaryController(BaseController):
             if output_dict['content'] in questionary.output_values and \
                     questionary.output_values[output_dict['content']]['evaluation']:
                 output = model.Output.query.get(_id=_id)
-                output_values[str(_id)] = output.render(questionary.output_values)
+                output_values['_' + str(_id)] = output.render(questionary.output_values)
             else:
                 # this clear useless output placeholder
-                output_values[str(_id)] = ''
-        questionary_compiled = questionary_compiled.safe_substitute(**output_values)
-        questionary_compiled = TemplateAnswer(questionary_compiled)
+                output_values['_' + str(_id)] = ''
+        safe_template = questionary.document.html.replace('#{', '#{_')
+        questionary_with_expanded_output = TemplateOutput(safe_template).safe_substitute(output_values)
+        questionary_compiled = TemplateAnswer(questionary_with_expanded_output.replace('@{', '@{_'))
 
         for qa_id, resp in questionary.qa_values.items():
-            qa_values[qa_id] = Markup.escape(resp['qa_response'])
+            qa_values['_' + qa_id] = Markup.escape(resp['qa_response'])
 
-        return Markup(questionary_compiled.safe_substitute(**qa_values))
+        return Markup(questionary_compiled.safe_substitute(qa_values))
 
     @expose('json')
     @decode_params('json')
@@ -179,9 +180,6 @@ class QuestionaryController(BaseController):
         else:
             order_number = max([questionary.qa_values[elem]['order_number'] for elem in questionary.qa_values]) + 1
         questionary.qa_values[qa_id] = {'qa_response': qa_response, 'order_number': order_number}
-
-        # Not sure about flush here
-        DBSession.flush(questionary)
         quest_compiled = questionary.evaluate_questionary
 
         return dict(questionary=questionary, quest_compiled=quest_compiled, html=self.get_questionary_html(_id))
@@ -197,27 +195,8 @@ class QuestionaryController(BaseController):
         if not completed:
             return redirect('/questionary/compile', params=dict(quest_complited=completed, workspace=workspace))
 
-        questionary_compiled = Template(questionary.document.html)
-        output_values, qa_values = dict(), dict()
-
-        for output_dict in questionary.document.content:
-            _id = ObjectId(output_dict['content'])
-            if questionary.output_values.get(output_dict['content']):
-                output = model.Output.query.get(_id=_id)
-                output_values['output_' + str(_id)] = output.render(questionary.output_values)
-            else:
-                # this clear useless output placeholder
-                output_values['output_' + str(_id)] = ''
-
-        questionary_compiled = questionary_compiled.safe_substitute(**output_values)
-        questionary_compiled = Template(questionary_compiled)
-
-        for qa_id, resp in questionary.qa_values.items():
-            qa_values['qa_' + qa_id] = Markup.escape(resp['qa_response'])
-
-        questionary_compiled = questionary_compiled.safe_substitute(**qa_values)
-
-        return dict(questionary_compiled=Markup(questionary_compiled), workspace=workspace)
+        questionary_compiled = self.get_questionary_html(_id)
+        return dict(questionary_compiled=questionary_compiled, workspace=workspace)
 
     @expose('json')
     @decode_params('json')

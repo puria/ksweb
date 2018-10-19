@@ -28,7 +28,7 @@ class ResolveController(BaseController):
     @with_entity_session
     @validate({'workspace': WorkspaceExistValidator(required=True), })
     def index(self, workspace, **kw):
-        return dict(workspace=workspace,**kw)
+        return dict(workspace=workspace, **kw)
 
     @expose()
     @with_entity_session

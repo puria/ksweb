@@ -31,6 +31,7 @@ testpkgs = [
     'nose',
     'coverage',
     'gearbox',
+    'backlash',
 ]
 
 install_requires = [

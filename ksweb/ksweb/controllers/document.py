@@ -158,7 +158,8 @@ class DocumentController(RestController):
     }, error_handler=validation_errors_response)
     def import_document(self, workspace, file_import):
         owner = user = request.identity['user']._id
-        imported_document = json.load(file_import.file)
+        content = file_import.file.read()
+        imported_document = json.loads(content.decode('utf-8'))
         content = []
         values = {}
         for output in imported_document['content']:

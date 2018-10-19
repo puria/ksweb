@@ -90,6 +90,7 @@ class QaController(RestController):
                 link=link,
                 type=answer_type,
                 answers=answers,
+                auto_generated=False,
                 public=True,
                 visible=True
             )
@@ -123,6 +124,7 @@ class QaController(RestController):
                 title=title, entity='qa',
                 question=question,
                 tooltip=tooltip, link=link,
+                auto_generated=False,
                 type=answer_type,
                 _parent_precondition=precondition,
                 answers=answers
@@ -139,6 +141,7 @@ class QaController(RestController):
         qa._parent_precondition = to_object_id(precondition)
         qa.title = title
         qa.question = question
+        qa.auto_generated = False
         qa.tooltip = tooltip
         qa.question = question
         qa.link = link
@@ -237,3 +240,8 @@ class QaController(RestController):
            (answer_type == Qa.TYPES.MULTI and len(answers) < 1):
             return False
         return True
+
+    @expose('json')
+    @validate({'workspace': WorkspaceExistValidator(required=True)})
+    def mark_as_read(self, workspace):
+        Qa.mark_as_read(request.identity['user']._id, workspace)
