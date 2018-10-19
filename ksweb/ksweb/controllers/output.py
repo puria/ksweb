@@ -23,7 +23,7 @@ class OutputController(RestController):
             return
 
         _filter = Precondition.query.get(_id=ObjectId(precondition))
-        answers = re.findall(r'%%([^\W]+)\b', html)
+        answers = re.findall(r'@{([^\W]+)\b}', html)
         problematic = set(answers) - set(_filter.response_interested)
         if len(problematic):
             response.status_code = 412
@@ -179,7 +179,7 @@ class OutputController(RestController):
         return dict(output={
             '_id': output._id,
             'title': output.title,
-            'content': output.human_readbale_content,
+            'content': output.human_readable_content,
             'human_readable_content': output.human_readable_content,
             '_owner': output._owner,
             'owner': output.owner.display_name,

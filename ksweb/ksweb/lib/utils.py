@@ -185,6 +185,8 @@ def get_related_entities_for_filters(_id):
 
 
 def get_entities_from_str(html):
+    if not html:
+        return [], []
     import re
     outputs_ids = re.findall(r'#{([^\W]+)\b}', html)
     answers_ids = re.findall(r'@{([^\W]+)\b}', html)

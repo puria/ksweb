@@ -183,13 +183,7 @@ class TestValidators(TestController):
 
             validator = OutputContentValidator()
             try:
-                res = validator._validate_python([
-                    {
-                        'type': "qa_response",
-                        'content': str(qa1._id),
-                        'title': qa1.title
-                    },
-                ])
+                res = validator._validate_python("@{%s}" % str(qa1._id))
             except ValidationError:
                 assert False
             else:
@@ -199,18 +193,7 @@ class TestValidators(TestController):
         with test_context(self.app):
             validator = OutputContentValidator()
             try:
-                res = validator._validate_python([
-                    {
-                        'type': "text",
-                        'content': "Buongiorno",
-                        'title': ""
-                    },
-                    {
-                        'type': "qa_response",
-                        'content': "5757ce79c42d752bde919318",
-                        'title': "fake title"
-                    },
-                ])
+                res = validator._validate_python("Buongiorno @{5757ce79c42d752bde919318}")
             except ValidationError:
                 assert True
             else:
@@ -220,17 +203,11 @@ class TestValidators(TestController):
         with test_context(self.app):
             validator = OutputContentValidator()
             try:
-                res = validator._validate_python([
-                    {
-                        'type': "fake_type",
-                        'content': "Buongiorno",
-                        'title': ""
-                    }
-                ])
+                res = validator._validate_python("Buongiorno")
             except ValidationError:
-                assert True
-            else:
                 assert False
+            else:
+                assert True
 
     def test_document_content_validator(self):
         with test_context(self.app):
@@ -247,13 +224,7 @@ class TestValidators(TestController):
 
             validator = DocumentContentValidator()
             try:
-                res = validator._validate_python([
-                    {
-                        'type': "output",
-                        'content': str(output._id),
-                        'title': output.title
-                    },
-                ])
+                res = validator._validate_python('#{%s}' % str(output._id))
             except ValidationError:
                 assert False
             else:
@@ -263,38 +234,21 @@ class TestValidators(TestController):
         with test_context(self.app):
             validator = DocumentContentValidator()
             try:
-                res = validator._validate_python([
-                    {
-                        'type': "text",
-                        'content': "Buongiorno",
-                        'title': ""
-                    },
-                    {
-                        'type': "output",
-                        'content': "5757ce79c42d752bde919318",
-                        'title': "fake title"
-                    },
-                ])
+                res = validator._validate_python("Buongiorno #{5757ce79c42d752bde919318}")
             except ValidationError:
                 assert True
             else:
                 assert False
 
-    def test_document_content_validator_invalid_type_output(self):
+    def test_document_content_validator_without_output(self):
         with test_context(self.app):
             validator = DocumentContentValidator()
             try:
-                res = validator._validate_python([
-                    {
-                        'type': "fake_type",
-                        'content': "Buongiorno",
-                        'title': ""
-                    }
-                ])
+                res = validator._validate_python("Buongiorno")
             except ValidationError:
-                assert True
-            else:
                 assert False
+            else:
+                assert True
 
     def test_questionary_exist_validator(self):
         self._login_lawyer()

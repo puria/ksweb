@@ -35,10 +35,10 @@ class PreconditionAdvancedController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
-    def post(self, title, category, conditions, **kw):
+    def post(self, title, workspace, conditions, **kw):
         error, condition = self._marshall_complex_filter(conditions)
         if error:
             response.status_code = 412
@@ -47,13 +47,13 @@ class PreconditionAdvancedController(RestController):
         user = request.identity['user']
         Precondition(
             _owner=user._id,
-            _category=ObjectId(category),
+            _category=ObjectId(workspace),
             title=title,
             type='advanced',
             condition=condition
         )
 
-        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(category))))
+        flash(_("Now you can create an output <a href='%s'>HERE</a>" % lurl('/output?workspace='+ str(workspace))))
         return dict(errors=None)
 
     @decode_params('json')
@@ -61,7 +61,7 @@ class PreconditionAdvancedController(RestController):
     @validate({
         '_id': PreconditionExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'conditions': LengthValidator(min=1, required=True),
     }, error_handler=validation_errors_response)
     @require(
@@ -69,7 +69,7 @@ class PreconditionAdvancedController(RestController):
             msg=l_(u'You are not allowed to edit this filter.'),
             field='_id',
             entity_model=Precondition))
-    def put(self, _id, title, category, conditions, **kw):
+    def put(self, _id, title, workspace, conditions, **kw):
         error, condition = self._marshall_complex_filter(conditions)
         if error:
             response.status_code = 412
@@ -82,18 +82,18 @@ class PreconditionAdvancedController(RestController):
                 _id=_id,
                 title=title,
                 condition=list(map(str, condition)),
-                _category=category,
+                _category=workspace,
                 auto_generated=False,
                 entity='precondition/advanced',
             )
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
-            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
         precondition.condition = condition
-        precondition._category = category
+        precondition._category = workspace
 
         return dict(errors=None, redirect_url=None)
 

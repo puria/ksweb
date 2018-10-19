@@ -34,7 +34,7 @@ class TestQaController(TestController):
         category1 = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -58,7 +58,7 @@ class TestQaController(TestController):
         category = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
-            'category': str(category._id),
+            'workspace': str(category._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -72,12 +72,12 @@ class TestQaController(TestController):
         params = {_: qa[_] + ' edited' for _ in fields}
         params['_id'] = str(qa._id)
         params['answer_type'] = qa.type
-        params['category'] = str(qa.category._id)
+        params['workspace'] = str(qa.category._id)
         response = self.app.put_json('/qa/put', params=params).json
 
         assert response['redirect_url']
         self.app.get(response['redirect_url'])
-        response = self.app.get('/resolve/original_edit', params=dict(workspace=params['category']))
+        response = self.app.get('/resolve/original_edit', params=dict(workspace=params['workspace']))
         response.follow()
 
         qa_edited = model.Qa.query.get(title=params['title'])
@@ -94,7 +94,7 @@ class TestQaController(TestController):
         category = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
-            'category': str(category._id),
+            'workspace': str(category._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -108,7 +108,7 @@ class TestQaController(TestController):
         params = {_: qa[_] + ' edited' for _ in fields}
         params['_id'] = str(qa._id)
         params['answer_type'] = qa.type
-        params['category'] = str(qa.category._id)
+        params['workspace'] = str(qa.category._id)
         self.app.put_json('/qa/put', params=params).json
         qa_edited = model.Qa.query.get(title=params['title'])
 
@@ -124,7 +124,7 @@ class TestQaController(TestController):
         category = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
-            'category': str(category._id),
+            'workspace': str(category._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -137,7 +137,7 @@ class TestQaController(TestController):
         params = dict(
             _id = str(qa._id),
             title = qa.title,
-            category = str(qa.category._id),
+            workspace = str(qa.category._id),
             question = qa.question,
             answer_type = qa.type,
             answers = []
@@ -149,10 +149,10 @@ class TestQaController(TestController):
 
     def test_put_qa_with_not_valid_answers(self):
         self._login_lawyer()
-        category = self._get_category('Area 1')
+        workspace = self._get_category('Area 1')
         qa_text_params = {
             'title': 'Title of QA',
-            'category': str(category._id),
+            'workspace': str(workspace._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -169,7 +169,7 @@ class TestQaController(TestController):
         category1 = self._get_category('Area 1')
         qa_text_single_missing_answers = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -184,7 +184,7 @@ class TestQaController(TestController):
 
         qa_text_single_missing_one_answers = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -203,7 +203,7 @@ class TestQaController(TestController):
 
         qa_text_single = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -223,7 +223,7 @@ class TestQaController(TestController):
         category1 = self._get_category('Area 1')
         qa_text_multi_missing_answers = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -242,7 +242,7 @@ class TestQaController(TestController):
         category1 = self._get_category('Area 1')
         qa_text_multi_one_answers = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -264,7 +264,7 @@ class TestQaController(TestController):
 
         qa_text_multi = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -288,7 +288,7 @@ class TestQaController(TestController):
 
         qa_text_multi = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -302,7 +302,7 @@ class TestQaController(TestController):
 
         resp = self.app.get('/qa/get_one', params={'id': str(qa._id)}).json
         assert resp['qa']['title'] == qa_text_multi['title']
-        assert str(resp['qa']['_category']) == qa_text_multi['category']
+        assert str(resp['qa']['_category']) == qa_text_multi['workspace']
         assert resp['qa']['question'] == qa_text_multi['question']
         assert resp['qa']['tooltip'] == qa_text_multi['tooltip']
         assert resp['qa']['link'] == qa_text_multi['link']

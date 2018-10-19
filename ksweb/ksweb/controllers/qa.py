@@ -66,14 +66,14 @@ class QaController(RestController):
     @expose('json')
     @validate({
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
         'answer_type': OneOfValidator(values=Qa.QA_TYPE, required=True),
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
-    def post(self, title, category, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
+    def post(self, title, workspace, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
         if not self._are_answers_valid(answer_type, answers):
             response.status_code = 412
             return dict(errors={'answers': _('Please add at least one more answer')})
@@ -82,7 +82,7 @@ class QaController(RestController):
 
         qa = Qa(
                 _owner=user._id,
-                _category=ObjectId(category),
+                _category=ObjectId(workspace),
                 _parent_precondition=to_object_id(precondition),
                 title=title,
                 question=question,
@@ -103,14 +103,14 @@ class QaController(RestController):
     @validate({
         '_id': QAExistValidator(required=True),
         'title': StringLengthValidator(min=2),
-        'category': WorkspaceExistValidator(required=True),
+        'workspace': WorkspaceExistValidator(required=True),
         'question': StringLengthValidator(min=2),
         'tooltip': StringLengthValidator(min=0, max=100),
         'link': StringLengthValidator(min=0, max=100),
         'answer_type': OneOfValidator(values=Qa.QA_TYPE, required=True),
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
-    def put(self, _id, title, category, question, tooltip, link, answer_type,
+    def put(self, _id, title, workspace, question, tooltip, link, answer_type,
                   precondition=None, answers=None, **kw):
         if not self._are_answers_valid(answer_type, answers):
             response.status_code = 412
@@ -120,7 +120,7 @@ class QaController(RestController):
 
         if check.get("entities"):
             entity = dict(
-                _id=_id, _category=category,
+                _id=_id, _category=workspace,
                 title=title, entity='qa',
                 question=question,
                 tooltip=tooltip, link=link,
@@ -134,10 +134,10 @@ class QaController(RestController):
             session['entity'] = entity  # overwrite always same key for avoiding conflicts
             session.save()
 
-            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=category)))
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         qa = Qa.query.get(_id=ObjectId(_id))
-        qa._category = ObjectId(category)
+        qa._category = ObjectId(workspace)
         qa._parent_precondition = to_object_id(precondition)
         qa.title = title
         qa.question = question

@@ -14,6 +14,7 @@ from tg.i18n import lazy_ugettext as l_
 import tg
 import pymongo
 from tg.i18n import ugettext as _
+from tgext.datahelpers.utils import slugify
 from tw2.core import StringLengthValidator, EmailValidator
 
 from ksweb import model
@@ -123,7 +124,8 @@ class QuestionaryController(BaseController):
                                   entity_model=model.Questionary))
     def download(self, _id):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
-        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.md' % questionary.title))
+        filename = slugify(questionary, questionary.title)
+        response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.md' % filename))
         return self.get_questionary_html(_id)
 
     @staticmethod
@@ -182,7 +184,9 @@ class QuestionaryController(BaseController):
         questionary.qa_values[qa_id] = {'qa_response': qa_response, 'order_number': order_number}
         quest_compiled = questionary.evaluate_questionary
 
-        return dict(questionary=questionary, quest_compiled=quest_compiled, html=self.get_questionary_html(_id))
+        return dict(questionary=questionary,
+                    quest_compiled=quest_compiled,
+                    html=self.get_questionary_html(_id))
 
     @expose('ksweb.templates.questionary.completed')
     @validate({

@@ -109,42 +109,18 @@ class TestQuestionaryController(TestController):
         category1 = self._get_category('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
-        color_content = [
-            {
-                "content": str(qa_color._id),
-                "type": "qa_response",
-                "title": "Favourite Color"
-            }
-        ]
-        out_1 = self._create_output("example1", category1._id,
-                                    fake_advanced_precond._id, color_content, 'some html')
+        out_1 = self._create_output("example1",
+                                    category1._id,
+                                    fake_advanced_precond._id,
+                                    'some html @{%s}' % str(qa_color._id))
 
         qa_animal = self._get_qa_by_title('Favourite color')
-        animal_content = [
-            {
-                "content": str(qa_animal._id),
-                "type": "qa_response",
-                "title": "Favourite Animals"
-            }
-        ]
         out_2 = self._create_output("example1", category1._id,
-                                    fake_advanced_precond._id, animal_content, 'some html')
+                                    fake_advanced_precond._id, 'some html  @{%s}' % str(qa_animal._id))
 
-        content = [
-            {
-                'type': "output",
-                'content': str(out_1._id),
-                'title': out_1.title
-            },
-            {
-                'type': "output",
-                'content': str(out_2._id),
-                'title': out_2.title
-            },
-        ]
-        html = ''
+        html = '#{%s} #{%s}' % (str(out_1._id), str(out_2._id))
 
-        document = self._create_document("Advanced_document", category1._id, content, html)
+        document = self._create_document("Advanced_document", category1._id, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
@@ -179,47 +155,14 @@ class TestQuestionaryController(TestController):
         category1 = self._get_category('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
-        color_content = [
-            {
-                "content": str(qa_color._id),
-                "type": "qa_response",
-                "title": "Favourite Color"
-            }
-        ]
         out_1 = self._create_output("example1", category1._id,
-                                    fake_advanced_precond._id, color_content, 'html')
+                                    fake_advanced_precond._id, '@{%s}' % str(qa_color._id))
 
         qa_animal = self._get_qa_by_title('Favourite color')
-        animal_content = [
-            {
-                "content": str(qa_animal._id),
-                "type": "qa_response",
-                "title": "Favourite Animals"
-            }
-        ]
         out_2 = self._create_output("example1", category1._id,
-                                    fake_advanced_precond._id, animal_content, 'html')
-
-        content = [
-            {
-                'type': "output",
-                'content': str(out_1._id),
-                'title': out_1.title
-            },
-            {
-                'type': "output",
-                'content': str(out_2._id),
-                'title': out_2.title
-            },
-            {
-                'type': "output",
-                'content': str(out_1._id),
-                'title': out_1.title
-            },
-        ]
-        html = ''
-
-        document = self._create_document("Advanced_document", category1._id, content, html) 
+                                    fake_advanced_precond._id, '@{%s}' % str(qa_animal._id))
+        html = '#{%s} #{%s} #{%s}' % (str(out_1._id), str(out_2._id), str(out_1._id))
+        document = self._create_document("Advanced_document", category1._id, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={

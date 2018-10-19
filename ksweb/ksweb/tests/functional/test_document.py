@@ -30,22 +30,12 @@ class TestDocument(TestController):
 
     def test_creation_document(self):
         self._login_lawyer()
-
         category1 = self._get_category('Area 1')
-
         output1 = self._create_fake_output('Output1')
-
         document_params = {
             'title': 'Titolo documento 1',
-            'category': str(category1._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
-            'content': [
-                {
-                    'type': "output",
-                    'content': str(output1._id),
-                    'title': output1.title
-                },
-            ]
+            'workspace': str(category1._id),
+            'html': 'Io sono il tuo editor #{%s}' % str(output1._id)
         }
         resp = self.app.post_json(
             '/document/post', params=document_params
@@ -74,8 +64,8 @@ class TestDocument(TestController):
         document_params = {
             '_id': str(original_document._id),
             'title': 'Aggiornato',
-            'category': str(category1._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'workspace': str(category1._id),
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
         resp = self.app.put_json(
@@ -98,7 +88,7 @@ class TestDocument(TestController):
         self._login_lawyer()
         document = self._create_fake_document("Document")
         response = self.app.get('/document/export', params=dict(_id=str(document._id)))
-        assert b"fake_tooltip_Document" in response.body
+        assert b"Document" in response.body, response.body
 
     def test_document_import(self):
         self._login_lawyer()
