@@ -115,18 +115,6 @@ class Questionary(MappedClass):
 
     @property
     def evaluate_questionary(self):
-        log.debug("evaluate_questionary")
-        """
-        Valutazione del questionario, ogni volta svuoto i valori delle valutazioni di documenti,
-        output e precond, così nel caso venga riaperto il questionario dopo che è stata inserita
-        una nuova domanda, viene ricalcolato tutto e sarà aggiornato.
-        Va a recuperare il documento collegato e ne analizza tutto il content
-        :return: Se a tutti gli output del content sono stati valutati restituisce come stato
-                 completed: True
-        :return: Se invece non sono stati ancora valutati degli output restituisce come stato
-                 completed: False e la qa alla quale bisogna rispondere
-        """
-
         # self.document_values = []
         self.output_values = {}
         self.generate_expression()
@@ -191,18 +179,6 @@ class Questionary(MappedClass):
         return advanced_expression
 
     def compile_output(self, output_id):
-        log.debug("compile_output")
-
-        """
-        Questo metodo serve per salvare direttamente dell'output in chiaro nel risultato finale del
-        questionario.
-
-        Questo metodo appende all'array di stringhe document_values i vari componenti trovati nel
-        documento, che siano testo semplice o risposte, un elemento per ogni cella dell'array
-
-        :param output_id:
-
-        """
         from . import Output
         output = Output.query.get(_id=ObjectId(output_id))
 

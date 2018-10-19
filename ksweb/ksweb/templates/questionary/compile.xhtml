@@ -109,7 +109,7 @@
             var self = this;
             self.set('questionary', self.questionary);
             self.set('quest_compiled', self.quest_compiled);
-            self.set('html', self.html);
+            self.set('html', KS.getMDConverter().makeHtml(self.html));
             self.set('qa_response', self.qa_response);
             self.checkButtons();
             self.set('errors', {});
@@ -229,9 +229,7 @@
         mywindow.document.write('</head><body >');
         mywindow.document.write('<div class="text-left">' + self.questionary.title + '</div>');
         mywindow.document.write($('#html').html());
-
         mywindow.document.write('</body></html>');
-
         mywindow.document.close(); // necessary for IE >= 10
         mywindow.focus(); // necessary for IE >= 10*/
 
