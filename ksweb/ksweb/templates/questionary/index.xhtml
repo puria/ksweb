@@ -58,6 +58,11 @@
 <script>
 <![CDATA[
 jQuery(document).ready(function () {
+  $(document).on("click", ".export,.esporta", function() {
+    var row_id = jQuery(this).data("row-id");
+    window.location = '${tg.url("/questionary/download")}?_id=' + row_id;
+  });
+
   $(document).on("click", "#submit-password", function(){
       var self = this;
       var params = { 'password': $('#form-password').val(),

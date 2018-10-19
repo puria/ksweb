@@ -6,6 +6,7 @@ from string import Template
 import tg
 from bson import ObjectId
 from tg.renderers import json as json_render
+from tgext.datahelpers.utils import slugify
 
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import import_output, export_outputs
@@ -140,7 +141,8 @@ class DocumentController(RestController):
     def export(self, _id):
         _document = model.Document.query.get(_id=ObjectId(_id))
         document = _document.__json__()
-        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % _document.title)))
+        filename = slugify(_document, _document.title)
+        response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % filename)))
         document.pop('_category', None)
         document.pop('_id', None)
         document.pop('entity', None)

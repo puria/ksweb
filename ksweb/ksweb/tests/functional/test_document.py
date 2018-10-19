@@ -30,15 +30,12 @@ class TestDocument(TestController):
 
     def test_creation_document(self):
         self._login_lawyer()
-
         category1 = self._get_category('Area 1')
-
         output1 = self._create_fake_output('Output1')
-
         document_params = {
             'title': 'Titolo documento 1',
-            'category': str(category1._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'workspace': str(category1._id),
+            'html': '<p>Io sono il tuo editor</p>',
             'content': [
                 {
                     'type': "output",
@@ -75,7 +72,7 @@ class TestDocument(TestController):
             '_id': str(original_document._id),
             'title': 'Aggiornato',
             'category': str(category1._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
         resp = self.app.put_json(

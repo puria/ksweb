@@ -287,9 +287,9 @@ class TestController(object):
             '/output/post', params={
                 'title': title,
                 'content': content,
-                'category': str(category_id),
+                'workspace': str(category_id),
                 'precondition': str(precondition_id),
-                'ks_editor': html,
+                'html': html,
             }
         )
         return self._get_output_by_title(title)
@@ -318,9 +318,9 @@ class TestController(object):
         self.app.post_json(
             '/document/post', params={
                 'title': title,
-                'category': str(category_id),
+                'workspace': str(category_id),
                 'content': content,
-                'ks_editor': html
+                'html': html
             }
         ).json
 
