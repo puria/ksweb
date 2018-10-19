@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Output model module."""
-from string import Template
+from itertools import filterfalse
 
 import pymongo
 import tg
@@ -67,21 +67,27 @@ class Output(MappedEntity):
     def is_filtered(self):
         return True if self._precondition else False
 
-    def render(self, evaluations_dict):
-        html = Template(self.html)
-        nested_output_html = dict()
+    @property
+    def nested_outputs(self):
+        def type_filter(item):
+            return item['type'] != 'output'
+        return list(filterfalse(type_filter, self.content))
 
+    def render(self, evaluations_dict):
         if str(self._id) not in evaluations_dict:
             return ''
         if evaluations_dict[str(self._id)]['evaluation'] is False:
             return ''
 
-        for elem in self.content:
-            if elem['type'] == 'output':
-                nested_output = Output.query.get(_id=ObjectId(elem['content']))
-                nested_output_html['output_' + elem['content']] = nested_output.render(evaluations_dict)
+        from ksweb.lib.utils import TemplateOutput
+        nested_output_html = dict()
 
-        return html.safe_substitute(**nested_output_html)
+        for elem in self.nested_outputs:
+            nested_output = Output.query.get(_id=ObjectId(elem['content']))
+            nested_output_html['output_' + elem['content']] = nested_output.render(evaluations_dict)
+
+        ret = TemplateOutput(self.html).safe_substitute(**nested_output_html)
+        return ret
 
     def update_content(self):
         from ksweb.lib.utils import get_entities_from_str

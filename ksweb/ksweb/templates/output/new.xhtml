@@ -141,7 +141,7 @@
 
             let params = this.get('create');
             params['html'] = this.get('editor').value();
-            
+
             KS.ajax(this.get('submit_url'),
                     JSON.stringify(params),
                     result => {

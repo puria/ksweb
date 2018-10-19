@@ -233,10 +233,7 @@ class Questionary(MappedClass):
         return None
 
     def evaluate_expression(self, output_id):
-        log.debug("evaluate_expression")
-
         expression = self.expressions[output_id]
-
         answers = dict()
 
         for _id, resp in self.qa_values.items():
@@ -244,7 +241,7 @@ class Questionary(MappedClass):
             if isinstance(answer, basestring):
                 answers['q_' + _id] = answer
             else:
-                # array
+                # lists
                 answers['q_' + _id] = "[%s]" % ' ,'.join(map(lambda x: "'%s'" % x, answer))
 
         try:
@@ -260,8 +257,6 @@ class Questionary(MappedClass):
         self.output_values[output_id] = {
             'evaluation': evaluation
         }
-
-        DBSession.flush_all()
 
         return {
             'completed': True
