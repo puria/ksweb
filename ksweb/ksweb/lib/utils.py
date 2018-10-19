@@ -40,17 +40,20 @@ def import_qa(imported_document, qa_id, owner, workspace_id):
         if qa['_parent_precondition'] else None
 
     if qa:
-        inserted = upsert_document(model_class=model.Qa, _owner=ObjectId(owner),
-                             _category=ObjectId(workspace_id),
-                             _parent_precondition=prec_id,
-                             title=qa['title'],
-                             question=qa['question'],
-                             tooltip=qa['tooltip'],
-                             link=qa['link'],
-                             type=qa['type'],
-                             answers=qa['answers'],
-                             public=qa['public'],
-                             visible=qa['visible'])
+        inserted = upsert_document(model_class=model.Qa,
+                                   _owner=ObjectId(owner),
+                                   _category=ObjectId(workspace_id),
+                                   _parent_precondition=prec_id,
+                                   status=model.Qa.STATUS.UNREAD,
+                                   auto_generated=True,
+                                   title=qa['title'],
+                                   question=qa['question'],
+                                   tooltip=qa['tooltip'],
+                                   link=qa['link'],
+                                   type=qa['type'],
+                                   answers=qa['answers'],
+                                   public=qa['public'],
+                                   visible=qa['visible'])
         return inserted._id
 
 
@@ -72,6 +75,8 @@ def import_precondition(imported_document, precondition_id, owner, workspace_id)
 
     prec = upsert_document(model_class=model.Precondition, _owner=ObjectId(owner),
                            _category=ObjectId(workspace_id),
+                           status=model.Precondition.STATUS.UNREAD,
+                           auto_generated=True,
                            title=precondition['title'],
                            type=precondition['type'],
                            condition=condition)
@@ -106,6 +111,8 @@ def import_output(imported_document, output_id, owner, workspace_id):
 
     output_inserted = upsert_document(model_class=model.Output,
                                       title=output['title'],
+                                      status=model.Output.STATUS.UNREAD,
+                                      auto_generated=True,
                                       _category=ObjectId(workspace_id),
                                       _owner=ObjectId(owner),
                                       html=html,

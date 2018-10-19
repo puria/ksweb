@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from tg import render_template
 
-from ksweb.model import Output, Precondition, Document
+from ksweb.model import Output, Precondition, Document, Qa
 
 
 def user_menu(section=None, **kw):
@@ -9,10 +9,12 @@ def user_menu(section=None, **kw):
 
 
 def sidebar(section=None, workspace=None, **kw):
+    unread_qas = Qa.unread_count(workspace)
     unread_outputs = Output.unread_count(workspace)
     unread_filters = Precondition.unread_count(workspace)
     unread_documents = Document.unread_count(workspace)
     return render_template(dict(workspace=workspace,
+                                unread_qas=unread_qas,
                                 unread_outputs=unread_outputs,
                                 unread_filters=unread_filters,
                                 unread_documents=unread_documents),
