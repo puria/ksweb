@@ -5,7 +5,7 @@ import tg
 from bson import ObjectId
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
-    response
+    response, session
 from tg import predicates
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
@@ -105,19 +105,20 @@ class OutputController(RestController):
 
         check = self.get_related_entities(_id)
 
-        # if check.get("entities"):
-        #     entity = dict(
-        #         _id=_id,
-        #         title=title,
-        #         _category=to_object_id(workspace),
-        #         _precondition=to_object_id(precondition),
-        #         entity='output',
-        #         auto_generated=False,
-        #         html=html
-        #     )
-        #     session['entity'] = entity  # overwrite always same key for avoiding conflicts
-        #     session.save()
-        #     return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
+        if check.get("entities"):
+            entity = dict(
+                _id=_id,
+                title=title,
+                _category=workspace,
+                _precondition=precondition,
+                entity='output',
+                auto_generated=False,
+                html=html
+            )
+            session.data_serializer = 'pickle'
+            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session.save()
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         output = Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title

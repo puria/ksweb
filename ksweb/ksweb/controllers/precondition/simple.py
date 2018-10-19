@@ -92,7 +92,6 @@ class PreconditionSimpleController(RestController):
         'title': StringLengthValidator(min=2),
         'workspace': WorkspaceExistValidator(required=True),
         'question': QAExistValidator(required=True),
-        'answer_type': OneOfValidator(values=[u'what_response'], required=True),
     }, error_handler=validation_errors_response)
     @require(
         CanManageEntityOwner(
@@ -101,18 +100,19 @@ class PreconditionSimpleController(RestController):
             entity_model=Precondition))
     def put(self, _id, title, workspace, question, interested_response, **kw):
         check = self.get_related_entities(_id)
-        # if check.get("entities"):
-        #     entity = dict(
-        #         _id=_id,
-        #         title=title,
-        #         condition=[question, interested_response],
-        #         _category=workspace,
-        #         auto_generated=False,
-        #         entity='precondition/simple'
-        #     )
-        #     session['entity'] = entity  # overwrite always same key for avoiding conflicts
-        #     session.save()
-        #     return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
+
+        if check.get("entities"):
+            entity = dict(
+                _id=_id,
+                title=title,
+                condition=[question, interested_response],
+                _category=workspace,
+                auto_generated=False,
+                entity='precondition/simple'
+            )
+            session['entity'] = entity  # overwrite always same key for avoiding conflicts
+            session.save()
+            return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
         precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
