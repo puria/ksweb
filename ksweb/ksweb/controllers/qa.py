@@ -90,6 +90,7 @@ class QaController(RestController):
                 link=link,
                 type=answer_type,
                 answers=answers,
+                auto_generated=False,
                 public=True,
                 visible=True
             )
