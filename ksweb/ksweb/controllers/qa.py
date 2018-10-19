@@ -140,6 +140,7 @@ class QaController(RestController):
         qa._parent_precondition = to_object_id(precondition)
         qa.title = title
         qa.question = question
+        qa.auto_generated = False
         qa.tooltip = tooltip
         qa.question = question
         qa.link = link
