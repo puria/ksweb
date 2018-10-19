@@ -184,7 +184,9 @@ class QuestionaryController(BaseController):
         questionary.qa_values[qa_id] = {'qa_response': qa_response, 'order_number': order_number}
         quest_compiled = questionary.evaluate_questionary
 
-        return dict(questionary=questionary, quest_compiled=quest_compiled, html=self.get_questionary_html(_id))
+        return dict(questionary=questionary,
+                    quest_compiled=quest_compiled,
+                    html=self.get_questionary_html(_id))
 
     @expose('ksweb.templates.questionary.completed')
     @validate({

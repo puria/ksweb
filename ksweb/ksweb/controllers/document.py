@@ -174,7 +174,7 @@ class DocumentController(RestController):
                                              workspace))
             }
             content.append(c)
-            values['output_' + output['content']] = '${output_' + c['content'] + '}'
+            values[output['content']] = '#{' + c['content'] + '}'
         html = Template(imported_document['html']).safe_substitute(**values)
         model.Document(
             _owner=owner,

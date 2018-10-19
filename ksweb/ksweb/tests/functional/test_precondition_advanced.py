@@ -30,14 +30,14 @@ class TestPreconditionAdvanced(TestController):
 
         qa_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
+        self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
         qa = self._get_qa_by_title(qa_params['title'])
 
         precondition1_params = {
@@ -53,14 +53,14 @@ class TestPreconditionAdvanced(TestController):
 
         qa2_params = {
             'title': 'Title of QA2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA2',
             'link': 'http://www.axant.it',
             'answer_type': 'multi',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa2_params['title'], qa2_params['category'], qa2_params['question'], qa2_params['tooltip'], qa2_params['link'], qa2_params['answer_type'], qa2_params['answers'])
+        self._create_qa(qa2_params['title'], qa2_params['workspace'], qa2_params['question'], qa2_params['tooltip'], qa2_params['link'], qa2_params['answer_type'], qa2_params['answers'])
         qa2 = self._get_qa_by_title(qa2_params['title'])
 
         precondition2_params = {
@@ -80,7 +80,7 @@ class TestPreconditionAdvanced(TestController):
         #  Ora che ho i 2 filtri semplici posso creare il filtro avanzato
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'conditions': [
                 {
                     'type': 'precondition',
@@ -127,7 +127,7 @@ class TestPreconditionAdvanced(TestController):
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'conditions': [
                 {
                     'type': 'precondition',
@@ -159,7 +159,7 @@ class TestPreconditionAdvanced(TestController):
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'conditions': [
                 {
                     'type': 'operator',
@@ -186,7 +186,7 @@ class TestPreconditionAdvanced(TestController):
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'conditions': [
                 {
                     'type': 'fake_content',
@@ -213,7 +213,7 @@ class TestPreconditionAdvanced(TestController):
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'conditions': [
                 {
                     'type': 'operator',
@@ -240,7 +240,7 @@ class TestPreconditionAdvanced(TestController):
         precond_advanced = {
             '_id': str(advanced_filter._id),
             'title': 'new title',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'conditions': [
                 {
                     'type': 'precondition',
@@ -271,7 +271,7 @@ class TestPreconditionAdvanced(TestController):
 
         precond_advanced = {
             'title': 'new title',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'conditions': [
                 {
                     'type': 'precondition',
@@ -300,7 +300,7 @@ class TestPreconditionAdvanced(TestController):
         precond_advanced = {
             '_id': str(advanced_filter._id),
             'title': 'new title',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'conditions': [
                 {
                     'type': 'operator',
@@ -317,12 +317,12 @@ class TestPreconditionAdvanced(TestController):
         self._login_lawyer()
         workspace = self._get_category('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
-        self._create_output("Title", workspace._id, advanced_filter._id, "balblaba", "blabla")
+        self._create_output("Title", workspace._id, advanced_filter._id, "blabla")
 
         precond_advanced = {
             '_id': str(advanced_filter._id),
             'title': 'new title',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'conditions': [
                 {
                     'type': 'precondition',

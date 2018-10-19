@@ -33,14 +33,14 @@ class TestPreconditionSimple(TestController):
         category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'],
+        self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'],
                         qa_params['link'], qa_params['answer_type'], qa_params['answers'])
         qa = self._get_qa_by_title(qa_params['title'])
 
@@ -66,14 +66,14 @@ class TestPreconditionSimple(TestController):
         category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'],
+        self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'],
                         qa_params['link'], qa_params['answer_type'], qa_params['answers'])
         qa = self._get_qa_by_title(qa_params['title'])
 
@@ -99,14 +99,14 @@ class TestPreconditionSimple(TestController):
         category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'],
+        self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'],
                         qa_params['link'], qa_params['answer_type'], qa_params['answers'])
         qa = self._get_qa_by_title(qa_params['title'])
 
@@ -132,20 +132,20 @@ class TestPreconditionSimple(TestController):
         category1 = self._get_category('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'],
+        self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'],
                         qa_params['link'], qa_params['answer_type'], qa_params['answers'])
         qa = self._get_qa_by_title(qa_params['title'])
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': []
@@ -181,7 +181,7 @@ class TestPreconditionSimple(TestController):
         precondition_params = {
             '_id': str(precondition._id),
             'title': 'Title of the precondition',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'question': str(precondition.get_qa()._id),
             'answer_type': 'what_response',
             'interested_response': []
@@ -195,12 +195,12 @@ class TestPreconditionSimple(TestController):
         self._login_lawyer()
         workspace = self._get_category('Area 1')
         precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
-        self._create_output("Title", workspace._id, precondition._id, "balblaba", "blablbla")
+        self._create_output("Title", workspace._id, precondition._id, "blablbla")
 
         precondition_params = {
             '_id': str(precondition._id),
             'title': 'Title of the precondition',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'question': str(precondition.get_qa()._id),
             'answer_type': 'what_response',
             'interested_response': []

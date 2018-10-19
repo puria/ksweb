@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from bson import ObjectId
+from ksweb.lib.utils import get_entities_from_str
 from ksweb.tests import TestController
 from ksweb import model
 
@@ -50,9 +51,9 @@ class TestOutput(TestController):
 
         output_params = {
             'title': 'Title of Output',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'precondition': str(precondition._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
 
@@ -73,7 +74,7 @@ class TestOutput(TestController):
         fake_qa = self._create_fake_qa('Fake name')
         output_params = {
             'title': 'Title of Output',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'precondition': str(precondition._id),
             'content': [
                 {
@@ -96,7 +97,7 @@ class TestOutput(TestController):
 
         assert resp, resp
         assert resp['errors'], resp
-        assert resp['errors']['content'] == 'Invalid Filter.'
+        assert resp['errors']['html'] == 'Enter a value'
 
     def test_put_output(self):
         self.test_creation_output()
@@ -107,9 +108,9 @@ class TestOutput(TestController):
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'precondition': str(precondition._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
 
@@ -129,8 +130,8 @@ class TestOutput(TestController):
 
         output_params = {
             'title': 'Title of Output',
-            'category': str(workspace._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'workspace': str(workspace._id),
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
 
@@ -154,39 +155,33 @@ class TestOutput(TestController):
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'category': str(category1._id),
+            'workspace': str(category1._id),
             'precondition': str(precondition._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
-            'content': [
-                {
-                    "content": str(fake_qa._id),
-                    "type": "qa_response",
-                    "title": fake_qa.title
-                }
-            ]
+            'html': 'Io sono il tuo editor @{%s}' % str(fake_qa._id),
         }
 
         resp = self.app.put_json(
             '/output/put', params=output_params,
             status=412
         ).json
+
         assert resp is not None
         assert resp['errors'] is not None, resp
-        assert resp['errors']['content'] == 'The question Fake name is not related to the filter', resp['errors']['content']
+        assert resp['errors']['content'] == "The question/s {'%s'} is not related to the filter" % str(fake_qa._id), resp['errors']['content']
 
     def test_update_output_with_related_entities(self):
         self._login_lawyer()
         category = self._get_category('Area 1')
         document = self._create_fake_document("Title", category_id=category._id)
-        output_id = document['content'][0]['content']
-        output1 = model.Output.query.get(_id=ObjectId(output_id))
+        outputs, _ = get_entities_from_str(document.html)
+        output1 = outputs[0]
 
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'category': str(category._id),
+            'workspace': str(category._id),
             'precondition': str(output1.precondition._id),
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
 
@@ -194,9 +189,9 @@ class TestOutput(TestController):
         assert response['redirect_url']
         self.app.get(response['redirect_url'])
         response = self.app.get('/resolve/original_edit',
-                                params=dict(workspace=output_params['category']))
+                                params=dict(workspace=output_params['workspace']))
         response.follow()
-        output_edited = model.Output.query.get(_id=ObjectId(output_id))
+        output_edited = model.Output.query.get(_id=ObjectId(output1._id))
         assert output_edited['title'] == output_params['title']
 
 
@@ -214,9 +209,9 @@ class TestOutput(TestController):
 
         output_params = {
             'title': '1',
-            'category': '56c59ab417928003321d5a55',
+            'workspace': '56c59ab417928003321d5a55',
             'precondition': '56c59ab417928003321d5a55',
-            'ks_editor': '<p>Io sono il tuo editor</p>',
+            'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
 
@@ -228,25 +223,17 @@ class TestOutput(TestController):
 
         assert resp
         resp = resp['errors']
-        assert resp['category'] == 'Work Area does not exists', resp
+        assert resp['workspace'] == 'Work Area does not exists', resp
         assert resp['precondition'] == 'Filter does not exists', resp
         assert resp['title'] == 'Must be at least 2 characters', resp
         assert output is None
 
-    # def test_sidebar_output(self):
-    #     self._login_lawyer()
-    #     category1 = self._get_category('Area 1')
-    #     self._create_fake_output("Out1", category1._id)
-    #     self._create_fake_output("Out2", category1._id)
-    #     resp = self.app.get('/output/sidebar_output', params={'workspace': category1._id})
-    #     assert "Out1" in resp
-    #     assert "Out2" in resp
 
     def test_human_readable_details(self):
         self._login_lawyer()
         out1 = self._create_fake_output("Out1")
         resp = self.app.get('/output/human_readable_details', params={'_id': out1._id})
-        assert 'human_readbale_content' in resp
+        assert 'human_readable_content' in resp
         assert str(out1._id) in resp
 
 class TestOutputPlus(TestController):

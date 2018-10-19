@@ -97,40 +97,25 @@ class TestUtils(TestController):
 
     def test_export_output(self):
         self._login_admin()
-        content = [
-            {'content': str(self.qa._id),
-             'type': 'qa_response',
-             'title': 'title'
-             }
-        ]
-        o = self._create_output('output', self.ws._id, self.prec._id, content=content, html='html')
-
-        content1 = [
-            {'content': str(self.qa._id),
-             'type': 'qa_response',
-             'title': 'title'
-             },
-            {'content': str(o._id),
-             'type': 'output',
-             'title': 'output'
-             }
-
-        ]
-        o1 = self._create_output('output1', self.ws._id, self.prec._id, content=content1, html='html')
+        o = self._create_output('output', self.ws._id, self.prec._id, html='@{%s}' % self.qa._id)
+        o1 = self._create_output('output1', self.ws._id, self.prec._id, html='@{%s} #{%s}' % (self.qa._id, o._id))
         export_outputs(o1._id, self.document)
         assert self.document['qa'] == self.qa_struct, self.document['qa']
         assert self.document['simple_preconditions'] == self.prec_struct, self.document['simple_preconditions']
-        expected = {'title': u'output1', 'content': [{u'content': str(self.qa._id),
-                                                      u'type': u'qa_response',
-                                                      u'title': u'title'},
-                                                     {u'content': str(o._id),
-                                                      u'type': u'output',
-                                                      u'title': u'output'}
-                                                     ],
-                    'visible': True, 'html': u'html', 'status': model.Output.STATUS.UNREAD, 'auto_generated': False,
-                    '_precondition': ObjectId(self.prec._id), '_id': ObjectId(o1._id),
-                    'public': True}
-        assert self.document['outputs'][str(o1._id)] == expected, (expected, self.document['outputs'][str(o1._id)])
+
+        expect = {'auto_generated': False,
+                  'content': [
+                      {'type': 'output', 'content': '%s' % o._id, 'title': 'output'},
+                      {'type': 'qa_response', 'content': '%s' % self.qa._id, 'title': 'title'}],
+                  'html': '@{%s} #{%s}' % (self.qa._id, o._id),
+                  'visible': True,
+                  '_id': o1._id,
+                  'public': True,
+                  'title': 'output1',
+                  '_precondition': self.prec._id,
+                  'status': 'UNREAD'}
+
+        assert self.document['outputs'][str(o1._id)] == expect, (expect, self.document['outputs'][str(o1._id)])
 
     def test_to_object_id(self):
         o = to_object_id("507f1f77bcf86cd799439011")

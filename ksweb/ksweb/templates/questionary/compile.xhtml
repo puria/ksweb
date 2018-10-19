@@ -81,6 +81,14 @@
         </div>
         <hr/>
         <div class="row mt-5">
+            <!--<div class="col">-->
+                <!--<dl>-->
+                    <!--{{questionary.answers}}-->
+                    <!--&lt;!&ndash;<dt>{{question}}</dt>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<dd>{{answer}}</dd>&ndash;&gt;-->
+                    <!--&lt;!&ndash;{{/each}}&ndash;&gt;-->
+                <!--</dl>-->
+            <!--</div>-->
             <div id="html" class="col pt-3">
                 {{{html}}}
             </div>
@@ -109,7 +117,7 @@
             var self = this;
             self.set('questionary', self.questionary);
             self.set('quest_compiled', self.quest_compiled);
-            self.set('html', KS.getMDConverter().makeHtml(self.html));
+            self.set('html', self.html);
             self.set('qa_response', self.qa_response);
             self.checkButtons();
             self.set('errors', {});
@@ -174,7 +182,7 @@
             self.set('saving', false);
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
-            self.set('html', KS.getMDConverter().makeHtml(data['html']));
+            self.set('html', data['html']);
             self.set('qa_response', data['previous_response']);
             self.set('errors', {});
             self.checkButtons();
@@ -208,7 +216,7 @@
             self.set('saving', false);
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
-            self.set('html', KS.getMDConverter().makeHtml(data['html']));
+            self.set('html', data['html']);
             self.set('errors', {});
             self.checkButtons();
             self.next_qa();
