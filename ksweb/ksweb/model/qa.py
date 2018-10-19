@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa model module."""
+import pymongo
+
 import tg
 from bson import ObjectId
 from markupsafe import Markup
@@ -54,7 +56,11 @@ class Qa(MappedEntity):
 
     @classmethod
     def available_for_user(cls, user_id, workspace=None):
-        return User.query.get(_id=user_id).owned_entities(cls, workspace)
+        return User.query.get(_id=user_id).owned_entities(cls, workspace).sort([
+                                ('auto_generated', pymongo.ASCENDING),
+                                ('status', pymongo.DESCENDING),
+                                ('title', pymongo.ASCENDING),
+                        ])
 
     @property
     def entity(self):
