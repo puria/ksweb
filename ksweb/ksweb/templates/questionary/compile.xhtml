@@ -79,17 +79,20 @@
                 {{/if}}
             </div>
         </div>
-        <hr/>
-        <div class="row mt-5">
-            <div class="col">
+        <div class="row mt-4">
+            <div class="col-4 mr-2">
+                <h2 class="text-primary">Q/A Recap</h2>
+                <hr/>
                 <dl>
                     {{#each recap}}
-                    <dt>{{question}}</dt>
-                    <dd>{{answer}}</dd>
+                    <dt class="text-muted">{{question}}</dt>
+                    <dd class="text-muted">{{answer}}</dd>
                     {{/each}}
                 </dl>
             </div>
-            <div id="html" class="col pt-3">
+            <div id="html" class="col ml-2">
+                <h2 class="text-primary">Preview</h2>
+                <hr/>
                 {{{html}}}
             </div>
         </div>
