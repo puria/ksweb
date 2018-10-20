@@ -42,6 +42,7 @@ def material_icon(icon_name):
         'more_horiz': '&#xE5D3;',
         'question_answer': '&#xE8AF',
         'low_priority': '&#xE16D',
+        'launch': '&#xe895',
         }
     return Markup('<i class="material-icons media-middle material-icon-%s" '
                   'style="vertical-align: bottom;">%s</i>' % (

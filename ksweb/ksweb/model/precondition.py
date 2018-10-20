@@ -14,8 +14,7 @@ from ksweb.model.mapped_entity import MappedEntity
 
 
 def _custom_title(obj):
-    url = tg.url('/precondition/%s/edit' % (Precondition.TYPES.SIMPLE if obj.is_simple else Precondition.TYPES.ADVANCED),
-                 params=dict(_id=obj._id, workspace=obj._category))
+    url = tg.url('/%s/edit' % (obj.entity), params=dict(_id=obj._id, workspace=obj._category))
     cls = 'bot' if obj.auto_generated else ''
     status = obj.status
     return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, cls, obj.title))

@@ -57,6 +57,9 @@
                         <span class="invalid-feedback">{{errors.precondition}}</span>
                     {{/if}}
                 </div>
+                <div class="col-md-auto align-self-center">
+                    <a href="${tg.url('/precondition/open')}?_id={{create.precondition}}" target="_blank">${h.material_icon('launch')}</a>
+                </div>
                 <div class="col">
                     <a href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}&question_content={{create.question}}&question_title={{create.title}}"
                        id="create-filter" class="btn btn-outline-success d-inline-block">

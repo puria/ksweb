@@ -45,6 +45,9 @@
                     </select>
                     {{#if errors.precondition}}<span class="help-block">{{errors.precondition}}</span>{{/if}}
                 </div>
+                <div class="col-md-auto align-self-center">
+                    <a href="${tg.url('/precondition/open')}?_id={{create.precondition}}" target="_blank">${h.material_icon('launch')}</a>
+                </div>
                 <div class="col">
                      <a target="_blank" href="${tg.url('/precondition/simple/new', params=dict(workspace=workspace))}" id="create-filter"
                            class="btn btn-outline-success d-inline-block">${h.material_icon('save')} ${_('New Simple Filter')}</a>

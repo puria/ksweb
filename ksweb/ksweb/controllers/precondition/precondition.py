@@ -3,7 +3,7 @@
 from __future__ import print_function
 import tg
 from bson import ObjectId
-from tg import request
+from tg import request, redirect
 from tg.decorators import paginate, decode_params, validate
 from tg.i18n import lazy_ugettext as l_
 from tg import expose, predicates, tmpl_context, validation_errors_response
@@ -80,4 +80,8 @@ class PreconditionController(BaseController):
     def mark_as_read(self, workspace):
         Precondition.mark_as_read(request.identity['user']._id, workspace)
 
+    @expose('json')
+    def open(self, _id):
+        p = Precondition.query.get(_id=ObjectId(_id))
+        return redirect('/%s/edit' % (p.entity), params=dict(_id=p._id, workspace=p._category))
 
