@@ -107,6 +107,7 @@
                     {{#each available_response:i}}
                         {{#if .display}}
                             <div class="answer">
+                                <a class="btn btn-outline btn-sm" onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</a>
                                 <input type="{{input_type}}" name="example_response">
                                     {{#if .editable}}
                                         <textarea id="{{.answer}}" class="form-control d-inline-block response response-text" autofocus
@@ -116,9 +117,6 @@
                                         <pre id={{.answer}} class="response d-inline-block m-0"
                                              onclick="ractive_qa.makeEditable('{{i}}')">{{.answer}}</pre>
                                     {{/if}}
-                                {{#if !edit_mode}}
-                                    <label onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</label>
-                                {{/if}}
                             </div>
                         {{/if}}
                     {{/each}}
@@ -156,7 +154,6 @@
         onconstruct: function (options) {
             var self = this;
             self.qa = options['qa'];
-            self.edit_mode = false;
             self.submit_url = "${tg.url('/qa/post')}";
             self.submit_type = 'POST';
             self.workspace = options['workspace'];
@@ -181,7 +178,6 @@
             if (self.qa['_id']) {
                 self.submit_type = 'PUT';
                 self.submit_url = '${tg.url('/qa/put')}';
-                self.set('edit_mode', true);
                 self.set('create.title', self.qa['title']);
                 self.set('create.question', self.qa['question']);
                 self.set('create.precondition', self.qa['_parent_precondition']);
@@ -265,11 +261,8 @@
         makeEditable: function (response) {
             var self = this;
             var available_response = self.get('available_response');
-            var edit_mode = self.get('edit_mode');
-            if (!edit_mode) {
-                available_response[response]['editable'] = true;
-                self.set('available_response', available_response);
-            }
+            available_response[response]['editable'] = true;
+            self.set('available_response', available_response);
         },
         editAnswer: function (index) {
             var self = this;
