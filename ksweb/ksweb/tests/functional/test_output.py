@@ -143,6 +143,29 @@ class TestOutput(TestController):
         assert resp, resp
         assert not resp['errors']
 
+    def test_put_output_with_fake_precondition(self):
+        self.test_creation_output()
+        category1 = self._get_category('Area 1')
+
+        output1 = self._get_output_by_title('Title of Output')
+        fake_qa = self._create_fake_qa('Fake name')
+
+        output_params = {
+            '_id': str(output1._id),
+            'title': 'Title of Output edited',
+            'workspace': str(category1._id),
+            'precondition': str(category1._id), # a wrong id by purpose
+            'html': 'Io sono il tuo editor @{%s}' % str(fake_qa._id),
+        }
+
+        resp = self.app.put_json(
+            '/output/put', params=output_params,
+            status=412
+        ).json
+
+        assert resp is not None
+        assert resp['errors'] is not None, resp
+        assert resp['errors']['precondition'] == "Filter does not exists", resp['errors']
 
     def test_put_output_with_fake_qa_related(self):
         self.test_creation_output()
