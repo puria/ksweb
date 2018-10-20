@@ -114,7 +114,8 @@ class QuestionaryController(BaseController):
         return dict(questionary=questionary,
                     quest_compiled=questionary.evaluate_questionary,
                     html=self.get_questionary_html(_id),
-                    workspace=workspace)
+                    workspace=workspace,
+                    recap=questionary.answers)
 
     @expose(content_type='text/html')
     @validate({
@@ -186,7 +187,8 @@ class QuestionaryController(BaseController):
 
         return dict(questionary=questionary,
                     quest_compiled=quest_compiled,
-                    html=self.get_questionary_html(_id))
+                    html=self.get_questionary_html(_id),
+                    recap=questionary.answers)
 
     @expose('ksweb.templates.questionary.completed')
     @validate({
@@ -224,4 +226,5 @@ class QuestionaryController(BaseController):
         return dict(questionary=questionary,
                     quest_compiled=questionary.evaluate_questionary,
                     html=self.get_questionary_html(_id),
-                    previous_response=previous_response)
+                    previous_response=previous_response,
+                    recap=questionary.answers)

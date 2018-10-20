@@ -241,7 +241,7 @@ class Questionary(MappedClass):
     @property
     def answers(self):
         questions = sorted(self.qa_values.items(), key=lambda i: i[1].order_number)
-        return [dict(question=Qa.query.get(_id=ObjectId(q)).title, answer=a.qa_response) for q, a in questions]
+        return [dict(question=Qa.query.get(_id=ObjectId(q)).question, answer=a.qa_response) for q, a in questions]
 
 
 __all__ = ['Questionary']

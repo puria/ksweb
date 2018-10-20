@@ -81,14 +81,14 @@
         </div>
         <hr/>
         <div class="row mt-5">
-            <!--<div class="col">-->
-                <!--<dl>-->
-                    <!--{{questionary.answers}}-->
-                    <!--&lt;!&ndash;<dt>{{question}}</dt>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<dd>{{answer}}</dd>&ndash;&gt;-->
-                    <!--&lt;!&ndash;{{/each}}&ndash;&gt;-->
-                <!--</dl>-->
-            <!--</div>-->
+            <div class="col">
+                <dl>
+                    {{#each recap}}
+                    <dt>{{question}}</dt>
+                    <dd>{{answer}}</dd>
+                    {{/each}}
+                </dl>
+            </div>
             <div id="html" class="col pt-3">
                 {{{html}}}
             </div>
@@ -111,6 +111,7 @@
             self.questionary = options['questionary'];
             self.quest_compiled = options['quest_compiled'];
             self.html = options['html'];
+            self.recap = options['recap']
             self.qa_response = [];
         },
         oninit: function () {
@@ -121,6 +122,7 @@
             self.set('qa_response', self.qa_response);
             self.checkButtons();
             self.set('errors', {});
+            self.set('recap', self.recap)
             self.next_qa();
         },
         next_qa: function () {
@@ -162,6 +164,7 @@
         quest_compiled: ${Markup(h.script_json_encode(quest_compiled))},
         questionary: ${Markup(h.script_json_encode(questionary))},
         html: ${Markup(h.script_json_encode(html))},
+        recap: ${Markup(h.script_json_encode(recap))},
     });
     compile_questionary.on('previous_question', function (event) {
         var self = this;
@@ -184,6 +187,7 @@
             self.set('quest_compiled', data['quest_compiled']);
             self.set('html', data['html']);
             self.set('qa_response', data['previous_response']);
+            self.set('recap', data['recap']);
             self.set('errors', {});
             self.checkButtons();
             self.next_qa();
@@ -217,6 +221,7 @@
             self.set('questionary', data['questionary']);
             self.set('quest_compiled', data['quest_compiled']);
             self.set('html', data['html']);
+            self.set('recap', data['recap']);
             self.set('errors', {});
             self.checkButtons();
             self.next_qa();
