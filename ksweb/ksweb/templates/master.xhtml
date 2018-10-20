@@ -56,5 +56,12 @@
       </main>
     </div>
   </div>
+  <script>
+    jQuery(document).ready(function () {
+        jQuery(document).on('shown.bs.modal', function () {
+            jQuery(this).find('input:text:visible:first').focus();
+        })
+    })
+  </script>
 </body>
 </html>
