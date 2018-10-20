@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col">
                 {{#if !quest_compiled.completed}}
-                <pre class="form-group pt-5 h3 font-weight-bold">{{{qa.question}}}</pre>
+                <pre class="form-group pt-4 h4" style="overflow: hidden">{{{qa.question}}}</pre>
                 <div class="form-group form-check answer pl-0">
                     {{#if qa.type == 'text'}}
                       <textarea class="form-control" class-is-invalid="errors.qa_response">{{qa_response}}</textarea>
@@ -40,13 +40,13 @@
                             <input type="radio" 
                                 class-is-invalid="errors.qa_response"
                                 class="form-check-input mx-2 px-2" name="{{qa_response}}" value="{{.}}"/>
-                            <pre class="mx-5 pt-1">{{.}}</pre>
+                            <pre class="mx-5 h6" style="overflow: hidden">{{.}}</pre>
                         {{/if}}
                         {{#if qa.type == 'multi'}}
                             <input type="checkbox" 
                                 class-is-invalid="errors.qa_response"
                                 class="form-check-input mx-2 px-2" name="{{qa_response}}" value="{{.}}">
-                            <pre class="mx-5 pt-1">{{.}}</pre>
+                            <pre class="mx-5 h6" style="overflow: hidden">{{.}}</pre>
                         {{/if}}
                       {{/each}}
                     {{/if}}

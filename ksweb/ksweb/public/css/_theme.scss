@@ -21,7 +21,13 @@
 .help-text { color: $grey; }
 .cke_widget_inline { margin: 6px, 2px; }
 #compile_questionary pre { white-space: pre-wrap; }
-.answer pre { vertical-align: top; }
+.answer {
+  vertical-align: top;
+  .response {
+    border: 1px solid $white;
+    &:hover { border-color: $dark-blue}
+  }
+}
 
 a.bot {
     background-position: left center;

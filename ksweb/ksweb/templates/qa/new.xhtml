@@ -106,30 +106,28 @@
                 <div class="form-group col">
                     {{#each available_response:i}}
                         {{#if .display}}
-                            <div class="answer">
-                                <a class="btn btn-outline btn-sm" onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</a>
-                                <input type="{{input_type}}" name="example_response">
+                            <div class="answer row py-3">
+                                <a class="btn btn-outline btn-sm col-md-auto align-self-center text-muted" onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</a>
+                                <input type="{{input_type}}" name="example_response" class="col-md-auto align-self-center">
                                     {{#if .editable}}
-                                        <textarea id="{{.answer}}" class="form-control d-inline-block response response-text" autofocus
+                                        <textarea id="{{.answer}}" class="col form-control d-inline-block response response-text" autofocus
                                                                value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
 
                                     {{else}}
-                                        <pre id={{.answer}} class="response d-inline-block m-0"
-                                             onclick="ractive_qa.makeEditable('{{i}}')">{{.answer}}</pre>
+                                        <p id={{.answer}} class="col align-self-center response d-inline-block m-0 p-2"
+                                             onclick="ractive_qa.makeEditable('{{i}}')">{{.answer}}</p>
                                     {{/if}}
                             </div>
                         {{/if}}
                     {{/each}}
 
                     <div class="row">
-                        <div class="form-inline col-4">
-                            <textarea id="response_text" class="form-control {{errors.answers ? 'is-invalid' : ''}}" placeholder="${_('Insert an option of Answer and click on +')}"></textarea>
-                            <label for="response_text" class="displ"
-                                   onclick="ractive_qa.addResponse()">${h.material_icon('add_circle_outline')}</label>
+                            <textarea id="response_text" class="col form-control {{errors.answers ? 'is-invalid' : ''}}" placeholder="${_('Insert an option of Answer and click on +')}"></textarea>
+                            <a class="btn btn-outline col-md-auto align-self-center"
+                                   onclick="ractive_qa.addResponse()">ADD ${h.material_icon('add_circle_outline')}</a>
                             {{#if errors.answers}}
                                 <span class="invalid-feedback">{{errors.answers}}</span>
                             {{/if}}
-                        </div>
                     </div>
                 </div>
             {{/if}}
