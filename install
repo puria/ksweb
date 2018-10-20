@@ -4,19 +4,6 @@ activate() {
   source "./venv/bin/activate"
 }
 
-# first, makes sure distutils.sysconfig usable
-if ! $(python -c "import distutils.sysconfig.get_config_vars" &> /dev/null); then
-	echo "ERROR: distutils.sysconfig not usable" >&2
-	exit 2
-fi
-
-# get include path for this python version
-INCLUDE_PY=$(python -c "from distutils import sysconfig as s; print s.get_config_vars()['INCLUDEPY']")
-if [ ! -f "${INCLUDE_PY}/Python.h" ]; then
-	echo "ERROR: python-devel not installed" >&2
-	exit 3
-fi
-
 python3 -m venv venv
 activate
 python -c 'import sys; print(sys.version_info[:])'
