@@ -82,6 +82,9 @@ class PreconditionController(BaseController):
 
     @expose('json')
     def open(self, _id):
+        if not _id:
+            tg.flash('The precondition you are looking for, does not exist')
+            redirect()
         p = Precondition.query.get(_id=ObjectId(_id))
-        return redirect('/%s/edit' % (p.entity), params=dict(_id=p._id, workspace=p._category))
+        redirect('/%s/edit' % (p.entity), params=dict(_id=p._id, workspace=p._category))
 
