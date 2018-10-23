@@ -30,6 +30,10 @@
                     {{/if}}
                 </div>
                 <label for="extra-fields-form-question" class="col help-text">${h.material_icon('help_outline')} ${_("Insert a question that user will answer in the questionary. e.g. What's your name?")}</label>
+                <div class="col">
+                    <h5 class="text-primary">Dependencies</h5>
+                    ${h.dependencies(qa)}
+                </div>
             </div>
 
 

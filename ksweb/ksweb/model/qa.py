@@ -78,4 +78,8 @@ class Qa(MappedEntity):
     def is_multi(self):
         return self.type == self.TYPES.MULTI
 
+    @property
+    def dependencies(self):
+        return self.dependent_filters() + self.dependent_outputs()
+
 __all__ = ['Qa']

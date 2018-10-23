@@ -90,10 +90,10 @@
                     {{/each}}
                 </dl>
             </div>
-            <div id="html" class="col ml-2">
+            <div id="html" class="col ml-2 z-depth-5">
                 <h2 class="text-primary">Preview</h2>
                 <hr/>
-                {{{html}}}
+                {{{@.makeHtml()}}}
             </div>
         </div>
         ]]>
@@ -157,6 +157,9 @@
             self.set('next_disabled', next_disabled);
             (next_disabled) ? self.set('next_disabled_attr', 'disabled') : null;
 //]]>
+        },
+        makeHtml: function () {
+            return KS.getMDConverter().makeHtml(this.get('html'));
         }
     });
 </script>

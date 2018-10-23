@@ -195,8 +195,8 @@ def get_entities_from_str(html):
     return (outputs, answers)
 
 
-class TemplateOutput(Template):
 # https://stackoverflow.com/questions/34360603/python-template-safe-substitution-with-the-custom-double-braces-format
+class TemplateOutput(Template):
     delimiter = '#'
 
 

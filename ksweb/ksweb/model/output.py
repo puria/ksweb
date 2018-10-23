@@ -73,6 +73,10 @@ class Output(MappedEntity):
             return item['type'] != 'output'
         return list(filterfalse(type_filter, self.content))
 
+    @property
+    def dependencies(self):
+        return self.dependent_outputs()
+
     def render(self, evaluations_dict):
         if str(self._id) not in evaluations_dict:
             return ''

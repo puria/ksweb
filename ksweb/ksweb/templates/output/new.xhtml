@@ -32,6 +32,10 @@
                 <div class="col">
                     <label for="form-title" class="help-text">${h.material_icon('help_outline')} ${_('This is a unique name that you will use to refer to this object in this workspace.')}</label>
                 </div>
+                <div class="col">
+                    <h5 class="text-primary">Dependencies</h5>
+                    ${h.dependencies(output)}
+                </div>
             </div>
 
             <div class="form-group row align-items-center">

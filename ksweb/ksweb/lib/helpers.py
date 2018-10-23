@@ -3,14 +3,23 @@
 import logging
 
 from bson import ObjectId
+from kajiki import XMLTemplate
+from ksweb.model.mapped_entity import MappedEntity
 from markupsafe import Markup
 from datetime import datetime
 
 from ksweb import model
 from tg.i18n import lazy_ugettext as l_
 
-
+# Import commonly used helpers from WebHelpers2 and TG
+from tg.util.html import script_json_encode
+from ..controllers import partials
 log = logging.getLogger(__name__)
+
+try:
+    from webhelpers2 import date, html, number, misc, text
+except SyntaxError:
+    log.error("WebHelpers2 helpers not available with this Python Version")
 
 
 def material_icon(icon_name):
@@ -78,6 +87,7 @@ def table_row_content(entity, fields):
         tags.append(html.HTML.td(converted_value, class_=css_class.get(field, 'type-table-item')))
     return html.HTML(*tags)
 
+
 table_row_content.ROW_CONVERSIONS = {
     model.Category: lambda c: c.name,
     model.Precondition: lambda p: p.title,
@@ -105,23 +115,31 @@ def editor_widget_template_for_qa(**kw):
 def underscore(text):
     return text.lower().replace(" ", "_")
 
+
 def gravatar(email_address, size=200):
     from hashlib import md5
     from tg import url
     mhash = md5(email_address.encode('utf-8')).hexdigest()
     return url('https://www.gravatar.com/avatar/'+mhash, params=dict(s=size))
 
-# Import commonly used helpers from WebHelpers2 and TG
-from tg.util.html import script_json_encode
-
-from ..controllers import partials
-
-try:
-    from webhelpers2 import date, html, number, misc, text
-except SyntaxError:
-    log.error("WebHelpers2 helpers not available with this Python Version")
-
 
 def get_workspace_name(workspace_id):
     ws = model.Category.query.get(_id=ObjectId(workspace_id))
     return ws.name.upper() if ws else l_('HOME')
+
+
+def dependencies(entity):
+    no_message = Markup('<p class="text-muted">No other entity uses this one</p>')
+    if not isinstance(entity, MappedEntity):
+        return no_message
+
+    deps = entity.dependencies
+    if not deps:
+        return no_message
+
+    t = XMLTemplate("""
+    <div class="list-group list-group-flush">
+      <a href='${_.url}' class="list-group-item" py:for="_ in deps">${_.title}</a>
+    </div>
+    """)
+    return Markup(t(dict(deps=deps)).render())
