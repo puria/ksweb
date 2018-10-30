@@ -38,7 +38,7 @@ var KS = (function() {
                         var id = match.split(/([_\W])/)[4]
                         var title = getTitle(id)
                         var cls = (title) ? "badge-primary" : "badge-danger"
-                        return `<span class="badge badge-pill ${cls} entity">${title||id}</span>`;
+                        return `<span class="badge badge-pill ${cls} entity"><a target="_blank" class="text-white" href="/entity/${id}">${title||id}</a></span>`;
                     }
                 }
             },
@@ -57,7 +57,8 @@ var KS = (function() {
                         var id = match.split(/([_\W])/)[4]
                         var title = getTitle(id)
                         var cls = (title) ? "badge-success" : "badge-danger"
-                        return `<span class="badge badge-pill ${cls} entity">${title||id}</span>`;
+                        console.log(id)
+                        return `<span class="badge badge-pill ${cls} entity"><a target="_blank" class="text-white" href="/entity/${id}">${title||id}</a></span>`;
                     }
                 }
             },

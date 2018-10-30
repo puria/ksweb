@@ -20,6 +20,7 @@
 #
 ##############################################################################
 from ksweb.controllers.output_plus import OutputPlusController
+from ksweb.model import Output, Precondition, Qa, Document
 from tg import expose, flash, require, url, lurl, response, config
 from tg import request, redirect, tmpl_context
 from tg.decorators import paginate, decode_params
@@ -46,19 +47,6 @@ __all__ = ['RootController']
 
 
 class RootController(BaseController):
-    """
-    The root controller for the ksweb application.
-
-    All the other controllers and WSGI applications should be mounted on this
-    controller. For example::
-
-        panel = ControlPanelController()
-        another_app = AnotherWSGIApplication()
-
-    Keep in mind that WSGI applications shouldn't be mounted directly: They
-    must be wrapped around with :class:`tg.controllers.WSGIAppController`.
-
-    """
     admin = AdminController(model, None, config_type=TGAdminConfig)
     qa = QaController()
     precondition = PreconditionController()
@@ -80,7 +68,6 @@ class RootController(BaseController):
     @expose('ksweb.templates.questionary.index')
     @paginate('entities', items_per_page=int(config.get('pagination.items_per_page')))
     def dashboard(self, share_id):
-        entities = {}
         user = model.User.query.find({'_id': ObjectId(share_id)}).first()
 
         if not user:
@@ -138,6 +125,16 @@ class RootController(BaseController):
         ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()
         return dict(page='welcome', user=user, workspace=workspace, ws=ws, show_sidebar=True)
 
+    @expose('json')
+    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    def entity(self, _id):
+        output = Output.query.get(_id=ObjectId(_id))
+        precondition = Precondition.query.get(_id=ObjectId(_id))
+        qa = Qa.query.get(_id=ObjectId(_id))
+        document = Document.query.get(_id=ObjectId(_id))
+        entity = filter(None, [output, precondition, qa, document])
+        redirect(list(entity)[0].url)
+
     @expose('ksweb.templates.terms')
     def terms(self):
         return dict()
@@ -156,7 +153,6 @@ class RootController(BaseController):
 
     @expose('ksweb.templates.login')
     def login(self, came_from=lurl('/'), failure=None, login=''):
-        """Start the user login."""
         if failure is not None:
             if failure == 'user-not-found':
                 flash(_('User not found'), 'error')
@@ -173,28 +169,15 @@ class RootController(BaseController):
 
     @expose()
     def post_login(self, came_from=lurl('/')):
-        """
-        Redirect the user to the initially requested page on successful
-        authentication or redirect her back to the login page if login failed.
-
-        """
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
             redirect('/login',
                      params=dict(came_from=came_from, __logins=login_counter))
         userid = request.identity['repoze.who.userid']
         flash(_('Welcome back, %s!') % userid)
-
-        # Do not use tg.redirect with tg.url as it will add the mountpoint
-        # of the application twice.
         return HTTPFound(location=came_from)
 
     @expose()
     def post_logout(self, came_from=lurl('/')):
-        """
-        Redirect the user to the initially requested page on logout and say
-        goodbye as well.
-
-        """
         flash(_('We hope to see you soon!'))
         return HTTPFound(location=came_from)
