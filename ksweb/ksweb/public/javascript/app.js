@@ -102,6 +102,23 @@ var KS = (function() {
         return text.match(_entityRegex) || []
     }
 
+    var printDocument = function(css, title, body) {
+        var mywindow = window.open('', '_blank');
+        mywindow.document.write(`<html><head><link rel="stylesheet" href="${css}" type="text/css" /><title>${title}</title>`);
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(`<div class="text-left">${title}</div>`);
+        mywindow.document.write(body);
+        mywindow.document.write('</body></html>');
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.onload = function () {
+            var self = this;
+            self.print();
+            self.close();
+        };
+    }
+
     return {
         ajax: ajax,
         editor: editor,
@@ -110,5 +127,6 @@ var KS = (function() {
         addAnswerToEditor: addAnswerToEditor,
         getTitle: getTitle,
         getMDConverter: getMDConverter,
+        printDocument: printDocument,
     }
 })();
