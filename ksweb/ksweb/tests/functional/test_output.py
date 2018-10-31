@@ -281,7 +281,7 @@ class TestOutputPlus(TestController):
         self.app.post_json('/output_plus/post', params=dict(
             highlighted_text='output_plus',
             workspace=str(self.category._id),
-            list_=["output_%s" % str(nested_output._id)],
+            list_=["#{%s}" % str(nested_output._id)],
         ), status=200)
 
         assert self._get_output_by_title('output_plus')
