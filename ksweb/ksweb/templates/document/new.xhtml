@@ -150,7 +150,7 @@
                     JSON.stringify({
                         'highlighted_text': highlighted_text,
                         'list_': KS.getEntitiesList(highlighted_text),
-                        'workspace': self.create.workspace
+                        'workspace': self.get('workspace')
                     }),
                     function(resp) {
                         alert("${_('An Output without filter was automatically created from ')} '" + highlighted_text +"'.");

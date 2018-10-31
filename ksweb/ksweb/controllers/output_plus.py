@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from bson import ObjectId
+from ksweb.lib.utils import entity_from_id
 from tg import expose, RestController, predicates, request, decode_params
-
-from ksweb.controllers.resolve import ResolveController
 from ksweb.model import Output
 
 
@@ -14,29 +13,20 @@ class OutputPlusController(RestController):
     def post(self, highlighted_text=u'', workspace=None, list_=[]):
         first_5_words = u' '.join(highlighted_text.split())
         title = u' '.join(first_5_words.split(" ")[:5])
-
         user = request.identity['user']
-
-        content = []
-        for elem in list_:
-            type, _id = elem.split("_")
-            _model = ResolveController.related_models[type]
-            o = _model.query.get(ObjectId(_id))
-            content.append({
-                'type': type,
-                'title': o.title,
-                'content': _id
-            })
-
         output = Output(
             _owner=user._id,
             _category=workspace,
             title=title,
-            content=content,
+            content=[],
             public=True,
             visible=True,
             html=highlighted_text,
             auto_generated=True,
             status=Output.STATUS.UNREAD,
         )
+        for o in list_:
+            m = entity_from_id(_id=ObjectId(o[2:-1]))
+            output.insert_content(m)
+
         return dict(_id=str(output._id), title=title)

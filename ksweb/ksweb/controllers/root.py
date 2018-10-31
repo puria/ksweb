@@ -20,6 +20,7 @@
 #
 ##############################################################################
 from ksweb.controllers.output_plus import OutputPlusController
+from ksweb.lib.utils import entity_from_id
 from ksweb.model import Output, Precondition, Qa, Document
 from tg import expose, flash, require, url, lurl, response, config
 from tg import request, redirect, tmpl_context
@@ -128,12 +129,8 @@ class RootController(BaseController):
     @expose('json')
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def entity(self, _id):
-        output = Output.query.get(_id=ObjectId(_id))
-        precondition = Precondition.query.get(_id=ObjectId(_id))
-        qa = Qa.query.get(_id=ObjectId(_id))
-        document = Document.query.get(_id=ObjectId(_id))
-        entity = filter(None, [output, precondition, qa, document])
-        redirect(list(entity)[0].url)
+        entity = entity_from_id(_id)
+        redirect(entity.url)
 
     @expose('ksweb.templates.terms')
     def terms(self):

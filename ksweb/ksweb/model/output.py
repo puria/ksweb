@@ -93,6 +93,13 @@ class Output(MappedEntity):
         ret = TemplateOutput(self.html).safe_substitute(**nested_output_html)
         return ret
 
+    def insert_content(self, entity):
+        self.content.append(dict(
+            content=str(entity._id),
+            title=entity.title,
+            type=entity.entity
+        ))
+
     def update_content(self):
         from ksweb.lib.utils import get_entities_from_str
         outputs, answers = get_entities_from_str(self.html)

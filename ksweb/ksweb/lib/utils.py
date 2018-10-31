@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from string import Template
 from bson import ObjectId
+from ksweb.model import Output, Precondition, Qa, Document
 from tg.util.ming import dictify
 from ksweb import model
 
@@ -193,6 +194,15 @@ def get_entities_from_str(html):
     outputs = [model.Output.query.get(_id=ObjectId(__)) for __ in outputs_ids]
     answers = [model.Qa.query.get(_id=ObjectId(__)) for __ in answers_ids]
     return (outputs, answers)
+
+
+def entity_from_id(_id):
+    output = Output.query.get(_id=ObjectId(_id))
+    precondition = Precondition.query.get(_id=ObjectId(_id))
+    qa = Qa.query.get(_id=ObjectId(_id))
+    document = Document.query.get(_id=ObjectId(_id))
+    entity = filter(None, [output, precondition, qa, document])
+    return list(entity)[0]
 
 
 # https://stackoverflow.com/questions/34360603/python-template-safe-substitution-with-the-custom-double-braces-format
