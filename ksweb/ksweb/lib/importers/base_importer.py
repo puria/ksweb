@@ -32,8 +32,8 @@ class BaseImporter(object):
             o['_precondition'] = str(__._id)
         os, qas = find_entities_from_html(o.get('html'))
         for nested_output in os:
-            self.__import_output(nested_output)
-            o['html'] = o['html'].replace(nested_output, self.converted[nested_output])
+            new_output = self.__import_output(nested_output)
+            o['html'] = o['html'].replace(nested_output, str(new_output._id))
         for qa in qas:
             new_qa = self.__import_qa(qa)
             o['html'] = o['html'].replace(qa, str(new_qa._id))
