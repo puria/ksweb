@@ -232,7 +232,6 @@ class QaController(RestController):
                 _precondition=ObjectId(autogen_filter._id),
                 title=qa.title + u' \u21d2 output',
                 html='@{%s}' % qa._id,
-                content= [dict(content=str(qa._id), type='qa_response', title=qa.title)]
             )
 
     def _are_answers_valid(self, answer_type, answers):

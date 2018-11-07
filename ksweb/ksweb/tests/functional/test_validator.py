@@ -91,7 +91,6 @@ class TestValidators(TestController):
             _category=self._get_category('Area 1')._id,
             title="Titolone",
             html='',
-            content=[],
             public=True,
             visible=True
         )
@@ -138,7 +137,6 @@ class TestValidators(TestController):
     def test_output_exist_validator(self):
         model.Output(
             title="Fake_output",
-            content=[],
             html='',
             _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
             _category=self._get_category('Area 1')._id,
@@ -213,7 +211,6 @@ class TestValidators(TestController):
         with test_context(self.app):
             model.Output(
                 title="FakeOutput",
-                content="Content of the fake output",
                 html='',
                 _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
                 _category=self._get_category('Area 1')._id,

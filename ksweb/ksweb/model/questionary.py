@@ -65,13 +65,7 @@ class Questionary(MappedClass):
     document = RelationProperty('Document')
 
     completed = FieldProperty(s.Bool, if_missing=False)
-    # document_values = FieldProperty(s.Anything, if_missing=[])
-    """
-    A list with a compiled document values
-    """
-
     expressions = FieldProperty(s.Anything, if_missing={})
-
     output_values = FieldProperty(s.Anything, if_missing={})
     """
     Is a nested dictionary with:

@@ -79,3 +79,7 @@ class MappedEntity(MappedClass):
         _dict = dictify(self)
         _dict['entity'] = self.entity
         return _dict
+
+    def exportable_dict(self):
+        filter_out = ['_category', '_owner', 'created_at', 'auto_generated', 'status']
+        return {k: v for k, v in self.__json__().items() if k not in filter_out}

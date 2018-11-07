@@ -83,7 +83,6 @@ class OutputController(RestController):
             status=Output.STATUS.UNREAD,
             html=html,
         )
-        o.update_content()
         return dict(errors=None)
 
     @expose('json')
@@ -127,7 +126,6 @@ class OutputController(RestController):
         output.html = html
         output.auto_generated = False
         output.status = Output.STATUS.UNREAD
-        output.update_content()
 
         return dict(errors=None, redirect_url=None)
 
@@ -195,13 +193,8 @@ class OutputController(RestController):
     @decode_params('json')
     @expose('json')
     def get_related_entities(self, _id):
-        """
-        This method return ALL entities (Output, Document) that have inside a `content.content` the given _id
-        :param _id:
-        :return:
-        """
-        output_related = Output.query.find({"content.type": "output", "content.content": _id}).all()
-        documents_related = Document.query.find({"content.type": "output", "content.content": _id}).all()
+        output_related = Output.query.find({'$text': {'$search': _id}}).all()
+        documents_related = Document.query.find({'$text': {'$search': _id}}).all()
         entities = list(output_related + documents_related)
         return dict(entities=entities, len=len(entities))
 

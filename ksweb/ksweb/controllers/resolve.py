@@ -3,14 +3,12 @@
 import tg
 from bson import ObjectId
 from ksweb.lib.base import BaseController
-from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session
+from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session, entity_from_id
 from ksweb.lib.validator import WorkspaceExistValidator
 from tg import expose, decode_params, flash, redirect, session
 from ksweb import model
 from tg import validate
 from tg.i18n import ugettext as _, lazy_ugettext as l_
-
-from ksweb.model import Output, Document
 
 
 class ResolveController(BaseController):
@@ -23,8 +21,8 @@ class ResolveController(BaseController):
         'document': model.Document
     }
 
-    @decode_params('json')
     @expose('ksweb.templates.resolve.index')
+    @decode_params('json')
     @with_entity_session
     @validate({'workspace': WorkspaceExistValidator(required=True), })
     def index(self, workspace, **kw):
@@ -35,9 +33,8 @@ class ResolveController(BaseController):
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def original_edit(self, workspace, **kw):
         entity = self._original_edit()
-
-        flash(_(u'Entity %s successfully edited!') % entity.title)
         session.delete()
+        flash(_(u'Entity %s successfully edited!') % entity.title)
         return redirect(base_url=tg.url('/%s' % entity.entity, params=dict(workspace=workspace)))
 
     @expose()
@@ -45,17 +42,16 @@ class ResolveController(BaseController):
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def clone_object(self, workspace, **kw):
         entity = self._clone_object()
-        flash(_("%s successfully created!") % entity.title)
         session.delete()
+        flash(_("%s successfully created!") % entity.title)
         return redirect(base_url=tg.url('/%s' % entity.entity, params=dict(workspace=workspace)))
 
-    @expose('')
+    @expose()
     @validate({'workspace': WorkspaceExistValidator(required=True)})
     def discard_changes(self, workspace, **kw):
         session.delete()
         flash(_(u'All the edits are discarded'))
         return redirect(base_url=tg.url('/qa', params=dict(workspace=workspace)))
-
 
     @expose('ksweb.templates.resolve.manually_resolve')
     @with_entity_session
@@ -69,8 +65,8 @@ class ResolveController(BaseController):
             workspace=workspace
         )
 
-    @decode_params('json')
     @expose('json')
+    @decode_params('json')
     @with_entity_session
     def mark_resolved(self, list_to_new=None, list_to_old=None, **kw):
         entity = session.get('entity')
@@ -94,61 +90,32 @@ class ResolveController(BaseController):
         params = session.get('entity')
         params['_category'] = to_object_id(params.get('_category'))
         params['_precondition'] = to_object_id(params.get('_precondition'))
-        entity = self._get_entity(params['entity'], params['_id'])
+        entity = entity_from_id(params['_id'])
         params.pop('entity', None)
         for k, v in params.items():
             setattr(entity, k, v)
-
-        self._find_and_modify(entity)
         return entity
-
-    def _find_and_modify(self, entity):
-        if isinstance(entity, Output):
-            Document.update_content_titles_with(entity)
-            Output.update_content_titles_with(entity)
 
     def _clone_object(self):
         params = session.get('entity')
-        entity = self._get_entity(params['entity'], params['_id'])
-        params['title'] += ' [NUOVO]'
+        entity = entity_from_id(params['_id'])
+        params['title'] += _(' [CLONED]')
         new_obj = clone_obj(self.related_models[params['entity']], entity, params)
         return new_obj
 
-    def _get_entity(self, entity_name, _id):
-        model_ = self.related_models[entity_name]
-        return model_.query.get(_id=ObjectId(_id))
-
     def _clone_and_modify_(self, obj_to_clone, to_edit):
         new_obj = self._clone_object()
-
+        old_obj_id = ObjectId(obj_to_clone['_id'])
         for obj in to_edit:
-            entity = self._get_entity(obj['entity'], obj['_id'])
+            entity = entity_from_id(obj['_id'])
             if obj_to_clone['entity'] == 'output':
-                # I have to search into:
-                #     output.content
-                #     document.content
-                for elem in entity.content:
-                    if elem['content'] == obj_to_clone['_id']:
-                        elem['content'] = str(getattr(new_obj, '_id'))
-                        elem['title'] = getattr(new_obj, 'title')
-
+                entity.html = entity.html.replace(obj_to_clone['id'], str(new_obj._id))
             elif obj_to_clone['entity'] in ['precondition/simple', 'precondition/advanced']:
-                # I have to search into:
-                #     qa._parent_precondition
-                #     output._precondition
-                #     precondition.condition
-                if entity.entity == 'qa' and entity._parent_precondition == ObjectId(obj_to_clone['_id']):
+                if entity.entity == 'qa' and entity._parent_precondition == old_obj_id:
                     entity._parent_precondition = new_obj._id
-                elif entity.entity == 'output' and entity._precondition == ObjectId(obj_to_clone['_id']):
+                elif entity.entity == 'output' and entity._precondition == old_obj_id:
                     entity._precondition = new_obj._id
                 elif entity.entity == 'precondition/advanced':
-                    for index, elem in enumerate(entity.condition):
-                        if elem == ObjectId(obj_to_clone['_id']):
-                            entity.condition[index] = new_obj._id
-
+                    entity.condition = [new_obj._id if __ == old_obj_id else __ for __ in entity.condition]
             elif obj_to_clone['entity'] == 'qa':
-                # I have to search into:
-                #     precondition.condition
-                for index, elem in enumerate(entity.condition):
-                    if elem == ObjectId(obj_to_clone['_id']):
-                        entity.condition[index] = new_obj._id
+                entity.condition = [new_obj._id if __ == old_obj_id else __ for __ in entity.condition]

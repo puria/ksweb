@@ -22,10 +22,13 @@ def _custom_title(obj):
 def _content_preview(obj):
     if not obj:
         return " "
-    return " ".join(Markup(obj.html).striptags().split()[:5])
+    from ksweb.lib.utils import five_words
+    return five_words(obj.html)
+
 
 def _custom_filter(o):
     return Markup(o.precondition)
+
 
 class Output(MappedEntity):
 
@@ -34,6 +37,7 @@ class Output(MappedEntity):
         name = 'output'
         indexes = [
             ('title',),
+            ('html', 'text')
         ]
 
     __ROW_COLUM_CONVERTERS__ = {
@@ -43,7 +47,6 @@ class Output(MappedEntity):
     }
 
     html = FieldProperty(s.String, required=True, if_missing='')
-    content = FieldProperty(s.Anything, if_missing=[])
     _precondition = ForeignIdProperty('Precondition')
     precondition = RelationProperty('Precondition')
 
@@ -77,6 +80,28 @@ class Output(MappedEntity):
     def dependencies(self):
         return self.dependent_outputs()
 
+    @property
+    def content(self):
+        from ksweb.lib.utils import get_entities_from_str
+        outputs, answers = get_entities_from_str(self.html)
+        content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs]
+        content.extend([{'content': str(__._id), 'title': __.title, 'type': 'qa_response'} for __ in answers])
+        return content
+
+    @property
+    def children(self):
+        from ksweb.lib.utils import get_entities_from_str
+        outputs, answers = get_entities_from_str(self.html)
+        return outputs + answers
+
+    def export_items(self):
+        items = set([self])
+        if self.precondition:
+            items.update(self.precondition.export_items())
+        for __ in self.children:
+            items.update(__.export_items())
+        return items
+
     def render(self, evaluations_dict):
         if str(self._id) not in evaluations_dict:
             return ''
@@ -99,20 +124,6 @@ class Output(MappedEntity):
             title=entity.title,
             type=entity.entity
         ))
-
-    def update_content(self):
-        from ksweb.lib.utils import get_entities_from_str
-        outputs, answers = get_entities_from_str(self.html)
-        self.content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs]
-        self.content.extend([{'content': str(__._id), 'title': __.title, 'type': 'qa_response'} for __ in answers])
-
-    @classmethod
-    def update_content_titles_with(cls, entity):
-        related = cls.query.find({'content.content': str(entity._id)}, ).all()
-        for document in related:
-            for i, item in enumerate(document.content):
-                if item.content == str(entity._id):
-                    document.content[i].title = entity.title
 
 
 __all__ = ['Output']

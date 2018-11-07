@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Document model module."""
+import json
+
 import tg
 from markupsafe import Markup
 from ming import schema as s
@@ -9,11 +11,13 @@ from ksweb.model.mapped_entity import MappedEntity
 
 
 def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(_id=obj._id, workspace=obj._category)), obj.title))
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(_id=obj._id, workspace=obj._category)),
+                                           obj.title))
 
 
 def _content_preview(obj):
-    return " ".join(Markup(obj.html).striptags().split()[:5])
+    from ksweb.lib.utils import five_words
+    return five_words(obj.html)
 
 
 class Document(MappedEntity):
@@ -25,6 +29,7 @@ class Document(MappedEntity):
             ('public',),
             ('title',),
             ('_category',),
+            ('html', 'text')
         ]
 
     __ROW_COLUM_CONVERTERS__ = {
@@ -33,7 +38,6 @@ class Document(MappedEntity):
     }
 
     html = FieldProperty(s.String, required=True, if_missing='')
-    content = FieldProperty(s.Anything, if_missing=[])
     description = FieldProperty(s.String, required=False)
     license = FieldProperty(s.String, required=False)
     version = FieldProperty(s.String, required=False)
@@ -47,18 +51,47 @@ class Document(MappedEntity):
     def entity(self):
         return 'document'
 
-    def update_content(self):
+    @property
+    def children(self):
         from ksweb.lib.utils import get_entities_from_str
         outputs, __ = get_entities_from_str(self.html)
-        self.content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs]
+        return outputs
 
-    @classmethod
-    def update_content_titles_with(cls, entity):
-        related = cls.query.find({'content.content': str(entity._id)}, ).all()
-        for document in related:
-            for i, item in enumerate(document.content):
-                if item.content == str(entity._id):
-                    document.content[i].title = entity.title
+    @property
+    def content(self):
+        return [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in self.children]
+
+    def exportable_dict(self):
+        filter_out = ['_category', '_owner', 'created_at', '_id']
+        filter_json = {k: v for k, v in self.__json__().items() if k not in filter_out}
+        for __ in ['outputs', 'advanced_preconditions', 'qa', 'simple_preconditions']:
+            filter_json[__] = {}
+        return filter_json
+
+    def export_items(self):
+        items = set()
+        [items.update(__.export_items()) for __ in self.children]
+        items.discard(None)
+        return items
+
+    def __group_export_items_by_type(self):
+        from itertools import groupby
+        items = list(self.export_items())
+        items.sort(key=lambda __: __.entity)
+        return {k: list(v) for k, v in groupby(items, lambda __: __.entity)}
+
+    def export(self):
+        json_result = self.exportable_dict()
+        items = self.__group_export_items_by_type()
+        content_types = {'qa': 'qa',
+                         'output': 'outputs',
+                         'precondition/simple': 'simple_preconditions',
+                         'precondition/advanced': 'advanced_preconditions'}
+        for entity_name, export_name in content_types.items():
+            for __ in items.get(entity_name, []):
+                json_result[export_name][str(__._id)] = __.exportable_dict()
+
+        return json_result
 
 
 __all__ = ['Document']

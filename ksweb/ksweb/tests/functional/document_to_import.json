@@ -1,117 +1,173 @@
-{	"version": null,
-	"description": null,
-	"tags": [],
-	"outputs": {
-		"5922aa07c42d753c2d93266a": {
-			"title": "Output numero soci",
-			"content": [{
-				"content": "5922a9bec42d753c2d932658",
-				"type": "qa_response",
-				"title": "nsoci"
-			}],
-			"visible": true,
-			"html": "Wow hai&nbsp;${qa_5922a9bec42d753c2d932658}!&nbsp;",
-			"_precondition": "5922a9d8c42d753c2d932663",
-			"_id": "5922aa07c42d753c2d93266a",
-			"public": true
-		},
-		"5922aa30c42d753c2d932674": {
-			"title": "Sas",
-			"content": [{
-				"content": "5922a961c42d753c2d93263f",
-				"type": "qa_response",
-				"title": "Ragione sociale"
-			}],
-			"visible": true,
-			"html": "sei una&nbsp;${qa_5922a961c42d753c2d93263f}!",
-			"_precondition": "5922a97bc42d753c2d93264b",
-			"_id": "5922aa30c42d753c2d932674",
-			"public": true
-		},
-		"5922aa1dc42d753c2d93266f": {
-			"title": "Spa",
-			"content": [{
-				"content": "5922a961c42d753c2d93263f",
-				"type": "qa_response",
-				"title": "Ragione sociale"
-			}],
-			"visible": true,
-			"html": "Sei una&nbsp;${qa_5922a961c42d753c2d93263f}",
-			"_precondition": "5922a971c42d753c2d932646",
-			"_id": "5922aa1dc42d753c2d93266f",
-			"public": true
-		}
-	},
-	"title": "Prova",
-	"advanced_preconditions": {},
-	"qa": {
-		"5922a9bec42d753c2d932658": {
-			"_parent_precondition": "5922a97bc42d753c2d93264b",
-			"title": "nsoci",
-			"question": "Numero di soci",
-			"tooltip": null,
-			"visible": true,
-			"link": null,
-			"answers": ["da 1 a 10", "da 10 a 500"],
-			"_id": "5922a9bec42d753c2d932658",
-			"type": "single",
-			"public": true
-		},
-		"5922a961c42d753c2d93263f": {
-			"_parent_precondition": null,
-			"title": "Ragione sociale",
-			"question": "Ragione Sociale",
-			"tooltip": null,
-			"visible": true,
-			"link": null,
-			"answers": ["Sas", "Spa"],
-			"_id": "5922a961c42d753c2d93263f",
-			"type": "single",
-			"public": true
-		}
-	},
-	"content": [{
-		"content": "5922aa30c42d753c2d932674",
-		"type": "output",
-		"title": "Sas"
-	}, {
-		"content": "5922aa1dc42d753c2d93266f",
-		"type": "output",
-		"title": "Spa"
-	}, {
-		"content": "5922aa07c42d753c2d93266a",
-		"type": "output",
-		"title": "Output numero soci"
-	}],
-	"visible": true,
-	"_owner": "59158069c42d753f623388c4",
-	"html": "<p>Del testo prima:&nbsp;${output_5922aa30c42d753c2d932674}${output_5922aa1dc42d753c2d93266f}&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>${output_5922aa07c42d753c2d93266a}&nbsp;E va be ogni tanto ci sta!</p>\n\n<p>Provaci Quel bellissimo testo</p>\n",
-	"license": null,
-	"simple_preconditions": {
-		"5922a971c42d753c2d932646": {
-			"title": "Ragione sociale -> Spa",
-			"visible": true,
-			"_id": "5922a971c42d753c2d932646",
-			"type": "simple",
-			"public": true,
-			"condition": ["5922a961c42d753c2d93263f", "Spa"]
-		},
-		"5922a9d8c42d753c2d932663": {
-			"title": "nsoci -> da 10 a 500",
-			"visible": true,
-			"_id": "5922a9d8c42d753c2d932663",
-			"type": "simple",
-			"public": true,
-			"condition": ["5922a9bec42d753c2d932658", "da 10 a 500"]
-		},
-		"5922a97bc42d753c2d93264b": {
-			"title": "Ragione sociale -> Sas",
-			"visible": true,
-			"_id": "5922a97bc42d753c2d93264b",
-			"type": "simple",
-			"public": true,
-			"condition": ["5922a961c42d753c2d93263f", "Sas"]
-		}
-	},
-	"public": true
+{
+    "advanced_preconditions": {
+        "5be2742c61791a64958c36a6": {
+            "_id": "5be2742c61791a64958c36a6",
+            "condition": [
+                "5be2742c61791a64958c36a4",
+                "or",
+                "5be2742c61791a64958c36a5"
+            ],
+            "entity": "precondition/advanced",
+            "public": true,
+            "title": "gender \u21d2 was compiled",
+            "type": "advanced",
+            "visible": true
+        }
+    },
+    "auto_generated": false,
+    "description": "Some test",
+    "entity": "document",
+    "html": "**Hey #{5be2738461791a64958c3697},**\nyou are a nice looking #{5be274d961791a64958c36be} born #{5be2739861791a64958c369e} yrs ago!!!",
+    "license": "MIT",
+    "outputs": {
+        "5be2738461791a64958c3697": {
+            "_id": "5be2738461791a64958c3697",
+            "_precondition": "5be2738461791a64958c3696",
+            "entity": "output",
+            "html": "@{5be2738461791a64958c3695}",
+            "public": true,
+            "title": "name \u21d2 output",
+            "visible": true
+        },
+        "5be2739861791a64958c369e": {
+            "_id": "5be2739861791a64958c369e",
+            "_precondition": "5be2739861791a64958c369d",
+            "entity": "output",
+            "html": "@{5be2739861791a64958c369c}",
+            "public": true,
+            "title": "age \u21d2 output",
+            "visible": true
+        },
+        "5be274a161791a64958c36b4": {
+            "_id": "5be274a161791a64958c36b4",
+            "_precondition": "5be2742c61791a64958c36a5",
+            "entity": "output",
+            "html": "gal",
+            "public": true,
+            "title": "female title",
+            "visible": true
+        },
+        "5be274c361791a64958c36b9": {
+            "_id": "5be274c361791a64958c36b9",
+            "_precondition": "5be2742c61791a64958c36a4",
+            "entity": "output",
+            "html": "guy",
+            "public": true,
+            "title": "male title",
+            "visible": true
+        },
+        "5be274d961791a64958c36be": {
+            "_id": "5be274d961791a64958c36be",
+            "_precondition": "5be2742c61791a64958c36a6",
+            "entity": "output",
+            "html": "#{5be274c361791a64958c36b9}#{5be274a161791a64958c36b4}",
+            "public": true,
+            "title": "title",
+            "visible": true
+        }
+    },
+    "public": true,
+    "qa": {
+        "5be2738461791a64958c3695": {
+            "_id": "5be2738461791a64958c3695",
+            "_parent_precondition": null,
+            "answers": [],
+            "entity": "qa",
+            "link": null,
+            "public": true,
+            "question": "Please insert your name",
+            "title": "name",
+            "tooltip": null,
+            "type": "text",
+            "visible": true
+        },
+        "5be2739861791a64958c369c": {
+            "_id": "5be2739861791a64958c369c",
+            "_parent_precondition": "5be2742c61791a64958c36a6",
+            "answers": [],
+            "entity": "qa",
+            "link": null,
+            "public": true,
+            "question": "How old are you?",
+            "title": "age",
+            "tooltip": null,
+            "type": "text",
+            "visible": true
+        },
+        "5be2742c61791a64958c36a3": {
+            "_id": "5be2742c61791a64958c36a3",
+            "_parent_precondition": "5be2738461791a64958c3696",
+            "answers": [
+                "m",
+                "f"
+            ],
+            "entity": "qa",
+            "link": null,
+            "public": true,
+            "question": "Please insert your gender",
+            "title": "gender",
+            "tooltip": null,
+            "type": "single",
+            "visible": true
+        }
+    },
+    "simple_preconditions": {
+        "5be2738461791a64958c3696": {
+            "_id": "5be2738461791a64958c3696",
+            "condition": [
+                "5be2738461791a64958c3695",
+                ""
+            ],
+            "entity": "precondition/simple",
+            "public": true,
+            "title": "name \u21d2 was compiled",
+            "type": "simple",
+            "visible": true
+        },
+        "5be2739861791a64958c369d": {
+            "_id": "5be2739861791a64958c369d",
+            "condition": [
+                "5be2739861791a64958c369c",
+                ""
+            ],
+            "entity": "precondition/simple",
+            "public": true,
+            "title": "age \u21d2 was compiled",
+            "type": "simple",
+            "visible": true
+        },
+        "5be2742c61791a64958c36a4": {
+            "_id": "5be2742c61791a64958c36a4",
+            "condition": [
+                "5be2742c61791a64958c36a3",
+                "m"
+            ],
+            "entity": "precondition/simple",
+            "public": true,
+            "title": "gender \u21d2 m",
+            "type": "simple",
+            "visible": true
+        },
+        "5be2742c61791a64958c36a5": {
+            "_id": "5be2742c61791a64958c36a5",
+            "condition": [
+                "5be2742c61791a64958c36a3",
+                "f"
+            ],
+            "entity": "precondition/simple",
+            "public": true,
+            "title": "gender \u21d2 f",
+            "type": "simple",
+            "visible": true
+        }
+    },
+    "status": null,
+    "tags": [
+        "filters",
+        "test",
+        "title"
+    ],
+    "title": "Testing document",
+    "version": "0.1",
+    "visible": true
 }

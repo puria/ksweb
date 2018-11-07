@@ -18,7 +18,6 @@ class OutputPlusController(RestController):
             _owner=user._id,
             _category=workspace,
             title=title,
-            content=[],
             public=True,
             visible=True,
             html=highlighted_text,

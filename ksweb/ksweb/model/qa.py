@@ -82,4 +82,11 @@ class Qa(MappedEntity):
     def dependencies(self):
         return self.dependent_filters() + self.dependent_outputs()
 
+    def export_items(self):
+        items = set([self])
+        if self.parent_precondition:
+            items.update(self.parent_precondition.export_items())
+        return items
+
+
 __all__ = ['Qa']

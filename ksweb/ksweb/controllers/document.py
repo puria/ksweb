@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """Document controller module"""
 import json
-from string import Template
 
 import tg
 from bson import ObjectId
+from ksweb.lib.importers.json_importer import JsonImporter
 from tg.renderers import json as json_render
 from tgext.datahelpers.utils import slugify
 
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import import_output, export_outputs
 from tg import expose, tmpl_context, predicates, RestController, request, validate, \
     validation_errors_response
 from tg import redirect
@@ -39,8 +38,7 @@ class DocumentController(RestController):
                 'columns_name': [_('Title'), _('Description'), _('Version'), _('License')],
                 'fields_name': ['title', 'description', 'version', 'license']
             },
-            entities=model.Document.document_available_for_user(request.identity['user']._id,
-                                                                workspace=workspace),
+            entities=model.Document.document_available_for_user(request.identity['user']._id, workspace=workspace),
             actions_content=[_('Export'), _('Create Form')],
             workspace=workspace,
             download=True
@@ -79,7 +77,6 @@ class DocumentController(RestController):
             version=version,
             tags=list(tags)
         )
-        doc.update_content()
         return dict(errors=None)
 
     @decode_params('json')
@@ -107,8 +104,6 @@ class DocumentController(RestController):
         document.description = description
         document.license = license
         document.version = version
-        document.update_content()
-
         return dict(errors=None)
 
     @expose('ksweb.templates.document.new')
@@ -139,19 +134,10 @@ class DocumentController(RestController):
         '_id': DocumentExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def export(self, _id):
-        _document = model.Document.query.get(_id=ObjectId(_id))
-        document = _document.__json__()
-        filename = slugify(_document, _document.title)
+        document = model.Document.query.get(_id=ObjectId(_id))
+        filename = slugify(document, document.title)
         response.headerlist.append(('Content-Disposition', str('attachment;filename=%s.json' % filename)))
-        document.pop('_category', None)
-        document.pop('_id', None)
-        document.pop('entity', None)
-        document['outputs'] = document['advanced_preconditions'] = {}
-        document['simple_preconditions'] = document['qa'] = {}
-        for output in document['content']:
-            export_outputs(output['content'], document)
-
-        encoded = json_render.encode(document)
+        encoded = json_render.encode(document.export())
         return json.dumps(json.loads(encoded), sort_keys=True, indent=4)
 
     @expose()
@@ -159,36 +145,9 @@ class DocumentController(RestController):
         'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def import_document(self, workspace, file_import):
-        owner = user = request.identity['user']._id
-        content = file_import.file.read()
-        imported_document = json.loads(content.decode('utf-8'))
-        content = []
-        values = {}
-        for output in imported_document['content']:
-            c = {
-                'type': output['type'],
-                'title': output['title'],
-                'content': str(import_output(imported_document,
-                                             str(output['content']),
-                                             owner,
-                                             workspace))
-            }
-            content.append(c)
-            values[output['content']] = '#{' + c['content'] + '}'
-        html = Template(imported_document['html']).safe_substitute(**values)
-        model.Document(
-            _owner=owner,
-            _category=ObjectId(workspace),
-            title=imported_document['title'],
-            content=content,
-            public=imported_document['public'],
-            visible=imported_document['visible'],
-            html=html,
-            version=imported_document['version'],
-            description=imported_document['description'],
-            license=imported_document['license'],
-            tags=imported_document['tags']
-        )
-        model.DBSession.flush_all()
+        owner = request.identity['user']._id
+        file_content = file_import.file.read()
+        importer = JsonImporter(file_content, ObjectId(workspace), owner)
+        importer.run()
         tg.flash(_('Document successfully imported!'))
         return redirect(tg.url('/document', params=dict(workspace=workspace)))

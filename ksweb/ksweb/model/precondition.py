@@ -77,26 +77,6 @@ class Precondition(MappedEntity):
 
     @property
     def response_interested(self):
-        """
-        Example of the return value
-        {
-            '5772314bc42d7513bb31e17c': <Qa title=u'Sesso'
-              _category=ObjectId('575581e4c42d75124a0a9601')
-              question=u'Di che sesso sei?' tooltip=None visible=True
-              _owner=ObjectId('575581e4c42d75124a0a95fc') link=None
-              answers=I[u'Maschio', u'Femmina']
-              _id=ObjectId('5772314bc42d7513bb31e17c') type=u'single'
-              public=True>,
-            '57723171c42d7513bb31e17d': <Qa title=u'Colori'
-              _category=ObjectId('575581e4c42d75124a0a9602')
-              question=u'Che colori ti piacciono?' tooltip=u'che colori
-              ti piacciono' visible=True
-              _owner=ObjectId('575581e4c42d75124a0a95fc') link=None
-              answers=I[u'Rosso', u'Verde', u'Blu', u'Giallo']
-              _id=ObjectId('57723171c42d7513bb31e17d') type=u'multi'
-              public=True>
-        }
-        """
         res_dict = {}
 
         if self.is_simple:
@@ -142,5 +122,18 @@ class Precondition(MappedEntity):
     @property
     def entity(self):
         return 'precondition/simple' if self.is_simple else 'precondition/advanced'
+
+    @property
+    def children(self):
+        return [Precondition.query.get(_id=__) for __ in self.condition if __ not in Precondition.PRECONDITION_OPERATOR]
+
+    def export_items(self):
+        items = set([self])
+        if self.is_advanced:
+            items.update(self.children)
+        else:
+            items.add(self.get_qa())
+        return items
+
 
 __all__ = ['Precondition']

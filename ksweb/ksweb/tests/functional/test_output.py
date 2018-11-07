@@ -196,19 +196,22 @@ class TestOutput(TestController):
         self._login_lawyer()
         category = self._get_category('Area 1')
         document = self._create_fake_document("Title", category_id=category._id)
+        print(document)
+        print(document.html)
         outputs, _ = get_entities_from_str(document.html)
         output1 = outputs[0]
+        print(output1)
 
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
             'workspace': str(category._id),
             'precondition': str(output1.precondition._id),
-            'html': '<p>Io sono il tuo editor</p>',
-            'content': []
+            'html': '<p>Io sono il tuo editor</p>'
         }
 
         response = self.app.put_json('/output/put', params=output_params).json
+        print(response)
         assert response['redirect_url']
         self.app.get(response['redirect_url'])
         response = self.app.get('/resolve/original_edit',
@@ -251,13 +254,13 @@ class TestOutput(TestController):
         assert resp['title'] == 'Must be at least 2 characters', resp
         assert output is None
 
-
     def test_human_readable_details(self):
         self._login_lawyer()
         out1 = self._create_fake_output("Out1")
         resp = self.app.get('/output/human_readable_details', params={'_id': out1._id})
         assert 'human_readable_content' in resp
         assert str(out1._id) in resp
+
 
 class TestOutputPlus(TestController):
     application_under_test = 'main'
