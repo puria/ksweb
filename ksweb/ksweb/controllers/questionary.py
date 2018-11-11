@@ -22,10 +22,6 @@ from ksweb.lib.base import BaseController
 from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator, \
     WorkspaceExistValidator
 from ksweb.model import DBSession
-try:
-    basestring
-except NameError: # pragma: no cover
-    basestring = str
 
 
 class QuestionaryController(BaseController):
@@ -64,7 +60,7 @@ class QuestionaryController(BaseController):
     @validate({
         'questionary_title': StringLengthValidator(min=2),
         'document_id': DocumentExistValidator(required=True),
-        'email_to_share': EmailValidator(),
+        'email_to_share': EmailValidator()
     }, error_handler=validation_errors_response)
     def create(self, questionary_title=None, document_id=None, email_to_share=None, **kw):
         owner = request.identity['user']
@@ -175,7 +171,7 @@ class QuestionaryController(BaseController):
 
         if qa.type == "multi":
             #  check each qa_response if is in qa.answers
-            if isinstance(qa_response, basestring):
+            if isinstance(qa_response, str):
                 qa_response = [qa_response]
 
         if not questionary.qa_values:

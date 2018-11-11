@@ -10,7 +10,7 @@ from tgext.datahelpers.utils import slugify
 
 from ksweb.lib.predicates import CanManageEntityOwner
 from tg import expose, tmpl_context, predicates, RestController, request, validate, \
-    validation_errors_response
+    validation_errors_response, flash
 from tg import redirect
 from tg import response
 from tg.decorators import paginate, decode_params, require

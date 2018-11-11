@@ -10,7 +10,7 @@ from markupsafe import Markup
 from ksweb.model import DBSession
 import tg
 
-from ksweb.model.mapped_entity import MappedEntity
+from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
 def _custom_title(obj):
@@ -38,7 +38,10 @@ class Precondition(MappedEntity):
         name = 'preconditions'
         indexes = [
             ('_owner',),
+            ('title',),
+            ('hash',),
         ]
+        extensions = [TriggerExtension]
 
     __ROW_COLUM_CONVERTERS__ = {
         'title': _custom_title,

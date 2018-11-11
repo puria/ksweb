@@ -20,17 +20,19 @@
 #
 ##############################################################################
 from ksweb.controllers.output_plus import OutputPlusController
-from ksweb.lib.utils import entity_from_id
+from ksweb.lib.utils import entity_from_id, ksweb_error_handler
+from ksweb.lib.validator import WorkspaceExistValidator
 from ksweb.model import Output, Precondition, Qa, Document
 from tg import expose, flash, require, url, lurl, response, config
 from tg import request, redirect, tmpl_context
-from tg.decorators import paginate, decode_params
+from tg.decorators import paginate, decode_params, validate
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
-from tg.controllers.util import auth_force_login
+from tg.controllers.util import auth_force_login, validation_errors_response
 from ksweb import model
 from bson import ObjectId
+from tg.validation import Convert
 from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
@@ -121,6 +123,7 @@ class RootController(BaseController):
 
     @expose('ksweb.templates.welcome')
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    @validate({'workspace': Convert(ObjectId, 'must be a valid ObjectId')}, error_handler=ksweb_error_handler)
     def welcome(self, workspace):
         user = request.identity['user']
         ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()

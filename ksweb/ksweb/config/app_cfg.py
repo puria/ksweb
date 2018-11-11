@@ -127,9 +127,9 @@ webassets.plugme(base_config,
 
 
 from tgext.pluggable import plug
-plug(base_config, 'tgext.mailer')
-plug(base_config, 'registration', global_models=True)
 plug(base_config, 'tgext.evolve', global_models=True, evolutions=evolutions)
+plug(base_config, 'registration', global_models=True)
+plug(base_config, 'tgext.mailer')
 from ksweb.config.registration_hooks import RegistrationHooks
 RegistrationHooks.register(base_config)
 plug(base_config,
@@ -137,19 +137,22 @@ plug(base_config,
      reset_password_form='ksweb.lib.forms.ResetPasswordForm',
      new_password_form='ksweb.lib.forms.NewPasswordForm')
 
-from tgext.pluggable import replace_template
-replace_template(base_config,
-                 'resetpassword.templates.index',
-                 'ksweb.templates.resetpassword.index')
+# from tgext.pluggable import replace_template
+# replace_template(base_config,
+#                  'resetpassword.templates.index',
+#                  'ksweb.templates.resetpassword.index')
 
 plug(base_config, 'userprofile')
-replace_template(base_config, 'registration.templates.register', 'ksweb.templates.registration.register')
+# replace_template(base_config, 'registration.templates.register', 'ksweb.templates.registration.register')
 # replace_template(base_config, 'userprofile.templates.index', 'ksweb.templates.userprofile.index')
+
+
 def replace_profile_form_layout():
     from axf.bootstrap import BootstrapFormLayout
     from userprofile.lib import UserForm
 
-    UserForm.child = BootstrapFormLayout(children=UserForm.child.children)
-    UserForm.submit.css_class = 'btn-primary form-control'
+    # UserForm.child = BootstrapFormLayout(children=UserForm.child.children)
+    UserForm.submit.css_class = 'btn btn-success'
+
 
 milestones.config_ready.register(replace_profile_form_layout)

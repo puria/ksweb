@@ -7,7 +7,7 @@ from itertools import chain, repeat
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
-    decode_params, request, tmpl_context, session, flash, lurl
+    decode_params, request, tmpl_context, session, flash, lurl, redirect
 import tg
 from tg.decorators import paginate, require
 from tg.i18n import ugettext as _, lazy_ugettext as l_
@@ -31,8 +31,8 @@ class QaController(RestController):
         return dict(
             page='qa-index',
             fields={
-                'columns_name': [_('Label'), _('Question'), _('Filter')],
-                'fields_name': ['title', 'question', 'parent_precondition']
+                'columns_name': [_('Label'), _('Question'), _('Filter'), _('Id')],
+                'fields_name': ['title', 'question', 'parent_precondition', 'hash']
             },
             entities=Qa.available_for_user(request.identity['user']._id, workspace),
             actions=False,

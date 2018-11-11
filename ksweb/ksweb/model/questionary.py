@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Questionary model module."""
+import ast
 import logging
 
 import tg
@@ -9,11 +10,6 @@ from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
-
-try:
-    basestring
-except NameError:
-    basestring = str
 
 log = logging.getLogger(__name__)
 
@@ -135,11 +131,7 @@ class Questionary(MappedClass):
         }
 
     def generate_expression(self):
-        if not self.document.content:
-            self.expressions = []
-            return
-        for o in self.document.content:
-            output = Output.query.get(_id=ObjectId(o['content']))
+        for output in self.document.children:
             self.expressions[str(output._id)] = self._generate(output.precondition)
 
     def _generate(self, precondition):
@@ -164,7 +156,7 @@ class Questionary(MappedClass):
         else:
             advanced_expression = ""
             for item in precondition.condition:
-                if isinstance(item, basestring):
+                if isinstance(item, str):
                     advanced_expression += ' %s ' % item
                 elif isinstance(item, ObjectId):
                     p = Precondition.query.get(_id=item)
@@ -208,7 +200,7 @@ class Questionary(MappedClass):
 
         for _id, resp in self.qa_values.items():
             answer = resp['qa_response']
-            if isinstance(answer, basestring):
+            if isinstance(answer, str):
                 answers['q_' + _id] = answer
             else:
                 # lists
@@ -235,7 +227,7 @@ class Questionary(MappedClass):
     @property
     def answers(self):
         questions = sorted(self.qa_values.items(), key=lambda i: i[1].order_number)
-        return [dict(question=Qa.query.get(_id=ObjectId(q)).question, answer=a.qa_response) for q, a in questions]
+        return [dict(question=Qa.by_id(q).question, answer=a.qa_response) for q, a in questions]
 
 
 __all__ = ['Questionary']

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from ksweb.lib.utils import get_entities_from_str
+from tg.validation import TGValidationError
 
 try:
     import HTMLParser
@@ -13,10 +14,6 @@ from tg.i18n import lazy_ugettext as l_
 
 from ksweb import model
 
-try:
-    basestring
-except NameError:
-    basestring = str
 
 class EntityValidator(Validator):
     entity = None
@@ -27,8 +24,8 @@ class EntityValidator(Validator):
     def _validate_python(self, value, state=None):
         try:
             found = self.entity.query.get(_id=ObjectId(value))
-        except (InvalidId, TypeError):
-            raise ValidationError('not_exists', self)
+        except InvalidId:
+            raise TGValidationError('not_exists', self)
 
         if found is None:
             raise ValidationError('not_exists', self)

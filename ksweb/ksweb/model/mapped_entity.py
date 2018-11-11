@@ -1,18 +1,36 @@
 # -*- coding: utf-8 -*-
+import hashlib
 
+import ming
 from bson import ObjectId
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
+from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty, state, mapper, MapperExtension
 
 from ming.odm.declarative import MappedClass
-from tg import lurl
+from tg import lurl, jsonify
 from tg.util import Bunch
 from tg.util.ming import dictify
 
 
-class MappedEntity(MappedClass):
-    """:type: ming.odm.Mapper"""
+def calculate_hash(e):
+    prop_names = [prop.name for prop in mapper(e).properties
+                  if isinstance(prop, ming.odm.property.FieldProperty)]
+    prop_names.remove('hash')
+    prop_names.remove('_id')
+    entity = {k: getattr(e, k) for k in prop_names}
+    entity_string = jsonify.encode(entity).encode()
+    return 'k' + hashlib.blake2b(entity_string, digest_size=6).hexdigest()
 
+
+class TriggerExtension(MapperExtension):
+    def before_insert(self, instance, st, sess):
+        instance.hash = calculate_hash(instance)
+
+    def before_update(self, instance, st, sess):
+        instance.hash = calculate_hash(instance)
+
+
+class MappedEntity(MappedClass):
     STATUS = Bunch(
         READ="READ",
         UNREAD="UNREAD"
@@ -26,6 +44,7 @@ class MappedEntity(MappedClass):
     _category = ForeignIdProperty('Category')
     category = RelationProperty('Category')
 
+    hash = FieldProperty(s.String)
     title = FieldProperty(s.String, required=True)
     public = FieldProperty(s.Bool, if_missing=True)
     visible = FieldProperty(s.Bool, if_missing=True)
@@ -55,6 +74,10 @@ class MappedEntity(MappedClass):
     @property
     def url(self):
         return lurl('/%s/edit/' % self.entity, params=dict(workspace=self.category._id, _id=self._id))
+
+    @classmethod
+    def by_id(cls, _id):
+        return cls.query.get(_id=ObjectId(_id)).first()
 
     @classmethod
     def mark_as_read(cls, user_oid, workspace_id):

@@ -30,8 +30,8 @@ class PreconditionController(BaseController):
         return dict(
             page='precondition-index',
             fields={
-                'columns_name': [l_('Label'), l_('Type'), l_('Owner')],
-                'fields_name': ['title', 'type', 'owner']
+                'columns_name': [l_('Label'), l_('Type'), l_('Owner'), l_('Id')],
+                'fields_name': 'title type owner hash'.split()
             },
             entities=Precondition.available_for_user(request.identity['user']._id, workspace=workspace),
             actions_content=[l_('New Output'),l_('New QA')],

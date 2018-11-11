@@ -83,3 +83,16 @@ def entity_from_id(_id):
     document = Document.query.get(_id=ObjectId(_id))
     entity = filter(None, [output, precondition, qa, document])
     return list(entity)[0]
+
+
+def ksweb_error_handler(*args, **kw):
+    from tg import flash, redirect
+    from tg._compat import unicode_text
+    from tg.request_local import request
+    from tg.i18n import lazy_ugettext as l_
+    _request = request._current_obj()
+    errors = dict(
+        (unicode_text(key), unicode_text(error)) for key, error in _request.validation.errors.items()
+    )
+    flash(l_('Errors: %s' % errors), 'error')
+    redirect('/start')

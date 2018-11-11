@@ -84,7 +84,6 @@ class User(MappedClass):
             password = salt + hash
             return password
 
-
         def __set__(self, instance, value):
             value = self._hash_password(value)
             return FieldProperty.__set__(self, instance, value)

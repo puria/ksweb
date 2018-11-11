@@ -17,6 +17,12 @@ class BaseImporter(object):
         self.workspace = workspace
         self.file_content = file_content
         self.to_be_imported = self.convert()
+        self.__new_properties = {
+            '_owner': self.owner,
+            'auto_generated': True,
+            '_category': self.workspace,
+            'status': MappedEntity.STATUS.UNREAD,
+        }
 
     def __import_outputs(self):
         for o in self.to_be_imported['outputs']:
@@ -74,34 +80,33 @@ class BaseImporter(object):
         return next((__ for __ in self.imported if str(__._id) == _id), None)
 
     def __find_stored_entity(self, cls, _id, body):
+        body['_owner'] = self.owner
+        body['_category'] = self.workspace
+        if '_precondition' in body.keys():
+            body['_precondition'] = ObjectId(body['_precondition']) if body['_precondition'] else None
         find_by_body = cls.query.find(body).first()
         find_by_id = cls.query.get(_id=ObjectId(_id))
         found = list(filter(partial(is_not, None), [find_by_body, find_by_id]))
         if found:
-            self.__add_to_conversion_table(_id, found[0]._id)
-            self.imported.add(found[0])
-            return found[0]
+            return self.__add_to_conversion_table(_id, found[0])
         return None
 
-    def __add_to_conversion_table(self, old, new):
-        if old == str(new):
+    def __add_to_conversion_table(self, old_id, new_entity):
+        if old_id == str(new_entity._id):
             return
-        self.converted[old] = str(new)
+        self.converted[old_id] = str(new_entity._id)
+        self.imported.add(new_entity)
+        return new_entity
 
     def __upsert_document(self, cls, _id, body):
         filter_out = ['_id', 'entity', 'auto_generated', 'status']
         body = {k: v for k, v in body.items() if k not in filter_out}
-        body['_owner'] = self.owner
-        body['_category'] = self.workspace
         found = self.__find_stored_entity(cls, _id, body)
         if found:
             return found
-        body['auto_generated'] = True
-        body['status'] = MappedEntity.STATUS.UNREAD
+        body.update(self.__new_properties)
         inserted = cls(**body)
-        self.__add_to_conversion_table(_id, inserted._id)
-        self.imported.add(inserted)
-        return inserted
+        return self.__add_to_conversion_table(_id, inserted)
 
     def create_document(self):
         html = self.to_be_imported['html']

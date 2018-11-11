@@ -8,7 +8,7 @@ from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ksweb.model import DBSession, User
-from ksweb.model.mapped_entity import MappedEntity
+from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
 def _format_instrumented_list(l):
@@ -38,7 +38,9 @@ class Qa(MappedEntity):
             ('_owner',),
             ('_category',),
             ('type', 'public',),
+            ('hash',),
         ]
+        extensions = [TriggerExtension]
 
     __ROW_COLUM_CONVERTERS__ = {
         'title': _custom_title,

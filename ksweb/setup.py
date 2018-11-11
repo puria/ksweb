@@ -1,20 +1,4 @@
-    # -*- coding: utf-8 -*-
-
-#  Quickstarted Options:
-#
-#  sqlalchemy: False
-#  auth:       ming
-#  mako:       False
-#
-#
-
-# This is just a work-around for a Python2.7 issue causing
-# interpreter crash at exit when trying to log an info message.
-try:
-    import logging
-    import multiprocessing
-except:
-    pass
+# -*- coding: utf-8 -*-
 
 import sys
 py_version = sys.version_info[:2]
@@ -35,7 +19,7 @@ testpkgs = [
 ]
 
 install_requires = [
-    "TurboGears2==2.3.12",
+    "TurboGears2>=2.4.0a1",
     "Beaker==1.10.0",
     "Kajiki==0.7.2",
     "Ming==0.6.5",
@@ -45,11 +29,13 @@ install_requires = [
     "WebHelpers2==2.0",
     "tgext.webassets==0.0.2",
     "libsass==0.14.5",
-    "tgapp-registration==0.9.3",
-    "tgext.mailer==0.2.0",
+    "tgapp-registration @ git+https://github.com/axant/tgapp-registration",
+    "tgext.pluggable @ git+https://github.com/TurboGears/tgext.pluggable",
+    "tgext.mailer @ git+https://github.com/amol-/tgext.mailer",
+    "tgapp-resetpassword @ git+https://github.com/puria/tgapp-resetpassword",
     "tgext.datahelpers",
-    "tgapp-resetpassword==0.2.4",
-    "tgapp-userprofile==0.3.6",
+    "tgapp-userprofile @ git+https://github.com/puria/tgapp-userprofile",
+#    "tgapp-userprofile==0.3.6",
     "axf==0.0.19",
     "tgext.evolve==0.0.4",
     "dukpy",
@@ -61,7 +47,7 @@ if py_version != (3, 2):
 
 setup(
     name='ksweb',
-    version='0.1',
+    version='1.0',
     description='',
     author='',
     author_email='',

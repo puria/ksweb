@@ -9,7 +9,7 @@ from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ksweb.model import DBSession, User
-from ksweb.model.mapped_entity import MappedEntity
+from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
 def _custom_title(obj):
@@ -37,8 +37,10 @@ class Output(MappedEntity):
         name = 'output'
         indexes = [
             ('title',),
-            ('html', 'text')
+            ('html', 'text'),
+            ('hash',),
         ]
+        extensions = [TriggerExtension]
 
     __ROW_COLUM_CONVERTERS__ = {
         'title': _custom_title,

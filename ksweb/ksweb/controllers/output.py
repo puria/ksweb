@@ -5,7 +5,7 @@ import tg
 from bson import ObjectId
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
-    response, session
+    response, session, flash, redirect
 from tg import predicates
 from tg.decorators import paginate, require
 from tg.i18n import lazy_ugettext as l_, ugettext as _
@@ -42,8 +42,8 @@ class OutputController(RestController):
         return dict(
             page='output-index',
             fields={
-                'columns_name': [_('Label'), _('Filter'), _('Content')],
-                'fields_name': ['title', 'precondition', 'content']
+                'columns_name': [_('Label'), _('Filter'), _('Content'), _('Id')],
+                'fields_name': ['title', 'precondition', 'content', 'hash']
             },
             entities=Output.output_available_for_user(request.identity['user']._id, workspace),
             actions=False,
