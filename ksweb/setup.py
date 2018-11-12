@@ -51,7 +51,7 @@ install_requires = [
     "tgapp-resetpassword==0.2.4",
     "tgapp-userprofile==0.3.6",
     "axf==0.0.19",
-    "tgext.evolve==0.0.4",
+    "tgext.evolve==0.0.5",
     "dukpy",
 ]
 
