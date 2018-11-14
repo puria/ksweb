@@ -44,7 +44,7 @@ install_requires = [
     "tgext.admin==0.7.4",
     "WebHelpers2==2.0",
     "tgext.webassets==0.0.2",
-    "libsass==0.14.5",
+    "libsass==0.16.0",
     "tgapp-registration==0.9.3",
     "tgext.mailer==0.2.0",
     "tgext.datahelpers",
