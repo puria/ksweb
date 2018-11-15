@@ -23,9 +23,9 @@ class EntityValidator(Validator):
 
     def _validate_python(self, value, state=None):
         try:
-            found = self.entity.query.get(_id=ObjectId(value))
+            found = self.entity.by_id(value)
         except InvalidId:
-            raise TGValidationError('not_exists', self)
+            raise ValidationError('not_exists', self)
 
         if found is None:
             raise ValidationError('not_exists', self)

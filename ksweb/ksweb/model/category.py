@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Category model module."""
+from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ming.odm.declarative import MappedClass
@@ -24,5 +25,10 @@ class Category(MappedClass):
     @classmethod
     def per_user(cls, user_id):
         return cls.query.find({'_owner': {'$in': [user_id, None]}, 'visible': True}).sort('_id').all()
+
+    @classmethod
+    def by_id(cls, _id):
+        return cls.query.get(_id=ObjectId(_id))
+
 
 __all__ = ['Category']

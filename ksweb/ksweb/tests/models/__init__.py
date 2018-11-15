@@ -37,7 +37,7 @@ class ModelTest(object):
             self.obj.__mongometa__.session.clear()
             return self.obj
         except:
-            datastore = config['pylons.app_globals'].ming_datastore
+            datastore = config['tg.app_globals'].ming_datastore
             try:
                 # On MIM drop all data
                 datastore.conn.clear_all()
@@ -48,7 +48,7 @@ class ModelTest(object):
 
     def tearDown(self):
         """Tear down test fixture for each model test method."""
-        datastore = config['pylons.app_globals'].ming_datastore
+        datastore = config['tg.app_globals'].ming_datastore
         try:
             # On MIM drop all data
             datastore.conn.clear_all()

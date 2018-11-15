@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """Questionary model module."""
-import ast
 import logging
 
 import tg
 from bson import ObjectId
-from ksweb.model import DBSession, Document, User, Output, Precondition, Qa
+from ksweb.model import DBSession, Document, User, Precondition, Qa
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -94,6 +93,10 @@ class Questionary(MappedClass):
     @property
     def creation_date(self):
         return self._id.generation_time
+
+    @classmethod
+    def by_id(cls, _id):
+        return cls.query.get(_id=ObjectId(_id))
 
     @property
     def completion(self):
