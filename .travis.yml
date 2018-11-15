@@ -6,6 +6,7 @@ python:
 before_script: cd ksweb
 
 install:
+  - "pip install --upgrade pip"
   - "pip install -e ksweb[testing]"
   - "pip install coveralls"
   - "pip install codecov"
