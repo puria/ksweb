@@ -25,12 +25,12 @@ def five_words(html):
 
 
 def clone_obj(class_, original_obj, params):
-    values = params.copy()
     items = dictify(original_obj).items()
-    {values[k]: v for k, v in items if k not in values}
-    values.pop('entity', None)
-    values.pop('_id', None)
-    return class_(**values)
+    cloned = {k: v for k, v in items if k not in params.keys()}
+    cloned.update(params)
+    cloned.pop('entity', None)
+    cloned.pop('_id', None)
+    return class_(**cloned)
 
 
 # use as decorator
@@ -85,7 +85,7 @@ def entity_from_id(_id):
     return list(entity)[0]
 
 
-def ksweb_error_handler(*args, **kw):
+def ksweb_error_handler(*args, **kw):  # pragma: nocover
     from tg import flash, redirect
     from tg._compat import unicode_text
     from tg.request_local import request

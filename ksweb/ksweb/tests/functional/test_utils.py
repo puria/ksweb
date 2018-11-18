@@ -3,7 +3,7 @@ import datetime
 import json
 
 from bson import ObjectId
-from ksweb.lib.utils import to_object_id, upsert_document
+from ksweb.lib.utils import to_object_id, upsert_document, clone_obj, find_entities_from_html
 from ksweb.model import Qa, DBSession
 from ksweb.tests import TestController
 from ksweb import model
@@ -172,6 +172,21 @@ class TestUtils(TestController):
         assert inserted is qa, (inserted, qa)
         qas = model.Qa.query.find().all()
         assert len(qas) == 3, qas
+
+    def test_clone_obj(self):
+        precondition = self._create_fake_simple_precondition('blah blah')
+        qa = self._get_or_create_qa('title')
+        qa.parent_precondition = precondition
+        qa_cloned = clone_obj(Qa, qa, {'link': 'linkssss'})
+
+        assert qa_cloned.title == 'title'
+        assert qa_cloned.link == 'linkssss'
+        assert qa_cloned._id != qa._id
+
+    def test_empty_find_entities_from_html(self):
+        o, q = find_entities_from_html(None)
+        assert isinstance(o, list)
+        assert isinstance(q, list)
 
     # def test_import_qa(self):
     #     imported_id = import_qa(imported_document=self.imported_document, qa_id='5922a961c42d753c2d93263f',

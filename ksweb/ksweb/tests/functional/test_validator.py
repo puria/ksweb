@@ -5,6 +5,7 @@ from ksweb.tests import TestController
 from ksweb.lib.validator import WorkspaceExistValidator, QAExistValidator, DocumentExistValidator, \
     PreconditionExistValidator, DocumentContentValidator, OutputExistValidator, OutputContentValidator, \
     QuestionaryExistValidator
+from nose.tools import eq_
 from tg.util.webtest import test_context
 from tw2.core import ValidationError
 from .test_document import TestDocument
@@ -157,8 +158,8 @@ class TestValidators(TestController):
             validator = OutputExistValidator()
             try:
                 res = validator._validate_python("5757ce79c42d752bde919318")
-            except ValidationError:
-                assert True
+            except ValidationError as v:
+                eq_(v.message, 'Output does not exists')
             else:
                 assert False
 
@@ -192,8 +193,8 @@ class TestValidators(TestController):
             validator = OutputContentValidator()
             try:
                 res = validator._validate_python("Buongiorno @{5757ce79c42d752bde919318}")
-            except ValidationError:
-                assert True
+            except ValidationError as v:
+                eq_(v.message, 'Question not found.')
             else:
                 assert False
 
@@ -227,11 +228,31 @@ class TestValidators(TestController):
             else:
                 assert True
 
+    def test_output_content_validator_with_invalid_output(self):
+        with test_context(self.app):
+            validator = OutputContentValidator()
+            try:
+                res = validator._validate_python("Buongiorno #{5757ce79c42d752bde919318}")
+            except ValidationError:
+                assert True
+            else:
+                assert False
+
     def test_document_content_validator_invalid_output(self):
         with test_context(self.app):
             validator = DocumentContentValidator()
             try:
                 res = validator._validate_python("Buongiorno #{5757ce79c42d752bde919318}")
+            except ValidationError:
+                assert True
+            else:
+                assert False
+
+    def test_output_content_validator_invalid_answer(self):
+        with test_context(self.app):
+            validator = OutputContentValidator()
+            try:
+                res = validator._validate_python("Buongiorno @{5757ce79c42d752bde919318}")
             except ValidationError:
                 assert True
             else:
