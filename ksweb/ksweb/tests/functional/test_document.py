@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from ksweb.tests import TestController
 from ksweb import model
+from nose.tools import ok_, eq_
 
 
 class TestDocument(TestController):
@@ -99,3 +100,10 @@ class TestDocument(TestController):
                                                 'ksweb/tests/functional/document_to_import.json')])
         r = response.follow()
         assert "Document successfully imported!" in r
+
+    def test_document_preview(self):
+        self._login_lawyer()
+        document = self._create_document('document title', html='one two three four five six')
+        eq_(document.content_preview(), 'one two three four five')
+        document.html = '<p>one</p> two three four five'
+        eq_(document.content_preview(), 'one two three four five')

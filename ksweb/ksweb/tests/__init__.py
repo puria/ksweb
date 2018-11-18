@@ -132,10 +132,7 @@ class TestController(object):
 
     def _get_or_create_qa(self, title, category_id=None, question=None, tooltip=None, link=None, qa_type=None, answers=None):
         qa = self._get_qa_by_title(title)
-        if qa:
-            return qa
-
-        return self._create_qa(title, category_id, question, tooltip, link, qa_type, answers)
+        return qa if qa else self._create_qa(title, category_id, question, tooltip, link, qa_type, answers)
 
     def _create_fake_qa(self, title, qa_type='single', answers=FAKE_RESPONSE):
         fake_category = self._get_or_create_category('fake_category')
@@ -175,7 +172,8 @@ class TestController(object):
         if not category_id:
             category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
 
-        return self._create_simple_precondition(title, category_id, self._create_fake_qa(title)._id, 'what_response', [self.FAKE_RESPONSE[0]])
+        qa = self._create_fake_qa(title)
+        return self._create_simple_precondition(title, category_id, qa._id, 'what_response', [self.FAKE_RESPONSE[0]])
 
     def _create_advanced_precondition(self, title, category_id, conditions=[]):
         self.app.post_json(
@@ -300,7 +298,7 @@ class TestController(object):
     def _get_document_by_title(self, title):
         return model.Document.query.get(title=title)
 
-    def _create_document(self, title, category_id, html):
+    def _create_document(self, title, category_id=None, html=None):
         if not category_id:
             category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
 

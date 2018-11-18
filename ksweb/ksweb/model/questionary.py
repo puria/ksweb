@@ -15,7 +15,8 @@ log = logging.getLogger(__name__)
 
 def _compile_questionary(obj):
     workspace = Document.query.find({'_id': ObjectId(obj._document)}).first()._category
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile', params=dict(_id=obj._id, workspace=workspace)),
+    return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile',
+                                                  params=dict(_id=obj._id, workspace=workspace)),
                                            obj.title))
 
 

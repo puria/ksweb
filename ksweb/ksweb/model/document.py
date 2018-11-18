@@ -10,16 +10,6 @@ from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
-def _custom_title(obj):
-    return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit', params=dict(_id=obj._id, workspace=obj._category)),
-                                           obj.title))
-
-
-def _content_preview(obj):
-    from ksweb.lib.utils import five_words
-    return five_words(obj.html)
-
-
 class Document(MappedEntity):
     class __mongometa__:
         session = DBSession
@@ -33,9 +23,19 @@ class Document(MappedEntity):
         ]
         extensions = [TriggerExtension]
 
+    def custom_title(self):
+        return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit',
+                                               params=dict(_id=self._id,
+                                                           workspace=self._category)),
+                                               self.title))
+
+    def content_preview(self):
+        from ksweb.lib.utils import five_words
+        return five_words(self.html)
+
     __ROW_COLUM_CONVERTERS__ = {
-        'title': _custom_title,
-        'content': _content_preview
+        'title': custom_title,
+        'content': content_preview
     }
 
     html = FieldProperty(s.String, required=True, if_missing='')

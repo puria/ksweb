@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from ksweb.model import Qa
 from ksweb.tests import TestController
 from ksweb import model
+from nose.tools import ok_, eq_
 
 
 class TestQaController(TestController):
@@ -345,3 +347,20 @@ class TestQaController(TestController):
             workspace=qa.category._id
         ), status=200)
         assert str(qa._id) in response
+
+    def test_qa_export(self):
+        self._login_lawyer()
+        qa = self._create_fake_qa("fake_qa")
+        items = qa.export_items()
+        eq_(list(items)[0], qa)
+
+    def test_qa_export_with_filter(self):
+        self._login_lawyer()
+        ws = self._get_category('Area 1')
+        qa = self._create_fake_qa("a question", qa_type=Qa.TYPES.TEXT)
+        _filter = self._create_simple_precondition('love boat title', str(ws._id), str(qa._id))
+        qa.parent_precondition = _filter
+        items = qa.export_items()
+        eq_(len(items), 3)
+        ok_(qa in items)
+        ok_(_filter in items)

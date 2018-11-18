@@ -11,10 +11,6 @@ from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
-def _format_instrumented_list(l):
-        return ', '.join(l)
-
-
 def _custom_title(obj):
     url = tg.url('/qa/edit', params=dict(_id=obj._id, workspace=obj._category))
     auto = 'bot' if obj.auto_generated else ''
@@ -24,9 +20,9 @@ def _custom_title(obj):
 
 class Qa(MappedEntity):
     class TYPES:
-        TEXT=u'text'
-        SINGLE=u'single'
-        MULTI=u'multi'
+        TEXT = u'text'
+        SINGLE = u'single'
+        MULTI = u'multi'
 
     QA_TYPE = [TYPES.TEXT, TYPES.SINGLE, TYPES.MULTI]
 
