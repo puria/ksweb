@@ -46,7 +46,6 @@ class TestUser(ModelTest):
 
 class TestPermission(ModelTest):
     """Unit test case for the ``Permission`` model."""
-
     klass = model.Permission
     attrs = dict(
         permission_name="test_permission",

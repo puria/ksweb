@@ -15,9 +15,8 @@ from tg.util.ming import dictify
 def calculate_hash(e):
     prop_names = [prop.name for prop in mapper(e).properties
                   if isinstance(prop, ming.odm.property.FieldProperty)]
-    if 'hash' in prop_names: prop_names.remove('hash')
-    if '_id' in prop_names: prop_names.remove('_id')
-    if 'tags' in prop_names: prop_names.remove('tags')
+    for attr in ["hash", "_id", "tags"]:
+        if attr in prop_names: prop_names.remove(attr)
     entity = {k: getattr(e, k) for k in prop_names}
     entity_string = jsonify.encode(entity).encode()
     return 'k' + hashlib.blake2b(entity_string, digest_size=6).hexdigest()
@@ -79,6 +78,10 @@ class MappedEntity(MappedClass):
     @classmethod
     def by_id(cls, _id):
         return cls.query.get(_id=ObjectId(_id))
+
+    @classmethod
+    def by_hash(cls, _hash):
+        return cls.query.get(hash=_hash)
 
     @classmethod
     def mark_as_read(cls, user_oid, workspace_id):

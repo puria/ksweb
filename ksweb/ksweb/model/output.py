@@ -12,24 +12,6 @@ from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
-def _custom_title(obj):
-    url = tg.url('/output/edit', params=dict(_id=obj._id, workspace=obj._category))
-    auto = 'bot' if obj.auto_generated else ''
-    status = obj.status
-    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, auto, obj.title))
-
-
-def _content_preview(obj):
-    if not obj:
-        return " "
-    from ksweb.lib.utils import five_words
-    return five_words(obj.html)
-
-
-def _custom_filter(o):
-    return Markup(o.precondition)
-
-
 class Output(MappedEntity):
 
     class __mongometa__:
@@ -42,10 +24,22 @@ class Output(MappedEntity):
         ]
         extensions = [TriggerExtension]
 
+    def custom_title(self):
+        url = tg.url('/output/edit', params=dict(_id=self._id, workspace=self._category))
+        auto = 'bot' if self.auto_generated else ''
+        return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (self.status, url, auto, self.title))
+
+    def markup_filter(self):
+        return Markup(self.precondition)
+
+    def content_preview(self):
+        from ksweb.lib.utils import five_words
+        return five_words(self.html)
+
     __ROW_COLUM_CONVERTERS__ = {
-        'title': _custom_title,
-        'precondition': _custom_filter,
-        'content': _content_preview
+        'title': custom_title,
+        'precondition': markup_filter,
+        'content': content_preview
     }
 
     html = FieldProperty(s.String, required=True, if_missing='')
