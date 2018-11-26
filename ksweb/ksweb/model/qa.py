@@ -6,16 +6,59 @@ import tg
 from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
+from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty, MapperExtension
 from ksweb.model import DBSession, User
 from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
+from tg.i18n import ugettext as _
 
 
-def _custom_title(obj):
-    url = tg.url('/qa/edit', params=dict(_id=obj._id, workspace=obj._category))
-    auto = 'bot' if obj.auto_generated else ''
-    status = obj.status
-    return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, auto, obj.title))
+class AutoCompile(MapperExtension):
+    def after_insert(self, instance, st, sess):
+        from ksweb.model import Precondition
+        DBSession.flush_all()
+
+        common_precondition_params = dict(
+            _owner=instance._owner,
+            _category=ObjectId(instance._category),
+            auto_generated=True,
+            status=Precondition.STATUS.UNREAD
+        )
+        if instance.is_text:
+            autogen_filter = Precondition(
+                                **common_precondition_params,
+                                title=_(u'%s \u21d2 was compiled' % instance.title),
+                                type=Precondition.TYPES.SIMPLE,
+                                condition=[instance.hash, ""]
+                            )
+        else:
+            condition = []
+            for answer in instance.answers:
+                precondition = Precondition(
+                    **common_precondition_params,
+                    title=u'%s \u21d2 %s' % (instance.title, answer),
+                    type=Precondition.TYPES.SIMPLE,
+                    condition=[instance.hash, answer],
+                )
+                condition.append(precondition.hash)
+                condition.append('or')
+            del condition[-1]
+
+            autogen_filter = Precondition(
+                **common_precondition_params,
+                title=instance.title + _(u' \u21d2 was compiled'),
+                type=Precondition.TYPES.ADVANCED,
+                condition=condition
+            )
+
+        if autogen_filter:
+            from ksweb.model import Output
+            Output(
+                **common_precondition_params,
+                _precondition=ObjectId(autogen_filter._id),
+                title=instance.title + u' \u21d2 output',
+                html='@{%s}' % instance.hash,
+            )
+        DBSession.flush_all()
 
 
 class Qa(MappedEntity):
@@ -36,10 +79,15 @@ class Qa(MappedEntity):
             ('type', 'public',),
             ('hash',),
         ]
-        extensions = [TriggerExtension]
+        extensions = [TriggerExtension, AutoCompile]
+
+    def custom_title(self):
+        url = tg.url('/qa/edit', params=dict(_id=self._id, workspace=self._category))
+        auto = 'bot' if self.auto_generated else ''
+        return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (self.status, url, auto, self.title))
 
     __ROW_COLUM_CONVERTERS__ = {
-        'title': _custom_title,
+        'title': custom_title,
     }
 
     _parent_precondition = ForeignIdProperty('Precondition')

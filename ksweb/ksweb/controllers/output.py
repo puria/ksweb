@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import re
 
 import tg
 from bson import ObjectId
-from ksweb.lib.utils import to_object_id
+from ksweb.lib.utils import to_object_id, find_entities_from_html, hash_to_id
 from tg import expose, validate, validation_errors_response, RestController, decode_params, request, tmpl_context, \
     response, session, flash, redirect
 from tg import predicates
@@ -14,7 +13,7 @@ from tw2.core import StringLengthValidator
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
-from ksweb.model import Precondition, Output, Document, Category as Workspace
+from ksweb.model import Precondition, Output, Document, Category as Workspace, Qa
 
 
 class OutputController(RestController):
@@ -23,7 +22,8 @@ class OutputController(RestController):
             return
 
         _filter = Precondition.query.get(_id=ObjectId(precondition))
-        answers = re.findall(r'@{([^\W]+)\b}', html)
+        __, answers_hashes = find_entities_from_html(html)
+        answers = [hash_to_id(h, Qa) for h in answers_hashes]
         problematic = set(answers) - set(_filter.response_interested)
         if len(problematic):
             response.status_code = 412

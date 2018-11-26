@@ -66,8 +66,8 @@
             {{#each qas}}
                 <div class="row">
                     <div class="col">
-                        <a id="{{._id}}"
-                            onclick='ractive_output.add_answer_to_editor("{{._id}}")'
+                        <a id="{{.hash}}"
+                            onclick='ractive_output.add_answer_to_editor("{{.hash}}")'
                             class="add_circle_outline cursor-pointer">
                                 ${h.material_icon('add_circle_outline')}
                             <span>{{{.title}}}</span>
@@ -189,7 +189,7 @@
                     }),
                     function(resp) {
                         alert("${_('An Output without filter was automatically created from ')} '" + highlighted_text +"'.");
-                        self.add_output_to_editor(resp['_id']);
+                        self.add_output_to_editor(resp['hash']);
                     });
         }
     });

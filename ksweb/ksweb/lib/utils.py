@@ -2,6 +2,7 @@
 from string import Template
 from bson import ObjectId
 from ksweb.model import Output, Precondition, Qa, Document
+from ksweb.model.mapped_entity import MappedEntity
 from markupsafe import Markup
 from tg.util.ming import dictify
 from ksweb import model
@@ -14,6 +15,15 @@ class TemplateOutput(Template):
 
 class TemplateAnswer(Template):
     delimiter = '@'
+
+
+def find_entities_from_html(html):
+    if not html:
+        return [], []
+    import re
+    outputs_hashes = re.findall(r'#{([^\W]+)\b}', html)
+    answers_hashes = re.findall(r'@{([^\W]+)\b}', html)
+    return outputs_hashes, answers_hashes
 
 
 def to_object_id(s):
@@ -60,19 +70,10 @@ def get_related_entities_for_filters(_id):
     return dict(entities=entities, len=len(entities))
 
 
-def find_entities_from_html(html):
-    if not html:
-        return [], []
-    import re
-    outputs_ids = re.findall(r'#{([^\W]+)\b}', html)
-    answers_ids = re.findall(r'@{([^\W]+)\b}', html)
-    return outputs_ids, answers_ids
-
-
 def get_entities_from_str(html):
     outputs_ids, answers_ids = find_entities_from_html(html)
-    outputs = [model.Output.query.get(_id=ObjectId(__)) for __ in outputs_ids]
-    answers = [model.Qa.query.get(_id=ObjectId(__)) for __ in answers_ids]
+    outputs = [model.Output.query.get(hash=__) for __ in outputs_ids]
+    answers = [model.Qa.query.get(hash=__) for __ in answers_ids]
     return outputs, answers
 
 
@@ -83,6 +84,11 @@ def entity_from_id(_id):
     document = Document.query.get(_id=ObjectId(_id))
     entity = filter(None, [output, precondition, qa, document])
     return list(entity)[0]
+
+
+def hash_to_id(_hash, model):
+    me = model.query.get(hash=_hash)
+    return str(me._id)
 
 
 def ksweb_error_handler(*args, **kw):  # pragma: nocover

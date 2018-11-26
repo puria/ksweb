@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """Qa controller module"""
-import json
 
 from bson import ObjectId
-from itertools import chain, repeat
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import to_object_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
@@ -95,7 +93,6 @@ class QaController(RestController):
                 visible=True
             )
 
-        self._autofill_qa_filters(qa)
         return dict(errors=None, _id=ObjectId(qa._id))
 
     @decode_params('json')
@@ -187,52 +184,6 @@ class QaController(RestController):
             'entities': entities,
             'len': len(entities)
         }
-
-    def _autofill_qa_filters(self, qa):
-        user = request.identity['user']
-
-        common_precondition_params = dict(
-            _owner=user._id,
-            _category=ObjectId(qa._category),
-            auto_generated=True,
-            status=Precondition.STATUS.UNREAD
-        )
-
-        if qa.is_text:
-            autogen_filter = Precondition(
-                                **common_precondition_params,
-                                title=_(u'%s \u21d2 was compiled' % qa.title),
-                                type=Precondition.TYPES.SIMPLE,
-                                answer_type="have_response",
-                                condition=[qa._id, ""]
-                            )
-        else:
-            condition = []
-            for answer in qa.answers:
-                precondition = Precondition(
-                    **common_precondition_params,
-                    title=u'%s \u21d2 %s' % (qa.title, answer),
-                    type=Precondition.TYPES.SIMPLE,
-                    condition=[qa._id, answer],
-                )
-                condition.append(precondition._id)
-                condition.append('or')
-            del condition[-1]
-
-            autogen_filter = Precondition(
-                **common_precondition_params,
-                title=qa.title + _(u' \u21d2 was compiled'),
-                type=Precondition.TYPES.ADVANCED,
-                condition=condition
-            )
-
-        if autogen_filter:
-            Output(
-                **common_precondition_params,
-                _precondition=ObjectId(autogen_filter._id),
-                title=qa.title + u' \u21d2 output',
-                html='@{%s}' % qa._id,
-            )
 
     def _are_answers_valid(self, answer_type, answers):
         if (answer_type == Qa.TYPES.SINGLE and len(answers) < 2) or\

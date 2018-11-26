@@ -154,7 +154,7 @@
                     }),
                     function(resp) {
                         alert("${_('An Output without filter was automatically created from ')} '" + highlighted_text +"'.");
-                        self.add_output_to_editor(resp['_id']);
+                        self.add_output_to_editor(resp['hash']);
                     });
         }
     });

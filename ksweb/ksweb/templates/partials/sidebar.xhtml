@@ -55,8 +55,8 @@
 
             {{#each precondition}}
             <div class="col-md-12">
-                <span id="{{._id}}"
-                      onclick="ractive_precondition_simple.addPrecondition('{{._id}}', {{JSON.stringify(.title)}})"
+                <span id="{{.hash}}"
+                      onclick="ractive_precondition_simple.addPrecondition('{{.hash}}', {{JSON.stringify(.title)}})"
                       class="add_circle_outline cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                 {{{.title}}}
             </div>
@@ -108,11 +108,11 @@
         {{#each outputs}}
             {{#each output}}
             <div class="col-md-12">
-                <a id="{{._id}}"
+                <a id="{{.hash}}"
                    {{#if div == '#nested-output-ractive'}}
-                        onclick="ractive_output.add_output_to_editor('{{._id}}')"
+                        onclick="ractive_output.add_output_to_editor('{{.hash}}')"
                    {{else}}
-                        onclick="ractive_document.add_output_to_editor('{{._id}}')"
+                        onclick="ractive_document.add_output_to_editor('{{.hash}}')"
                    {{/if}}
                    class="add_circle_outline cursor-pointer">
                         ${h.material_icon('add_circle_outline')}
