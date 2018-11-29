@@ -87,7 +87,7 @@ def entity_from_id(_id):
 
 def hash_to_id(_hash, _model):
     me = _model.query.get(hash=_hash)
-    return str(me._id)
+    return str(me._id) if me else None
 
 
 def ksweb_error_handler(*args, **kw):  # pragma: nocover

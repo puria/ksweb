@@ -112,13 +112,13 @@ class TestQuestionaryController(TestController):
         out_1 = self._create_output("example1",
                                     workspace1._id,
                                     fake_advanced_precond._id,
-                                    'some html @{%s}' % str(qa_color._id))
+                                    'some html @{%s}' % qa_color.hash)
 
         qa_animal = self._get_qa_by_title('Favourite color')
         out_2 = self._create_output("example1", workspace1._id,
-                                    fake_advanced_precond._id, 'some html  @{%s}' % str(qa_animal._id))
+                                    fake_advanced_precond._id, 'some html  @{%s}' % qa_animal.hash)
 
-        html = '#{%s} #{%s}' % (str(out_1._id), str(out_2._id))
+        html = '#{%s} #{%s}' % (out_1.hash, out_2.hash)
 
         document = self._create_document("Advanced_document", workspace1._id, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
@@ -156,12 +156,12 @@ class TestQuestionaryController(TestController):
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
         out_1 = self._create_output("example1", workspace1._id,
-                                    fake_advanced_precond._id, '@{%s}' % str(qa_color._id))
+                                    fake_advanced_precond._id, '@{%s}' % str(qa_color.hash))
 
         qa_animal = self._get_qa_by_title('Favourite color')
         out_2 = self._create_output("example1", workspace1._id,
-                                    fake_advanced_precond._id, '@{%s}' % str(qa_animal._id))
-        html = '#{%s} #{%s} #{%s}' % (str(out_1._id), str(out_2._id), str(out_1._id))
+                                    fake_advanced_precond._id, '@{%s}' % str(qa_animal.hash))
+        html = '#{%s} #{%s} #{%s}' % (str(out_1.hash), str(out_2.hash), str(out_1.hash))
         document = self._create_document("Advanced_document", workspace1._id, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 

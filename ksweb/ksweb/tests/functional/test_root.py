@@ -36,7 +36,7 @@ class TestRootController(TestController):
         self._login_lawyer()
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
         response = self.app.get('/start', status=200)
-        workspaces = model.Category.per_user(lawyer._id)
+        workspaces = model.Workspace.per_user(lawyer._id)
         workspaces_names = [__.name for __ in workspaces]
 
         assert all(name in response for name in workspaces_names)

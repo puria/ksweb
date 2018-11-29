@@ -252,7 +252,7 @@ class TestController(object):
             'conditions': [
                 {
                     'type': 'precondition',
-                    'content': precond_red.hash
+                    'content': str(precond_red._id)
                 },
                 {
                     'type': 'operator',
@@ -260,7 +260,7 @@ class TestController(object):
                 },
                 {
                     'type': 'precondition',
-                    'content': precond_pig_dog.hash
+                    'content': str(precond_pig_dog._id)
                  }
             ]
         }

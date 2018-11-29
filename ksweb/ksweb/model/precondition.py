@@ -95,7 +95,7 @@ class Precondition(MappedEntity):
             if ___ in Precondition.PRECONDITION_OPERATOR:
                 continue
             else:
-                rel_ent = Precondition.query.get(___)
+                rel_ent = Precondition.query.get(ObjectId(___))
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict
