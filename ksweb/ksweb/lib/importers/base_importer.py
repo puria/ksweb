@@ -112,7 +112,7 @@ class BaseImporter(object):
         html = self.to_be_imported['html']
         for old, new in self.converted.items():
             html = html.replace(old, new)
-        return Document(
+        document_args = dict(
             html=html,
             _owner=self.owner,
             _category=self.workspace,
@@ -125,6 +125,7 @@ class BaseImporter(object):
             visible=self.to_be_imported['visible'],
             description=self.to_be_imported['description'],
         )
+        return Document(**document_args)
 
     def convert(self):
         return self.file_content

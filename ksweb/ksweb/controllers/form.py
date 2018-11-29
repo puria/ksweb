@@ -127,7 +127,7 @@ class FormController(BaseController):
 
     @staticmethod
     def get_questionary_html(quest_id):
-        questionary = model.Questionary.query.get(_id=ObjectId(quest_id))
+        questionary = model.Questionary.query.get(ObjectId(quest_id))
         if not questionary.document.content:
             return
 

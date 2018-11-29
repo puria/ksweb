@@ -109,7 +109,7 @@ class Output(MappedEntity):
 
         for elem in self.nested_outputs:
             nested_output = Output.query.get(_id=ObjectId(elem['content']))
-            nested_output_html['output_' + elem['content']] = nested_output.render(evaluations_dict)
+            nested_output_html[elem['content']] = nested_output.render(evaluations_dict)
 
         ret = TemplateOutput(self.html).safe_substitute(**nested_output_html)
         return ret
