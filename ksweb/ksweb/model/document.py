@@ -90,7 +90,7 @@ class Document(MappedEntity):
                          'precondition/advanced': 'advanced_preconditions'}
         for entity_name, export_name in content_types.items():
             for __ in items.get(entity_name, []):
-                json_result[export_name][str(__._id)] = __.exportable_dict()
+                json_result[export_name][__.hash] = __.exportable_dict()
 
         return json_result
 

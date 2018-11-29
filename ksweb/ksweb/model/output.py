@@ -121,5 +121,11 @@ class Output(MappedEntity):
             type=entity.entity
         ))
 
+    def exportable_dict(self):
+        editable = super().exportable_dict()
+        if self._precondition:
+            editable['_precondition'] = self.precondition.hash
+        return editable
+
 
 __all__ = ['Output']

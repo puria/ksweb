@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from string import Template
 from bson import ObjectId
+from bson.errors import InvalidId
 from ksweb.model import Output, Precondition, Qa, Document
 from markupsafe import Markup
 from tg.util.ming import dictify
@@ -85,9 +86,17 @@ def entity_from_id(_id):
     return list(entity)[0]
 
 
-def hash_to_id(_hash, _model):
-    me = _model.query.get(hash=_hash)
-    return str(me._id) if me else None
+def hash_to_id(_hash, cls):
+    me = cls.query.get(hash=_hash)
+    return str(me._id) if me else _hash
+
+
+def id_to_hash(_id, cls):
+    try:
+        me = cls.query.get(ObjectId(_id))
+    except InvalidId:
+        return _id
+    return me.hash if me else _id
 
 
 def ksweb_error_handler(*args, **kw):  # pragma: nocover

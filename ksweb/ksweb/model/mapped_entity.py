@@ -134,5 +134,5 @@ class MappedEntity(MappedClass):
         return _dict
 
     def exportable_dict(self):
-        filter_out = ['_workspace', '_owner', 'created_at', 'auto_generated', 'status']
+        filter_out = ['_workspace', '_owner', 'created_at', 'auto_generated', 'status', '_id']
         return {k: v for k, v in self.__json__().items() if k not in filter_out}

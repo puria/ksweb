@@ -138,5 +138,15 @@ class Precondition(MappedEntity):
             items.add(self.get_qa())
         return items
 
+    def exportable_dict(self):
+        editable = super().exportable_dict()
+        from ksweb.model import Qa
+        from ksweb.lib.utils import id_to_hash
+        cls = Qa if self.is_simple else self.__class__
+        for i, __ in enumerate(editable['condition']):
+            editable['condition'][i] = id_to_hash(__, cls)
+
+        return editable
+
 
 __all__ = ['Precondition']

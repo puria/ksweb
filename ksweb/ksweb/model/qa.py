@@ -134,5 +134,11 @@ class Qa(MappedEntity):
             items.update(self.parent_precondition.export_items())
         return items
 
+    def exportable_dict(self):
+        editable = super().exportable_dict()
+        if self.parent_precondition:
+            editable['_parent_precondition'] = self.parent_precondition.hash
+        return editable
+
 
 __all__ = ['Qa']

@@ -1,6 +1,5 @@
 from ksweb.model import Output, Precondition, Qa
 from ksweb.tests.models import ModelTest
-from nose.tools import eq_
 
 
 class TestOutput(ModelTest):
