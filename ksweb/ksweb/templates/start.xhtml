@@ -78,7 +78,7 @@
             self.set('workspaces', self.workspaces);
             self.on('create_workspace', function (event, workspace_name) {
                 var params = { 'workspace_name': workspace_name };
-                KS.ajax("${tg.url('/category/create')}",
+                KS.ajax("${tg.url('/workspace/create')}",
                         JSON.stringify(params),
                         () => { window.location.replace("${tg.url('/')}") },
                         data => {
@@ -96,7 +96,7 @@
                 if (r == true) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '${tg.url("/category/delete")}',
+                        url: '${tg.url("/workspace/delete")}',
                         data: JSON.stringify({'workspace_id': workspace_id}),
                         dataType: "json",
                         processData: false,

@@ -9,40 +9,40 @@ class TestPreconditionAdvanced(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Area 1')
+        self.workspace = self._get_workspace('Area 1')
 
     def test_access_new_permission_not_garanted(self):
         self.app.get('/precondition/advanced/new', status=302)
 
     def test_access_new_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/precondition/advanced/new', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/precondition/advanced/new', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_access_new_permission_lawyer(self):
         self._login_lawyer()
-        resp_lawyer = self.app.get('/precondition/advanced/new', params=dict(workspace=self.category._id))
+        resp_lawyer = self.app.get('/precondition/advanced/new', params=dict(workspace=self.workspace._id))
         assert resp_lawyer.status_code == 200
 
     def test_post_precondition_advanced(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
 
         qa_params = {
             'title': 'Title of QA',
-            'workspace': str(category1._id),
+            'workspace_id': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
-            'answer_type': 'single',
+            'qa_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
+        self._create_qa(**qa_params)
         qa = self._get_qa_by_title(qa_params['title'])
 
         precondition1_params = {
             'title': 'Have resp1',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': ['Risposta1']
@@ -53,19 +53,19 @@ class TestPreconditionAdvanced(TestController):
 
         qa2_params = {
             'title': 'Title of QA2',
-            'workspace': str(category1._id),
+            'workspace_id': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA2',
             'link': 'http://www.axant.it',
-            'answer_type': 'multi',
+            'qa_type': 'multi',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        self._create_qa(qa2_params['title'], qa2_params['workspace'], qa2_params['question'], qa2_params['tooltip'], qa2_params['link'], qa2_params['answer_type'], qa2_params['answers'])
+        self._create_qa(**qa2_params)
         qa2 = self._get_qa_by_title(qa2_params['title'])
 
         precondition2_params = {
             'title': 'Have resp2',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa2._id),
             'answer_type': 'what_response',
             'interested_response': ['Risposta2']
@@ -80,7 +80,7 @@ class TestPreconditionAdvanced(TestController):
         #  Ora che ho i 2 filtri semplici posso creare il filtro avanzato
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'conditions': [
                 {
                     'type': 'precondition',
@@ -120,14 +120,14 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_precondition_with_not_valid_id(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_qa('Title1', workspace1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'conditions': [
                 {
                     'type': 'precondition',
@@ -152,14 +152,14 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_operator_not_valid(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_qa('Title1', workspace1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'conditions': [
                 {
                     'type': 'operator',
@@ -179,14 +179,14 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_operator_and_condition_not_valid(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_qa('Title1', workspace1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'conditions': [
                 {
                     'type': 'fake_content',
@@ -206,14 +206,14 @@ class TestPreconditionAdvanced(TestController):
 
     def test_post_advanced_condition_syntax_error(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_qa('Title1', workspace1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
         precond_advanced = {
             'title': 'Resp1 or Resp2',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'conditions': [
                 {
                     'type': 'operator',
@@ -234,7 +234,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_update_advanced_filter(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
 
         precond_advanced = {
@@ -266,7 +266,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_update_advanced_filter_no_id(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
 
         precond_advanced = {
@@ -294,7 +294,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_update_advanced_filter_syntax_error(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
 
         precond_advanced = {
@@ -315,7 +315,7 @@ class TestPreconditionAdvanced(TestController):
 
     def test_update_advanced_filter_with_related_entity(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
         self._create_output("Title", workspace._id, advanced_filter._id, "blabla")
 
@@ -353,16 +353,16 @@ class TestPreconditionAdvanced(TestController):
 
     def test_edit_advanced_filter(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         advanced_filter = self._create_fake_advanced_precondition_red_animal("Title")
 
         response = self.app.get('/precondition/advanced/edit',
                                 params=dict(_id=advanced_filter._id, workspace=workspace._id))
-        assert str(advanced_filter._id) in response
+        assert str(advanced_filter.hash) in response
 
     def test_edit_advanced_filter_wrong_id(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         response = self.app.get('/precondition/advanced/edit', status=412,
                                 params=dict(_id='aaaa1231', workspace=workspace._id)).json
 

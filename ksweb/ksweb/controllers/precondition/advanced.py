@@ -47,7 +47,7 @@ class PreconditionAdvancedController(RestController):
         user = request.identity['user']
         Precondition(
             _owner=user._id,
-            _category=ObjectId(workspace),
+            _workspace=ObjectId(workspace),
             title=title,
             type='advanced',
             condition=condition
@@ -82,7 +82,7 @@ class PreconditionAdvancedController(RestController):
                 _id=_id,
                 title=title,
                 condition=list(map(str, condition)),
-                _category=workspace,
+                _workspace=workspace,
                 auto_generated=False,
                 entity='precondition/advanced',
             )
@@ -93,7 +93,7 @@ class PreconditionAdvancedController(RestController):
         precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
         precondition.condition = condition
-        precondition._category = workspace
+        precondition._workspace = workspace
 
         return dict(errors=None, redirect_url=None)
 
@@ -105,7 +105,7 @@ class PreconditionAdvancedController(RestController):
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id',
                                   entity_model=Precondition))
     def edit(self, _id, workspace=None, **kw):
-        precondition = Precondition.query.find({'_id': ObjectId(_id)}).first()
+        precondition = Precondition.query.get(ObjectId(_id))
         return dict(precondition=precondition, workspace=workspace, errors=None)
 
     @decode_params('json')
@@ -119,7 +119,7 @@ class PreconditionAdvancedController(RestController):
 
         for _f in filters:
             if _f['type'] == 'precondition':
-                p = Precondition.query.get(hash=_f['content'])
+                p = Precondition.query.get(ObjectId(_f['content']))
                 error = None if p else {'conditions': _('Filter not found.')}
                 boolean_str += "True "
                 marshalled_filter.append(_f['content'])

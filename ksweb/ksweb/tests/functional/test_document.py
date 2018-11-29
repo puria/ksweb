@@ -9,34 +9,34 @@ class TestDocument(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Area 1')
+        self.workspace = self._get_workspace('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/document/', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/document', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/document', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lawyer()
-        resp_lawyer = self.app.get('/document', params=dict(workspace=self.category._id))
+        resp_lawyer = self.app.get('/document', params=dict(workspace=self.workspace._id))
         assert resp_lawyer.status_code == 200
 
     def test_new_document(self):
         self._login_admin()
-        resp_admin = self.app.get('/document/new', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/document/new', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_creation_document(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         output1 = self._create_fake_output('Output1')
         document_params = {
             'title': 'Titolo documento 1',
-            'workspace': str(category1._id),
-            'html': 'Io sono il tuo editor #{%s}' % str(output1._id)
+            'workspace': str(workspace1._id),
+            'html': 'Io sono il tuo editor #{%s}' % str(output1.hash)
         }
         resp = self.app.post_json(
             '/document/post', params=document_params
@@ -53,19 +53,19 @@ class TestDocument(TestController):
 
         resp = self.app.get('/document/edit', params={
             '_id': str(doc1._id),
-            'workspace': doc1._category
+            'workspace': doc1._workspace
         })
         assert str(doc1._id) in resp
 
     def test_document_put(self):
         self.test_creation_document()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         original_document = self._get_document_by_title('Titolo documento 1')
 
         document_params = {
             '_id': str(original_document._id),
             'title': 'Aggiornato',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'html': '<p>Io sono il tuo editor</p>',
             'content': []
         }
@@ -93,7 +93,7 @@ class TestDocument(TestController):
 
     def test_document_import(self):
         self._login_lawyer()
-        workspace = self._get_category("Area 1")
+        workspace = self._get_workspace("Area 1")
         response = self.app.post('/document/import_document',
                                  params=dict(workspace=str(workspace._id)),
                                  upload_files=[('file_import',

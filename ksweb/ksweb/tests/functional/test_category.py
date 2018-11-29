@@ -2,82 +2,82 @@
 from ksweb.tests import TestController
 
 
-class TestCategory(TestController):
+class TestWorkspace(TestController):
     application_under_test = 'main'
 
     def setUp(self):
         TestController.setUp(self)
 
     def test_access_permission_not_garanted(self):
-        self.app.get('/category/', status=302)
+        self.app.get('/workspace/', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/category')
+        resp_admin = self.app.get('/workspace')
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lawyer()
-        resp_lawyer = self.app.get('/category')
+        resp_lawyer = self.app.get('/workspace')
         assert resp_lawyer.status_code == 200
 
     def test_get_one(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
-        resp = self.app.get('/category/get_one', params={'id': str(category1._id)})
-        assert str(category1._id) in resp
+        workspace1 = self._get_workspace('Area 1')
+        resp = self.app.get('/workspace/get_one', params={'id': str(workspace1._id)})
+        assert str(workspace1._id) in resp
 
     def test_get_all(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
-        category2 = self._get_category('Area 2')
-        category3 = self._get_category('Not Visible Category')
+        workspace1 = self._get_workspace('Area 1')
+        workspace2 = self._get_workspace('Area 2')
+        workspace3 = self._get_workspace('Not Visible Workspace')
 
-        resp = self.app.get('/category/get_all')
-        assert str(category1._id) in resp
-        assert str(category2._id) in resp
-        assert str(category3._id) not in resp
+        resp = self.app.get('/workspace/get_all')
+        assert str(workspace1._id) in resp
+        assert str(workspace2._id) in resp
+        assert str(workspace3._id) not in resp
 
-    def test_create_category(self):
+    def test_create_workspace(self):
         self._login_lawyer()
         self.app.post_json(
-            '/category/create',
+            '/workspace/create',
             params=dict(
-                workspace_name='Category',
+                workspace_name='Workspace',
             )
         )
-        category = self._get_category('Category')
-        assert category
+        workspace = self._get_workspace('Workspace')
+        assert workspace
 
-    def test_check_duplicate_category(self):
-        self.test_create_category()
+    def test_check_duplicate_workspace(self):
+        self.test_create_workspace()
         self.app.post_json(
-            '/category/create',
+            '/workspace/create',
             params=dict(
-                workspace_name='Category',
+                workspace_name='Workspace',
             ),
             status=412
         )
 
-    def test_category_delete(self):
-        self.test_create_category()
-        category = self._get_category("Category")
+    def test_workspace_delete(self):
+        self.test_create_workspace()
+        workspace = self._get_workspace("Workspace")
         self.app.post_json(
-            '/category/delete',
-            params={'workspace_id': str(category._id)}
+            '/workspace/delete',
+            params={'workspace_id': str(workspace._id)}
         )
-        c = self._get_category("Category")
-        response = self.app.get('/category/get_all')
+        c = self._get_workspace("Workspace")
+        response = self.app.get('/workspace/get_all')
         assert not c
-        assert str(category._id) not in response
+        assert str(workspace._id) not in response
 
 
     def test_workspace_without_owner_delete(self):
         self._login_lawyer()
-        self.app.post_json('/category/create', params=dict(workspace_name='Category',))
-        category = self._get_category('Category')
-        category._owner = None
-        category.owner = None
-        self.app.post_json('/category/delete', params={'workspace_id': str(category._id)})
-        c = self._get_category("Category")
+        self.app.post_json('/workspace/create', params=dict(workspace_name='Workspace',))
+        workspace = self._get_workspace('Workspace')
+        workspace._owner = None
+        workspace.owner = None
+        self.app.post_json('/workspace/delete', params={'workspace_id': str(workspace._id)})
+        c = self._get_workspace("Workspace")
         assert c

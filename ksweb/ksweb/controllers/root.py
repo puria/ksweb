@@ -36,12 +36,12 @@ from tg.validation import Convert
 from tgext.admin.mongo import BootstrapTGMongoAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
-from ksweb.controllers.category import CategoryController
+from ksweb.controllers.workspace import WorkspaceController
 from ksweb.controllers.document import DocumentController
 from ksweb.controllers.output import OutputController
 from ksweb.controllers.precondition.precondition import PreconditionController
 from ksweb.controllers.qa import QaController
-from ksweb.controllers.questionary import QuestionaryController
+from ksweb.controllers.form import FormController
 from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
 from ksweb.controllers.resolve import ResolveController
@@ -53,10 +53,10 @@ class RootController(BaseController):
     admin = AdminController(model, None, config_type=TGAdminConfig)
     qa = QaController()
     precondition = PreconditionController()
-    category = CategoryController()
+    workspace = WorkspaceController()
     output = OutputController()
     document = DocumentController()
-    questionary = QuestionaryController()
+    questionary = FormController()
     resolve = ResolveController()
     output_plus = OutputPlusController()
 
@@ -118,7 +118,7 @@ class RootController(BaseController):
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def start(self):
         user = request.identity['user']
-        categories = model.Category.per_user(user._id)
+        categories = model.Workspace.per_user(user._id)
         return dict(page='index', user=user, workspaces=categories, show_sidebar=False)
 
     @expose('ksweb.templates.welcome')
@@ -126,7 +126,7 @@ class RootController(BaseController):
     @validate({'workspace': Convert(ObjectId, 'must be a valid ObjectId')}, error_handler=ksweb_error_handler)
     def welcome(self, workspace):
         user = request.identity['user']
-        ws = model.Category.query.find({'_id': ObjectId(workspace)}).first()
+        ws = model.Workspace.query.find({'_id': ObjectId(workspace)}).first()
         return dict(page='welcome', user=user, workspace=workspace, ws=ws, show_sidebar=True)
 
     @expose('json')

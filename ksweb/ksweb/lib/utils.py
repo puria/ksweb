@@ -2,7 +2,6 @@
 from string import Template
 from bson import ObjectId
 from ksweb.model import Output, Precondition, Qa, Document
-from ksweb.model.mapped_entity import MappedEntity
 from markupsafe import Markup
 from tg.util.ming import dictify
 from ksweb import model
@@ -86,8 +85,8 @@ def entity_from_id(_id):
     return list(entity)[0]
 
 
-def hash_to_id(_hash, model):
-    me = model.query.get(hash=_hash)
+def hash_to_id(_hash, _model):
+    me = _model.query.get(hash=_hash)
     return str(me._id)
 
 
@@ -102,3 +101,12 @@ def ksweb_error_handler(*args, **kw):  # pragma: nocover
     )
     flash(l_('Errors: %s' % errors), 'error')
     redirect('/start')
+
+
+def uid():
+    from tg import request
+    return request.identity['user']._id
+
+
+def save_to_session():
+    pass

@@ -67,7 +67,7 @@ class DocumentController(RestController):
 
         doc = model.Document(
             _owner=user._id,
-            _category=ObjectId(workspace),
+            _workspace=ObjectId(workspace),
             title=title,
             public=True,
             visible=True,
@@ -98,7 +98,7 @@ class DocumentController(RestController):
         tags = {__.strip() for __ in tags.split(',')} if tags else []
         document = model.Document.query.find({'_id': ObjectId(_id)}).first()
         document.title = title
-        document._category = ObjectId(workspace)
+        document._workspace = ObjectId(workspace)
         document.html = html
         document.tags = list(tags)
         document.description = description

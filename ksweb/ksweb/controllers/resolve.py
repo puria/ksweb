@@ -88,7 +88,7 @@ class ResolveController(BaseController):
 
     def _original_edit(self):
         params = session.get('entity')
-        params['_category'] = to_object_id(params.get('_category'))
+        params['_workspace'] = to_object_id(params.get('_workspace'))
         params['_precondition'] = to_object_id(params.get('_precondition'))
         entity = entity_from_id(params['_id'])
         params.pop('entity', None)

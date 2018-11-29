@@ -91,23 +91,23 @@ class TestController(object):
         return model.User.query.get(email_address=email_address)
 
     #  Rewrite utility method for test
-    #  Category Utility
-    def _get_category(self, name):
-        return model.Category.query.get(name=name)
+    #  Workspace Utility
+    def _get_workspace(self, name):
+        return model.Workspace.query.get(name=name)
 
-    def _create_category(self, name, visible=True):
-        c = model.Category(
+    def _create_workspace(self, name, visible=True):
+        c = model.Workspace(
                 name=name,
                 visible=visible,
         )
         DBSession.flush(c)
         return c
 
-    def _get_or_create_category(self, name, visible=True):
-        c = self._get_category(name)
+    def _get_or_create_workspace(self, name, visible=True):
+        c = self._get_workspace(name)
         if c:
             return c
-        return self._create_category(name, visible)
+        return self._create_workspace(name, visible)
 
     #  Question And Answer Utility
     def _get_qa(self, id):
@@ -116,11 +116,11 @@ class TestController(object):
     def _get_qa_by_title(self, title):
         return model.Qa.query.get(title=title)
 
-    def _create_qa(self, title, category_id, question, tooltip, link, qa_type, answers):
+    def _create_qa(self, title, workspace_id, question, tooltip, link, qa_type, answers):
         self.app.post_json(
             '/qa/post', params={
                 'title': title,
-                'workspace': str(category_id),
+                'workspace': str(workspace_id),
                 'question': question,
                 'tooltip': tooltip,
                 'link': link,
@@ -130,15 +130,15 @@ class TestController(object):
         )
         return self._get_qa_by_title(title)
 
-    def _get_or_create_qa(self, title, category_id=None, question=None, tooltip=None, link=None, qa_type=None, answers=None):
+    def _get_or_create_qa(self, title, workspace_id=None, question=None, tooltip=None, link=None, qa_type=None, answers=None):
         qa = self._get_qa_by_title(title)
-        return qa if qa else self._create_qa(title, category_id, question, tooltip, link, qa_type, answers)
+        return qa if qa else self._create_qa(title, workspace_id, question, tooltip, link, qa_type, answers)
 
     def _create_fake_qa(self, title, qa_type='single', answers=FAKE_RESPONSE):
-        fake_category = self._get_or_create_category('fake_category')
+        fake_workspace = self._get_or_create_workspace('fake_workspace')
         return self._create_qa(
             title,
-            fake_category._id,
+            fake_workspace._id,
             '%s_fake_question' % title,
             'fake_tooltip_%s' % title,
             'fake_link_%s' % title,
@@ -153,14 +153,14 @@ class TestController(object):
     def _get_precond_by_title(self, title):
         return model.Precondition.query.get(title=title)
 
-    def _create_simple_precondition(self, title, category_id, qa_id, answer_type='what_response', interested_response=[]):
+    def _create_simple_precondition(self, title, workspace_id, qa_id, answer_type='what_response', interested_response=[]):
         """
         answer_type = ['have_response', what_response]
         """
         self.app.post_json(
             '/precondition/simple/post', params={
                 'title': title,
-                'workspace': str(category_id),
+                'workspace': str(workspace_id),
                 'question': str(qa_id),
                 'answer_type': answer_type,
                 'interested_response': interested_response
@@ -168,18 +168,18 @@ class TestController(object):
         )
         return self._get_precond_by_title(title)
 
-    def _create_fake_simple_precondition(self, title, category_id=None):
-        if not category_id:
-            category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
+    def _create_fake_simple_precondition(self, title, workspace_id=None):
+        if not workspace_id:
+            workspace_id = self._get_or_create_workspace("Fake_cat_%s" % title)._id
 
         qa = self._create_fake_qa(title)
-        return self._create_simple_precondition(title, category_id, qa._id, 'what_response', [self.FAKE_RESPONSE[0]])
+        return self._create_simple_precondition(title, workspace_id, qa._id, 'what_response', [self.FAKE_RESPONSE[0]])
 
-    def _create_advanced_precondition(self, title, category_id, conditions=[]):
+    def _create_advanced_precondition(self, title, workspace_id, conditions=[]):
         self.app.post_json(
             '/precondition/advanced/post', params={
                 'title': title,
-                'workspace': str(category_id),
+                'workspace': str(workspace_id),
                 'conditions': conditions
             }
         )
@@ -195,23 +195,23 @@ class TestController(object):
         :return: the created precondition
         """
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         #  Devo creare almeno 1 qa con delle risposte
 
         qa_color_param = {
             'title': 'Favourite color',
-            'workspace': str(category1._id),
+            'workspace_id': str(workspace1._id),
             'question': 'What is your favourite color?',
             'tooltip': 'Favourite color',
             'link': 'http://www.axant.it',
-            'answer_type': 'single',
+            'qa_type': 'single',
             'answers': ['Red', 'Blu', 'Yellow', 'Green']
         }
-        qa_color = self._create_qa(qa_color_param['title'], qa_color_param['workspace'], qa_color_param['question'], qa_color_param['tooltip'], qa_color_param['link'], qa_color_param['answer_type'], qa_color_param['answers'])
+        qa_color = self._create_qa(**qa_color_param)
 
         prec_red_color = {
             'title': 'Red is Favourite',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa_color._id),
             'answer_type': 'what_response',
             'interested_response': ['Red']
@@ -222,18 +222,18 @@ class TestController(object):
 
         qa_animal_liked_param = {
             'title': 'Animal liked',
-            'workspace': str(category1._id),
+            'workspace_id': str(workspace1._id),
             'question': 'What animal do you like?',
             'tooltip': 'Animalsss',
             'link': 'http://www.axant.it',
-            'answer_type': 'multi',
+            'qa_type': 'multi',
             'answers': ['Dog', 'Cat', 'Pig', 'Turtle', 'Rabbit']
         }
-        qa_animal_liked = self._create_qa(qa_animal_liked_param['title'], qa_animal_liked_param['workspace'], qa_animal_liked_param['question'], qa_animal_liked_param['tooltip'], qa_animal_liked_param['link'], qa_animal_liked_param['answer_type'], qa_animal_liked_param['answers'])
+        qa_animal_liked = self._create_qa(**qa_animal_liked_param)
 
         prec_animal_liked_pig_dog = {
             'title': 'Like pig and dog',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa_animal_liked._id),
             'answer_type': 'what_response',
             'interested_response': ['Pig', 'Dog']
@@ -248,11 +248,11 @@ class TestController(object):
         #  Ora che ho i 2  filtri posso creare quelli composti
         precond_advanced = {
             'title': title,
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'conditions': [
                 {
                     'type': 'precondition',
-                    'content': str(precond_red._id)
+                    'content': precond_red.hash
                 },
                 {
                     'type': 'operator',
@@ -260,7 +260,7 @@ class TestController(object):
                 },
                 {
                     'type': 'precondition',
-                    'content': str(precond_pig_dog._id)
+                    'content': precond_pig_dog.hash
                  }
             ]
         }
@@ -277,45 +277,45 @@ class TestController(object):
     def _get_output_by_title(self, title):
         return model.Output.query.get(title=title)
 
-    def _create_output(self, title, category_id, precondition_id, html=''):
+    def _create_output(self, title, workspace_id, precondition_id, html=''):
         self.app.post_json(
             '/output/post', params={
                 'title': title,
-                'workspace': str(category_id),
+                'workspace': str(workspace_id),
                 'precondition': str(precondition_id),
                 'html': html,
             }
         )
         return self._get_output_by_title(title)
 
-    def _create_fake_output(self, title, category_id=None):
-        if not category_id:
-            category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
-        return self._create_output(title, category_id,
+    def _create_fake_output(self, title, workspace_id=None):
+        if not workspace_id:
+            workspace_id = self._get_or_create_workspace("Fake_cat_%s" % title)._id
+        return self._create_output(title, workspace_id,
                                    self._create_fake_simple_precondition(title)._id,
                                    "Fake html")
 
     def _get_document_by_title(self, title):
         return model.Document.query.get(title=title)
 
-    def _create_document(self, title, category_id=None, html=None):
-        if not category_id:
-            category_id = self._get_or_create_category("Fake_cat_%s" % title)._id
+    def _create_document(self, title, workspace_id=None, html=None):
+        if not workspace_id:
+            workspace_id = self._get_or_create_workspace("Fake_cat_%s" % title)._id
 
         self.app.post_json(
             '/document/post', params={
                 'title': title,
-                'workspace': str(category_id),
+                'workspace': str(workspace_id),
                 'html': html
             }
         ).json
 
         return self._get_document_by_title(title)
 
-    def _create_fake_document(self, title, html=None, category_id=None):
+    def _create_fake_document(self, title, html=None, workspace_id=None):
         output1 = self._create_fake_output(title)
-        html = html if html else "#{%s}" % str(output1._id)
-        return self._create_document(title, category_id, html)
+        html = html if html else "#{%s}" % str(output1.hash)
+        return self._create_document(title, workspace_id, html)
 
     #  Questionary Utility
     def _get_questionary(self, id):
@@ -331,8 +331,8 @@ class TestController(object):
         })
         return self._get_questionary_by_title(title)
 
-    def _create_fake_questionary(self, title, category_id=None):
-        fake_doc = self._create_fake_document(title, category_id=None)
+    def _create_fake_questionary(self, title, workspace_id=None):
+        fake_doc = self._create_fake_document(title, workspace_id=None)
         self._create_questionary(title, fake_doc._id)
 
         return self._get_questionary_by_title(title)

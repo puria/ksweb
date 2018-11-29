@@ -19,19 +19,19 @@ class TestQuestionaryController(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Area 1')
+        self.workspace = self._get_workspace('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/questionary', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/questionary', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/questionary', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lawyer()
-        resp_lawyer = self.app.get('/questionary', params=dict(workspace=self.category._id))
+        resp_lawyer = self.app.get('/questionary', params=dict(workspace=self.workspace._id))
         assert resp_lawyer.status_code == 200
 
     def test_questionary_create(self):
@@ -40,7 +40,7 @@ class TestQuestionaryController(TestController):
         resp = self.app.post_json('/questionary/create', params={
             'questionary_title': 'TestQuestionary',
             'document_id': str(doc._id),
-            'workspace':  str(self.category._id)
+            'workspace':  str(self.workspace._id)
         })
         assert resp
 
@@ -51,7 +51,7 @@ class TestQuestionaryController(TestController):
         self.app.post_json('/questionary/create', params={
             'questionary_title': 'TestQuestionary',
             'document_id': str(document._id),
-            'workspace':  str(self.category._id),
+            'workspace':  str(self.workspace._id),
             'email_to_share': email_to_share
         })
 
@@ -60,10 +60,10 @@ class TestQuestionaryController(TestController):
 
     def test_compile_questionary(self):
         self._login_lawyer()
-        questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
+        questionary = self._create_fake_questionary('FakeQuestionary', workspace_id=self.workspace._id)
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
-            'workspace': self.category._id
+            'workspace': self.workspace._id
         }).json
         assert resp['quest_compiled'] is not None, resp
         assert resp['quest_compiled']['completed'] is False, resp
@@ -71,11 +71,11 @@ class TestQuestionaryController(TestController):
     def test_responde_questionary(self):
 
         self._login_lawyer()
-        questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
+        questionary = self._create_fake_questionary('FakeQuestionary', workspace_id=self.workspace._id)
 
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
-            'workspace': self.category._id
+            'workspace': self.workspace._id
         }).json
 
         assert resp['quest_compiled']['completed'] is False, resp
@@ -90,10 +90,10 @@ class TestQuestionaryController(TestController):
 
     def test_hack_response(self):
         self._login_lawyer()
-        questionary = self._create_fake_questionary('FakeQuestionary', category_id=self.category._id)
+        questionary = self._create_fake_questionary('FakeQuestionary', workspace_id=self.workspace._id)
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
-            'workspace': self.category._id
+            'workspace': self.workspace._id
         }).json
         assert resp['quest_compiled']['completed'] is False, resp
 
@@ -106,26 +106,26 @@ class TestQuestionaryController(TestController):
 
     def test_compile_advanced_questionary(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
         out_1 = self._create_output("example1",
-                                    category1._id,
+                                    workspace1._id,
                                     fake_advanced_precond._id,
                                     'some html @{%s}' % str(qa_color._id))
 
         qa_animal = self._get_qa_by_title('Favourite color')
-        out_2 = self._create_output("example1", category1._id,
+        out_2 = self._create_output("example1", workspace1._id,
                                     fake_advanced_precond._id, 'some html  @{%s}' % str(qa_animal._id))
 
         html = '#{%s} #{%s}' % (str(out_1._id), str(out_2._id))
 
-        document = self._create_document("Advanced_document", category1._id, html)
+        document = self._create_document("Advanced_document", workspace1._id, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
-            'workspace': document._category
+            'workspace': document._workspace
         }).json
         assert resp['quest_compiled']['completed'] is False, resp
 
@@ -152,22 +152,22 @@ class TestQuestionaryController(TestController):
 
     def test_compile_advanced_questionary_not_showing_two_time_same_answer(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
-        out_1 = self._create_output("example1", category1._id,
+        out_1 = self._create_output("example1", workspace1._id,
                                     fake_advanced_precond._id, '@{%s}' % str(qa_color._id))
 
         qa_animal = self._get_qa_by_title('Favourite color')
-        out_2 = self._create_output("example1", category1._id,
+        out_2 = self._create_output("example1", workspace1._id,
                                     fake_advanced_precond._id, '@{%s}' % str(qa_animal._id))
         html = '#{%s} #{%s} #{%s}' % (str(out_1._id), str(out_2._id), str(out_1._id))
-        document = self._create_document("Advanced_document", category1._id, html)
+        document = self._create_document("Advanced_document", workspace1._id, html)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={
             '_id': str(questionary._id),
-            'workspace': document._category
+            'workspace': document._workspace
 
         }).json
         assert resp['quest_compiled']['completed'] is False, resp
@@ -205,7 +205,7 @@ class TestQuestionaryController(TestController):
         self.test_questionary_create()
         form = self._get_questionary_by_title('TestQuestionary')
         response = self.app.get('/questionary/completed',
-                                params=dict(_id=str(form._id), workspace=self.category._id),
+                                params=dict(_id=str(form._id), workspace=self.workspace._id),
                                 status=200)
         assert response, response
 
@@ -239,7 +239,7 @@ class TestQuestionaryController(TestController):
 """ FIXME:
     def test_hack_response_multi(self):
         self._login_lavewr()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         fake_advanced_precond = self._create_fake_advanced_precondition_red_animal("Advanced_precond")
         qa_color = self._get_qa_by_title('Favourite color')
         color_content = [
@@ -254,7 +254,7 @@ class TestQuestionaryController(TestController):
                 "title": "Favourite Color"
             }
         ]
-        out_1 = self._create_output("example1", category1._id, fake_advanced_precond._id, color_content)
+        out_1 = self._create_output("example1", workspace1._id, fake_advanced_precond._id, color_content)
 
         qa_animal = self._get_qa_by_title('Favourite color')
         animal_content = [
@@ -269,7 +269,7 @@ class TestQuestionaryController(TestController):
                 "title": "Favourite Animals"
             }
         ]
-        out_2 = self._create_output("example1", category1._id, fake_advanced_precond._id, animal_content)
+        out_2 = self._create_output("example1", workspace1._id, fake_advanced_precond._id, animal_content)
 
         content = [
             {
@@ -293,7 +293,7 @@ class TestQuestionaryController(TestController):
                 'title': out_2.title
             },
         ]
-        document = self._create_document("Advanced_document", category1._id, content)
+        document = self._create_document("Advanced_document", workspace1._id, content)
         questionary = self._create_questionary("Advanced_Questionary", document._id)
 
         resp = self.app.get('/questionary/compile.json', params={

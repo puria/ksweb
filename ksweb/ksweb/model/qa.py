@@ -3,62 +3,12 @@
 import pymongo
 
 import tg
-from bson import ObjectId
 from markupsafe import Markup
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty, MapperExtension
-from ksweb.model import DBSession, User
+from ksweb.model import DBSession
 from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 from tg.i18n import ugettext as _
-
-
-class AutoCompile(MapperExtension):
-    def after_insert(self, instance, st, sess):
-        from ksweb.model import Precondition
-        DBSession.flush_all()
-
-        common_precondition_params = dict(
-            _owner=instance._owner,
-            _category=ObjectId(instance._category),
-            auto_generated=True,
-            status=Precondition.STATUS.UNREAD
-        )
-        if instance.is_text:
-            autogen_filter = Precondition(
-                                **common_precondition_params,
-                                title=_(u'%s \u21d2 was compiled' % instance.title),
-                                type=Precondition.TYPES.SIMPLE,
-                                condition=[instance.hash, ""]
-                            )
-        else:
-            condition = []
-            for answer in instance.answers:
-                precondition = Precondition(
-                    **common_precondition_params,
-                    title=u'%s \u21d2 %s' % (instance.title, answer),
-                    type=Precondition.TYPES.SIMPLE,
-                    condition=[instance.hash, answer],
-                )
-                condition.append(precondition.hash)
-                condition.append('or')
-            del condition[-1]
-
-            autogen_filter = Precondition(
-                **common_precondition_params,
-                title=instance.title + _(u' \u21d2 was compiled'),
-                type=Precondition.TYPES.ADVANCED,
-                condition=condition
-            )
-
-        if autogen_filter:
-            from ksweb.model import Output
-            Output(
-                **common_precondition_params,
-                _precondition=ObjectId(autogen_filter._id),
-                title=instance.title + u' \u21d2 output',
-                html='@{%s}' % instance.hash,
-            )
-        DBSession.flush_all()
 
 
 class Qa(MappedEntity):
@@ -75,14 +25,14 @@ class Qa(MappedEntity):
         indexes = [
             ('title',),
             ('_owner',),
-            ('_category',),
+            ('_workspace',),
             ('type', 'public',),
             ('hash',),
         ]
-        extensions = [TriggerExtension, AutoCompile]
+        extensions = [TriggerExtension]
 
     def custom_title(self):
-        url = tg.url('/qa/edit', params=dict(_id=self._id, workspace=self._category))
+        url = tg.url('/qa/edit', params=dict(_id=self._id, workspace=self._workspace))
         auto = 'bot' if self.auto_generated else ''
         return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (self.status, url, auto, self.title))
 
@@ -99,14 +49,6 @@ class Qa(MappedEntity):
     type = FieldProperty(s.OneOf(*QA_TYPE), required=True)
 
     answers = FieldProperty(s.Anything)
-
-    @classmethod
-    def available_for_user(cls, user_id, workspace=None):
-        return User.query.get(_id=user_id).owned_entities(cls, workspace).sort([
-                                ('auto_generated', pymongo.ASCENDING),
-                                ('status', pymongo.DESCENDING),
-                                ('title', pymongo.ASCENDING),
-                        ])
 
     @property
     def entity(self):
@@ -127,6 +69,64 @@ class Qa(MappedEntity):
     @property
     def dependencies(self):
         return self.dependent_filters() + self.dependent_outputs()
+
+    def __get_common_fields(self, **kwargs):
+        common = dict(
+            _owner=self._owner,
+            _workspace=self._workspace,
+            public=self.public,
+            visible=self.visible
+        )
+        common.update(**kwargs)
+        return common
+
+    def __generate_generic_filter_from(self, title, **kwargs):
+        from ksweb.model import Precondition
+        common = self.__get_common_fields(auto_generated=True, status=Precondition.STATUS.UNREAD)
+        common.update(**kwargs)
+        common.update({'title': title})
+        return Precondition.upsert({'title': title}, common)
+
+    def generate_text_filter_from(self):
+        from ksweb.model import Precondition
+        return self.__generate_generic_filter_from(
+            title=_(u'%s \u21d2 was compiled' % self.title),
+            type=Precondition.TYPES.SIMPLE,
+            condition=[self._id, ""]
+        )
+
+    def generate_filter_answer_from(self, answer):
+        from ksweb.model import Precondition
+        return self.__generate_generic_filter_from(
+            title=u'%s \u21d2 %s' % (self.title, answer),
+            type=Precondition.TYPES.SIMPLE,
+            condition=[self._id, answer],
+        )
+
+    def generate_filters_from(self):
+        if self.is_text:
+            return self.generate_text_filter_from()
+
+        composed_condition = []
+        for __ in self.answers:
+            composed_condition.append(self.generate_filter_answer_from(__)._id)
+            composed_condition.append('or')
+        del composed_condition[-1]
+
+        from ksweb.model import Precondition
+        return self.__generate_generic_filter_from(
+            title=_(u'%s \u21d2 was compiled' % self.title),
+            type=Precondition.TYPES.ADVANCED,
+            condition=composed_condition
+        )
+
+    def generate_output_from(self):
+        from ksweb.model import Output
+        _filter = self.generate_filters_from()
+        common = self.__get_common_fields(auto_generated=True, status=Output.STATUS.UNREAD)
+        title = u'%s \u21d2 output' % self.title
+        common.update({'_precondition': _filter._id, 'html': '@{%s}' % self.hash, 'title': title})
+        return Output.upsert({'title': title}, common)
 
     def export_items(self):
         items = set([self])

@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 def _compile_questionary(obj):
-    workspace = Document.query.find({'_id': ObjectId(obj._document)}).first()._category
+    workspace = Document.query.find({'_id': ObjectId(obj._document)}).first()._workspace
     return Markup("<a href='%s'>%s</a>" % (tg.url('/questionary/compile',
                                                   params=dict(_id=obj._id, workspace=workspace)),
                                            obj.title))
@@ -109,22 +109,21 @@ class Questionary(MappedClass):
 
     @property
     def evaluate_questionary(self):
-        # self.document_values = []
         self.output_values = {}
         self.generate_expression()
 
         if not self.document.content:
             return {'completed': False}
-        # document contains outputs only
+
         for output in self.document.content:
-            output_id = output['content']
-            output_res = self.evaluate_expression(output_id)
+            output_hash = output['content']
+            output_res = self.evaluate_expression(output_hash)
 
             if not output_res['completed']:
                 return output_res
             else:
-                if self.output_values[output_id].get('evaluation'):
-                    res = self.compile_output(output_id)
+                if self.output_values[output_hash].get('evaluation'):
+                    res = self.compile_output(output_hash)
                     # this need for to show other questions though output is already evaluated,
                     # for example when output uses some response to a certain questions
                     if res:
@@ -136,7 +135,7 @@ class Questionary(MappedClass):
 
     def generate_expression(self):
         for output in self.document.children:
-            self.expressions[str(output._id)] = self._generate(output.precondition)
+            self.expressions[output.hash] = self._generate(output.precondition)
 
     def _generate(self, precondition):
         parent_expression, expression = '', ''
@@ -147,7 +146,7 @@ class Questionary(MappedClass):
             qa = precondition.get_qa()
 
             if qa._parent_precondition:
-                parent_expression = '(' + self._generate(qa.parent_precondition) + ') and '
+                parent_expression = '( %s ) and ' % self._generate(qa.parent_precondition)
             if precondition.simple_text_response:
                 expression = "q_%s != ''" % str(precondition.condition[0])
             elif precondition.single_choice_response:
@@ -163,14 +162,14 @@ class Questionary(MappedClass):
                 if isinstance(item, str):
                     advanced_expression += ' %s ' % item
                 elif isinstance(item, ObjectId):
-                    p = Precondition.query.get(_id=item)
+                    p = Precondition.query.get(hash=item)
                     advanced_expression += '( %s )' % self._generate(p)
 
         return advanced_expression
 
     def compile_output(self, output_id):
         from . import Output
-        output = Output.query.get(_id=ObjectId(output_id))
+        output = Output.query.get(hash=output_id)
 
         for elem in output.content:
             if elem['type'] == "qa_response":
@@ -198,8 +197,8 @@ class Questionary(MappedClass):
                             return res
         return None
 
-    def evaluate_expression(self, output_id):
-        expression = self.expressions[output_id]
+    def evaluate_expression(self, output_hash):
+        expression = self.expressions[output_hash]
         answers = dict()
 
         for _id, resp in self.qa_values.items():
@@ -220,7 +219,7 @@ class Questionary(MappedClass):
                 'qa': _id
             }
 
-        self.output_values[output_id] = {
+        self.output_values[output_hash] = {
             'evaluation': evaluation
         }
 

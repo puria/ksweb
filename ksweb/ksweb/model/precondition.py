@@ -14,7 +14,7 @@ from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 
 
 def _custom_title(obj):
-    url = tg.url('/%s/edit' % (obj.entity), params=dict(_id=obj._id, workspace=obj._category))
+    url = tg.url('/%s/edit' % (obj.entity), params=dict(_id=obj._id, workspace=obj._workspace))
     cls = 'bot' if obj.auto_generated else ''
     status = obj.status
     return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (status, url, cls, obj.title))
@@ -63,7 +63,7 @@ class Precondition(MappedEntity):
 
     @classmethod
     def available_for_user(cls, user_id, workspace):
-        return cls.query.find({'_owner': user_id, 'visible': True, '_category': ObjectId(workspace)})\
+        return cls.query.find({'_owner': user_id, 'visible': True, '_workspace': ObjectId(workspace)})\
                         .sort([
                                 ('auto_generated', pymongo.ASCENDING),
                                 ('status', pymongo.DESCENDING),
@@ -95,7 +95,7 @@ class Precondition(MappedEntity):
             if ___ in Precondition.PRECONDITION_OPERATOR:
                 continue
             else:
-                rel_ent = Precondition.query.get(_id=ObjectId(___))
+                rel_ent = Precondition.query.get(___)
                 res_dict.update(rel_ent.response_interested)
 
         return res_dict
@@ -104,7 +104,7 @@ class Precondition(MappedEntity):
         if self.is_advanced:
             return None
         from . import Qa
-        return Qa.query.get(_id=ObjectId(self.condition[0]))
+        return Qa.query.get(self.condition[0])
 
     @property
     def simple_text_response(self):

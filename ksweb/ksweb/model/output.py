@@ -25,7 +25,7 @@ class Output(MappedEntity):
         extensions = [TriggerExtension]
 
     def custom_title(self):
-        url = tg.url('/output/edit', params=dict(_id=self._id, workspace=self._category))
+        url = tg.url('/output/edit', params=dict(_id=self._id, workspace=self._workspace))
         auto = 'bot' if self.auto_generated else ''
         return Markup("<span class='%s'></span><a href='%s' class='%s'>%s</a>" % (self.status, url, auto, self.title))
 

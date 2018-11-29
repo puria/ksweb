@@ -8,7 +8,7 @@ from tg.decorators import paginate, decode_params, validate
 from tg.i18n import lazy_ugettext as l_
 from tg import expose, predicates, tmpl_context, validation_errors_response
 from ksweb.lib.validator import PreconditionExistValidator, WorkspaceExistValidator
-from ksweb.model import Precondition, Category
+from ksweb.model import Precondition, Workspace
 from .simple import PreconditionSimpleController
 from .advanced import PreconditionAdvancedController
 from ksweb.lib.base import BaseController
@@ -44,20 +44,20 @@ class PreconditionController(BaseController):
             {
                 '$match': {
                     '_owner': request.identity['user']._id,
-                    '_category': ObjectId(workspace)
+                    '_workspace': ObjectId(workspace)
                 }
             },
             {
                 '$group': {
-                    '_id': '$_category',
+                    '_id': '$_workspace',
                     'precondition': {'$push': "$$ROOT", }
                 }
             }
         ]))
 
-        #  Insert category name into res
+        #  Insert workspace name into res
         for e in res:
-            e['category_name'] = Category.query.get(_id=ObjectId(e['_id'])).name
+            e['workspace_name'] = Workspace.query.get(_id=ObjectId(e['_id'])).name
 
         return dict(precond=res)
 
@@ -86,5 +86,5 @@ class PreconditionController(BaseController):
             tg.flash('The precondition you are looking for, does not exist')
             redirect()
         p = Precondition.query.get(_id=ObjectId(_id))
-        redirect('/%s/edit' % (p.entity), params=dict(_id=p._id, workspace=p._category))
+        redirect('/%s/edit' % (p.entity), params=dict(_id=p._id, workspace=p._workspace))
 

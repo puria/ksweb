@@ -127,5 +127,5 @@ class User(MappedClass):
     def owned_entities(self, entity_model, workspace=None):
         query = {'_owner': self._id}
         if workspace:
-            query['_category'] = ObjectId(workspace)
+            query['_workspace'] = ObjectId(workspace)
         return entity_model.query.find(query).sort('title')

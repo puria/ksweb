@@ -13,7 +13,7 @@ from tw2.core import StringLengthValidator
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.validator import WorkspaceExistValidator, PreconditionExistValidator, \
     OutputExistValidator, OutputContentValidator
-from ksweb.model import Precondition, Output, Document, Category as Workspace, Qa
+from ksweb.model import Precondition, Output, Document, Workspace, Qa
 
 
 class OutputController(RestController):
@@ -43,7 +43,7 @@ class OutputController(RestController):
             page='output-index',
             fields={
                 'columns_name': [_('Label'), _('Filter'), _('Content'), _('Id')],
-                'fields_name': ['title', 'precondition', 'content', 'hash']
+                'fields_name': 'title precondition content hash'.split()
             },
             entities=Output.output_available_for_user(request.identity['user']._id, workspace),
             actions=False,
@@ -75,7 +75,7 @@ class OutputController(RestController):
         user = request.identity['user']
         o = Output(
             _owner=user._id,
-            _category=ObjectId(workspace),
+            _workspace=ObjectId(workspace),
             _precondition=to_object_id(precondition),
             title=title,
             public=True,
@@ -108,7 +108,7 @@ class OutputController(RestController):
             entity = dict(
                 _id=_id,
                 title=title,
-                _category=workspace,
+                _workspace=workspace,
                 _precondition=precondition,
                 entity='output',
                 auto_generated=False,
@@ -121,7 +121,7 @@ class OutputController(RestController):
 
         output = Output.query.find({'_id': ObjectId(_id)}).first()
         output.title = title
-        output._category = ObjectId(workspace)
+        output._workspace = ObjectId(workspace)
         output._precondition = to_object_id(precondition)
         output.html = html
         output.auto_generated = False
@@ -136,7 +136,7 @@ class OutputController(RestController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this output.'), field='_id', entity_model=Output))
     def edit(self, _id, workspace, **kw):
-        output = Output.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
+        output = Output.query.find({'_id': ObjectId(_id), '_workspace': ObjectId(workspace)}).first()
         tmpl_context.sidebar_output = "output-edit"
         return dict(output=output, workspace=workspace, errors=None)
 
@@ -149,20 +149,20 @@ class OutputController(RestController):
                     '_owner': request.identity['user']._id,
                     '_id': {'$ne': ObjectId(_id)},
                     'visible': True,
-                    '_category': ObjectId(workspace)
+                    '_workspace': ObjectId(workspace)
                 }
             },
             {
                 '$group': {
-                    '_id': '$_category',
+                    '_id': '$_workspace',
                     'output': {'$push': "$$ROOT", }
                 }
             }
         ]))
 
-        #  Insert category name into res
+        #  Insert workspace name into res
         for e in res:
-            e['category_name'] = Workspace.query.get(_id=ObjectId(e['_id'])).name
+            e['workspace_name'] = Workspace.query.get(_id=ObjectId(e['_id'])).name
 
         return dict(outputs=res)
 
@@ -183,8 +183,8 @@ class OutputController(RestController):
             'owner': output.owner.display_name,
             '_precondition': output._precondition,
             'precondition': output.precondition.title,
-            '_category': output._category,
-            'category': output.category.name,
+            '_workspace': output._workspace,
+            'workspace': output.workspace.name,
             'public': output.public,
             'visible': output.visible,
             'created_at': output.created_at

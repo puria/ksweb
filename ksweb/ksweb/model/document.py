@@ -18,7 +18,7 @@ class Document(MappedEntity):
             ('_owner',),
             ('public',),
             ('title',),
-            ('_category',),
+            ('_workspace',),
             ('html', 'text')
         ]
         extensions = [TriggerExtension]
@@ -26,7 +26,7 @@ class Document(MappedEntity):
     def custom_title(self):
         return Markup("<a href='%s'>%s</a>" % (tg.url('/document/edit',
                                                params=dict(_id=self._id,
-                                                           workspace=self._category)),
+                                                           workspace=self._workspace)),
                                                self.title))
 
     def content_preview(self):
@@ -60,10 +60,10 @@ class Document(MappedEntity):
 
     @property
     def content(self):
-        return [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in self.children]
+        return [{'content': __.hash, 'title': __.title, 'type': 'output'} for __ in self.children]
 
     def exportable_dict(self):
-        filter_out = ['_category', '_owner', 'created_at', '_id']
+        filter_out = ['_workspace', '_owner', 'created_at', '_id']
         filter_json = {k: v for k, v in self.__json__().items() if k not in filter_out}
         for __ in ['outputs', 'advanced_preconditions', 'qa', 'simple_preconditions']:
             filter_json[__] = {}

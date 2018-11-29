@@ -15,7 +15,7 @@ class TestUtils(TestController):
     def setUp(self):
         TestController.setUp(self)
         self._login_admin()
-        self.ws = self._get_category('Area 1')
+        self.ws = self._get_workspace('Area 1')
         self.document = {'qa': {}, 'advanced_preconditions': {}, 'simple_preconditions': {}, 'outputs': {}}
         self.qa = self._create_qa('title', self.ws._id, 'question', 'tooltip', 'link', 'single', ['a', 'b'])
         self.qa_struct = {str(self.qa._id): {'_parent_precondition': None, 'title': u'title', 'question': u'question',
@@ -85,7 +85,7 @@ class TestUtils(TestController):
     #         }
     #     ]
     #
-    #     a_prec = self._create_advanced_precondition('title2', category_id=self.ws._id, conditions=conditions)
+    #     a_prec = self._create_advanced_precondition('title2', workspace_id=self.ws._id, conditions=conditions)
     #     export_preconditions(a_prec._id, self.document)
     #     assert self.document['qa'] == self.qa_struct, self.document['qa']
     #     assert self.document['simple_preconditions'] == self.prec_struct, self.document['simple_preconditions']
@@ -127,7 +127,7 @@ class TestUtils(TestController):
     def test_upsert_document(self):
         inserted = upsert_document(cls=model.Qa,
                                    _owner=ObjectId(self._get_user('lawyer1@ks.axantweb.com')._id),
-                                   _category=ObjectId(self.ws._id),
+                                   _workspace=ObjectId(self.ws._id),
                                    _parent_precondition=None,
                                    title='title 4',
                                    question='question',
@@ -146,7 +146,7 @@ class TestUtils(TestController):
 
     def test_upsert_document_already_in(self):
         qa = Qa(_owner=ObjectId(self._get_user('lawyer1@ks.axantweb.com')._id),
-                _category=ObjectId(self.ws._id),
+                _workspace=ObjectId(self.ws._id),
                 _parent_precondition=None,
                 title='title',
                 question='question',
@@ -159,7 +159,7 @@ class TestUtils(TestController):
         model.DBSession.flush_all()
 
         inserted = upsert_document(cls=model.Qa, _owner=ObjectId(self._get_user('lawyer1@ks.axantweb.com')._id),
-                                   _category=ObjectId(self.ws._id),
+                                   _workspace=ObjectId(self.ws._id),
                                    _parent_precondition=None,
                                    title='title',
                                    question='question',

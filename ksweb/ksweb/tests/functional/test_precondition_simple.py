@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from ksweb.tests import TestController, load_app, setup_app
 from ksweb import model
+from nose.tools import ok_
 
 
 class TestPreconditionSimple(TestController):
@@ -8,32 +9,32 @@ class TestPreconditionSimple(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Area 1')
+        self.workspace = self._get_workspace('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/precondition/', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/precondition', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/precondition', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lawyer()
-        resp_lawyer = self.app.get('/precondition',  params=dict(workspace=self.category._id))
+        resp_lawyer = self.app.get('/precondition',  params=dict(workspace=self.workspace._id))
         assert resp_lawyer.status_code == 200
 
     def test_new_precondition_simple(self):
         self._login_admin()
-        resp_admin = self.app.get('/precondition/simple/new',  params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/precondition/simple/new',  params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_post_precondition_simple_what_response(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -46,7 +47,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': [qa_params['answers'][0]]
@@ -63,10 +64,10 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_what_response(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -79,7 +80,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': [qa_params['answers'][0], qa_params['answers'][1]]
@@ -96,10 +97,10 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_have_response(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -112,7 +113,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa._id),
             'answer_type': 'have_response',
             'interested_response': []
@@ -129,10 +130,10 @@ class TestPreconditionSimple(TestController):
 
     def test_post_precondition_advanced_what_response_error(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
@@ -145,7 +146,7 @@ class TestPreconditionSimple(TestController):
 
         precondition_params = {
             'title': 'Title of the precondition',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': str(qa._id),
             'answer_type': 'what_response',
             'interested_response': []
@@ -159,24 +160,24 @@ class TestPreconditionSimple(TestController):
 
     def test_available_preconditions(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
 
-        self._create_qa('Title1', category1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
+        self._create_qa('Title1', workspace1._id, 'Di che sesso sei', 'tooltip', 'link', 'text', '')
 
-        self._create_fake_simple_precondition('Precond1', category1._id)
-        self._create_fake_simple_precondition('Precond2', category1._id)
+        self._create_fake_simple_precondition('Precond1', workspace1._id)
+        self._create_fake_simple_precondition('Precond2', workspace1._id)
 
         #  Set precond2 to not visible
         precond2 = self._get_precond_by_title('Precond2')
         precond2.visible = False
         model.DBSession.flush()
-        resp = self.app.get('/precondition/available_preconditions', params=dict(workspace=category1._id))
+        resp = self.app.get('/precondition/available_preconditions', params=dict(workspace=workspace1._id))
         assert "Precond1" in resp
         assert "Precond2" not in resp
 
     def test_update_simple_filter(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
         precondition_params = {
             '_id': str(precondition._id),
@@ -188,12 +189,12 @@ class TestPreconditionSimple(TestController):
         }
 
         response = self.app.put_json('/precondition/simple/put', params=precondition_params).json
-        assert response
-        assert self._get_precond_by_title(precondition_params['title'])
+        ok_(response)
+        ok_(self._get_precond_by_title(precondition_params['title']))
 
     def test_update_simple_filter_with_related_entities(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
         self._create_output("Title", workspace._id, precondition._id, "blablbla")
 
@@ -214,7 +215,7 @@ class TestPreconditionSimple(TestController):
 
     def test_edit_simple_filter(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
         response = self.app.get('/precondition/simple/edit',
                                 params=dict(_id=precondition._id, workspace=workspace._id))
@@ -222,7 +223,7 @@ class TestPreconditionSimple(TestController):
 
     def test_human_redable_simple_filter(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         precondition = self._create_fake_simple_precondition('Precond1', workspace._id)
         response = self.app.get('/precondition/simple/human_readable_details',
                                 params=dict(_id=precondition._id)).json

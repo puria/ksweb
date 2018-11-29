@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Category model module."""
 from bson import ObjectId
 from ming import schema as s
 from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
@@ -7,10 +6,10 @@ from ming.odm.declarative import MappedClass
 from ksweb.model import DBSession
 
 
-class Category(MappedClass):
+class Workspace(MappedClass):
     class __mongometa__:
         session = DBSession
-        name = 'categories'
+        name = 'workspaces'
         custom_indexes = [
             dict(fields=('name', '_owner'), unique=True, sparse=True)
         ]
@@ -31,4 +30,4 @@ class Category(MappedClass):
         return cls.query.get(_id=ObjectId(_id))
 
 
-__all__ = ['Category']
+__all__ = ['Workspace']

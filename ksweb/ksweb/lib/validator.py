@@ -7,7 +7,6 @@ try:
 except ImportError:
     from html.parser import HTMLParser
 
-from bson import ObjectId
 from bson.errors import InvalidId
 from tw2.core import Validator, ValidationError
 from tg.i18n import lazy_ugettext as l_
@@ -37,7 +36,7 @@ class QAExistValidator(EntityValidator):
 
 
 class WorkspaceExistValidator(EntityValidator):
-    entity = model.Category
+    entity = model.Workspace
     msgs = dict(not_exists=l_(u'Work Area does not exists'))
 
 

@@ -16,7 +16,7 @@ class OutputPlusController(RestController):
         user = request.identity['user']
         output = Output(
             _owner=user._id,
-            _category=workspace,
+            _workspace=workspace,
             title=title,
             public=True,
             visible=True,

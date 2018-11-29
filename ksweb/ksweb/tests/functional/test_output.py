@@ -3,6 +3,7 @@ from bson import ObjectId
 from ksweb.lib.utils import get_entities_from_str
 from ksweb.tests import TestController
 from ksweb import model
+from nose.tools import ok_
 
 
 class TestOutput(TestController):
@@ -10,32 +11,32 @@ class TestOutput(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Area 1')
+        self.workspace = self._get_workspace('Area 1')
 
     def test_access_permission_not_garanted(self):
         self.app.get('/output/', status=302)
 
     def test_access_permission_admin(self):
         self._login_admin()
-        resp_admin = self.app.get('/output', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/output', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_access_permission_lawyer(self):
         self._login_lawyer()
-        resp_lawyer = self.app.get('/output', params=dict(workspace=self.category._id))
+        resp_lawyer = self.app.get('/output', params=dict(workspace=self.workspace._id))
         assert resp_lawyer.status_code == 200
 
     def test_new_precondition_simple(self):
         self._login_admin()
-        resp_admin = self.app.get('/output/new', params=dict(workspace=self.category._id))
+        resp_admin = self.app.get('/output/new', params=dict(workspace=self.workspace._id))
         assert resp_admin.status_code == 200
 
     def test_creation_error_check_without_precondition(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
         output_params = {
             'title': 'Title of Output',
-            'category': str(workspace._id),
+            'workspace': str(workspace._id),
             'content': []
         }
         resp = self.app.post_json('/output/post', params=output_params, status=412).json
@@ -46,12 +47,12 @@ class TestOutput(TestController):
     def test_creation_output(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Area 1')
-        precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
+        workspace1 = self._get_workspace('Area 1')
+        precondition = self._create_fake_simple_precondition('Precondition 1', workspace1._id)
 
         output_params = {
             'title': 'Title of Output',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'precondition': str(precondition._id),
             'html': '<p>Io sono il tuo editor</p>',
             'content': []
@@ -69,12 +70,12 @@ class TestOutput(TestController):
     def test_creation_output_with_fake_qa_related(self):
         self._login_lawyer()
 
-        category1 = self._get_category('Area 1')
-        precondition = self._create_fake_simple_precondition('Precondition 1', category1._id)
+        workspace1 = self._get_workspace('Area 1')
+        precondition = self._create_fake_simple_precondition('Precondition 1', workspace1._id)
         fake_qa = self._create_fake_qa('Fake name')
         output_params = {
             'title': 'Title of Output',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'precondition': str(precondition._id),
             'content': [
                 {
@@ -101,14 +102,14 @@ class TestOutput(TestController):
 
     def test_put_output(self):
         self.test_creation_output()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         precondition = self._get_precond_by_title('Precondition 1')
 
         output1 = self._get_output_by_title('Title of Output')
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'precondition': str(precondition._id),
             'html': '<p>Io sono il tuo editor</p>',
             'content': []
@@ -126,7 +127,7 @@ class TestOutput(TestController):
 
     def test_output_post_without_filter(self):
         self._login_lawyer()
-        workspace = self._get_category('Area 1')
+        workspace = self._get_workspace('Area 1')
 
         output_params = {
             'title': 'Title of Output',
@@ -145,7 +146,7 @@ class TestOutput(TestController):
 
     def test_put_output_with_fake_precondition(self):
         self.test_creation_output()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
 
         output1 = self._get_output_by_title('Title of Output')
         fake_qa = self._create_fake_qa('Fake name')
@@ -153,8 +154,8 @@ class TestOutput(TestController):
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'workspace': str(category1._id),
-            'precondition': str(category1._id), # a wrong id by purpose
+            'workspace': str(workspace1._id),
+            'precondition': str(workspace1._id), # a wrong id by purpose
             'html': 'Io sono il tuo editor @{%s}' % str(fake_qa._id),
         }
 
@@ -169,7 +170,7 @@ class TestOutput(TestController):
 
     def test_put_output_with_fake_qa_related(self):
         self.test_creation_output()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         precondition = self._get_precond_by_title('Precondition 1')
 
         output1 = self._get_output_by_title('Title of Output')
@@ -178,9 +179,9 @@ class TestOutput(TestController):
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'workspace': str(category1._id),
+            'workspace': str(workspace1._id),
             'precondition': str(precondition._id),
-            'html': 'Io sono il tuo editor @{%s}' % str(fake_qa._id),
+            'html': 'Io sono il tuo editor @{%s}' % str(fake_qa.hash),
         }
 
         resp = self.app.put_json(
@@ -194,25 +195,21 @@ class TestOutput(TestController):
 
     def test_update_output_with_related_entities(self):
         self._login_lawyer()
-        category = self._get_category('Area 1')
-        document = self._create_fake_document("Title", category_id=category._id)
-        print(document)
-        print(document.html)
+        workspace = self._get_workspace('Area 1')
+        document = self._create_fake_document("Title", workspace_id=workspace._id)
         outputs, _ = get_entities_from_str(document.html)
         output1 = outputs[0]
-        print(output1)
 
         output_params = {
             '_id': str(output1._id),
             'title': 'Title of Output edited',
-            'workspace': str(category._id),
+            'workspace': str(workspace._id),
             'precondition': str(output1.precondition._id),
             'html': '<p>Io sono il tuo editor</p>'
         }
 
         response = self.app.put_json('/output/put', params=output_params).json
-        print(response)
-        assert response['redirect_url']
+        ok_(response['redirect_url'])
         self.app.get(response['redirect_url'])
         response = self.app.get('/resolve/original_edit',
                                 params=dict(workspace=output_params['workspace']))
@@ -226,7 +223,7 @@ class TestOutput(TestController):
         self.test_creation_output()
         out = self._get_output_by_title('Title of Output')
         resp = self.app.get(
-            '/output/edit', params={'_id': str(out._id), 'workspace': out._category}
+            '/output/edit', params={'_id': str(out._id), 'workspace': out._workspace}
         )
         assert str(out._id) in resp
 
@@ -267,13 +264,13 @@ class TestOutputPlus(TestController):
 
     def setUp(self):
         TestController.setUp(self)
-        self.category = self._get_category('Area 1')
+        self.workspace = self._get_workspace('Area 1')
 
     def test_output_plus_creation(self):
         self._login_lawyer()
         self.app.get('/output_plus/post', params=dict(
             highlighted_text='output_plus',
-            workspace=str(self.category._id),
+            workspace=str(self.workspace._id),
         ), status=200)
 
         assert self._get_output_by_title('output_plus')
@@ -283,7 +280,7 @@ class TestOutputPlus(TestController):
         nested_output = self._create_fake_output("nested_output")
         self.app.post_json('/output_plus/post', params=dict(
             highlighted_text='output_plus',
-            workspace=str(self.category._id),
+            workspace=str(self.workspace._id),
             list_=["#{%s}" % str(nested_output._id)],
         ), status=200)
 

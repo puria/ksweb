@@ -89,7 +89,7 @@ def table_row_content(entity, fields):
 
 
 table_row_content.ROW_CONVERSIONS = {
-    model.Category: lambda c: c.name,
+    model.Workspace: lambda c: c.name,
     model.Precondition: lambda p: p.title,
     bool: lambda b: material_icon('done') if b else material_icon('clear'),
     model.User: lambda u: u.display_name
@@ -124,7 +124,7 @@ def gravatar(email_address, size=200):
 
 
 def get_workspace_name(workspace_id):
-    ws = model.Category.query.get(_id=ObjectId(workspace_id))
+    ws = model.Workspace.query.get(_id=ObjectId(workspace_id))
     return ws.name.upper() if ws else l_('HOME')
 
 

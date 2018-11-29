@@ -16,11 +16,11 @@ def init_model(engine):
 
 # Import your model modules here.
 from ksweb.model.auth import User, Group, Permission
-from ksweb.model.category import Category
 from ksweb.model.qa import Qa
 from ksweb.model.precondition import Precondition
 from ksweb.model.output import Output
 from ksweb.model.document import Document
 from ksweb.model.questionary import Questionary
+from ksweb.model.workspace import Workspace
 
-__all__ = ['User', 'Group', 'Permission', 'Category', 'Qa', 'Precondition', 'Output', 'Document', 'Questionary']
+__all__ = ['User', 'Group', 'Permission', 'Workspace', 'Qa', 'Precondition', 'Output', 'Document', 'Questionary']

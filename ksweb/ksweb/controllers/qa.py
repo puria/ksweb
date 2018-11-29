@@ -11,7 +11,7 @@ from tg.decorators import paginate, require
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg import predicates
 from tw2.core import StringLengthValidator, OneOfValidator
-from ksweb.model import Category, Output, Precondition, Qa
+from ksweb.model import Workspace, Precondition, Qa, DBSession
 from ksweb.lib.validator import WorkspaceExistValidator, QAExistValidator, PreconditionExistValidator
 
 
@@ -30,7 +30,7 @@ class QaController(RestController):
             page='qa-index',
             fields={
                 'columns_name': [_('Label'), _('Question'), _('Filter'), _('Id')],
-                'fields_name': ['title', 'question', 'parent_precondition', 'hash']
+                'fields_name': 'title question parent_precondition hash'.split()
             },
             entities=Qa.available_for_user(request.identity['user']._id, workspace),
             actions=False,
@@ -42,8 +42,7 @@ class QaController(RestController):
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def get_one(self, id,  **kw):
-        qa = Qa.query.find({'_id': ObjectId(id)}).first()
-        return dict(qa=qa)
+        return dict(qa=Qa.by_id(id))
 
     @expose('json')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
@@ -80,7 +79,7 @@ class QaController(RestController):
 
         qa = Qa(
                 _owner=user._id,
-                _category=ObjectId(workspace),
+                _workspace=ObjectId(workspace),
                 _parent_precondition=to_object_id(precondition),
                 title=title,
                 question=question,
@@ -92,6 +91,8 @@ class QaController(RestController):
                 public=True,
                 visible=True
             )
+        DBSession.flush(qa)
+        qa.generate_output_from()
 
         return dict(errors=None, _id=ObjectId(qa._id))
 
@@ -107,8 +108,7 @@ class QaController(RestController):
         'answer_type': OneOfValidator(values=Qa.QA_TYPE, required=True),
         'precondition': PreconditionExistValidator(required=False),
     }, error_handler=validation_errors_response)
-    def put(self, _id, title, workspace, question, tooltip, link, answer_type,
-                  precondition=None, answers=None, **kw):
+    def put(self, _id, title, workspace, question, tooltip, link, answer_type, precondition=None, answers=None, **kw):
         if not self._are_answers_valid(answer_type, answers):
             response.status_code = 412
             return dict(errors={'answers': _('Please add at least one more answer')})
@@ -117,10 +117,13 @@ class QaController(RestController):
 
         if check.get("entities"):
             entity = dict(
-                _id=_id, _category=workspace,
-                title=title, entity='qa',
+                _id=_id,
+                _workspace=workspace,
+                title=title,
+                entity='qa',
                 question=question,
-                tooltip=tooltip, link=link,
+                tooltip=tooltip,
+                link=link,
                 auto_generated=False,
                 type=answer_type,
                 _parent_precondition=precondition,
@@ -133,19 +136,19 @@ class QaController(RestController):
 
             return dict(redirect_url=tg.url('/resolve', params=dict(workspace=workspace)))
 
-        qa = Qa.query.get(_id=ObjectId(_id))
-        qa._category = ObjectId(workspace)
-        qa._parent_precondition = to_object_id(precondition)
-        qa.title = title
-        qa.question = question
-        qa.auto_generated = False
-        qa.tooltip = tooltip
-        qa.question = question
-        qa.link = link
-        qa.type = answer_type
-        qa.answers = answers
-        self._autofill_qa_filters(qa)
-
+        qa = Qa.upsert({'_id': ObjectId(_id)}, dict(
+            _workspace=ObjectId(workspace),
+            _parent_precondition=to_object_id(precondition),
+            title=title,
+            question=question,
+            auto_generated=False,
+            tooltip=tooltip,
+            link=link,
+            type=answer_type,
+            answers=answers
+        ))
+        DBSession.flush(qa)
+        qa.generate_output_from()
         return dict(errors=None)
 
     @expose('ksweb.templates.qa.new')
@@ -154,7 +157,7 @@ class QaController(RestController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You can not edit this Q/A'), field='_id', entity_model=Qa))
     def edit(self, _id, workspace=None, **kw):
-        ws = Category.query.find({'_id': ObjectId(workspace)}).first()
+        ws = Workspace.query.find({'_id': ObjectId(workspace)}).first()
         if not ws:
             return tg.abort(404)
         qa = Qa.query.find({'_id': ObjectId(_id)}).first()
@@ -177,9 +180,7 @@ class QaController(RestController):
         :param _id:
         :return:
         """
-
-        preconditions_related = Precondition.query.find({'type': Precondition.TYPES.SIMPLE, 'condition': ObjectId(_id)})
-        entities = list(preconditions_related)
+        entities = Precondition.query.find({'type': Precondition.TYPES.SIMPLE, 'condition': ObjectId(_id)}).all()
         return {
             'entities': entities,
             'len': len(entities)

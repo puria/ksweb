@@ -16,17 +16,17 @@ class TestValidators(TestController):
 
     def test_qa_exist_validator(self):
         self._login_lawyer()
-        category1 = self._get_category('Area 1')
+        workspace1 = self._get_workspace('Area 1')
         qa_params = {
             'title': 'Title of QA',
-            'category': str(category1._id),
+            'workspace': str(workspace1._id),
             'question': 'Text of the question',
             'tooltip': 'Tooltip of QA1',
             'link': 'http://www.axant.it',
             'answer_type': 'single',
             'answers': ['Risposta1', 'Risposta2', 'Risposta3']
         }
-        qa = self._create_qa(qa_params['title'], qa_params['category'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
+        qa = self._create_qa(qa_params['title'], qa_params['workspace'], qa_params['question'], qa_params['tooltip'], qa_params['link'], qa_params['answer_type'], qa_params['answers'])
 
         validator = QAExistValidator()
         try:
@@ -56,17 +56,17 @@ class TestValidators(TestController):
             else:
                 assert False
 
-    def test_category_exist_validator(self):
-        category1 = self._get_category('Area 1')
+    def test_workspace_exist_validator(self):
+        workspace1 = self._get_workspace('Area 1')
         validator = WorkspaceExistValidator()
         try:
-            res = validator._validate_python(str(category1._id))
+            res = validator._validate_python(str(workspace1._id))
         except ValidationError:
             assert False
         else:
             assert True
 
-    def test_category_exist_validator_with_obj_not_valid(self):
+    def test_workspace_exist_validator_with_obj_not_valid(self):
         with test_context(self.app):
             validator = WorkspaceExistValidator()
             try:
@@ -76,7 +76,7 @@ class TestValidators(TestController):
             else:
                 assert False
 
-    def test_category_exist_validator_with_not_existing_category(self):
+    def test_workspace_exist_validator_with_not_existing_workspace(self):
         with test_context(self.app):
             validator = WorkspaceExistValidator()
             try:
@@ -89,7 +89,7 @@ class TestValidators(TestController):
     def test_document_exist_validator(self):
         model.Document(
             _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
-            _category=self._get_category('Area 1')._id,
+            _workspace=self._get_workspace('Area 1')._id,
             title="Titolone",
             html='',
             public=True,
@@ -140,7 +140,7 @@ class TestValidators(TestController):
             title="Fake_output",
             html='',
             _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
-            _category=self._get_category('Area 1')._id,
+            _workspace=self._get_workspace('Area 1')._id,
             _precondition=None
         )
         DBSession.flush()
@@ -175,14 +175,14 @@ class TestValidators(TestController):
 
     def test_output_content_validator(self):
         self._login_lawyer()
-        qa1 = self._create_qa('FakeQa1', self._get_category('Area 1')._id, 'Di che sesso sei', 'tooltip', 'link',
+        qa1 = self._create_qa('FakeQa1', self._get_workspace('Area 1')._id, 'Di che sesso sei', 'tooltip', 'link',
                               'text', '')
 
         with test_context(self.app):
 
             validator = OutputContentValidator()
             try:
-                res = validator._validate_python("@{%s}" % str(qa1._id))
+                res = validator._validate_python("@{%s}" % str(qa1.hash))
             except ValidationError:
                 assert False
             else:
@@ -214,7 +214,7 @@ class TestValidators(TestController):
                 title="FakeOutput",
                 html='',
                 _owner=self._get_user('lawyer1@ks.axantweb.com')._id,
-                _category=self._get_category('Area 1')._id,
+                _workspace=self._get_workspace('Area 1')._id,
                 _precondition=None,
             )
             DBSession.flush()
@@ -222,7 +222,7 @@ class TestValidators(TestController):
 
             validator = DocumentContentValidator()
             try:
-                res = validator._validate_python('#{%s}' % str(output._id))
+                res = validator._validate_python('#{%s}' % str(output.hash))
             except ValidationError:
                 assert False
             else:

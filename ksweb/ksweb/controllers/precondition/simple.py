@@ -44,7 +44,7 @@ class PreconditionSimpleController(RestController):
         _type = Precondition.TYPES.SIMPLE
 
         if qa.is_text:
-            _condition = [ObjectId(question), '']
+            _condition = [qa._id, '']
         else:
             if answer_type == 'have_response':
                 interested_response = qa.answers
@@ -54,13 +54,13 @@ class PreconditionSimpleController(RestController):
                 return dict(errors={'interested_response': _('Please select at least one answer')})
 
             if answers_len == 1:
-                _condition = [ObjectId(question), interested_response[0]]
+                _condition = [qa._id, interested_response[0]]
             else:
                 advanced_condition = []
                 for answer in interested_response:
                     ___ = Precondition(
                         _owner=user._id,
-                        _category=ObjectId(workspace),
+                        _workspace=ObjectId(workspace),
                         title="%s_%s" % (qa.title.upper(), answer.upper()),
                         type=_type,
                         condition=[qa._id, answer],
@@ -76,12 +76,11 @@ class PreconditionSimpleController(RestController):
 
         new_filter = Precondition(
             _owner=user._id,
-            _category=ObjectId(workspace),
+            _workspace=ObjectId(workspace),
             title=title,
             type=_type,
             condition=_condition
         )
-
 
         return dict(precondition_id=str(new_filter._id), errors=None)
 
@@ -106,7 +105,7 @@ class PreconditionSimpleController(RestController):
                 _id=_id,
                 title=title,
                 condition=[question, interested_response],
-                _category=workspace,
+                _workspace=workspace,
                 auto_generated=False,
                 entity='precondition/simple'
             )
@@ -119,7 +118,7 @@ class PreconditionSimpleController(RestController):
         precondition.condition = [ObjectId(question), interested_response]
         precondition.auto_generated = False
         precondition.status = Precondition.STATUS.UNREAD
-        precondition._category = workspace
+        precondition._workspace = workspace
 
         return dict(errors=None, redirect_url=None)
 
@@ -135,9 +134,8 @@ class PreconditionSimpleController(RestController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this filter.'), field='_id', entity_model=Precondition))
     def edit(self, _id, workspace):
-        precondition = Precondition.query.find({'_id': ObjectId(_id), '_category': ObjectId(workspace)}).first()
+        precondition = Precondition.query.find({'_id': ObjectId(_id), '_workspace': ObjectId(workspace)}).first()
         return dict(precondition=precondition, workspace=workspace, errors=None)
-
 
     @expose('json')
     @decode_params('json')
@@ -145,5 +143,4 @@ class PreconditionSimpleController(RestController):
         '_id': PreconditionExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def human_readable_details(self, _id):
-        precondition = Precondition.query.find({'_id': ObjectId(_id)}).first()
-        return dict(precondition=precondition)
+        return dict(precondition=Precondition.query.get(ObjectId(_id)))
