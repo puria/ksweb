@@ -252,8 +252,13 @@
 
 </script>
 <div style="display: none;">
+    <div py:for="(title, hash) in questionary.children_titles">
+        <div id="${hash}">
+            <span>${title}</span>
+        </div>
+    </div>
     <div py:for="(id, response) in questionary.qa_values.items()">
-        <div id="${id}">
+        <div id="${h.i2h(id)}">
             <span>${response.qa_response}</span>
         </div>
     </div>

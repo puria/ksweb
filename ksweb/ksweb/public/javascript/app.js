@@ -37,7 +37,7 @@ var KS = (function() {
                     } else {
                         var id = match.split(/([_\W])/)[4]
                         var title = getTitle(id)
-                        var cls = (title) ? "badge-primary" : "badge-danger"
+                        var cls = (title) ? "badge-primary" : "badge-warning"
                         return `<span class="badge badge-pill ${cls} entity"><a target="_blank" class="text-white" href="/entity/${id}">${title||id}</a></span>`;
                     }
                 }

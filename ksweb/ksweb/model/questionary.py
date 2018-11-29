@@ -232,5 +232,9 @@ class Questionary(MappedClass):
         questions = sorted(self.qa_values.items(), key=lambda i: i[1].order_number)
         return [dict(question=Qa.by_id(q).question, answer=a.qa_response) for q, a in questions]
 
+    @property
+    def children_titles(self):
+        return [(__.title, __.hash) for __ in self.document.children]
+
 
 __all__ = ['Questionary']

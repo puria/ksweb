@@ -4,6 +4,7 @@ import logging
 
 from bson import ObjectId
 from kajiki import XMLTemplate
+from ksweb.lib.utils import id_to_hash, entity_from_id
 from ksweb.model.mapped_entity import MappedEntity
 from markupsafe import Markup
 from datetime import datetime
@@ -143,3 +144,8 @@ def dependencies(entity):
     </div>
     """)
     return Markup(t(dict(deps=deps)).render())
+
+
+def i2h(_id):
+    e = entity_from_id(_id)
+    return e.hash
