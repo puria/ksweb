@@ -55,8 +55,8 @@
 
             {{#each precondition}}
             <div class="col-md-12">
-                <span id="{{.hash}}"
-                      onclick="ractive_precondition_simple.addPrecondition('{{.hash}}', {{JSON.stringify(.title)}})"
+                <span id="{{._id}}"
+                      onclick="ractive_precondition_simple.addPrecondition('{{._id}}', {{JSON.stringify(.title)}})"
                       class="add_circle_outline cursor-pointer">${h.material_icon('add_circle_outline')}</span>
                 {{{.title}}}
             </div>

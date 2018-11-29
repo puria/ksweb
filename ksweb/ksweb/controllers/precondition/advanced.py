@@ -122,7 +122,7 @@ class PreconditionAdvancedController(RestController):
                 p = Precondition.query.get(ObjectId(_f['content']))
                 error = None if p else {'conditions': _('Filter not found.')}
                 boolean_str += "True "
-                marshalled_filter.append(_f['content'])
+                marshalled_filter.append(ObjectId(_f['content']))
             elif _f['type'] == 'operator':
                 o = _f['content'] in Precondition.PRECONDITION_OPERATOR
                 error = None if o else {'conditions': _('Filter not found.')}

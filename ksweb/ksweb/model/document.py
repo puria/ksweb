@@ -60,7 +60,7 @@ class Document(MappedEntity):
 
     @property
     def content(self):
-        return [{'content': __.hash, 'title': __.title, 'type': 'output'} for __ in self.children]
+        return [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in self.children]
 
     def exportable_dict(self):
         filter_out = ['_workspace', '_owner', 'created_at', '_id']

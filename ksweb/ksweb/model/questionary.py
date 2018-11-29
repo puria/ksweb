@@ -116,14 +116,14 @@ class Questionary(MappedClass):
             return {'completed': False}
 
         for output in self.document.content:
-            output_hash = output['content']
-            output_res = self.evaluate_expression(output_hash)
+            output_id = output['content']
+            output_res = self.evaluate_expression(output_id)
 
             if not output_res['completed']:
                 return output_res
             else:
-                if self.output_values[output_hash].get('evaluation'):
-                    res = self.compile_output(output_hash)
+                if self.output_values[output_id].get('evaluation'):
+                    res = self.compile_output(output_id)
                     # this need for to show other questions though output is already evaluated,
                     # for example when output uses some response to a certain questions
                     if res:
@@ -135,7 +135,7 @@ class Questionary(MappedClass):
 
     def generate_expression(self):
         for output in self.document.children:
-            self.expressions[output.hash] = self._generate(output.precondition)
+            self.expressions[str(output._id)] = self._generate(output.precondition)
 
     def _generate(self, precondition):
         parent_expression, expression = '', ''
@@ -162,14 +162,14 @@ class Questionary(MappedClass):
                 if isinstance(item, str):
                     advanced_expression += ' %s ' % item
                 elif isinstance(item, ObjectId):
-                    p = Precondition.query.get(hash=item)
+                    p = Precondition.query.get(item)
                     advanced_expression += '( %s )' % self._generate(p)
 
         return advanced_expression
 
     def compile_output(self, output_id):
         from . import Output
-        output = Output.query.get(hash=output_id)
+        output = Output.query.get(ObjectId(output_id))
 
         for elem in output.content:
             if elem['type'] == "qa_response":
@@ -197,8 +197,8 @@ class Questionary(MappedClass):
                             return res
         return None
 
-    def evaluate_expression(self, output_hash):
-        expression = self.expressions[output_hash]
+    def evaluate_expression(self, output_id):
+        expression = self.expressions[output_id]
         answers = dict()
 
         for _id, resp in self.qa_values.items():
@@ -219,7 +219,7 @@ class Questionary(MappedClass):
                 'qa': _id
             }
 
-        self.output_values[output_hash] = {
+        self.output_values[output_id] = {
             'evaluation': evaluation
         }
 

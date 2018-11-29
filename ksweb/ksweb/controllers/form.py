@@ -137,8 +137,8 @@ class FormController(BaseController):
             _id = output_dict['content']
             if output_dict['content'] in questionary.output_values and \
                     questionary.output_values[output_dict['content']]['evaluation']:
-                output = model.Output.query.get(hash=_id)
-                output_values['_' + str(_id)] = output.render(questionary.output_values)
+                output = model.Output.query.get(ObjectId(_id))
+                output_values[str(_id)] = output.render(questionary.output_values)
             else:
                 # this clear useless output placeholder
                 output_values['_' + str(_id)] = ''
@@ -147,7 +147,7 @@ class FormController(BaseController):
         questionary_compiled = TemplateAnswer(questionary_with_expanded_output.replace('@{', '@{_'))
 
         for qa_id, resp in questionary.qa_values.items():
-            qa_values['_' + qa_id] = Markup.escape(resp['qa_response'])
+            qa_values[qa_id] = Markup.escape(resp['qa_response'])
 
         return Markup(questionary_compiled.safe_substitute(qa_values))
 

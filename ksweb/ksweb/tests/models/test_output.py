@@ -1,4 +1,4 @@
-from ksweb.model import Output, Precondition, Qa, Category
+from ksweb.model import Output, Precondition, Qa
 from ksweb.tests.models import ModelTest
 from nose.tools import eq_
 
