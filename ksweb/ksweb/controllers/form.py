@@ -141,10 +141,10 @@ class FormController(BaseController):
                 output_values[str(_id)] = output.render(questionary.output_values)
             else:
                 # this clear useless output placeholder
-                output_values['_' + str(_id)] = ''
-        safe_template = questionary.document.html.replace('#{', '#{_')
+                output_values[_id] = ''
+        safe_template = questionary.document.html
         questionary_with_expanded_output = TemplateOutput(safe_template).safe_substitute(output_values)
-        questionary_compiled = TemplateAnswer(questionary_with_expanded_output.replace('@{', '@{_'))
+        questionary_compiled = TemplateAnswer(questionary_with_expanded_output)
 
         for qa_id, resp in questionary.qa_values.items():
             qa_values[qa_id] = Markup.escape(resp['qa_response'])
