@@ -77,6 +77,15 @@ def get_entities_from_str(html):
     return outputs, answers
 
 
+def entity_from_hash(hash):
+    output = Output.query.get(hash=hash)
+    precondition = Precondition.query.get(hash=hash)
+    qa = Qa.query.get(hash=hash)
+    document = Document.query.get(hash=hash)
+    entity = filter(None, [output, precondition, qa, document])
+    return list(entity)[0]
+
+
 def entity_from_id(_id):
     output = Output.query.get(_id=ObjectId(_id))
     precondition = Precondition.query.get(_id=ObjectId(_id))

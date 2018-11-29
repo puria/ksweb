@@ -20,7 +20,7 @@
 #
 ##############################################################################
 from ksweb.controllers.output_plus import OutputPlusController
-from ksweb.lib.utils import entity_from_id, ksweb_error_handler
+from ksweb.lib.utils import entity_from_id, ksweb_error_handler, entity_from_hash
 from ksweb.lib.validator import WorkspaceExistValidator
 from ksweb.model import Output, Precondition, Qa, Document
 from tg import expose, flash, require, url, lurl, response, config
@@ -132,7 +132,7 @@ class RootController(BaseController):
     @expose('json')
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def entity(self, _id):
-        entity = entity_from_id(_id)
+        entity = entity_from_hash(_id)
         redirect(entity.url)
 
     @expose('ksweb.templates.terms')

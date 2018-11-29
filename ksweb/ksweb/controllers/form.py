@@ -4,7 +4,7 @@ from string import Template
 
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import TemplateOutput, TemplateAnswer
+from ksweb.lib.utils import TemplateOutput, TemplateAnswer, id_to_hash
 from markupsafe import Markup
 from tg import expose, response, validate, flash, predicates, validation_errors_response, decode_params, request, \
     tmpl_context
@@ -21,7 +21,7 @@ from ksweb import model
 from ksweb.lib.base import BaseController
 from ksweb.lib.validator import QuestionaryExistValidator, DocumentExistValidator, QAExistValidator, \
     WorkspaceExistValidator
-from ksweb.model import DBSession
+from ksweb.model import DBSession, Qa
 
 
 class FormController(BaseController):
@@ -138,7 +138,7 @@ class FormController(BaseController):
             if output_dict['content'] in questionary.output_values and \
                     questionary.output_values[output_dict['content']]['evaluation']:
                 output = model.Output.query.get(ObjectId(_id))
-                output_values[str(_id)] = output.render(questionary.output_values)
+                output_values[output.hash] = output.render(questionary.output_values)
             else:
                 # this clear useless output placeholder
                 output_values[_id] = ''
@@ -147,7 +147,7 @@ class FormController(BaseController):
         questionary_compiled = TemplateAnswer(questionary_with_expanded_output)
 
         for qa_id, resp in questionary.qa_values.items():
-            qa_values[qa_id] = Markup.escape(resp['qa_response'])
+            qa_values[id_to_hash(qa_id, Qa)] = Markup.escape(resp['qa_response'])
 
         return Markup(questionary_compiled.safe_substitute(qa_values))
 
