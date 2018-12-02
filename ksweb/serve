@@ -1,0 +1,3 @@
+#!/bin/bash
+gearbox setup-app
+gearbox serve

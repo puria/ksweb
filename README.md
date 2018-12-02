@@ -16,6 +16,7 @@ Some example of Knowledge Bases are:
 <details>
  <summary><strong>:triangular_flag_on_post: Table of Contents</strong> (click to expand)</summary>
 
+* [Getting started](#whale-getting-started)
 * [Installation](#floppy_disk-installation)
 * [Usage](#video_game-usage)
 * [Configuration](#wrench-configuration)
@@ -25,6 +26,14 @@ Some example of Knowledge Bases are:
 * [Contributing](#busts_in_silhouette-contributing)
 * [License](#briefcase-license)
 </details>
+
+## :whale: Getting started
+
+The easiest way to run ksweb is inside a docker container. just run
+
+    git clone --recursive https://github.com/puria/ksweb.git
+	cd ksweb
+    docker-container up
 
 ## :floppy_disk: Installation
 
@@ -38,8 +47,6 @@ Before install KSweb you need to have an instance of **[:leaves:mongodb](https:/
 
 ### Installer
 run the installer:
-
-    cd  zenrule/zenrule/lib/zenroom
 
 :apple: macosx
 

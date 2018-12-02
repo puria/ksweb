@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+    db: 
+        image: mongo
+        restart: always
+        volumes:
+            - ./data:/data/db
+    web:
+        build: .
+        command: ./serve
+        ports:
+            - "8080:8080"
+        depends_on:
+            - db
