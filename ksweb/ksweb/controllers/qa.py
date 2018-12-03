@@ -3,7 +3,7 @@
 
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import to_object_id
+from ksweb.lib.utils import to_object_id, hash_to_id
 from tg import expose, validate, validation_errors_response, response, RestController, \
     decode_params, request, tmpl_context, session, flash, lurl, redirect
 import tg
@@ -41,8 +41,9 @@ class QaController(RestController):
     @validate({
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def get_one(self, id,  **kw):
-        return dict(qa=Qa.by_id(id))
+    def get_one(self, _id,  **kw):
+        _id = hash_to_id(_id)
+        return dict(qa=Qa.by_id(_id))
 
     @expose('json')
     @validate({'workspace': WorkspaceExistValidator(required=True)})

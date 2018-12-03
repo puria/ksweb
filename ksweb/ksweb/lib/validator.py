@@ -24,7 +24,7 @@ class EntityValidator(Validator):
         try:
             found = self.entity.by_id(value)
         except InvalidId:
-            raise ValidationError('not_exists', self)
+            found = self.entity.by_hash(value)
 
         if found is None:
             raise ValidationError('not_exists', self)
