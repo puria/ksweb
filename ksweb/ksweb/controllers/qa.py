@@ -41,9 +41,9 @@ class QaController(RestController):
     @validate({
         'id': QAExistValidator(required=True),
     }, error_handler=validation_errors_response)
-    def get_one(self, _id,  **kw):
-        _id = hash_to_id(_id)
-        return dict(qa=Qa.by_id(_id))
+    def get_one(self, id,  **kw):
+        id = hash_to_id(id, Qa)
+        return dict(qa=Qa.by_id(id))
 
     @expose('json')
     @validate({'workspace': WorkspaceExistValidator(required=True)})
