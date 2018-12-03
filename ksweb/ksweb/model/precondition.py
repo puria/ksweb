@@ -143,8 +143,9 @@ class Precondition(MappedEntity):
         from ksweb.model import Qa
         from ksweb.lib.utils import id_to_hash
         cls = Qa if self.is_simple else self.__class__
-        for i, __ in enumerate(editable['condition']):
-            editable['condition'][i] = id_to_hash(__, cls)
+        editable['condition'] = []
+        for i, __ in enumerate(self.condition):
+            editable['condition'].append(id_to_hash(__, cls))
 
         return editable
 
