@@ -4,7 +4,7 @@ from string import Template
 
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
-from ksweb.lib.utils import TemplateOutput, TemplateAnswer, id_to_hash
+from ksweb.lib.utils import TemplateOutput, TemplateAnswer, id_to_hash, find_entities_from_html
 from markupsafe import Markup
 from tg import expose, response, validate, flash, predicates, validation_errors_response, decode_params, request, \
     tmpl_context
@@ -123,7 +123,9 @@ class FormController(BaseController):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         filename = slugify(questionary, questionary.title)
         response.headerlist.append(('Content-Disposition', 'attachment;filename=%s.md' % filename))
-        return self.get_questionary_html(_id)
+        filled_md = self.get_questionary_html(_id)
+        unanswered, __ = find_entities_from_html(filled_md)
+        return TemplateOutput(filled_md).safe_substitute({k: '' for k in unanswered})
 
     @staticmethod
     def get_questionary_html(quest_id):

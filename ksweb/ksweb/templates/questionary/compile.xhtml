@@ -241,10 +241,12 @@
 <![CDATA[
     compile_questionary.on('print_questionary', function () {
         var self = this;
+        var html = $('#html')
+        html.find('.entity').remove()
         KS.printDocument(
             "${tg.url('/css/print.css', qualified=True)}",
             self.questionary.title,
-            $('#html').html()
+            html.wrap("<div>").parent().html().replace(/(\\)?#{([^\W]+)\b}/g, '')
         );
         return true;
 ]]>
