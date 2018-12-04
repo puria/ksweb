@@ -69,15 +69,15 @@ class BaseImporter(object):
         if duplicate:
             return duplicate
         qa = self.to_be_imported['qa'].get(qid, None)
-        if qa.get('_parent_precondition', None):
+        if qa and qa.get('_parent_precondition', None):
             __ = self.__import_filter(qa['_parent_precondition'])
-            qa['_parent_precondition'] = str(__._id)
+            qa['_parent_precondition'] = __._id
         return self.__upsert_document(Qa, qid, qa)
 
     def __get_already_imported(self, _id):
         if _id in self.converted:
-            return next((__ for __ in self.imported if __.hash == self.converted[_id]), None)
-        return next((__ for __ in self.imported if str(__._id) == _id or __.hash == _id), None)
+            return next((__ for __ in self.imported if __.hash == self.converted[str(_id)]), None)
+        return next((__ for __ in self.imported if str(__._id) == str(_id) or __.hash == _id), None)
 
     def __find_stored_entity(self, cls, _id, body):
         body['_owner'] = self.owner
