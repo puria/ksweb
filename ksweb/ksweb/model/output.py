@@ -80,8 +80,8 @@ class Output(MappedEntity):
     def content(self):
         from ksweb.lib.utils import get_entities_from_str
         outputs, answers = get_entities_from_str(self.html)
-        content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs]
-        content.extend([{'content': str(__._id), 'title': __.title, 'type': 'qa_response'} for __ in answers])
+        content = [{'content': str(__._id), 'title': __.title, 'type': 'output'} for __ in outputs if __]
+        content.extend([{'content': str(__._id), 'title': __.title, 'type': 'qa_response'} for __ in answers if __])
         return content
 
     @property
