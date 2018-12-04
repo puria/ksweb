@@ -135,7 +135,7 @@ class Precondition(MappedEntity):
         if self.is_advanced:
             [items.update(__.export_items()) for __ in self.children]
         else:
-            items.add(self.get_qa())
+            items.update(self.get_qa().export_items())
         return items
 
     def exportable_dict(self):

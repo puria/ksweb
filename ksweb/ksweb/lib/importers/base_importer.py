@@ -71,24 +71,24 @@ class BaseImporter(object):
         qa = self.to_be_imported['qa'].get(qid, None)
         if qa.get('_parent_precondition', None):
             __ = self.__import_filter(qa['_parent_precondition'])
-            qa['_parent_precondition'] = __._id
+            qa['_parent_precondition'] = str(__._id)
         return self.__upsert_document(Qa, qid, qa)
 
     def __get_already_imported(self, _id):
         if _id in self.converted:
             return next((__ for __ in self.imported if __.hash == self.converted[_id]), None)
-        return next((__ for __ in self.imported if __._id == _id), None)
+        return next((__ for __ in self.imported if str(__._id) == _id or __.hash == _id), None)
 
     def __find_stored_entity(self, cls, _id, body):
         body['_owner'] = self.owner
         body['_workspace'] = self.workspace
-        if '_precondition' in body.keys():
+        if cls == Output:
             body['_precondition'] = ObjectId(body['_precondition']) if body['_precondition'] else None
-        find_by_body = cls.query.find(body).first()
-        find_by_hash = cls.query.get(hash=_id)
-        found = list(filter(partial(is_not, None), [find_by_body, find_by_hash]))
+        if cls == Qa:
+            body['_parent_precondition'] = ObjectId(body['_parent_precondition']) if body['_parent_precondition'] else None
+        found = cls.query.find(body).first()
         if found:
-            return self.__add_to_conversion_table(_id, found[0])
+            return self.__add_to_conversion_table(_id, found)
         return None
 
     def __add_to_conversion_table(self, old_id, new_entity):
