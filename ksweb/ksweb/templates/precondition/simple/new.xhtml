@@ -146,8 +146,10 @@
       var api_params = JSON.stringify(self.get('create'));
 
       KS.ajax(self.get('submit_url'), api_params, function(resp) {
-          if (resp.redirect_url)
+          if (resp.redirect_url) {
               window.location.replace(resp.redirect_url);
+              return
+          }
 
           var redirect_to;
           if (self.get('question_content') || self.get('question_title')) {
