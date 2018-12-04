@@ -20,7 +20,7 @@ class BaseImporter(object):
         self.__new_properties = {
             '_owner': self.owner,
             'auto_generated': True,
-            '_category': self.workspace,
+            '_workspace': self.workspace,
             'status': MappedEntity.STATUS.UNREAD,
         }
 
@@ -56,7 +56,7 @@ class BaseImporter(object):
         f = self.to_be_imported['simple_preconditions'][fid]
         qa = f['condition'][0]
         new = self.__import_qa(qa)
-        f['condition'][0] = str(new.hash)
+        f['condition'][0] = new._id
         return self.__upsert_document(Precondition, fid, f)
 
     def __import_advanced_filter(self, fid):
@@ -71,7 +71,7 @@ class BaseImporter(object):
         qa = self.to_be_imported['qa'].get(qid, None)
         if qa.get('_parent_precondition', None):
             __ = self.__import_filter(qa['_parent_precondition'])
-            qa['_parent_precondition'] = __.hash
+            qa['_parent_precondition'] = __._id
         return self.__upsert_document(Qa, qid, qa)
 
     def __get_already_imported(self, _id):
@@ -81,7 +81,7 @@ class BaseImporter(object):
 
     def __find_stored_entity(self, cls, _id, body):
         body['_owner'] = self.owner
-        body['_category'] = self.workspace
+        body['_workspace'] = self.workspace
         if '_precondition' in body.keys():
             body['_precondition'] = ObjectId(body['_precondition']) if body['_precondition'] else None
         find_by_body = cls.query.find(body).first()
@@ -99,23 +99,25 @@ class BaseImporter(object):
         return new_entity
 
     def __upsert_document(self, cls, _id, body):
-        filter_out = ['_id', 'entity', 'auto_generated', 'status']
+        filter_out = ['_id', 'entity', 'auto_generated', 'status', 'hash']
         body = {k: v for k, v in body.items() if k not in filter_out}
         found = self.__find_stored_entity(cls, _id, body)
         if found:
             return found
         body.update(self.__new_properties)
         inserted = cls(**body)
+        DBSession.flush(inserted)
         return self.__add_to_conversion_table(_id, inserted)
 
     def create_document(self):
         html = self.to_be_imported['html']
         for old, new in self.converted.items():
-            html = html.replace(old, new)
+            if old in html:
+                html = html.replace(old, (Output.query.get(ObjectId(new))).hash)
         document_args = dict(
             html=html,
             _owner=self.owner,
-            _category=self.workspace,
+            _workspace=self.workspace,
             tags=self.to_be_imported['tags'],
             title=self.to_be_imported['title'],
             public=self.to_be_imported['public'],

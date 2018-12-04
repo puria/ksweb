@@ -133,7 +133,7 @@ class Precondition(MappedEntity):
     def export_items(self):
         items = set([self])
         if self.is_advanced:
-            items.update(self.children)
+            [items.update(__.export_items()) for __ in self.children]
         else:
             items.add(self.get_qa())
         return items
