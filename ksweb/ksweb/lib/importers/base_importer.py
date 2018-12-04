@@ -77,7 +77,7 @@ class BaseImporter(object):
     def __get_already_imported(self, _id):
         if _id in self.converted:
             return next((__ for __ in self.imported if __.hash == self.converted[_id]), None)
-        return next((__ for __ in self.imported if __.hash == _id), None)
+        return next((__ for __ in self.imported if __._id == _id), None)
 
     def __find_stored_entity(self, cls, _id, body):
         body['_owner'] = self.owner
