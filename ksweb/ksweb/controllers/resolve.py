@@ -92,6 +92,12 @@ class ResolveController(BaseController):
         params['_workspace'] = to_object_id(params.get('_workspace'))
         params['_precondition'] = to_object_id(params.get('_precondition'))
         entity = entity_from_id(params['_id'])
+        if (type(entity) is model.Precondition):
+            if entity.is_advanced:
+                params['condition'] = [to_object_id(__) if __ not in model.Precondition.PRECONDITION_OPERATOR else __ for __ in params['condition'] ]
+            else:
+                params['condition'][0] = ObjectId(params['condition'][0])
+
         old_hash = entity['hash']
         params.pop('entity', None)
         for k, v in params.items():
