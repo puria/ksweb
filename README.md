@@ -17,7 +17,7 @@ Some example of Knowledge Bases are:
  <summary><strong>:triangular_flag_on_post: Table of Contents</strong> (click to expand)</summary>
 
 * [Getting started](#whale-getting-started)
-* [Installation](#floppy_disk-installation)
+* [Manual Installation](#floppy_disk-manual-installation-for-advanced-users)
 * [Usage](#video_game-usage)
 * [Configuration](#wrench-configuration)
 * [Notes](#memo-notes)
@@ -35,7 +35,7 @@ The easiest way to run ksweb is inside a docker container. just run
 	cd ksweb
     docker-container up
 
-## :floppy_disk: Installation
+## :floppy_disk: Manual Installation (for advanced users)
 
 Checkout the project
 
