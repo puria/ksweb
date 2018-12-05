@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import hashlib
+import logging
 
 import ming
 import pymongo
@@ -116,6 +117,10 @@ class MappedEntity(MappedClass):
             ('title', pymongo.ASCENDING),
         ])
 
+    def update_dependencies(self, old):
+        log = logging.getLogger(__name__)
+        log.info("Please implement this method in models if some action is needed for %s => %s" % (old, self.hash))
+
     def dependent_filters(self):
         from ksweb.model import Precondition
         simple = Precondition.query.find(dict(condition=self._id)).all()
@@ -125,7 +130,7 @@ class MappedEntity(MappedClass):
 
     def dependent_outputs(self):
         from ksweb.model import Output
-        outputs = Output.query.find({'content.content': str(self._id)}).all()
+        outputs = Output.query.find({'html': self.hash}).all()
         return outputs
 
     def __json__(self):

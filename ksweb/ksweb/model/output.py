@@ -90,6 +90,17 @@ class Output(MappedEntity):
         outputs, answers = get_entities_from_str(self.html)
         return outputs + answers
 
+    def update_dependencies(self, old):
+        from ksweb.model import Output
+        from ksweb.model import Document
+        outputs = Output.query.find({'$text': {'$search': old}}).all()
+        documents = Document.query.find({'$text': {'$search': old}}).all()
+        for e in (outputs + documents):
+            old_hash = e.hash
+            e.html = e.html.replace(old, self.hash)
+            DBSession.flush(e)
+            e.update_dependencies(old_hash)
+
     def export_items(self):
         items = set([self])
         if self.precondition:

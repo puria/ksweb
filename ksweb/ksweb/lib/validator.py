@@ -21,12 +21,14 @@ class EntityValidator(Validator):
     }
 
     def _validate_python(self, value, state=None):
+        found = None
         try:
             found = self.entity.by_id(value)
         except InvalidId:
-            found = self.entity.by_hash(value)
+            if 'by_hash' in dir(self.entity):
+                found = self.entity.by_hash(value)
 
-        if found is None:
+        if not found:
             raise ValidationError('not_exists', self)
 
 

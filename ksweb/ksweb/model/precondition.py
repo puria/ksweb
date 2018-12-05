@@ -104,7 +104,7 @@ class Precondition(MappedEntity):
         if self.is_advanced:
             return None
         from . import Qa
-        return Qa.query.get(self.condition[0])
+        return Qa.query.get(ObjectId(self.condition[0]))
 
     @property
     def simple_text_response(self):

@@ -193,8 +193,9 @@ class OutputController(RestController):
     @decode_params('json')
     @expose('json')
     def get_related_entities(self, _id):
-        output_related = Output.query.find({'$text': {'$search': _id}}).all()
-        documents_related = Document.query.find({'$text': {'$search': _id}}).all()
+        o = Output.by_id(_id)
+        output_related = Output.query.find({'$text': {'$search': o.hash}}).all()
+        documents_related = Document.query.find({'$text': {'$search': o.hash}}).all()
         entities = list(output_related + documents_related)
         return dict(entities=entities, len=len(entities))
 

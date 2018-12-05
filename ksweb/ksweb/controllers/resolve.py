@@ -5,6 +5,7 @@ from bson import ObjectId
 from ksweb.lib.base import BaseController
 from ksweb.lib.utils import to_object_id, clone_obj, with_entity_session, entity_from_id
 from ksweb.lib.validator import WorkspaceExistValidator
+from ksweb.model import DBSession
 from tg import expose, decode_params, flash, redirect, session
 from ksweb import model
 from tg import validate
@@ -91,9 +92,12 @@ class ResolveController(BaseController):
         params['_workspace'] = to_object_id(params.get('_workspace'))
         params['_precondition'] = to_object_id(params.get('_precondition'))
         entity = entity_from_id(params['_id'])
+        old_hash = entity['hash']
         params.pop('entity', None)
         for k, v in params.items():
             setattr(entity, k, v)
+        DBSession.flush(entity)
+        entity.update_dependencies(old_hash)
         return entity
 
     def _clone_object(self):
@@ -109,7 +113,7 @@ class ResolveController(BaseController):
         for obj in to_edit:
             entity = entity_from_id(obj['_id'])
             if obj_to_clone['entity'] == 'output':
-                entity.html = entity.html.replace(obj_to_clone['id'], str(new_obj._id))
+                entity.html = entity.html.replace(obj_to_clone['hash'], str(new_obj.hash))
             elif obj_to_clone['entity'] in ['precondition/simple', 'precondition/advanced']:
                 if entity.entity == 'qa' and entity._parent_precondition == old_obj_id:
                     entity._parent_precondition = new_obj._id

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """Qa model module."""
-import pymongo
 
 import tg
 from markupsafe import Markup
 from ming import schema as s
-from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty, MapperExtension
+from ming.odm import FieldProperty, ForeignIdProperty, RelationProperty
 from ksweb.model import DBSession
 from ksweb.model.mapped_entity import MappedEntity, TriggerExtension
 from tg.i18n import ugettext as _
@@ -69,6 +68,15 @@ class Qa(MappedEntity):
     @property
     def dependencies(self):
         return self.dependent_filters() + self.dependent_outputs()
+
+    def update_dependencies(self, old):
+        from ksweb.model import Output
+        outputs = Output.query.find({'$text': {'$search': old}}).all()
+        for o in outputs:
+            old_hash = o.hash
+            o.html = o.html.replace(old, self.hash)
+            DBSession.flush(o)
+            o.update_dependencies(old_hash)
 
     def __get_common_fields(self, **kwargs):
         common = dict(
