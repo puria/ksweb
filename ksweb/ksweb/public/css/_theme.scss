@@ -38,11 +38,25 @@ a.bot {
     color: $dark-grey;
 }
 
-.UNREAD {
+.status-dot {
   height: 7px;
   width: 7px;
-  background-color: $green;
   border-radius: 50%;
   display: inline-block;
   margin-right: 7px;
+}
+
+.UNREAD {
+  @extend .status-dot;
+  background-color: $green;
+}
+
+.READ {
+  @extend .status-dot;
+  background-color: $white;
+}
+
+.INCOMPLETE {
+  @extend .status-dot;
+  background-color: $red;
 }

@@ -77,6 +77,7 @@ class Qa(MappedEntity):
             o.html = o.html.replace(old, self.hash)
             DBSession.flush(o)
             o.update_dependencies(old_hash)
+        self.generate_output_from()
 
     def __get_common_fields(self, **kwargs):
         common = dict(
@@ -111,6 +112,13 @@ class Qa(MappedEntity):
             condition=[self._id, answer],
         )
 
+    def invalidate_outdated_filters(self):
+        simple_filters = [f for f in self.dependent_filters() if f.is_simple]
+        broken_filters = [f for f in simple_filters for c in f.condition if isinstance(c, str) and c not in self.answers]
+        for f in broken_filters:
+            from ksweb.model import Precondition
+            f.status = Precondition.STATUS.INCOMPLETE
+
     def generate_filters_from(self):
         if self.is_text:
             return self.generate_text_filter_from()
@@ -120,7 +128,7 @@ class Qa(MappedEntity):
             composed_condition.append(self.generate_filter_answer_from(__)._id)
             composed_condition.append('or')
         del composed_condition[-1]
-
+        self.invalidate_outdated_filters()
         from ksweb.model import Precondition
         return self.__generate_generic_filter_from(
             title=_(u'%s \u21d2 was compiled' % self.title),
@@ -131,10 +139,13 @@ class Qa(MappedEntity):
     def generate_output_from(self):
         from ksweb.model import Output
         _filter = self.generate_filters_from()
-        common = self.__get_common_fields(auto_generated=True, status=Output.STATUS.UNREAD)
+        common = self.__get_common_fields()
         title = u'%s \u21d2 output' % self.title
         common.update({'_precondition': _filter._id, 'html': '@{%s}' % self.hash, 'title': title})
-        return Output.upsert({'title': title}, common)
+        o = Output.upsert({'title': title}, common)
+        o.auto_generated = True
+        o.status = Output.STATUS.UNREAD
+        return o
 
     def export_items(self):
         items = set([self])

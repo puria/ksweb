@@ -36,7 +36,8 @@ class TriggerExtension(MapperExtension):
 class MappedEntity(MappedClass):
     STATUS = Bunch(
         READ="READ",
-        UNREAD="UNREAD"
+        UNREAD="UNREAD",
+        INCOMPLETE="INCOMPLETE"
     )
 
     _id = FieldProperty(s.ObjectId)
