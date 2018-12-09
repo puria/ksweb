@@ -20,6 +20,7 @@ Some example of Knowledge Bases are:
 * [Manual Installation](#floppy_disk-manual-installation-for-advanced-users)
 * [Usage](#video_game-usage)
 * [Configuration](#wrench-configuration)
+* [I18n](#globe_with_meridians-I18n)
 * [Notes](#memo-notes)
 * [Troubleshooting & debugging](#bug-troubleshooting--debugging)
 * [Acknowledgements](#heart_eyes-acknowledgements)
@@ -126,6 +127,27 @@ The most effective way is to edit the file and tweak stuff. Salient info are rep
 ### :leaves: MongoDB 
 
 The url of the database connection is `ming.url` find it in `development.ini` and change it per your needs.
+
+***
+
+## :globe_with_meridians: I18n
+
+The UI of the knowledge shaper is already translated in English and Italian.
+If you need othe languages, please indicate us someone who wants to help, and
+open and issue.
+The extensive documentation about how the translation works is available on 
+[this section](https://turbogears.readthedocs.io/en/latest/turbogears/i18n.html)
+of the Turbogears official site.
+
+In briefe allows to:
+
+  * Create a new language (also called `Catalog`)
+  * Extract the strings from the software
+  * Update and Compile existing language/catalog
+
+The catalogs are simple `.po` files that anyone can open with a translation
+software (eg. [Poedit](https://poedit.net/))
+
 
 ***
 ## :memo: Notes
