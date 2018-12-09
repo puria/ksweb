@@ -6,65 +6,56 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ksweb 0.1\n"
+"Project-Id-Version: ksweb 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-01-17 19:32+0100\n"
+"POT-Creation-Date: 2018-12-09 10:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.3\n"
+"Generated-By: Babel 2.6.0\n"
 
-#: ksweb/controllers/category.py:16 ksweb/controllers/document.py:27
-#: ksweb/controllers/output.py:37 ksweb/controllers/precondition/precondition.py:19
-#: ksweb/controllers/qa.py:23 ksweb/controllers/questionary.py:28
-#: ksweb/controllers/root.py:76 ksweb/controllers/root.py:83
+#: ksweb/controllers/document.py:29 ksweb/controllers/form.py:31
+#: ksweb/controllers/output.py:36 ksweb/controllers/precondition/precondition.py:18
+#: ksweb/controllers/qa.py:22 ksweb/controllers/root.py:118
+#: ksweb/controllers/root.py:125 ksweb/controllers/root.py:133
+#: ksweb/controllers/workspace.py:15
 msgid "Only for admin or lawyer"
 msgstr ""
 
-#: ksweb/controllers/category.py:48
-#, python-format
-msgid "Workspace %s successfully created!"
-msgstr ""
-
-#: ksweb/controllers/category.py:65
-msgid "Category and all entities associated deleted"
-msgstr ""
-
-#: ksweb/controllers/document.py:36 ksweb/controllers/questionary.py:44
-#: ksweb/templates/document/new.xhtml:37
+#: ksweb/controllers/document.py:38 ksweb/controllers/form.py:49
+#: ksweb/controllers/root.py:94 ksweb/templates/document/new.xhtml:28
 msgid "Title"
 msgstr ""
 
-#: ksweb/controllers/document.py:36 ksweb/templates/document/new.xhtml:48
-#: ksweb/templates/document/new.xhtml:50
+#: ksweb/controllers/document.py:38 ksweb/templates/document/new.xhtml:45
 msgid "Description"
 msgstr ""
 
-#: ksweb/controllers/document.py:36 ksweb/templates/document/new.xhtml:75
-#: ksweb/templates/document/new.xhtml:77
+#: ksweb/controllers/document.py:38 ksweb/templates/document/new.xhtml:57
 msgid "Version"
 msgstr ""
 
-#: ksweb/controllers/document.py:36 ksweb/templates/document/new.xhtml:63
+#: ksweb/controllers/document.py:38 ksweb/templates/document/new.xhtml:51
 msgid "License"
 msgstr ""
 
-#: ksweb/controllers/document.py:41
+#: ksweb/controllers/document.py:42 ksweb/controllers/form.py:54
+#: ksweb/controllers/root.py:100
 msgid "Export"
 msgstr ""
 
-#: ksweb/controllers/document.py:41
-msgid "Create Questionary"
+#: ksweb/controllers/document.py:42
+msgid "Create Form"
 msgstr ""
 
-#: ksweb/controllers/document.py:94 ksweb/controllers/document.py:120
+#: ksweb/controllers/document.py:94 ksweb/controllers/document.py:114
 msgid "You are not allowed to edit this document."
 msgstr ""
 
-#: ksweb/controllers/document.py:189
+#: ksweb/controllers/document.py:152
 msgid "Document successfully imported!"
 msgstr ""
 
@@ -72,184 +63,197 @@ msgstr ""
 msgid "<p>We're sorry but we weren't able to process  this request.</p>"
 msgstr ""
 
-#: ksweb/controllers/output.py:30
-#, python-format
-msgid "The question %s is not related to the filter"
-msgstr ""
-
-#: ksweb/controllers/output.py:46 ksweb/controllers/precondition/precondition.py:34
-#: ksweb/controllers/qa.py:33 ksweb/templates/output/new.xhtml:31
-#: ksweb/templates/precondition/advanced/new.xhtml:22
-#: ksweb/templates/precondition/simple/new.xhtml:83 ksweb/templates/qa/new.xhtml:89
-msgid "Label"
-msgstr ""
-
-#: ksweb/controllers/output.py:46 ksweb/controllers/qa.py:33
-msgid "Filter"
-msgstr ""
-
-#: ksweb/controllers/output.py:46
-msgid "Content"
-msgstr ""
-
-#: ksweb/controllers/output.py:90
-#, python-format
-msgid "Select the document for you outputs <a href='%s'>HERE</a>"
-msgstr ""
-
-#: ksweb/controllers/output.py:102 ksweb/controllers/output.py:143
-msgid "You are not allowed to edit this output."
-msgstr ""
-
-#: ksweb/controllers/output_plus.py:25
-msgid "Question for Output "
-msgstr ""
-
-#: ksweb/controllers/output_plus.py:26
-msgid "Add "
-msgstr ""
-
-#: ksweb/controllers/output_plus.py:30 ksweb/controllers/output_plus.py:39
-msgid "Start "
-msgstr ""
-
-#: ksweb/controllers/output_plus.py:37
-msgid "Filter for Ouput "
-msgstr ""
-
-#: ksweb/controllers/output_plus.py:52
-msgid "Output "
-msgstr ""
-
-#: ksweb/controllers/qa.py:33
-msgid "Question"
-msgstr ""
-
-#: ksweb/controllers/qa.py:85 ksweb/controllers/qa.py:157
-msgid "Please add at least one more answer"
-msgstr ""
-
-#: ksweb/controllers/qa.py:107 ksweb/controllers/qa.py:132
-msgid " -> ANSWERED"
-msgstr ""
-
-#: ksweb/controllers/qa.py:209
-msgid "You can not edit this Q/A"
-msgstr ""
-
-#: ksweb/controllers/precondition/precondition.py:34
-#: ksweb/controllers/questionary.py:44
+#: ksweb/controllers/form.py:49 ksweb/controllers/precondition/precondition.py:33
+#: ksweb/controllers/root.py:94
 msgid "Owner"
 msgstr ""
 
-#: ksweb/controllers/questionary.py:44
+#: ksweb/controllers/form.py:49 ksweb/controllers/root.py:94
 msgid "Shared with"
 msgstr ""
 
-#: ksweb/controllers/questionary.py:44
+#: ksweb/controllers/form.py:49 ksweb/controllers/root.py:94
 msgid "Created on"
 msgstr ""
 
-#: ksweb/controllers/questionary.py:44
+#: ksweb/controllers/form.py:49 ksweb/controllers/root.py:95
 msgid "Completion %"
 msgstr ""
 
-#: ksweb/controllers/questionary.py:76 ksweb/controllers/questionary.py:114
-#: ksweb/controllers/questionary.py:189
+#: ksweb/controllers/form.py:91
+msgid "Invite to a KSWEB document"
+msgstr ""
+
+#: ksweb/controllers/form.py:95
+#, python-format
+msgid ""
+"Hi, you were invited to compile the following document %s at the following "
+"url %s"
+msgstr ""
+
+#: ksweb/controllers/form.py:97
+#, python-format
+msgid "Questionary succesfully created and shared to %s"
+msgstr ""
+
+#: ksweb/controllers/form.py:106 ksweb/controllers/form.py:120
+#: ksweb/controllers/form.py:163 ksweb/controllers/form.py:210
 msgid "You are not allowed to edit this questionary."
 msgstr ""
 
-#: ksweb/controllers/questionary.py:123
+#: ksweb/controllers/form.py:172 ksweb/templates/qa/new.xhtml:254
 msgid "Invalid answer"
 msgstr ""
 
-#: ksweb/controllers/resolve.py:36
+#: ksweb/controllers/output.py:30
+#, python-format
+msgid "The question/s %s is not related to the filter"
+msgstr ""
+
+#: ksweb/controllers/output.py:45 ksweb/controllers/precondition/precondition.py:33
+#: ksweb/controllers/qa.py:32 ksweb/templates/output/new.xhtml:29
+#: ksweb/templates/precondition/advanced/new.xhtml:25
+#: ksweb/templates/precondition/simple/new.xhtml:87 ksweb/templates/qa/new.xhtml:42
+msgid "Label"
+msgstr ""
+
+#: ksweb/controllers/output.py:45 ksweb/controllers/qa.py:32
+msgid "Filter"
+msgstr ""
+
+#: ksweb/controllers/output.py:45
+msgid "Content"
+msgstr ""
+
+#: ksweb/controllers/output.py:45 ksweb/controllers/precondition/precondition.py:33
+#: ksweb/controllers/qa.py:32
+msgid "Id"
+msgstr ""
+
+#: ksweb/controllers/output.py:97 ksweb/controllers/output.py:137
+msgid "You are not allowed to edit this output."
+msgstr ""
+
+#: ksweb/controllers/qa.py:32
+msgid "Question"
+msgstr ""
+
+#: ksweb/controllers/qa.py:77 ksweb/controllers/qa.py:115
+msgid "Please add at least one more answer"
+msgstr ""
+
+#: ksweb/controllers/qa.py:159
+msgid "You can not edit this Q/A"
+msgstr ""
+
+#: ksweb/controllers/resolve.py:38
 #, python-format
 msgid "Entity %s successfully edited!"
 msgstr ""
 
-#: ksweb/controllers/resolve.py:45
+#: ksweb/controllers/resolve.py:47
 #, python-format
 msgid "%s successfully created!"
 msgstr ""
 
-#: ksweb/controllers/resolve.py:53
+#: ksweb/controllers/resolve.py:54
 msgid "All the edits are discarded"
 msgstr ""
 
-#: ksweb/controllers/resolve.py:90
+#: ksweb/controllers/resolve.py:87
 msgid "All the conflicts are successfully resolved"
 msgstr ""
 
-#: ksweb/controllers/root.py:110
+#: ksweb/controllers/resolve.py:112
+msgid " [CLONED]"
+msgstr ""
+
+#: ksweb/controllers/root.py:78
+msgid "You are not allowed to operate in this page"
+msgstr ""
+
+#: ksweb/controllers/root.py:87
+#, python-format
+msgid "You don't have any form associated to %s"
+msgstr ""
+
+#: ksweb/controllers/root.py:158
 msgid "User not found"
 msgstr ""
 
-#: ksweb/controllers/root.py:112
+#: ksweb/controllers/root.py:160
 msgid "Invalid Password"
 msgstr ""
 
-#: ksweb/controllers/root.py:116
+#: ksweb/controllers/root.py:162
+msgid "User successfully created"
+msgstr ""
+
+#: ksweb/controllers/root.py:166
 msgid "Wrong credentials"
 msgstr ""
 
-#: ksweb/controllers/root.py:132
+#: ksweb/controllers/root.py:177
 #, python-format
 msgid "Welcome back, %s!"
 msgstr ""
 
-#: ksweb/controllers/root.py:145
+#: ksweb/controllers/root.py:182
 msgid "We hope to see you soon!"
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:48
-#: ksweb/controllers/precondition/advanced.py:107
-msgid "Filter not found."
+#: ksweb/controllers/workspace.py:49
+#, python-format
+msgid "Workspace %s successfully created!"
+msgstr ""
+
+#: ksweb/controllers/workspace.py:60
+msgid "This workspace can not be deleted"
+msgstr ""
+
+#: ksweb/controllers/workspace.py:70
+msgid "Workspace and all entities associated deleted"
 msgstr ""
 
 #: ksweb/controllers/precondition/advanced.py:56
-#: ksweb/controllers/precondition/advanced.py:115
-msgid "Invalid logic operator."
-msgstr ""
-
-#: ksweb/controllers/precondition/advanced.py:63
-#: ksweb/controllers/precondition/advanced.py:122
-msgid "Invalid operator"
-msgstr ""
-
-#: ksweb/controllers/precondition/advanced.py:69
-msgid "Syntax error."
-msgstr ""
-
-#: ksweb/controllers/precondition/advanced.py:80
 #, python-format
 msgid "Now you can create an output <a href='%s'>HERE</a>"
 msgstr ""
 
-#: ksweb/controllers/precondition/advanced.py:93
-#: ksweb/controllers/precondition/advanced.py:157
-#: ksweb/controllers/precondition/simple.py:111
-#: ksweb/controllers/precondition/simple.py:162
+#: ksweb/controllers/precondition/advanced.py:69
+#: ksweb/controllers/precondition/advanced.py:105
+#: ksweb/controllers/precondition/simple.py:97
+#: ksweb/controllers/precondition/simple.py:135
 msgid "You are not allowed to edit this filter."
 msgstr ""
 
+#: ksweb/controllers/precondition/advanced.py:123
 #: ksweb/controllers/precondition/advanced.py:128
+msgid "Filter not found."
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:132
+msgid "Invalid operator"
+msgstr ""
+
+#: ksweb/controllers/precondition/advanced.py:137
 msgid "Syntax error"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:34
+#: ksweb/controllers/precondition/precondition.py:33
 msgid "Type"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:38
+#: ksweb/controllers/precondition/precondition.py:37
+#: ksweb/templates/output/new.xhtml:11
 msgid "New Output"
 msgstr ""
 
-#: ksweb/controllers/precondition/precondition.py:38
-msgid "New Q/A"
+#: ksweb/controllers/precondition/precondition.py:37
+msgid "New QA"
 msgstr ""
 
-#: ksweb/controllers/precondition/simple.py:66
+#: ksweb/controllers/precondition/simple.py:54
 msgid "Please select at least one answer"
 msgstr ""
 
@@ -281,45 +285,54 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: ksweb/lib/validator.py:29 ksweb/lib/validator.py:32
+#: ksweb/lib/helpers.py:129
+msgid "HOME"
+msgstr ""
+
+#: ksweb/lib/utils.py:120
+#, python-format
+msgid "Errors: %s"
+msgstr ""
+
+#: ksweb/lib/validator.py:20
+msgid "Value is too short"
+msgstr ""
+
+#: ksweb/lib/validator.py:37
 msgid "Question does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:41 ksweb/lib/validator.py:44
+#: ksweb/lib/validator.py:42
 msgid "Work Area does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:53 ksweb/lib/validator.py:56
+#: ksweb/lib/validator.py:47
 msgid "Filter does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:65 ksweb/lib/validator.py:68
+#: ksweb/lib/validator.py:52
 msgid "Output does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:77 ksweb/lib/validator.py:80
+#: ksweb/lib/validator.py:57
 msgid "Document does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:89 ksweb/lib/validator.py:92
+#: ksweb/lib/validator.py:62
 msgid "Questionary does not exists"
 msgstr ""
 
-#: ksweb/lib/validator.py:102
+#: ksweb/lib/validator.py:69 ksweb/lib/validator.py:78
+msgid "Output not found."
+msgstr ""
+
+#: ksweb/lib/validator.py:71
 msgid "Question not found."
 msgstr ""
 
-#: ksweb/lib/validator.py:106
-msgid "Output not found"
-msgstr ""
-
-#: ksweb/lib/validator.py:108 ksweb/lib/validator.py:126 ksweb/lib/validator.py:145
-#: ksweb/lib/validator.py:159
-msgid "Invalid Filter."
-msgstr ""
-
-#: ksweb/lib/validator.py:157
-msgid "Output not found."
+#: ksweb/model/qa.py:101 ksweb/model/qa.py:126
+#, python-format
+msgid "%s ⇒ was compiled"
 msgstr ""
 
 #: ksweb/templates/error.xhtml:3
@@ -334,135 +347,191 @@ msgstr ""
 msgid "Error "
 msgstr ""
 
-#: ksweb/templates/index.xhtml:3
-msgid "Welcome to KS Web"
+#: ksweb/templates/index.xhtml:36
+msgid "KNOWLEDGE SHAPER"
 msgstr ""
 
-#: ksweb/templates/index.xhtml:195
-msgid ""
-"WARNING: Deleting a workspace you will delete all entities associated, with "
-"no chance of recover."
+#: ksweb/templates/index.xhtml:38
+msgid "Menu"
 msgstr ""
 
-#: ksweb/templates/index.xhtml:196
-msgid "Are you sure you want to proceed?"
+#: ksweb/templates/index.xhtml:44
+msgid "Download"
 msgstr ""
 
-#: ksweb/templates/index.xhtml:104
-msgid "Welcome to KNOWLEDGE SHAPER!"
+#: ksweb/templates/index.xhtml:47
+msgid "Features"
 msgstr ""
 
-#: ksweb/templates/index.xhtml:104
-msgid "Select your workspace or create a new one"
+#: ksweb/templates/index.xhtml:50
+msgid "Freedom"
 msgstr ""
 
-#: ksweb/templates/index.xhtml:129
-msgid "Create a new Workspace"
-msgstr ""
-
-#: ksweb/templates/document/index.xhtml:43 ksweb/templates/document/index.xhtml:71
-#: ksweb/templates/index.xhtml:139
-msgid "Cancel"
-msgstr ""
-
-#: ksweb/templates/document/index.xhtml:74 ksweb/templates/document/new.xhtml:29
-#: ksweb/templates/index.xhtml:142 ksweb/templates/output/new.xhtml:22
-#: ksweb/templates/precondition/advanced/new.xhtml:15
-#: ksweb/templates/precondition/simple/new.xhtml:15 ksweb/templates/qa/new.xhtml:69
-msgid "Save"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:3 ksweb/templates/login.xhtml:3
-#: ksweb/templates/login.xhtml:29 ksweb/templates/source.xhtml:3
+#: ksweb/templates/index.xhtml:53 ksweb/templates/legal.xhtml:3
+#: ksweb/templates/login.xhtml:3 ksweb/templates/login.xhtml:29
+#: ksweb/templates/privacy.xhtml:3 ksweb/templates/source.xhtml:3
+#: ksweb/templates/terms.xhtml:3
 msgid "Login"
 msgstr ""
 
+#: ksweb/templates/index.xhtml:65
+msgid "Knowledge Shaper. L’editor per condividere la tua conoscenza"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:66
+msgid "Scoprilo subito!"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:90
+msgid "Knowledge shaper è software libero!"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:91
+msgid ""
+"Guarda la demo di Knowledge Shaper. Prova la base di conoscenza sul "
+"Memorandum\n"
+"              GDPR! Prova gratuitamente Knowledge Shaper registrandoti."
+msgstr ""
+
+#: ksweb/templates/index.xhtml:94
+msgid "REGISTRATI"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:95
+msgid "SORGENTI"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:96
+msgid "DEMO"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:106
+msgid "Knowledge Shaper ti permette di lavorare con le tue basi di conoscenza"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:107
+msgid ""
+"Componi le tue basi di conoscenza creando domande, risposte, filtri e output "
+"per comporre wizard, formulari ecc."
+msgstr ""
+
+#: ksweb/templates/index.xhtml:130
+msgid "creare ed editare,"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:136
+msgid "importare ed esportare,"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:144
+msgid "creare questionari ed usarli,"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:150
+msgid "far usare i questionari a chi vuoi tu."
+msgstr ""
+
+#: ksweb/templates/index.xhtml:163
+msgid "Prova gratuitamente Knowledge Shaper."
+msgstr ""
+
+#: ksweb/templates/index.xhtml:164
+msgid "Guarda la demo di Knowledge Shaper."
+msgstr ""
+
+#: ksweb/templates/index.xhtml:172
+msgid ""
+"Ti incoraggiamo a pubblicare le tue basi di conoscenza con licenza libera\n"
+"          (per es, vedi"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:174 ksweb/templates/welcome.xhtml:22
+msgid "Memorandum GDPR"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:174 ksweb/templates/terms.xhtml:656
+msgid ")"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:175
+msgid "e a metterci una stellina su github"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:177
+msgid "Star"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:178
+msgid "Fork"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:185
+msgid "Made with"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:185
+msgid "by AXANT"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:185
+msgid ""
+"Studio Legale Ciurcina Tita Ass. Prof. · Torino, Via San Quintino n. 32, cap "
+"10121 · C.F. e P. IVA 09027200014"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:188
+msgid "Privacy Policy"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:191 ksweb/templates/terms.xhtml:23
+msgid "Condizioni"
+msgstr ""
+
+#: ksweb/templates/index.xhtml:8 ksweb/templates/master.xhtml:8
+#: ksweb/templates/master_without_sidebar.xhtml:8
+msgid "KS Web"
+msgstr ""
+
 #: ksweb/templates/legal.xhtml:11 ksweb/templates/login.xhtml:11
-#: ksweb/templates/master.html:47 ksweb/templates/source.xhtml:11
+#: ksweb/templates/master.xhtml:21 ksweb/templates/master_without_sidebar.xhtml:30
+#: ksweb/templates/privacy.xhtml:11 ksweb/templates/source.xhtml:11
+#: ksweb/templates/terms.xhtml:11 ksweb/templates/terms.xhtml:103
+#: ksweb/templates/terms.xhtml:109 ksweb/templates/terms.xhtml:150
+#: ksweb/templates/terms.xhtml:179 ksweb/templates/terms.xhtml:181
+#: ksweb/templates/terms.xhtml:184
 msgid "KS"
 msgstr ""
 
 #: ksweb/templates/legal.xhtml:12 ksweb/templates/login.xhtml:12
-#: ksweb/templates/source.xhtml:12
+#: ksweb/templates/privacy.xhtml:12 ksweb/templates/source.xhtml:12
+#: ksweb/templates/terms.xhtml:12
 msgid "Knowledge Shaper"
 msgstr ""
 
 #: ksweb/templates/legal.xhtml:16
+msgid "ACCETTAZIONE ESPRESSA"
+msgstr ""
+
+#: ksweb/templates/legal.xhtml:18
 msgid ""
-"Knowledge Shaper – A collaborative wizard editing software\n"
-"Copyright (C) 2017 – StudioLegale.it &lt;http://studiolegale.it&gt;\n"
-"Copyright (C) 2017 – AXANT &lt;http://www.axant.it&gt;\n"
+"Ai sensi e per gli effetti degli articoli 1341 e 1342 c.c. l'Utente dichiara "
+"d'aver letto ed espressamente approva le seguenti clausole delle Condizioni:"
 "\n"
-"Knowledge Shaper is free software: you can redistribute it and/or modify\n"
-"it under the terms of the GNU Affero General Public License as\n"
-"published by the Free Software Foundation, either version 3 of the\n"
-"License, or (at your option) any later version.\n"
-"\n"
-"Knowledge Shaper is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU Affero General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU Affero General Public License\n"
-"along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;."
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:42 ksweb/templates/login.xhtml:43
-#: ksweb/templates/source.xhtml:25
-msgid "Terms"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:42 ksweb/templates/legal.xhtml:43
-#: ksweb/templates/legal.xhtml:44 ksweb/templates/login.xhtml:43
-#: ksweb/templates/login.xhtml:44 ksweb/templates/login.xhtml:45
-#: ksweb/templates/source.xhtml:25 ksweb/templates/source.xhtml:26
-#: ksweb/templates/source.xhtml:27
-msgid "·"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:43 ksweb/templates/login.xhtml:44
-#: ksweb/templates/source.xhtml:26
-msgid "Privacy Policy"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:44 ksweb/templates/login.xhtml:45
-#: ksweb/templates/source.xhtml:27
-msgid "Legal notice"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:45 ksweb/templates/login.xhtml:46
-#: ksweb/templates/source.xhtml:28
-msgid "Source"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:46 ksweb/templates/login.xhtml:47
-#: ksweb/templates/source.xhtml:29
-msgid "Made with"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:46 ksweb/templates/login.xhtml:47
-#: ksweb/templates/source.xhtml:29
-msgid "by"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:46 ksweb/templates/login.xhtml:47
-#: ksweb/templates/source.xhtml:29
-msgid "AXANT"
-msgstr ""
-
-#: ksweb/templates/legal.xhtml:47 ksweb/templates/login.xhtml:48
-#: ksweb/templates/source.xhtml:30
-msgid ""
-"Studio Legale Ciurcina Tita Ass. Prof. · Torino, Via San Quintino n.\n"
-"                      32, cap\n"
-"                      10121 · C.F. e P. IVA 09027200014"
+"5. Servizio Registrazione, 7. Uso dei Servizi e delle Risorse: avvisi ed "
+"esclusione di responsabilità, 10. Uso dei Servizi e delle Risorse: "
+"segnalazione per violazione di diritti, 13. Contenuti: avvisi ed esclusione "
+"di responsabilità, 15. Indennità, 16. Garanzia ed assistenza, 17. Esclusione "
+"di garanzie, 18. Limitazione di responsabilità, 19. Modifiche, 20. Durata dei"
+" Servizi, recesso e risoluzione, 21. Varie - lett. (a) Cessione del contratto"
+" e lett. (d) Soluzione delle controversie, legge applicabile, giurisdizione e"
+" competenza"
 msgstr ""
 
 #: ksweb/templates/login.xhtml:30
 msgid "Did you forget the password?"
 msgstr ""
 
-#: ksweb/templates/login.xhtml:30 ksweb/templates/welcome.xhtml:16
+#: ksweb/templates/login.xhtml:30 ksweb/templates/welcome.xhtml:17
 msgid "or"
 msgstr ""
 
@@ -470,46 +539,2871 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: ksweb/templates/master.html:13
-msgid "Ks web"
+#: ksweb/templates/master.xhtml:38 ksweb/templates/master_without_sidebar.xhtml:49
+msgid "Sign out"
 msgstr ""
 
-#: ksweb/templates/master.html:41 ksweb/templates/master.xhtml:31
-#: ksweb/templates/master_without_sidebar.xhtml:31
-msgid "Toggle navigation"
+#: ksweb/templates/privacy.xhtml:16
+msgid ""
+"PRIVACY\n"
+"POLICY"
 msgstr ""
 
-#: ksweb/templates/master.html:58
-msgid "Profile"
+#: ksweb/templates/privacy.xhtml:19 ksweb/templates/terms.xhtml:17
+msgid ""
+"(versione\n"
+"del 19/03/2018)"
 msgstr ""
 
-#: ksweb/templates/master.xhtml:8 ksweb/templates/master_without_sidebar.xhtml:8
-msgid "KS Web"
+#: ksweb/templates/privacy.xhtml:24
+msgid "TITOLARE"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:25
+msgid ""
+"Noi\n"
+"("
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:26 ksweb/templates/terms.xhtml:648
+msgid ""
+"Studio\n"
+"Legale Ciurcina Tita Ass. Prof."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:27
+msgid ""
+") siamo titolari\n"
+"del trattamento dei tuoi dati e per ogni necessità potrai scriverci\n"
+"al seguente indirizzo: Torino"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:30
+msgid "(TO), Via"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:30
+msgid ""
+"San\n"
+"Quintino"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:32 ksweb/templates/terms.xhtml:129
+#: ksweb/templates/terms.xhtml:653
+msgid "n."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:32 ksweb/templates/terms.xhtml:130
+#: ksweb/templates/terms.xhtml:654
+msgid "32"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:32
+msgid ""
+",\n"
+"cap 10"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:33
+msgid "121"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:33 ksweb/templates/privacy.xhtml:67
+#: ksweb/templates/privacy.xhtml:85 ksweb/templates/privacy.xhtml:154
+#: ksweb/templates/privacy.xhtml:174 ksweb/templates/privacy.xhtml:258
+#: ksweb/templates/terms.xhtml:25 ksweb/templates/terms.xhtml:73
+#: ksweb/templates/terms.xhtml:121 ksweb/templates/terms.xhtml:294
+#: ksweb/templates/terms.xhtml:339 ksweb/templates/terms.xhtml:366
+#: ksweb/templates/terms.xhtml:401 ksweb/templates/terms.xhtml:405
+#: ksweb/templates/terms.xhtml:585 ksweb/templates/terms.xhtml:613
+#: ksweb/templates/terms.xhtml:699 ksweb/templates/terms.xhtml:755
+msgid "."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:34
+msgid ""
+"Puoi\n"
+"anche contattarci inviando un’e-mail all’indirizzo"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:36 ksweb/templates/terms.xhtml:656
+msgid "ks"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:36
+msgid "@"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:36
+msgid "studiolegale.it"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:37
+msgid ""
+"oppure utilizzando gli altri dati di contatto disponibili nel nostro\n"
+"sito."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:39
+msgid ""
+"Ti\n"
+"informiamo che tratteremo i tuoi dati con liceità e correttezza nel\n"
+"pieno rispetto dei tuoi diritti ed in particolare della tua\n"
+"riservatezza."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:43
+msgid "DATI"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:44
+msgid ""
+"Noi\n"
+"tratteremo i seguenti dati:"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:46
+msgid ""
+"Dati\n"
+"di registrazione"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:47
+msgid ""
+"- Quando ti registri, acquisiamo i tuoi dati\n"
+"personali (nickname, nome, cognome, email e password)."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:49
+msgid ""
+"Dati\n"
+"del tuo profilo"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:50
+msgid ""
+"- Quando aggiungi nuovi dati al tuo profilo (per\n"
+"es. la tua fotografia), o modifichi quelli esistenti, acquisiamo i\n"
+"tuoi dati personali."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:54
+msgid ""
+"Dati\n"
+"di navigazione"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:56
+msgid ""
+"- Quando ti colleghi al nostro sistema, questo registra\n"
+"automaticamente le informazioni che il tuo dispositivo ci invia.\n"
+"Queste informazioni possono riguardare i contenuti caricati,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:58
+msgid ""
+"le\n"
+"pagine navigate,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:59
+msgid ""
+"le\n"
+"operazioni svolte, l'indirizzo IP da"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:60
+msgid "l"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:61
+msgid "qual"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:61 ksweb/templates/privacy.xhtml:271
+msgid "e"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:62
+msgid ""
+"ti colleghi, il sistema operativo e la lingua del tuo dispositivo, la\n"
+"data e l’ora della tua richiesta, la tua posizione."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:64
+msgid "C"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:64
+msgid "ont"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:64
+msgid "enuti"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:65
+msgid "–"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:65
+msgid ""
+"Quando\n"
+"crei, modifichi o carichi dei Contenuti, comprese delle Kbase,\n"
+"procediamo a trattarli secondo le tue istruzioni"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:68
+msgid "Cookie"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:69
+msgid ""
+"– Quando utilizzi i nostri servizi possiamo inviare al tuo\n"
+"dispositivo uno o più cookie (piccoli file di testo contenente una\n"
+"stringa di caratteri alfanumerici):"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:75 ksweb/templates/privacy.xhtml:166
+#: ksweb/templates/privacy.xhtml:168 ksweb/templates/privacy.xhtml:173
+msgid "c"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:75
+msgid "ookie tecnici"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:75
+msgid ""
+",\n"
+"\tcioè di navigazione o sessione e strettamente necessari per il\n"
+"\tfunzionamento del sito o per consentirti di usufruire dei contenuti\n"
+"\te dei servizi da te richiesti,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:81
+msgid "cookie"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:81
+msgid ""
+"di\n"
+"\tfunzionalità"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:82
+msgid ""
+", cioè utilizzati per attivare specifiche\n"
+"\tfunzionalità del sito e una serie di criteri selezionati (ad\n"
+"\tesempio, la lingua o le tue preferenze sull'uso dei cookie) al fine\n"
+"\tdi migliorare il servizio reso"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:87
+msgid "Comunicazioni"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:88
+msgid ""
+"- Quando ci invii un'email o un’altra comunicazione registriamo la\n"
+"comunicazione stessa."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:90
+msgid "FINALITÀ"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:91
+msgid ""
+"I\n"
+"tuoi dati verranno trattati con le seguenti finalità:"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:96
+msgid ""
+"fornirti\n"
+"\ti nostri servizi,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:100
+msgid ""
+"adempiere\n"
+"\tad obblighi di legge e/o ottemperare ad ordini provenienti da\n"
+"\tpubbliche autorità, inclusa l’autorità giudiziaria."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:104
+msgid ""
+"Potremo\n"
+"anche trattare i tuoi dati, ma in modo aggregato ed anonimo, per\n"
+"elaborare analisi dirette a rilevare la sicurezza dei nostri sistemi,\n"
+"il grado di soddisfazione dei nostri clienti e le preferenze\n"
+"accordate ai nostri servizi e per elaborare statistiche."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:109
+msgid ""
+"Con\n"
+"il tuo consenso, tratteremo i tuoi dati anche per"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:111
+msgid "informarti sui nostri servizi e sulle novità disponibili"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:112
+msgid "(l"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:112
+msgid ""
+"'adesione\n"
+"a queste"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:113
+msgid "finalità"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:114
+msgid "di trattamento è facoltativa, se"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:114
+msgid "negherai"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:115
+msgid "il"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:115
+msgid "tuo"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:115
+msgid ""
+"consenso\n"
+"non"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:116
+msgid "vi"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:117
+msgid "dar"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:117
+msgid "emo"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:118
+msgid "corso e p"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:118
+msgid ""
+"uoi\n"
+"contattarci in qualsiasi momento per chiederci di interromperl"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:119
+msgid "a"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:119
+msgid ")."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:120
+msgid "MODALITÀ"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:122
+msgid ""
+"I\n"
+"tuoi dati verranno:"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:125
+msgid ""
+"-\n"
+"raccolti per via telematica,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:127
+msgid ""
+"-\n"
+"registrati in formato digitale"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:129
+msgid "presso server nella nostra disponibilità,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:131
+msgid ""
+"-\n"
+"protetti da rischi di distruzione, modifica, cancellazione e accesso\n"
+"non autorizzato mediante efficienti misure di sicurezza di carattere\n"
+"fisico, logico e organizzativo,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:135
+msgid ""
+"-\n"
+"ulteriormente"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:136
+msgid ""
+"trattati\n"
+"nella misura e nei tempi strettamente necessari per dare esecuzione\n"
+"alle finalità indicate sopra."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:139
+msgid ""
+"COMUNICAZIONE\n"
+"A TERZI"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:142
+msgid "Quando"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:143
+msgid ""
+"utilizzi\n"
+"i nostri servizi per"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:144
+msgid ""
+"diffondere\n"
+"dei contenuti"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:145
+msgid ""
+",\n"
+"questi saranno diffusi"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:146
+msgid ""
+"nell'ambito\n"
+"di diffusione da te scelto,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:148
+msgid "insieme al tuo nickname ed all"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:148
+msgid "'immagine"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:149
+msgid "del tuo profilo."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:150
+msgid ""
+"Potremo\n"
+"comunicare i tuoi dati a soggetti terzi che collaborano con noi e\n"
+"provvedono a trattare fasi dei processi necessari al corretto\n"
+"espletamento delle nostre attività, esclusivamente"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:153
+msgid ""
+"per\n"
+"le finalità indicate sopra"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:156
+msgid ""
+"Potremo\n"
+"anche:"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:159
+msgid ""
+"-\n"
+"comunicare e diffondere i tuoi dati, ma solo in forma anonima ed\n"
+"aggregata, per divulgare informazioni sull'uso dei nostri servizi;"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:162
+msgid ""
+"-\n"
+"comunicare i tuoi dati a terzi per adempiere ad obblighi di legge o\n"
+"per ottemperare ad ordini provenienti da pubbliche autorità, inclusa\n"
+"l’autorità giudiziaria, per"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:165
+msgid ""
+"replicare\n"
+"a contestazioni secondo le quali i"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:166
+msgid ""
+"ontenuti\n"
+"che ha"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:167 ksweb/templates/privacy.xhtml:276
+#: ksweb/templates/terms.xhtml:337 ksweb/templates/terms.xhtml:338
+msgid "i"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:168
+msgid "aricar"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:168
+msgid ""
+"o\n"
+"e/o diffuso"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:169
+msgid ""
+"utilizzando\n"
+"i nostri servizi"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:170
+msgid ""
+"violano\n"
+"diritti di terzi, ovvero per tutelare i"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:171
+msgid ""
+"nostri\n"
+"o"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:172
+msgid ""
+"dei terzi ai sensi di\n"
+"legge e/o in conformità alle"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:173
+msgid "ondizioni"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:174
+msgid "di servizio"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:175
+msgid ""
+"NATURA\n"
+"ED EFFETTI DEL CONFERIMENTO"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:177
+msgid ""
+"Il\n"
+"conferimento dei dati di registrazione e di navigazione è\n"
+"obbligatorio ed indispensabile per consentirci di erogarti i nostri\n"
+"servizi e se rifiuti di conferirci questi dati non potremo erogarti i\n"
+"nostri servizi."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:182
+msgid ""
+"Il\n"
+"conferimento degli altri dati è facoltativo ma senza di quelli\n"
+"potremmo non essere in grado di fornirti certi servizi o certe\n"
+"funzionalità dei servizi."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:186
+msgid "DIRITTI"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:187
+msgid ""
+"Ti\n"
+"ricordiamo, inoltre, che la legge tutela i tuoi diritti di accesso,\n"
+"aggiornamento, rettifica dati ed opposizione al trattamento. Essi\n"
+"comprendono, a titolo meramente esemplificativo, i diritti di\n"
+"ottenere la conferma dell'esistenza di dati che ti riguardano e la\n"
+"loro comunicazione in forma intelligibile, l'indicazione dell'origine\n"
+"dei dati, delle finalità e modalità di trattamento,\n"
+"l'aggiornamento, la rettificazione o l'integrazione dei dati, la\n"
+"cancellazione, la trasformazione in forma anonima o il blocco dei\n"
+"dati personali trattati in violazione di legge, ed il diritto di\n"
+"opporsi, in tutto o in parte, al relativo utilizzo."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:200
+msgid ""
+"INFORMAZIONI\n"
+"SUI COOKIE"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:203
+msgid ""
+"Puoi\n"
+"controllare e/o sopprimere i cookie a piacimento – per saperne di\n"
+"più, consulta il sito http://www.allaboutcookies.org/."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:207
+msgid ""
+"Puoi\n"
+"selezionare quali cookie autorizzare attraverso l’apposita\n"
+"procedura di seguito prevista, nonchè  cancellare i cookie già\n"
+"presenti sul tuo dispositivo e impostare la maggior parte dei browser\n"
+"in modo da bloccarne l'installazione."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:213
+msgid ""
+"La\n"
+"maggior parte dei browser consente di:"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:218
+msgid ""
+"visualizzare\n"
+"\ti cookie presenti e cancellarli singolarmente,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:222
+msgid ""
+"bloccare\n"
+"\ti cookie di terze parti,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:226
+msgid ""
+"bloccare\n"
+"\ti cookie di particolari siti,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:230
+msgid ""
+"bloccare\n"
+"\tl'installazione di tutti i cookie,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:234
+msgid ""
+"cancellare\n"
+"\ttutti i cookie alla chiusura del browser."
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:238
+msgid ""
+"Per\n"
+"avere maggiori informazioni su come impostare le preferenze sull’uso\n"
+"dei cookie attraverso il tuo browser di navigazione, puoi consultare\n"
+"le relative istruzioni:"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:244
+msgid ""
+"Internet\n"
+"\tExplorer"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:248
+msgid "Firefox"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:251
+msgid "Chrome"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:254
+msgid "Opera"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:258
+msgid "Safari"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:261
+msgid ""
+"Se\n"
+"scegli di cancellare o non autorizzare"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:267
+msgid ""
+"i\n"
+"\tcookie tecnici,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:268
+msgid "ti"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:269
+msgid "potrebbe"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:270
+msgid "essere"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:271
+msgid "impossibil"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:272
+msgid "utilizzare il sito, visionar"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:272
+msgid "n"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:272
+msgid ""
+"e\n"
+"\ti contenuti ed usufruire dei relativi servizi,"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:277
+msgid ""
+"cookie\n"
+"\tdi funzionalità"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:278
+msgid ","
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:279
+msgid "alcuni servizi o determinate funzioni del sito"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:279
+msgid "potrebbero"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:280
+msgid "non"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:281
+msgid "esserti"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:282
+msgid "disponibili o non funzion"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:282
+msgid "are"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:283
+msgid "correttamente e potre"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:283
+msgid "sti"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:284
+msgid ""
+"essere costretto a modificare o a inserire manualmente alcune\n"
+"\tinformazioni o preferenze ogni volta che visiter"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:285
+msgid "ai"
+msgstr ""
+
+#: ksweb/templates/privacy.xhtml:286
+msgid "il sito."
 msgstr ""
 
 #: ksweb/templates/source.xhtml:15
-msgid "The source code of Knowledge Shaper is available here [link al GitHub]"
+msgid "The source code of Knowledge Shaper is available here"
+msgstr ""
+
+#: ksweb/templates/source.xhtml:16
+msgid "https://github.com/puria/ksweb"
+msgstr ""
+
+#: ksweb/templates/start.xhtml:3
+msgid "Welcome to KS Web"
+msgstr ""
+
+#: ksweb/templates/start.xhtml:11
+msgid "Select your workspace or create a new one"
+msgstr ""
+
+#: ksweb/templates/start.xhtml:40
+msgid "Create a new Workspace"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:46 ksweb/templates/document/index.xhtml:81
+#: ksweb/templates/questionary/index.xhtml:50 ksweb/templates/start.xhtml:54
+msgid "Cancel"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:83 ksweb/templates/document/new.xhtml:19
+#: ksweb/templates/output/new.xhtml:21
+#: ksweb/templates/precondition/advanced/new.xhtml:15
+#: ksweb/templates/precondition/simple/new.xhtml:15 ksweb/templates/qa/new.xhtml:18
+#: ksweb/templates/questionary/index.xhtml:51 ksweb/templates/start.xhtml:57
+msgid "Save"
+msgstr ""
+
+#: ksweb/templates/start.xhtml:94
+msgid ""
+"WARNING: Deleting a workspace you will delete all entities associated, with "
+"no chance of recover."
+msgstr ""
+
+#: ksweb/templates/start.xhtml:95
+msgid "Are you sure you want to proceed?"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:16
+msgid "CONDIZIONI DI SERVIZIO"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:22
+msgid ""
+"Quelle\n"
+"che seguono sono le condizioni (di seguito “"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:23
+msgid ""
+"”)\n"
+"che regolano la fornitura dei Servizi e l'uso delle Risorse di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:25 ksweb/templates/terms.xhtml:66
+#: ksweb/templates/terms.xhtml:96 ksweb/templates/terms.xhtml:105
+#: ksweb/templates/terms.xhtml:118 ksweb/templates/terms.xhtml:125
+#: ksweb/templates/terms.xhtml:139 ksweb/templates/terms.xhtml:158
+#: ksweb/templates/terms.xhtml:165 ksweb/templates/terms.xhtml:171
+#: ksweb/templates/terms.xhtml:197 ksweb/templates/terms.xhtml:218
+#: ksweb/templates/terms.xhtml:222 ksweb/templates/terms.xhtml:252
+#: ksweb/templates/terms.xhtml:256 ksweb/templates/terms.xhtml:265
+#: ksweb/templates/terms.xhtml:269 ksweb/templates/terms.xhtml:289
+#: ksweb/templates/terms.xhtml:294 ksweb/templates/terms.xhtml:298
+#: ksweb/templates/terms.xhtml:299 ksweb/templates/terms.xhtml:301
+#: ksweb/templates/terms.xhtml:313 ksweb/templates/terms.xhtml:339
+#: ksweb/templates/terms.xhtml:348 ksweb/templates/terms.xhtml:353
+#: ksweb/templates/terms.xhtml:357 ksweb/templates/terms.xhtml:359
+#: ksweb/templates/terms.xhtml:366 ksweb/templates/terms.xhtml:372
+#: ksweb/templates/terms.xhtml:380 ksweb/templates/terms.xhtml:445
+#: ksweb/templates/terms.xhtml:453 ksweb/templates/terms.xhtml:460
+#: ksweb/templates/terms.xhtml:463 ksweb/templates/terms.xhtml:465
+#: ksweb/templates/terms.xhtml:470 ksweb/templates/terms.xhtml:486
+#: ksweb/templates/terms.xhtml:505 ksweb/templates/terms.xhtml:509
+#: ksweb/templates/terms.xhtml:515 ksweb/templates/terms.xhtml:516
+#: ksweb/templates/terms.xhtml:517 ksweb/templates/terms.xhtml:522
+#: ksweb/templates/terms.xhtml:526 ksweb/templates/terms.xhtml:542
+#: ksweb/templates/terms.xhtml:553 ksweb/templates/terms.xhtml:563
+#: ksweb/templates/terms.xhtml:566 ksweb/templates/terms.xhtml:578
+#: ksweb/templates/terms.xhtml:580 ksweb/templates/terms.xhtml:583
+#: ksweb/templates/terms.xhtml:585 ksweb/templates/terms.xhtml:588
+#: ksweb/templates/terms.xhtml:593 ksweb/templates/terms.xhtml:613
+#: ksweb/templates/terms.xhtml:623 ksweb/templates/terms.xhtml:625
+#: ksweb/templates/terms.xhtml:630 ksweb/templates/terms.xhtml:647
+#: ksweb/templates/terms.xhtml:663 ksweb/templates/terms.xhtml:664
+#: ksweb/templates/terms.xhtml:676 ksweb/templates/terms.xhtml:679
+#: ksweb/templates/terms.xhtml:682 ksweb/templates/terms.xhtml:690
+#: ksweb/templates/terms.xhtml:699 ksweb/templates/terms.xhtml:704
+#: ksweb/templates/terms.xhtml:711 ksweb/templates/terms.xhtml:712
+#: ksweb/templates/terms.xhtml:723 ksweb/templates/terms.xhtml:730
+#: ksweb/templates/terms.xhtml:750 ksweb/templates/terms.xhtml:755
+msgid "StudioLegale.it"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:26
+msgid ""
+"L'Utente\n"
+"manifesta la volontà di accettare le Condizioni e s'impegna a\n"
+"rispettarle con uno qualsiasi dei seguenti comportamenti:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:29
+msgid ""
+"(a)\n"
+"approvando le Condizioni quando aderisce al Servizio Registrazione;\n"
+"e/o"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:32
+msgid ""
+"(b)\n"
+"utilizzando i Servizi; e/o"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:34
+msgid ""
+"(c)\n"
+"utilizzando le Risorse in qualsiasi altro modo."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:36
+msgid ""
+"L'Utente\n"
+"si impegna a non usare i Servizi e le Risorse se non ha accettato le\n"
+"Condizioni ed a leggere con attenzione le Condizioni prima di\n"
+"utilizzare i Servizi o le Risorse."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:40
+msgid ""
+"1.\n"
+"DEFINIZIONI"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:42
+msgid ""
+"Ai\n"
+"sensi e per gli effetti delle presenti Condizioni valgono le seguenti\n"
+"definizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:45 ksweb/templates/terms.xhtml:49
+#: ksweb/templates/terms.xhtml:53 ksweb/templates/terms.xhtml:57
+#: ksweb/templates/terms.xhtml:61 ksweb/templates/terms.xhtml:69
+#: ksweb/templates/terms.xhtml:74 ksweb/templates/terms.xhtml:80
+#: ksweb/templates/terms.xhtml:85 ksweb/templates/terms.xhtml:89
+#: ksweb/templates/terms.xhtml:94 ksweb/templates/terms.xhtml:99
+#: ksweb/templates/terms.xhtml:102 ksweb/templates/terms.xhtml:108
+#: ksweb/templates/terms.xhtml:111 ksweb/templates/terms.xhtml:115
+#: ksweb/templates/terms.xhtml:120 ksweb/templates/terms.xhtml:122
+#: ksweb/templates/terms.xhtml:125 ksweb/templates/terms.xhtml:133
+#: ksweb/templates/terms.xhtml:334 ksweb/templates/terms.xhtml:335
+msgid "\""
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:45
+msgid "Applicazioni"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:45
+msgid ""
+":\n"
+"artefatti composti di Software e Contenuti che gli Utenti utilizzano\n"
+"sui propri dispositivi e che permettono agli Utenti di utilizzare i\n"
+"Servizi su certe configurazioni di certi dispositivi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:49
+msgid ""
+"Area\n"
+"Utente"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:50
+msgid ""
+"\": area\n"
+"delle Risorse accessibile esclusivamente dall'Utente utilizzando i\n"
+"Codici d'Accesso."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:53
+msgid "Caricare"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:53
+msgid ""
+"\":\n"
+"atto di trasferire dei Contenuti da un dispositivo o da un'area di\n"
+"memorizzazione nella disponibilità di un Utente alle Risorse\n"
+"utilizzando le Interfacce."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:57
+msgid ""
+"Codici\n"
+"d'Accesso"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:58
+msgid ""
+"\": la\n"
+"username e la password che sono assegnate all'Utente quando aderisce\n"
+"al Servizio Registrazione e che sono gestite da StudioLegale.it."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:61 ksweb/templates/terms.xhtml:69
+msgid "Contenuti"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:61
+msgid ""
+"\":\n"
+"testi, immagini, registrazioni audio e/o video, dati e/o\n"
+"informazioni, inclusi i dati personali, in qualsiasi formato (file o\n"
+"sequenza di byte di altro tipo) che vengono trasmessi, copiati,\n"
+"inviati, e/o comunque elaborati dagli Utenti utilizzando i Servizi o\n"
+"da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:67
+msgid ""
+"e/o comunque messi a disposizione degli Utenti. Ciascuno dei\n"
+"Contenuti sarà anche definito \""
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:68
+msgid "Contenuto"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:68 ksweb/templates/terms.xhtml:79
+#: ksweb/templates/terms.xhtml:107 ksweb/templates/terms.xhtml:136
+msgid "\"."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:70
+msgid "d"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:70
+msgid "ell’Utente"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:70
+msgid ""
+"\":\n"
+"Contenuti che"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:71
+msgid ""
+"l’Utente\n"
+"procede a Pubblicare,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:72
+msgid ""
+"incluse\n"
+"le sue Kbase"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:74
+msgid "Interfacce"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:74
+msgid ""
+"\":\n"
+"interfacce (Applicazioni od altro) funzionanti su certe\n"
+"configurazioni di certi dispositivi mediante le quali gli Utenti\n"
+"possono utilizzare i Servizi collegandosi alle Risorse attraverso la\n"
+"rete internet. Ciascuna delle Interfacce sarà anche definita\n"
+"\""
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:79
+msgid "Interfaccia"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:80
+msgid "KBase"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:80 ksweb/templates/terms.xhtml:125
+msgid "\":"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:81
+msgid ""
+"base di conoscenza\n"
+"relativa al dominio scelto dall’Utente composta di domande,\n"
+"risposte, output e filtri (organizzati secondo la logica scelta\n"
+"dall’Utente)."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:85
+msgid ""
+"Privacy\n"
+"Policy"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:86
+msgid ""
+"\":\n"
+"privacy policy che l'Utente approva prima di utilizzare i Servizi che\n"
+"prevedono il trattamento dei suoi dati personali."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:89
+msgid "Pubblicare"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:89
+msgid ""
+"\":\n"
+"atto dell'Utente di rendere accessibili agli altri Utenti dei\n"
+"Contenuti che ha previamente provveduto a Caricare nei modi e con i\n"
+"profili di diffusione scelti dall'Utente tra quelli consentiti dalle\n"
+"funzioni delle Interfacce."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:94 ksweb/templates/terms.xhtml:392
+#: ksweb/templates/terms.xhtml:396 ksweb/templates/terms.xhtml:401
+msgid "Risorse"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:94
+msgid ""
+"\":\n"
+"hardware, Software e Contenuti opportunamente configurati da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:97
+msgid ""
+"ed accessibili attraverso la rete internet utilizzando le Interfacce\n"
+"che rendono disponibili i Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:99
+msgid ""
+"Scopo\n"
+"dell'Utente"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:100
+msgid ""
+"\":\n"
+"obiettivo di utilizzare i Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:102
+msgid "Servizi"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:102
+msgid ""
+"\":\n"
+"il Servizio"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:103
+msgid ""
+",\n"
+"il Servizio Pubblicazione, il Servizio Registrazione e gli altri\n"
+"servizi offerti da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:106
+msgid ""
+"attraverso le Risorse. Ciascuno dei Servizi sarà anche definito\n"
+"\""
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:107 ksweb/templates/terms.xhtml:108
+msgid "Servizio"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:109
+msgid ""
+"\":\n"
+"servizio descritto all’art. 4 delle Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:111
+msgid ""
+"Servizio\n"
+"Pubblicazione"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:112
+msgid ""
+"\":\n"
+"Servizio che consente agli Utenti di Pubblicare dei Contenuti\n"
+"attraverso le Risorse."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:115
+msgid ""
+"Servizio\n"
+"Registrazione"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:116
+msgid ""
+"\":\n"
+"servizio che consente agli Utenti di utilizzare i propri Codici\n"
+"d'Accesso per essere identificati da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:119
+msgid "ed accedere alle Risorse ed ai Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:120
+msgid "Sito"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:120
+msgid ""
+"\":\n"
+"il dominio http://"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:121
+msgid "ks.studiolegale.it"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:122
+msgid "Software"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:122
+msgid ""
+"\":\n"
+"qualunque insieme di istruzioni (programmi e/o dati) interpretabile\n"
+"da un computer per dirigere il funzionamento del suo processore."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:126
+msgid ""
+"Studio Legale Ciurcina\n"
+"Tita Ass. Prof."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:127
+msgid ""
+", con\n"
+"sede in"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:128 ksweb/templates/terms.xhtml:650
+msgid "Torino"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:128 ksweb/templates/terms.xhtml:648
+#: ksweb/templates/terms.xhtml:651
+msgid "("
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:128 ksweb/templates/terms.xhtml:651
+msgid "TO"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:128 ksweb/templates/terms.xhtml:651
+msgid "),"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:129
+msgid "Via San Quintino"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:130 ksweb/templates/terms.xhtml:654
+msgid ""
+",\n"
+"cap"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:131 ksweb/templates/terms.xhtml:655
+msgid "10121"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:131
+msgid ""
+",\n"
+"P. IVA"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:132
+msgid "09027200014."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:133
+msgid "Utenti"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:133
+msgid ""
+"\":\n"
+"coloro i quali utilizzano i Servizi e/o le Risorse avendo accettato\n"
+"queste Condizioni. Ciascuno degli Utenti sarà anche definito\n"
+"\""
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:136
+msgid "Utente"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:137
+msgid ""
+"2.\n"
+"OGGETTO"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:140
+msgid ""
+"si impegna a mettere a disposizione dell'Utente, che intende\n"
+"utilizzarli, i Servizi e le Risorse secondi i termini previsti in\n"
+"queste Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:143
+msgid ""
+"3.\n"
+"USO DEI SERVIZI"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:145
+msgid ""
+"Per\n"
+"poter utilizzare i Servizi l'Utente deve essere maggiorenne e, in\n"
+"ogni caso, deve avere la capacità di concludere un contratto\n"
+"vincolante."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:149
+msgid ""
+"L'Utente\n"
+"può usare il Servizio"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:151
+msgid ""
+"e gli altri Servizi ogni volta che lo desideri quando questi sono\n"
+"disponibili mediante le Interfacce."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:153
+msgid ""
+"Tutti\n"
+"i costi di connessione alla rete internet del dispositivo dal quale\n"
+"l'Utente utilizza i Servizi sono a carico dell'Utente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:156
+msgid ""
+"Ciascuna\n"
+"richiesta di utilizzare un Servizio dell'Utente sarà vincolante per"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:159
+msgid ""
+"solo se l'Utente riceve conferma via e-mail che la richiesta è stata\n"
+"accettata e pertanto le informazioni contenute nelle Risorse non\n"
+"possono essere considerate come offerte di Servizi ma come inviti a\n"
+"richiederne la fornitura."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:163
+msgid ""
+"Nell'Area\n"
+"Utente sono disponibili le informazioni sui contratti conclusi\n"
+"dall'Utente con"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:166
+msgid ""
+"(fasi tecniche, archiviazione, modalità d'accesso e d'individuazione\n"
+"e correzione degli errori, lingue a disposizione, condizioni\n"
+"applicabili, ecc.) e sull'uso dei Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:169
+msgid ""
+"Se\n"
+"nel corso della procedura, o anche in seguito, l'Utente rileva degli\n"
+"errori, può scrivere a"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:172
+msgid "all'indirizzo email disponibile nel Sito."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:173
+msgid ""
+"I\n"
+"contratti conclusi saranno archiviati digitalmente e l'Utente potrà\n"
+"accedere al proprio profilo ed ai contratti tramite l'Area Utente ed\n"
+"al testo delle Condizioni dal link disponibile in calce alle pagine\n"
+"del Sito."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:178
+msgid ""
+"4.\n"
+"SERVIZIO"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:180
+msgid ""
+"Il\n"
+"Servizio"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:182
+msgid "funziona come segue."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:183
+msgid ""
+"L'Utente\n"
+"può utilizzare il Servizio"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:185
+msgid "per:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:186
+msgid ""
+"-\n"
+"elaborare, Caricare e/o esportare una Kbase,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:188
+msgid ""
+"-\n"
+"usare la Kbase come questionario,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:190
+msgid ""
+"-\n"
+"far usare la Kbase come questionario a terzi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:192
+msgid ""
+"5.\n"
+"SERVIZIO REGISTRAZIONE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:194
+msgid ""
+"L'Utente\n"
+"aderisce al Servizio Registrazione seguendo la procedura disponibile\n"
+"attraverso le Interfacce ed accettando queste Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:198
+msgid "fornisce il Servizio Registrazione all'Utente gratuitamente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:199
+msgid ""
+"Quando\n"
+"si registra l'Utente sceglie i Codici d'Accesso, utilizzando i quali\n"
+"può accedere all'Area Utente ed usare i Servizi mediante le\n"
+"Interfacce."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:203
+msgid ""
+"I\n"
+"Codici d'Accesso dell'Utente non sono cedibili a terzi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:205
+msgid ""
+"L'Utente\n"
+"deve memorizzare la username e mantenere segreta la password, essendo\n"
+"l'Utente responsabile di tutte le attività che vengono poste in\n"
+"essere facendo uso di tali Codici d'Accesso."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:209
+msgid ""
+"L'Utente,\n"
+"attraverso l'Area Utente, può variare i Contenuti del proprio\n"
+"profilo e le opzioni di configurazione dei Servizi mediante le\n"
+"Interfacce."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:213
+msgid ""
+"L'Utente\n"
+"si impegna a:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:215
+msgid ""
+"(a)\n"
+"fornire dati di registrazione veritieri, completi ed aggiornati;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:217
+msgid ""
+"(b)\n"
+"aggiornare i propri dati forniti a"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:219
+msgid ""
+"al fine di garantirne costantemente la veridicità, la completezza e\n"
+"l'aggiornamento;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:221
+msgid ""
+"(c)\n"
+"comunicare immediatamente a"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:223
+msgid ""
+"qualsiasi perdita di riservatezza della password o qualsiasi uso da\n"
+"parte di terzi dei suoi Codici d'Accesso od eventuali violazioni\n"
+"delle misure di sicurezza previste per i Servizi e per le Risorse\n"
+"delle quali abbia conoscenza;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:227
+msgid ""
+"(d)\n"
+"chiudere la sessione ogni volta che interrompe l'uso dei Servizi o\n"
+"dell'Area Utente;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:230
+msgid ""
+"(e)\n"
+"non consentire l'accesso ai Servizi ed alle Risorse, tramite i propri\n"
+"Codici d'Accesso, a soggetti terzi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:233
+msgid ""
+"6.\n"
+"USO DEI SERVIZI E DELLE RISORSE: OBBLIGHI DELL'UTENTE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:235
+msgid ""
+"Nell'usare\n"
+"i Servizi, l'Utente si impegna a:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:237
+msgid ""
+"(a)\n"
+"non nascondere o rendere irriconoscibile la propria identità, o\n"
+"comunque rendere impossibile ricondurre a se i Contenuti che procede\n"
+"a Caricare;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:241
+msgid ""
+"(b)\n"
+"non interrompere, danneggiare o limitare i Servizi, i server o la\n"
+"rete collegata ai Servizi ed alle Risorse o violare le misure di\n"
+"sicurezza, le procedure, le politiche o le regole della rete\n"
+"collegata ai Servizi, ivi comprese le regole di Netiquette;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:246
+msgid ""
+"(c)\n"
+"non violare intenzionalmente od involontariamente le leggi\n"
+"applicabili in Italia, nel paese in cui si trova l'Utente od altre\n"
+"leggi comunque applicabili alle attività che l'Utente compie;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:250
+msgid ""
+"(d)\n"
+"non impegnare od occupare le Risorse od impedire l'accesso ai Servizi\n"
+"ed alle Risorse ed il loro uso, senza il permesso di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:252 ksweb/templates/terms.xhtml:392
+msgid ";"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:253
+msgid ""
+"(e)\n"
+"non inviare posta elettronica indesiderata o non richiesta;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:255
+msgid ""
+"(f)\n"
+"non simulare d'essere"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:257
+msgid "od altri;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:258
+msgid ""
+"(g)\n"
+"non contraffare intestazioni o manipolare in altro modo gli\n"
+"identificatori (inclusi gli URI) con l'intento di falsificare\n"
+"l'origine di qualsivoglia Contenuto trasmesso utilizzando i Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:262
+msgid ""
+"7.\n"
+"USO DEI SERVIZI E DELLE RISORSE: AVVISI ED ESCLUSIONE DI\n"
+"RESPONSABILITÀ"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:266
+msgid ""
+"gestisce le Risorse ed i Servizi e ne controlla il funzionamento\n"
+"dall'Italia e non garantisce che le Risorse ed i Servizi siano adatti\n"
+"all'uso od accessibili in qualunque zona geografica."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:270
+msgid ""
+"userà nella misura ragionevolmente possibile tutte le proprie\n"
+"capacità ed attenzioni per cercare di mantenere la disponibilità\n"
+"delle Risorse e la funzionalità dei Servizi, anche se non garantisce\n"
+"che le Risorse ed i Servizi siano disponibili in ogni momento."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:274
+msgid ""
+"In\n"
+"particolare, si esclude espressamente qualsiasi responsabilità per\n"
+"il caso in cui il malfunzionamento dei Servizi o delle Risorse\n"
+"dipenda da:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:278
+msgid ""
+"-\n"
+"uso non autorizzato o non corretto dei Servizi o delle Risorse;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:280
+msgid ""
+"-\n"
+"mancato o parziale funzionamento dei dispositivi o delle\n"
+"apparecchiature dell'Utente;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:283
+msgid ""
+"-\n"
+"fatto dipendente dalla responsabilità dei fornitori di accesso ad\n"
+"internet o dei gestori delle linee telefoniche;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:286
+msgid ""
+"-\n"
+"malfunzionamenti della rete internet o telefonica;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:288
+msgid ""
+"-\n"
+"accesso non autorizzato al sistema informatico di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:290
+msgid ""
+"da parte dell'Utente o da parte di un terzo o alterazioni nella\n"
+"trasmissione dei Contenuti;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:292
+msgid ""
+"-\n"
+"cause di forza maggiore o comunque non dipendenti dalla volontà o\n"
+"dalla colpa di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:295
+msgid ""
+"Le\n"
+"Risorse contengono link ad altri siti web, ai quali l'Utente potrebbe\n"
+"essere reindirizzato e Contenuti caricati dagli Utenti. Tali siti web\n"
+"e Contenuti non sono monitorati o controllati da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:299
+msgid "e pertanto"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:300
+msgid "non ne è responsabile."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:302
+msgid ""
+"fa del proprio meglio affinché le Risorse ed i Servizi siano\n"
+"facilmente utilizzabili con il maggior numero possibile di\n"
+"Interfacce, ma esclude espressamente che le Risorse ed i Servizi\n"
+"funzionino con ogni possibile Interfaccia e l'Utente è consapevole\n"
+"ed accetta questo limite di funzionalità delle Risorse e dei\n"
+"Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:308
+msgid ""
+"8.\n"
+"LICENZA ALL’UTENTE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:310
+msgid ""
+"Fatto\n"
+"salvo quanto segue, le Risorse, i Servizi i Contenuti, le\n"
+"Applicazioni ed i Software sono di esclusiva proprietà di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:313
+msgid ""
+",\n"
+"sono protetti dalle leggi italiane ed internazionali, in particolare\n"
+"da quelle in materia di copyright."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:316
+msgid ""
+"Ciascun\n"
+"Contenuto che ciascun Utente procede a Caricare è di proprietà di\n"
+"quell'Utente o dei suoi danti causa."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:319
+msgid ""
+"Il\n"
+"software Knowledge Shaper, che fa funzionare il Servizio KS, è\n"
+"licenziato secondo i termini della licenza Affero General Public\n"
+"License."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:323
+msgid ""
+"Per\n"
+"specifici Software, Applicazioni o Contenuti possono essere indicati\n"
+"titolari dei diritti e/o regimi d'uso diversi da quelli di cui sopra."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:326
+msgid ""
+"È\n"
+"espressamente escluso e fatto salvo ogni altro diritto."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:328
+msgid ""
+"Le\n"
+"autorizzazioni di cui sopra sono concesse in via non esclusiva e,\n"
+"fatto salvo il caso in cui sia indicato diversamente, sono\n"
+"revocabili."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:332
+msgid ""
+"9.\n"
+"USO DEI SERVIZI E DELLE RISORSE: SEGNI DISTINTIVI"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:334
+msgid ""
+"Knowledge\n"
+"Shaper\" e \"KS"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:336
+msgid "sono"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:337
+msgid "segn"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:338
+msgid "distintiv"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:339
+msgid "di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:340
+msgid ""
+"Gli\n"
+"altri segni distintivi presenti nelle Risorse sono di proprietà dei\n"
+"rispettivi titolari."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:343
+msgid ""
+"10.\n"
+"USO DEI SERVIZI E DELLE RISORSE: SEGNALAZIONE PER VIOLAZIONE DI\n"
+"DIRITTI"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:346
+msgid ""
+"Se\n"
+"l'Utente è certo che un Contenuto viola un proprio diritto o un\n"
+"diritto di terzi, può farne segnalazione a"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:349
+msgid ""
+"indicando il Contenuto in questione, l'indirizzo al quale è\n"
+"visibile, chi assume essere titolare dei diritti sul Contenuto, il\n"
+"diritto violato e la prova della violazione di tale diritto."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:352
+msgid "Se"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:354
+msgid ""
+"riterrà la segnalazione manifestamente fondata, provvederà a\n"
+"rimuovere il Contenuto o a disabilitarne l'accesso entro un termine\n"
+"ragionevole e, se l'Utente trasmette anche un ordine di autorità\n"
+"competente,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:358
+msgid "provvederà immediatamente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:360
+msgid ""
+"si riserva la facoltà, ma non l'obbligo, di contattare (secondo\n"
+"ragionevolezza e buona fede) chi risulta titolare dei diritti sul\n"
+"Contenuto al fine di consentirgli di esporre le sue ragioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:363
+msgid ""
+"L'Utente\n"
+"prende atto che, ove segnali infondatamente che un Contenuto viola un\n"
+"proprio diritto o un diritto di terzi, risponde dei danni conseguenti\n"
+"impegnandosi a manlevare"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:367
+msgid ""
+"11.\n"
+"CONTENUTI: LICENZA"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:368
+msgid "A"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:369
+msgid "STUDIOLEGALE.IT"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:370
+msgid ""
+"Nella\n"
+"misura in cui sia richiesto dal diritto applicabile, l"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:371
+msgid ""
+"'Utente\n"
+"autorizza"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:373
+msgid ""
+"ad utilizzare i propri Contenuti che procede a Caricare e/o\n"
+"Pubblicare ed ogni loro parte e/o elemento, assieme e/o\n"
+"separatamente, senza restrizione alcuna, in tutto il mondo, in\n"
+"perpetuo e comunque per tutta la durata della protezione legale quale\n"
+"sancita in ogni paese del mondo al fine di fornire i Servizi agli\n"
+"Utenti."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:379
+msgid ""
+"In\n"
+"particolare l'Utente autorizza"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:381
+msgid ""
+"a Pubblicare i Contenuti rendendoli accessibili agli altri Utenti nei\n"
+"termini richiesti dall'Utente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:383
+msgid ""
+"A\n"
+"titolo esemplificativo ma non esaustivo, nella suddetta\n"
+"autorizzazione s’intende anche ricompreso il diritto di:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:386
+msgid ""
+"(i)\n"
+"pubblicare, diffondere, comunicare al pubblico e mettere a\n"
+"disposizione del pubblico in modo che ciascuno possa avervi accesso\n"
+"nel momento e nel luogo scelto individualmente, in tutto od anche\n"
+"solo in parte, con ogni mezzo e/o tecnologia e con qualsiasi modalità\n"
+"(anche interattiva), attualmente noti e/o sviluppati in futuro, i\n"
+"Contenuti attraverso le"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:393
+msgid ""
+"(ii)\n"
+"ai fini di quanto sopra, riprodurre e modificare i Contenuti in ogni\n"
+"modo o forma per rispettare i vincoli tecnologici imposti dalle\n"
+"modalità di funzionamento delle"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:397
+msgid "e dei Servizi;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:398
+msgid ""
+"(iii)\n"
+"autorizzare"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:399
+msgid "gli Utenti"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:400
+msgid ""
+"a riprodurre i Contenuti al fine di visualizzarli sui loro\n"
+"dispositivi utilizzando i Servizi e le"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:402
+msgid ""
+"I\n"
+"diritti di cui sopra si intendono concessi in via non esclusiva e\n"
+"pertanto l'Utente resta legittimato ad utilizzare gli stessi\n"
+"Contenuti in ogni forma e modo"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:406
+msgid ""
+"12.\n"
+"CONTENUTI: DICHIARAZIONE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:408
+msgid ""
+"L'Utente\n"
+"dichiara di disporre pienamente e legittimamente di tutti i diritti\n"
+"relativi ai Contenuti (a titolo esemplificativo ma non esaustivo:\n"
+"diritti d'autore, diritti d'immagine e/o della personalità in\n"
+"genere, diritti di privativa, diritti di tutela della riservatezza,\n"
+"diritti relativi al ritratto ecc.) che procede a Caricare ed in\n"
+"particolare di essere pienamente legittimato ad autorizzare l'uso dei\n"
+"Contenuti nei termini di cui alle Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:416
+msgid ""
+"L'Utente\n"
+"dichiara espressamente che là dove egli non sia pienamente titolare\n"
+"di diritti sui Contenuti che procede a Caricare, è stato\n"
+"espressamente autorizzato a disporre dei Contenuti dai terzi titolari\n"
+"di tali diritti ed è dunque pienamente legittimato a rilasciare\n"
+"l'autorizzazione ad usare i Contenuti con l'ampiezza prevista nelle\n"
+"presenti Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:423
+msgid ""
+"L'Utente\n"
+"si impegna a non Caricare qualsiasi Contenuto se tale Contenuto e/o\n"
+"il suo utilizzo:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:426
+msgid ""
+"(a)\n"
+"è falso, osceno, pornografico, diffamatorio, od include informazioni\n"
+"razziste, violente, offensive, moleste, od istiga a commettere reati\n"
+"o è comunque illegale in Italia o nel luogo in cui l'Utente usa i\n"
+"Servizi o le Risorse od in base ad altre leggi comunque applicabili;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:431
+msgid ""
+"(b)\n"
+"viola le norme in materia di trattamento dei dati personali e/o in\n"
+"materia di tutela delle informazioni segrete;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:434
+msgid ""
+"(c)\n"
+"presuppone il possesso in capo all'Utente di autorizzazioni, diritti\n"
+"o requisiti richiesti dalla legge di cui questi non dispone;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:437
+msgid ""
+"(d)\n"
+"viola brevetti, marchi, diritti d'autore od altri diritti di terzi;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:439
+msgid ""
+"(e)\n"
+"contiene virus informatici o qualsiasi programma o software\n"
+"progettato per interrompere, distruggere, danneggiare od anche solo\n"
+"limitare le funzionalità di qualsiasi software, hardware od apparato\n"
+"di rete o dei Servizi o delle Risorse stessi;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:444
+msgid ""
+"(f)\n"
+"sia in qualunque modo dannoso per"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:445
+msgid ""
+",\n"
+"per gli Utenti o per i terzi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:447
+msgid ""
+"L'Utente\n"
+"garantisce la buona qualità dei Contenuti che procede a Caricare e\n"
+"l'adeguatezza degli stessi all'uso al quale sono destinati."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:450
+msgid ""
+"13.\n"
+"CONTENUTI: AVVISI ED ESCLUSIONE DI RESPONSABILITÀ"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:452
+msgid ""
+"In\n"
+"nessun caso"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:454
+msgid ""
+"sarà ritenuta responsabile dei Contenuti che l'Utente procede a\n"
+"Caricare incluso, a titolo non esaustivo, il caso in cui si\n"
+"verifichino errori od omissioni nei Contenuti o per la perdita o per\n"
+"il danneggiamento di qualsiasi Contenuto."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:458
+msgid ""
+"L'Utente\n"
+"riconosce ed accetta che i Servizi non comprendono un servizio di\n"
+"back-up e pertanto"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:461
+msgid ""
+"non assume alcuna responsabilità per il rischio di perdita di\n"
+"Contenuti dell'Utente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:464
+msgid ""
+"non esegue alcun controllo sui Contenuti che l'Utente procede a\n"
+"Caricare e/o Pubblicare, sebbene"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:466
+msgid ""
+"si riservi il diritto, ove venga a conoscenza del fatto che un\n"
+"Contenuto è illecito o comunque lede diritti di terzi, di rimuoverlo\n"
+"dalle Risorse e cancellarlo."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:469
+msgid ""
+"In\n"
+"ogni caso"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:471
+msgid ""
+"si riserva il diritto di modificare od eliminare Contenuti che\n"
+"violino le presenti Condizioni o che contengano materiale\n"
+"pubblicitario di terzi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:474
+msgid ""
+"14.\n"
+"AUTORIZZAZIONE ALL'USO DEI DATI PERSONALI"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:476
+msgid ""
+"L'Utente\n"
+"accetta la Privacy Policy che si intende qui richiamata e che\n"
+"pertanto forma parte delle Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:479
+msgid ""
+"L'Utente\n"
+"si impegna a trattare i dati degli altri Utenti nei termini previsti\n"
+"dalla Privacy Policy e nel rispetto delle norme sulla privacy\n"
+"applicabili."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:483
+msgid ""
+"15.\n"
+"INDENNITÀ"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:485
+msgid ""
+"L'Utente\n"
+"si impegna a manlevare e tenere indenne"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:486
+msgid ""
+",\n"
+"i suoi rappresentanti, amministratori, dipendenti ed i suoi partner\n"
+"commerciali da qualunque richiesta di risarcimento, inclusi\n"
+"ragionevoli onorari legali, che venga formulata da qualsiasi parte\n"
+"terza:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:491
+msgid ""
+"a)\n"
+"in conseguenza di attività poste in essere dall'Utente utilizzando\n"
+"le Risorse od i Servizi, o poste in essere da qualunque altra persona\n"
+"che acceda alle Risorse od ai Servizi utilizzando i Codici d'Accesso\n"
+"dell'Utente,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:496
+msgid ""
+"b)\n"
+"in relazione ai Contenuti che l'Utente procede a Caricare e/o\n"
+"Pubblicare."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:499
+msgid ""
+"16.\n"
+"GARANZIA ED ASSISTENZA"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:501
+msgid "È"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:502
+msgid "esclusa qualsiasi garanzia di buon funzionamento dei Servizi"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:502
+msgid ""
+"che\n"
+"sono"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:503
+msgid ""
+"utilizzati a titolo\n"
+"gratuito e, per il caso del malfunzionamento di questi, non è dovuto\n"
+"nulla da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:506
+msgid "all'Utente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:507
+msgid ""
+"L'Utente\n"
+"riconosce ed accetta che nessuna rassicurazione, avviso o\n"
+"informazione inviata oralmente o per iscritto da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:510
+msgid ""
+"all'Utente può far sorgere una qualsiasi forma di garanzia a favore\n"
+"dell'Utente al di fuori di quelle espressamente previste nelle\n"
+"presenti Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:513
+msgid ""
+"Per\n"
+"ogni necessità di assistenza l'Utente può contattare l'help desk di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:516
+msgid "scrivendo all'indirizzo di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:517
+msgid "ed agli altri dati di contatto indicati da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:517
+msgid ""
+".\n"
+"L'Utente può anche inviare un'email ai recapiti indicati nel Sito."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:519
+msgid ""
+"17.\n"
+"ESCLUSIONE DI GARANZIE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:521
+msgid ""
+"Nel\n"
+"fornire i Servizi"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:523
+msgid "assume obbligazione di mezzi e non di risultato."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:524
+msgid ""
+"Fatte\n"
+"salve le esplicite garanzie rilasciate ai sensi di queste Condizioni,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:527
+msgid ""
+"esclude qualunque garanzia, condizione, impegno o dichiarazione di\n"
+"alcun genere, espressa o implicita, di legge o di altra natura o in\n"
+"altro modo correlata ai Servizi od alle Risorse, ivi comprese, senza\n"
+"alcuna limitazione, qualsivoglia garanzia o condizione implicita di\n"
+"commerciabilità, soddisfacente qualità, idoneità a uno scopo\n"
+"specifico, di conformità o derivante da qualsiasi comportamento, uso\n"
+"o pratica commerciale."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:534
+msgid ""
+"In\n"
+"alcuni stati / alcune giurisdizioni non è consentita l'esclusione\n"
+"delle garanzie implicite; pertanto, l'esclusione di cui sopra\n"
+"potrebbe non essere applicabile all'Utente, il quale potrebbe\n"
+"pertanto essere titolare di altri diritti stabiliti dalla legge che\n"
+"possono variare da stato a stato o per diverse giurisdizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:540
+msgid ""
+"Senza\n"
+"con ciò voler limitare il carattere generale di quanto sopra\n"
+"esposto,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:543
+msgid ""
+"non garantisce che i Servizi o le Risorse soddisferanno le richieste\n"
+"dell'Utente o che il loro funzionamento sarà ininterrotto o privo di\n"
+"errori, né che i difetti presenti nei Servizi e nelle Risorse\n"
+"verranno corretti."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:547
+msgid ""
+"18.\n"
+"LIMITAZIONE DI RESPONSABILITÀ"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:549
+msgid ""
+"L'Utente\n"
+"utilizza i Servizi e le Risorse a proprio rischio."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:551
+msgid ""
+"Nella\n"
+"misura massima consentita dalla legge applicabile, in nessun caso"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:554
+msgid ""
+"ovvero le sue parti terze licenzianti e i suoi fornitori o i\n"
+"collaboratori saranno responsabili nei confronti dell'Utente, o nei\n"
+"confronti di coloro che avanzano rivendicazioni mediante l'Utente,\n"
+"per danni diretti, indiretti, consequenziali, incidentali, speciali o\n"
+"punitivi o per perdita di qualsivoglia tipo, ivi inclusa, senza\n"
+"pretesa di esaustività, perdita di profitti, perdita di contratti,\n"
+"interruzione dell'attività, perdita o corruzione di dati, qualunque\n"
+"ne sia la causa e indipendentemente dal fatto che si verifichi in\n"
+"sede contrattuale o per illecito civile, negligenza inclusa, anche\n"
+"nel caso in cui"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:564
+msgid "sia stato avvertito della possibilità di tali danni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:565
+msgid ""
+"Fermo\n"
+"quanto sopra, in ogni caso in cui"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:567
+msgid ""
+"sia dichiarata responsabile per perdita o danno la cui entità possa\n"
+"essere legittimamente limitata (inclusi i casi in cui il contratto di\n"
+"fornitura dei Servizi sia risolto, annullato, dichiarato nullo o\n"
+"comunque sciolto o una limitazione, esclusione, restrizione o altra\n"
+"disposizione contenuta nelle presenti Condizioni sia giudicata nulla\n"
+"per un qualsivoglia motivo da parte di un foro competente), tale\n"
+"responsabilità, che sia in sede contrattuale, civile o altro, non\n"
+"potrà eccedere l'importo di 10,00 euro."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:575
+msgid ""
+"Nulla\n"
+"in queste Condizioni:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:577
+msgid ""
+"(i)\n"
+"limiterà la responsabilità di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:579
+msgid ""
+"per il caso della morte o di un danno alla persona risultante dalla\n"
+"colpa di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:580
+msgid ""
+",\n"
+"se l'Utente è un consumatore,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:582
+msgid ""
+"(ii)\n"
+"limiterà la responsabilità di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:584
+msgid ""
+"verso l'Utente per il fatto risultante dal dolo o dalla colpa grave\n"
+"di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:586
+msgid ""
+"19.\n"
+"MODIFICHE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:588
+msgid ""
+",\n"
+"se ricorre un giustificato motivo e cioè per"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:589
+msgid ""
+"adeguarsi\n"
+"ad obblighi di legge ovvero ad ordini provenienti da pubbliche\n"
+"autorità, inclusa l'autorità giudiziaria, per migliorare\n"
+"l'efficienza dei Servizi e/o per migliore la tutela dei diritti di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:593
+msgid ""
+",\n"
+"degli Utenti o dei terzi,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:595
+msgid ""
+"è espressamente autorizzato in qualsiasi momento, a propria\n"
+"esclusiva ed insindacabile discrezione, a:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:597
+msgid ""
+"(i)\n"
+"modificare queste Condizioni;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:599
+msgid ""
+"(ii)\n"
+"modificare le Risorse e/o i Servizi (compresa la facoltà di\n"
+"interromperli o di sospenderli, in tutto o in parte);"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:602
+msgid ""
+"(iii)\n"
+"sospendere od annullare i Codici d'Accesso dell'Utente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:604
+msgid ""
+"In\n"
+"questo caso darà notizia mediante comunicazione scritta almeno\n"
+"cinque giorni prima della modificazione mediante pubblicazione di\n"
+"annuncio nel Sito, nell'Area Utente, mediante invio di email alla\n"
+"casella di posta indicata nel profilo dell’Utente e/o in qualsiasi\n"
+"altro modo."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:610
+msgid ""
+"L'Utente,\n"
+"entro cinque giorni dalla comunicazione della modifica, avrà la\n"
+"possibilità di accettare la modifica oppure di recedere dal\n"
+"contratto dandone comunicazione scritta a"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:614
+msgid ""
+"In\n"
+"ogni caso però, continuando ad utilizzare le Risorse e/o i Servizi,\n"
+"l'Utente dimostrerà la sua implicita accettazione delle modifiche\n"
+"apportate."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:618
+msgid ""
+"Nel\n"
+"caso in cui ricorra una giusta causa (come per esempio per far fronte\n"
+"a problemi di sicurezza, per adempiere ad obblighi di legge ovvero\n"
+"rispettare ordini provenienti da pubbliche autorità, inclusa\n"
+"l'autorità giudiziaria, ovvero per tutelare i diritti di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:623
+msgid ""
+",\n"
+"degli Utenti o dei terzi ai sensi di legge e/o in conformità alle\n"
+"presenti Condizioni)"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:626
+msgid ""
+"potrà sospendere od annullare i Codici d'Accesso dell'Utente e/o\n"
+"modificare o disconnettere temporaneamente o permanentemente le\n"
+"Risorse e/o i Servizi (o parte di essi) anche senza darne preavviso."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:629
+msgid "Inoltre,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:631
+msgid ""
+"può in qualsiasi momento, a propria esclusiva ed insindacabile\n"
+"discrezione e senza darne avviso all'Utente:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:633
+msgid ""
+"(i)\n"
+"aggiungere nuove funzionalità ai Servizi attualmente disponibili, o\n"
+"eliminare funzionalità accessorie;"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:636
+msgid ""
+"(ii)\n"
+"aggiungere o eliminare Contenuti."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:638
+msgid ""
+"20.\n"
+"DURATA DEI SERVIZI, RECESSO E RISOLUZIONE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:640
+msgid ""
+"I\n"
+"Servizi sono attivi a tempo indeterminato a partire dal momento in\n"
+"cui la richiesta di utilizzare ciascun Servizio è confermata."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:643
+msgid ""
+"L'Utente\n"
+"può recedere dai Servizi in qualsiasi momento."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:645
+msgid ""
+"Per\n"
+"esercitare il diritto di recesso, l'Utente è tenuto ad informare"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:649
+msgid ""
+",\n"
+"con sede in"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:652
+msgid ""
+"Via\n"
+"San Quintino"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:655
+msgid ""
+",\n"
+"email:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:656
+msgid "@studiolegale.it"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:657
+msgid ""
+"della\n"
+"sua decisione di recedere dal contratto tramite una dichiarazione\n"
+"esplicita (ad esempio lettera inviata per posta, fax o posta\n"
+"elettronica)."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:661
+msgid ""
+"Può\n"
+"anche compilare e inviare elettronicamente il modulo di recesso\n"
+"eventualmente disponibile sul Sito di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:664
+msgid "e nel caso scegliesse detta opzione,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:665
+msgid ""
+"trasmetterà senza indugio una conferma di ricevimento del recesso su\n"
+"un supporto durevole (ad esempio per posta elettronica)."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:667
+msgid ""
+"L'Utente\n"
+"prende atto che la facoltà di recesso di cui sopra è più ampia,\n"
+"sia per condizioni che per modalità d'esercizio, di quella concessa\n"
+"dagli artt. 49-59 del D. Lgs. 206/2005 (Codice del Consumo), dei\n"
+"quali riconosce d'essere stato informato."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:672
+msgid ""
+"L'Utente\n"
+"è consapevole che recedendo dal Servizio Registrazione non può\n"
+"utilizzare gli altri Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:675
+msgid ""
+"Con\n"
+"il recesso dal Servizio Registrazione"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:677
+msgid ""
+"è libero di cancellare, ma non vi è obbligato, tutti i Contenuti\n"
+"che l'Utente ha provveduto a Caricare e/o Pubblicare."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:680
+msgid ""
+"può recedere dal contratto di fornitura dei Servizi con un preavviso\n"
+"di 30 giorni e, ove ricorra una giusta causa, anche senza preavviso."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:683
+msgid ""
+"può risolvere il contratto ai sensi dell'articolo 1456 del codice\n"
+"civile in caso di violazione da parte dell'Utente di una qualsiasi\n"
+"delle obbligazioni previste agli articoli 5 o 6 delle Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:686
+msgid ""
+"21.\n"
+"VARIE"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:688
+msgid ""
+"(a)\n"
+"Cessione del contratto."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:691
+msgid ""
+"è autorizzato a cedere il contratto di fornitura dei Servizi\n"
+"concluso con l'Utente, con ogni facoltà prevista nelle Condizioni,\n"
+"inclusa l'autorizzazione all'uso dei Contenuti nei termini previsti\n"
+"da queste Condizioni, ad altro soggetto che eroghi servizi simili ai\n"
+"Servizi."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:696
+msgid ""
+"L'Utente\n"
+"non potrà cedere o trasferire il contratto od alcuno dei diritti,\n"
+"doveri ed obbligazioni dell'Utente previsti nelle Condizioni senza il\n"
+"preventivo consenso scritto di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:700
+msgid ""
+"(b)\n"
+"Accordo completo."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:702
+msgid ""
+"Queste\n"
+"Condizioni sostituiscono qualsiasi precedente accordo, sia scritto\n"
+"che verbale, precedentemente intervenuto tra"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:705
+msgid ""
+"e l'Utente ed avente ad oggetto la materia di cui alle presenti\n"
+"Condizioni (salvo il caso di false dichiarazioni fatte con dolo o\n"
+"colpa grave)."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:708
+msgid ""
+"(c)\n"
+"Comunicazioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:710
+msgid ""
+"Le\n"
+"comunicazioni a"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:712
+msgid "dovranno essere fatte all'indirizzo di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:713
+msgid "indicato all'art. 1 o al nuovo indirizzo comunicato successivamente."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:714
+msgid ""
+"Le\n"
+"comunicazioni all'Utente potranno essere effettuate:"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:716
+msgid ""
+"-\n"
+"via posta ordinaria all'indirizzo indicato dall'Utente,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:718
+msgid ""
+"-\n"
+"via email alla casella di posta elettronica indicata dall'Utente, o"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:720
+msgid ""
+"-\n"
+"mediante pubblicazione sul Sito o su altre Risorse."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:722
+msgid ""
+"Data\n"
+"la natura del servizio di posta elettronica,"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:724
+msgid ""
+"non garantisce la consegna di ogni comunicazione di posta\n"
+"elettronica."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:726
+msgid ""
+"Le\n"
+"comunicazioni pubblicate sulle Risorse si intendono ricevute quando\n"
+"l'Utente, accedendo all'Area Utente dopo la loro pubblicazione, le\n"
+"visualizza sul proprio dispositivo in base alla procedura predisposta\n"
+"da"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:731
+msgid "che ne impone la visualizzazione."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:732
+msgid ""
+"(d)\n"
+"Soluzione delle controversie, legge applicabile, giurisdizione e\n"
+"competenza."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:735
+msgid ""
+"In\n"
+"caso di controversia, l'Utente può rivolgersi all'autorità\n"
+"giudiziaria ordinaria."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:738
+msgid ""
+"Queste\n"
+"Condizioni devono essere interpretate, valutate, e fatte osservare in\n"
+"tutti i sensi secondo il diritto Italiano."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:741
+msgid ""
+"Se\n"
+"l'Utente è un consumatore, accetta la giurisdizione non esclusiva\n"
+"delle Corti Italiane."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:744
+msgid ""
+"Se\n"
+"l'Utente non è un consumatore accetta la giurisdizione esclusiva\n"
+"delle Corti Italiane e la competenza esclusiva del foro di Torino."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:747
+msgid ""
+"(e)\n"
+"Tolleranza."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:749
+msgid ""
+"Il\n"
+"fatto che"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:751
+msgid ""
+"non esiga che l'Utente si attenga tassativamente ed in ogni momento\n"
+"alle disposizioni delle presenti Condizioni e/o non eserciti uno o\n"
+"più dei diritti quivi sanciti, non comporta la decadenza da tali\n"
+"diritti o la rinuncia all'esercizio degli stessi da parte di"
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:756
+msgid ""
+"(f)\n"
+"Integrazione."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:758
+msgid ""
+"Qualora\n"
+"una o più clausole delle presenti Condizioni fossero o divenissero\n"
+"contrarie a norme giuridiche imperative o di ordine pubblico, esse\n"
+"saranno considerate come non apposte e non incideranno sulla validità\n"
+"delle altre clausole delle Condizioni, fatto salvo il diritto di\n"
+"ciascuna parte di chiedere una modifica delle stesse Condizioni."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:764
+msgid ""
+"(g)\n"
+"Versione linguistica."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:766
+msgid ""
+"Il\n"
+"testo in lingua italiana delle presenti Condizioni è l'unico facente\n"
+"fede."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:769
+msgid ""
+"Le\n"
+"eventuali traduzioni in altre lingue delle Condizioni hanno scopo\n"
+"meramente illustrativo e, in caso di incongruenze o discrepanze il\n"
+"testo in lingua italiana prevale."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:773
+msgid ""
+"(h)\n"
+"Riferimenti."
+msgstr ""
+
+#: ksweb/templates/terms.xhtml:775
+msgid ""
+"Le\n"
+"Condizioni richiamano le disposizioni di cui agli artt. 45 e seguenti\n"
+"(dei diritti dei consumatori nei contratti) del D. Lgs 206/2005\n"
+"(Codice del Consumo)."
 msgstr ""
 
 #: ksweb/templates/qa/index.xhtml:3 ksweb/templates/welcome.xhtml:3
 msgid "KS | QA"
 msgstr ""
 
-#: ksweb/templates/welcome.xhtml:9
+#: ksweb/templates/welcome.xhtml:8
 #, python-format
 msgid "Welcome in %s"
 msgstr ""
 
-#: ksweb/templates/welcome.xhtml:14
-msgid "Build your wise tool"
+#: ksweb/templates/welcome.xhtml:11
+msgid "Build your knowledge base"
 msgstr ""
 
-#: ksweb/templates/welcome.xhtml:15
+#: ksweb/templates/welcome.xhtml:16
 msgid "Draft a new Q/A"
 msgstr ""
 
-#: ksweb/templates/welcome.xhtml:17
+#: ksweb/templates/welcome.xhtml:19
 msgid "Draft a new Document"
+msgstr ""
+
+#: ksweb/templates/welcome.xhtml:21
+msgid "or import an existing knowledge base like the"
 msgstr ""
 
 #: ksweb/templates/document/index.xhtml:3 ksweb/templates/document/new.xhtml:3
@@ -520,148 +3414,149 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:10
-msgid "Document is a collection of Outputs"
-msgstr ""
-
-#: ksweb/templates/document/index.xhtml:16
+#: ksweb/templates/document/index.xhtml:13
 msgid " Import Document"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:20
+#: ksweb/templates/document/index.xhtml:17
 msgid " New Document"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:36 ksweb/templates/document/index.xhtml:60
-msgid "×"
+#: ksweb/templates/document/index.xhtml:23
+msgid "Document is a collection of Outputs"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:37
+#: ksweb/templates/document/index.xhtml:38
 msgid "Import a new Document"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:61
-msgid "Create a new questionary"
+#: ksweb/templates/document/index.xhtml:40 ksweb/templates/document/index.xhtml:62
+#: ksweb/templates/questionary/index.xhtml:34
+msgid "×"
 msgstr ""
 
-#: ksweb/templates/document/index.xhtml:64
+#: ksweb/templates/document/index.xhtml:60
+msgid "Create a new Form"
+msgstr ""
+
+#: ksweb/templates/document/index.xhtml:65
 msgid "Insert the title:"
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:281
-msgid "ATTENTION: you dont have highlighted any text."
+#: ksweb/templates/document/index.xhtml:70
+msgid "Optionally insert the email to invite:"
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:362 ksweb/templates/output/new.xhtml:348
-msgid "Unsaved data! Are you sure you want to leave?"
+#: ksweb/templates/document/new.xhtml:11
+msgid "New Document"
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:12
-msgid "Document"
-msgstr ""
-
-#: ksweb/templates/document/new.xhtml:18
-msgid "New Questionary"
-msgstr ""
-
-#: ksweb/templates/document/new.xhtml:23 ksweb/templates/output/new.xhtml:16
+#: ksweb/templates/document/new.xhtml:14 ksweb/templates/output/new.xhtml:15
 msgid "Create Output+"
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:27 ksweb/templates/output/new.xhtml:20
-#: ksweb/templates/precondition/advanced/new.xhtml:13
-#: ksweb/templates/precondition/simple/new.xhtml:13 ksweb/templates/qa/new.xhtml:67
-#: ksweb/templates/questionary/compile.xhtml:45
+#: ksweb/templates/document/new.xhtml:17 ksweb/templates/output/new.xhtml:19
+#: ksweb/templates/precondition/advanced/new.xhtml:11
+#: ksweb/templates/precondition/simple/new.xhtml:11 ksweb/templates/qa/new.xhtml:16
+#: ksweb/templates/questionary/compile.xhtml:70
 msgid "Saving..."
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:61
-msgid "Licence"
+#: ksweb/templates/document/new.xhtml:33
+msgid "Title your document (eg. Privacy Policy)."
 msgstr ""
 
-#: ksweb/templates/document/new.xhtml:89 ksweb/templates/document/new.xhtml:91
+#: ksweb/templates/document/new.xhtml:63
 msgid "Tags"
+msgstr ""
+
+#: ksweb/templates/document/new.xhtml:108 ksweb/templates/output/new.xhtml:137
+msgid "Unsaved data! Are you sure you want to leave?"
+msgstr ""
+
+#: ksweb/templates/document/new.xhtml:145 ksweb/templates/output/new.xhtml:180
+msgid "ATTENTION: you dont have highlighted any text."
+msgstr ""
+
+#: ksweb/templates/document/new.xhtml:156 ksweb/templates/output/new.xhtml:191
+msgid "An Output without filter was automatically created from "
 msgstr ""
 
 #: ksweb/templates/output/index.xhtml:3 ksweb/templates/output/new.xhtml:3
 msgid "KS | Output"
 msgstr ""
 
-#: ksweb/templates/output/index.xhtml:9
+#: ksweb/templates/output/index.xhtml:8
 msgid "Output"
 msgstr ""
 
-#: ksweb/templates/output/index.xhtml:10
+#: ksweb/templates/output/index.xhtml:11
+msgid " New output"
+msgstr ""
+
+#: ksweb/templates/output/index.xhtml:17
 msgid ""
 "Outputs is what you decide to show in the document depending on the Answers "
 "provided by the user"
 msgstr ""
 
-#: ksweb/templates/output/index.xhtml:14
-msgid " New output"
-msgstr ""
-
-#: ksweb/templates/output/new.xhtml:251
-msgid "ATTENTION: you don't have highlighted any text."
-msgstr ""
-
-#: ksweb/templates/output/new.xhtml:271
-msgid ""
-"A Q/A, Filter and Output where automatically created and the following text "
-"is based on them:"
-msgstr ""
-
-#: ksweb/templates/output/new.xhtml:37
-#: ksweb/templates/precondition/advanced/new.xhtml:28
-#: ksweb/templates/precondition/simple/new.xhtml:88 ksweb/templates/qa/new.xhtml:95
+#: ksweb/templates/output/new.xhtml:33
+#: ksweb/templates/precondition/advanced/new.xhtml:31
+#: ksweb/templates/precondition/simple/new.xhtml:94 ksweb/templates/qa/new.xhtml:48
 msgid ""
 "This is a unique name that you will use to refer to this object in this "
 "workspace."
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:59
+#: ksweb/templates/output/new.xhtml:45
 msgid "Choose a filter (select a Q/A)"
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:69 ksweb/templates/qa/new.xhtml:115
+#: ksweb/templates/output/new.xhtml:57 ksweb/templates/qa/new.xhtml:70
 msgid "New Simple Filter"
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:73
+#: ksweb/templates/output/new.xhtml:62
 msgid "Available answers"
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:86
+#: ksweb/templates/output/new.xhtml:63
 msgid "Please select the Answer to the Question that you want to use in this Output."
 msgstr ""
 
-#: ksweb/templates/output/new.xhtml:93
+#: ksweb/templates/output/new.xhtml:92
 msgid ""
 "To create an Output from a text, highlight it with your mouse and click on "
 "the orange button Create Output+"
 msgstr ""
 
-#: ksweb/templates/partials/sidebar.xhtml:14
+#: ksweb/templates/output/new.xhtml:147
+msgid ""
+"You have not selected a Filter. Are you sure you want to create an output "
+"without a filter?"
+msgstr ""
+
+#: ksweb/templates/partials/sidebar.xhtml:13
 msgid " Q/A"
 msgstr ""
 
-#: ksweb/templates/partials/sidebar.xhtml:22
+#: ksweb/templates/partials/sidebar.xhtml:19
 msgid " FILTERS"
 msgstr ""
 
-#: ksweb/templates/partials/sidebar.xhtml:30
+#: ksweb/templates/partials/sidebar.xhtml:25
 msgid " OUTPUTS"
 msgstr ""
 
-#: ksweb/templates/partials/sidebar.xhtml:38
+#: ksweb/templates/partials/sidebar.xhtml:31
 msgid " DOCUMENTS"
 msgstr ""
 
-#: ksweb/templates/partials/sidebar.xhtml:46
-msgid " QUESTIONARIES"
+#: ksweb/templates/partials/sidebar.xhtml:37
+msgid " FORMS"
 msgstr ""
 
-#: ksweb/templates/partials/sidebar.xhtml:61
+#: ksweb/templates/partials/sidebar.xhtml:48
 #: ksweb/templates/precondition/index.xhtml:9
 msgid "Filters"
 msgstr ""
@@ -670,7 +3565,7 @@ msgstr ""
 msgid " Account"
 msgstr ""
 
-#: ksweb/templates/partials/user_menu.xhtml:11
+#: ksweb/templates/partials/user_menu.xhtml:8
 msgid " Logout"
 msgstr ""
 
@@ -680,126 +3575,122 @@ msgstr ""
 msgid "KS | Filters"
 msgstr ""
 
-#: ksweb/templates/precondition/index.xhtml:11
+#: ksweb/templates/precondition/index.xhtml:12
+msgid " New simple filter"
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:15
+msgid " New advanced filter"
+msgstr ""
+
+#: ksweb/templates/precondition/index.xhtml:21
 msgid ""
 "Filters allows you to filter how Outputs or Q/A are displayed in "
 "questionaries."
 msgstr ""
 
-#: ksweb/templates/precondition/index.xhtml:12
+#: ksweb/templates/precondition/index.xhtml:22
 msgid "Simple Filters are based on one single Q/A."
 msgstr ""
 
-#: ksweb/templates/precondition/index.xhtml:13
+#: ksweb/templates/precondition/index.xhtml:23
 msgid "Advanced Filters are based on multiple Q/As."
 msgstr ""
 
-#: ksweb/templates/precondition/index.xhtml:17
-msgid " New simple filter"
-msgstr ""
-
-#: ksweb/templates/precondition/index.xhtml:20
-msgid " New advanced filter"
-msgstr ""
-
-#: ksweb/templates/precondition/advanced/new.xhtml:9
+#: ksweb/templates/precondition/advanced/new.xhtml:8
 msgid "Advanced Filters"
 msgstr ""
 
-#: ksweb/templates/precondition/advanced/new.xhtml:50
+#: ksweb/templates/precondition/advanced/new.xhtml:36
 msgid "Operators"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:237
-msgid " ANSWERED"
-msgstr ""
-
-#: ksweb/templates/precondition/simple/new.xhtml:9
+#: ksweb/templates/precondition/simple/new.xhtml:8
 msgid "Simple filter"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:23
+#: ksweb/templates/precondition/simple/new.xhtml:25
 msgid "Select a question"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:36
+#: ksweb/templates/precondition/simple/new.xhtml:34
 msgid "New Question"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:38
+#: ksweb/templates/precondition/simple/new.xhtml:37
 msgid "Select the question to use for this filter."
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:46
+#: ksweb/templates/precondition/simple/new.xhtml:45
 msgid "The question was just answered"
 msgstr ""
 
-#: ksweb/templates/precondition/simple/new.xhtml:52
+#: ksweb/templates/precondition/simple/new.xhtml:53
 msgid "The user selects one of the following answers"
 msgstr ""
 
-#: ksweb/templates/qa/index.xhtml:9
-msgid "Q / A"
+#: ksweb/templates/precondition/simple/new.xhtml:199
+msgid " was compiled"
 msgstr ""
 
-#: ksweb/templates/qa/index.xhtml:11
+#: ksweb/templates/qa/index.xhtml:9
+msgid "Q/A"
+msgstr ""
+
+#: ksweb/templates/qa/index.xhtml:12
+msgid " New Q/A"
+msgstr ""
+
+#: ksweb/templates/qa/index.xhtml:18
 msgid ""
 "Q/As are Question that the Wise Tool makes to the user and relative Answers "
 "that user provides"
-msgstr ""
-
-#: ksweb/templates/qa/index.xhtml:15
-msgid " New Q/A"
 msgstr ""
 
 #: ksweb/templates/qa/new.xhtml:3
 msgid "KS | New Q/A"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:77
+#: ksweb/templates/qa/new.xhtml:26
 msgid "Content of the question"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:85
+#: ksweb/templates/qa/new.xhtml:32
 msgid ""
 "Insert a question that user will answer in the questionary. e.g. What's your "
 "name?"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:101
+#: ksweb/templates/qa/new.xhtml:54
 msgid "Add an optional filter to this Q/A"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:121
+#: ksweb/templates/qa/new.xhtml:77
 msgid "Answer's type"
 msgstr ""
 
-#: ksweb/templates/qa/new.xhtml:175
+#: ksweb/templates/qa/new.xhtml:132
 msgid "Insert an option of Answer and click on +"
 msgstr ""
 
 #: ksweb/templates/questionary/compile.xhtml:3
-msgid "KS | Questionary"
+msgid "KS | Form"
 msgstr ""
 
-#: ksweb/templates/questionary/compile.xhtml:9
-msgid "Complete the questionary"
+#: ksweb/templates/questionary/compile.xhtml:8
+msgid "Complete the form"
 msgstr ""
 
-#: ksweb/templates/questionary/compile.xhtml:41
+#: ksweb/templates/questionary/compile.xhtml:67
 msgid "Prev"
 msgstr ""
 
-#: ksweb/templates/questionary/compile.xhtml:48
+#: ksweb/templates/questionary/compile.xhtml:77
 msgid "Next"
 msgstr ""
 
-#: ksweb/templates/questionary/compile.xhtml:62
-msgid "Questionary"
-msgstr ""
-
 #: ksweb/templates/questionary/completed.xhtml:3
-msgid "KS | Questionary completed"
+msgid "KS | Form completed"
 msgstr ""
 
 #: ksweb/templates/questionary/index.xhtml:3
@@ -807,11 +3698,65 @@ msgid "KS | Questionaries"
 msgstr ""
 
 #: ksweb/templates/questionary/index.xhtml:9
-msgid "Questionaries"
+msgid "Forms"
 msgstr ""
 
-#: ksweb/templates/questionary/index.xhtml:10
-msgid "Questionary is an instances of a Document assigned to a user"
+#: ksweb/templates/questionary/index.xhtml:13
+msgid "Become Editor"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:19
+msgid "Form is an instances of a Document assigned to a user"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:32
+msgid "Become an editor"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:37
+msgid "You have to choose a password:"
+msgstr ""
+
+#: ksweb/templates/questionary/index.xhtml:43
+msgid "and also a username:"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:3
+msgid "Register New User"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:22
+msgid "You expressly accept these"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:23
+msgid "conditions"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:28
+msgid "By clicking on “Save” you accept the"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:28
+msgid "terms"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:28
+msgid ""
+",\n"
+"          consent to use of your personal data according to the"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:29
+msgid "privacy policy"
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:29
+msgid "and ask to use the Knowledge Shaper."
+msgstr ""
+
+#: ksweb/templates/registration/register.xhtml:31
+msgid "You will receive e confirmation email."
 msgstr ""
 
 #: ksweb/templates/resetpassword/index.xhtml:3
@@ -830,39 +3775,43 @@ msgstr ""
 msgid "How to continue?"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:23
-msgid "Le modifiche si applicheranno all'oggetto originario"
+#: ksweb/templates/resolve/index.xhtml:22
+msgid "All the edits will be applied to the original entity"
 msgstr ""
 
 #: ksweb/templates/resolve/index.xhtml:27
 msgid "Apply to all the others"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:31
-msgid "Viene creata una copia dell'oggetto originario con le modifiche"
+#: ksweb/templates/resolve/index.xhtml:38
+msgid "Other alternatives"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:35
+#: ksweb/templates/resolve/index.xhtml:44
+msgid "A shallow copy of the original entity will be created"
+msgstr ""
+
+#: ksweb/templates/resolve/index.xhtml:49
 msgid "Do not apply to all the others"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:39
-msgid "Viene scelto caso per caso"
+#: ksweb/templates/resolve/index.xhtml:53
+msgid "It will be chosen case by case"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:43
+#: ksweb/templates/resolve/index.xhtml:57
 msgid "Select manually"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:48
-msgid "Continuando verranno perse tutte le modifiche. Continuare?"
+#: ksweb/templates/resolve/index.xhtml:61
+msgid "If you continue you will loose all the edits. Continue?"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:50
+#: ksweb/templates/resolve/index.xhtml:63
 msgid "Cancella tutte le modifiche effettuate"
 msgstr ""
 
-#: ksweb/templates/resolve/index.xhtml:55
+#: ksweb/templates/resolve/index.xhtml:68
 #: ksweb/templates/resolve/manually_resolve.xhtml:23
 msgid "Leave the procedure"
 msgstr ""
@@ -919,23 +3868,19 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: ksweb/templates/userprofile/index.xhtml:46
+#: ksweb/templates/userprofile/index.xhtml:8
+msgid " Profile"
+msgstr ""
+
+#: ksweb/templates/userprofile/index.xhtml:39
 msgid "Account"
 msgstr ""
 
-#: ksweb/templates/userprofile/index.xhtml:53
+#: ksweb/templates/userprofile/index.xhtml:46
 msgid "Name"
 msgstr ""
 
-#: ksweb/templates/userprofile/index.xhtml:69
+#: ksweb/templates/userprofile/index.xhtml:62
 msgid "Edit"
-msgstr ""
-
-#: ksweb/templates/userprofile/index.xhtml:71
-msgid "Change password"
-msgstr ""
-
-#: ksweb/templates/userprofile/index.xhtml:8
-msgid " Profile"
 msgstr ""
 
