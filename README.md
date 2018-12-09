@@ -34,7 +34,10 @@ The easiest way to run ksweb is inside a docker container. just run
 
     git clone --recursive https://github.com/puria/ksweb.git
 	cd ksweb
-    docker-container up
+    docker-compose up
+
+For instructions about how to install `docker-compose` please refere to the 
+[official documentation](https://docs.docker.com/compose/install/) 
 
 ## :floppy_disk: Manual Installation (for advanced users)
 
