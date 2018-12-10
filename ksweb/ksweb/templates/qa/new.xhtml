@@ -117,11 +117,11 @@
                                 <a class="btn btn-outline btn-sm col-md-auto align-self-center text-muted" onclick="ractive_qa.removeResponse('{{i}}')">${h.material_icon('delete')}</a>
                                 <input type="{{input_type}}" name="example_response" class="col-md-auto align-self-center">
                                     {{#if .editable}}
-                                        <textarea id="{{.answer}}" class="col form-control d-inline-block response response-text" autofocus
+                                        <textarea id="a{{i}}" class="col form-control d-inline-block response response-text" autofocus
                                                                value="{{.answer}}" onblur="ractive_qa.editAnswer('{{i}}')"> </textarea>
 
                                     {{else}}
-                                        <p id={{.answer}} class="col align-self-center response d-inline-block m-0 p-2"
+                                        <p id=a{{i}} class="col align-self-center response d-inline-block m-0 p-2"
                                              onclick="ractive_qa.makeEditable('{{i}}')">{{.answer}}</p>
                                     {{/if}}
                             </div>
@@ -274,9 +274,8 @@
             var self = this;
             var available_response = self.get('available_response');
             available_response[index]['editable'] = false;
-            available_response[index]['answer'] = jQuery("#" + available_response[index]['answer']).val();
+            available_response[index]['answer'] = jQuery("#a" + index).val();
             self.set('available_response', available_response);
-
         },
         removeResponse: function (index) {
             var self = this;
