@@ -139,7 +139,7 @@
             }
         },
         questionary_completed: function () {
-            var _url = "${tg.url('/questionary/completed', params=dict(_id=questionary._id, workspace=workspace))}";
+            var _url = "${tg.url('/questionary/completed', params=dict(_id=questionary._id))}";
             window.location.replace(_url);
         },
         checkButtons: function () {

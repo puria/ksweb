@@ -277,15 +277,18 @@ class TestController(object):
     def _get_output_by_title(self, title):
         return model.Output.query.get(title=title)
 
-    def _create_output(self, title, workspace_id, precondition_id, html=''):
-        self.app.post_json(
+    def _create_output(self, title, workspace_id=None, precondition_id=None, html=''):
+        if not workspace_id:
+            workspace_id = self._get_or_create_workspace("Fake_cat_%s" % title)._id
+        resp = self.app.post_json(
             '/output/post', params={
                 'title': title,
                 'workspace': str(workspace_id),
-                'precondition': str(precondition_id),
+                'precondition': str(precondition_id) if precondition_id else None,
                 'html': html,
             }
         )
+        print(resp)
         return self._get_output_by_title(title)
 
     def _create_fake_output(self, title, workspace_id=None):

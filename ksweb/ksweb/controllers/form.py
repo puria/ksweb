@@ -101,7 +101,6 @@ class FormController(BaseController):
     @expose('json')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
-        'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id',
                                   entity_model=model.Questionary))
@@ -110,7 +109,6 @@ class FormController(BaseController):
         return dict(questionary=questionary,
                     quest_compiled=questionary.evaluate_questionary,
                     html=self.get_questionary_html(_id),
-                    workspace=workspace,
                     recap=questionary.answers)
 
     @expose(content_type='text/html')
@@ -191,16 +189,15 @@ class FormController(BaseController):
     @expose('ksweb.templates.questionary.completed')
     @validate({
         '_id': QuestionaryExistValidator(required=True),
-        'workspace': WorkspaceExistValidator(required=True),
     }, error_handler=validation_errors_response)
     def completed(self, _id=None, workspace=None):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         completed = questionary.evaluate_questionary
         if not completed:
-            return redirect('/questionary/compile', params=dict(quest_complited=completed, workspace=workspace))
+            return redirect('/questionary/compile', params=dict(quest_complited=completed))
 
         questionary_compiled = self.get_questionary_html(_id)
-        return dict(questionary_compiled=questionary_compiled, workspace=workspace)
+        return dict(questionary_compiled=questionary_compiled)
 
     @expose('json')
     @decode_params('json')

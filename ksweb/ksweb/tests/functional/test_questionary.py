@@ -5,6 +5,10 @@ import zipfile
 import pytz
 import io
 from datetime import datetime
+
+from nose.tools import eq_, ok_
+from tg.util.webtest import test_context
+
 try:
     from StringIO import StringIO
 except ImportError:
@@ -67,6 +71,7 @@ class TestQuestionaryController(TestController):
         }).json
         assert resp['quest_compiled'] is not None, resp
         assert resp['quest_compiled']['completed'] is False, resp
+        eq_(questionary.completion, "0 %")
 
     def test_responde_questionary(self):
 
@@ -87,6 +92,7 @@ class TestQuestionaryController(TestController):
         }).json
 
         assert resp['quest_compiled']['completed'] is True, resp
+        eq_(questionary.completion, "0 %")
 
     def test_hack_response(self):
         self._login_lawyer()
@@ -103,6 +109,7 @@ class TestQuestionaryController(TestController):
             'qa_response': "Fake response"
         }, status=412).json
 
+        eq_(questionary.completion, "0 %")
 
     def test_compile_advanced_questionary(self):
         self._login_lawyer()
@@ -148,6 +155,8 @@ class TestQuestionaryController(TestController):
         }, status=qa_response[rel_qa.title]['status']).json
 
         assert resp['quest_compiled']['completed'] is True
+        q = self._get_questionary(questionary._id)
+        eq_(q.completion, '100 %')
 
 
     def test_compile_advanced_questionary_not_showing_two_time_same_answer(self):
@@ -234,6 +243,45 @@ class TestQuestionaryController(TestController):
         self.test_questionary_create()
         form = self._get_questionary_by_title('TestQuestionary')
         assert u"lawyer1@ks.axantweb.com" == sw(form)
+
+    def test_evaluate_questionary_empty(self):
+        self.test_questionary_create()
+        form = self._get_questionary_by_title('TestQuestionary')
+        form.document.html = ''
+        eq_(form.evaluate_questionary['completed'], False)
+
+    def _test_title(self):
+        from ksweb.model.questionary import _compile_questionary as cq
+        with test_context(self.app):
+            self._login_lawyer()
+            doc = self._create_fake_document('Fake1')
+            self.app.post_json('/questionary/create', params={
+                'questionary_title': 'TestQuestionary',
+                'document_id': str(doc._id),
+                'workspace': str(self.workspace._id)
+            })
+            form = self._get_questionary_by_title('TestQuestionary')
+            print(form)
+            eq_("FakeQuestionary", cq(form))
+
+    def test_form_with_output_no_condition(self):
+        self._login_lawyer()
+        title = "some title for testing"
+        workspace_id = self._get_or_create_workspace("Fake_cat_yeah")._id
+        self.app.post_json(
+            '/output/post', params={
+                'title': title,
+                'workspace': str(workspace_id),
+                'html': "Love",
+            }
+        )
+        output = self._get_output_by_title(title)
+        doc = self._create_document(title="Documento", html="#{%s}" % output.hash)
+        form = self._create_questionary(title="Da Form", document_id=doc._id)
+        form.generate_expression()
+
+        eq_({str(output._id): "()"}, form.expressions)
+
 
 
 """ FIXME:
