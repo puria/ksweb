@@ -2,17 +2,10 @@
 # tasks file for Configure-Circus
 
 - name: Install software dependencies
-  apt: name={{item}} update_cache=yes state=installed
-  with_items:
-    - python-pip
-    - python-dev
-    - build-essential
-    - python-virtualenv
-    - libxml2-dev
-    - libxslt-dev
-    - libzmq-dev
-    - libevent-dev
-    - git-core
+  apt:
+    name: ['python-pip', 'python-dev', 'build-essential', 'python-virtualenv', 'libxml2-dev', 'libxslt-dev', 'libzmq-dev', 'libevent-dev', 'git-core']
+    update_cache: yes
+    state: present 
 
 - name: Install Circus
   pip:

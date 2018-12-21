@@ -1,9 +1,7 @@
 - name: install nginx packages
   apt:
-    name: "{{item}}"
+    name: nginx
     state: present
-  with_items:
-    - nginx
 
 - name: copy conf file
   template:

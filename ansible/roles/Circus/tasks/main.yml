@@ -13,17 +13,10 @@
     extra_args: --upgrade --index-url=https://pypi.python.org/simple/
 
 - name: Install python dependencies
-  pip: name={{item}} virtualenv={{ deploy_path }}/venv virtualenv_site_packages=no
-  with_items:
-    - setuptools
-    - chaussette
-    - waitress==0.9.0
-    - tg.devtools
-    - backlash
-    - speaklater
-    - circus-web
-    - PasteDeploy
-
+  pip:
+    name: ['setuptools', 'chausette', 'waitress==0.9.0', 'tg.devtools', 'backlash', 'speaklater', 'circus-web', 'PasteDeploy']
+    virtualenv: "{{ deploy_path }}/venv"
+    virtualenv_site_packages: no
 
 - name: Get code from repository
   git: repo={{repository}} version={{current_branch}} dest={{deploy_path}}/app force=yes
