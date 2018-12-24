@@ -82,17 +82,27 @@ def entity_from_hash(hash):
     precondition = Precondition.query.get(hash=hash)
     qa = Qa.query.get(hash=hash)
     document = Document.query.get(hash=hash)
-    entity = filter(None, [output, precondition, qa, document])
-    return list(entity)[0]
+    entity = list(filter(None, [output, precondition, qa, document]))
+    if len(entity):
+        return entity[0]
+
+    return None
 
 
 def entity_from_id(_id):
-    output = Output.query.get(_id=ObjectId(_id))
-    precondition = Precondition.query.get(_id=ObjectId(_id))
-    qa = Qa.query.get(_id=ObjectId(_id))
-    document = Document.query.get(_id=ObjectId(_id))
-    entity = filter(None, [output, precondition, qa, document])
-    return list(entity)[0]
+    try:
+        oid = ObjectId(_id)
+    except InvalidId:
+        return None
+    output = Output.query.get(_id=oid)
+    precondition = Precondition.query.get(_id=oid)
+    qa = Qa.query.get(_id=oid)
+    document = Document.query.get(_id=oid)
+    entity = list(filter(None, [output, precondition, qa, document]))
+    if len(entity):
+        return entity[0]
+
+    return None
 
 
 def hash_to_id(_hash, cls):

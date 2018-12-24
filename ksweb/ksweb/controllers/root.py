@@ -23,7 +23,7 @@ from ksweb.controllers.output_plus import OutputPlusController
 from ksweb.lib.utils import entity_from_id, ksweb_error_handler, entity_from_hash
 from ksweb.lib.validator import WorkspaceExistValidator
 from ksweb.model import Output, Precondition, Qa, Document
-from tg import expose, flash, require, url, lurl, response, config
+from tg import expose, flash, require, url, lurl, response, config, abort
 from tg import request, redirect, tmpl_context
 from tg.decorators import paginate, decode_params, validate
 from tg.i18n import ugettext as _, lazy_ugettext as l_
@@ -133,7 +133,12 @@ class RootController(BaseController):
     @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
     def entity(self, _id):
         entity = entity_from_hash(_id)
-        redirect(entity.url)
+        if not entity:
+            entity = entity_from_id(_id)
+        if entity:
+            redirect(entity.url)
+
+        abort(404)
 
     @expose('ksweb.templates.terms')
     def terms(self):

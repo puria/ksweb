@@ -93,6 +93,8 @@ class PreconditionAdvancedController(RestController):
         precondition = Precondition.query.get(_id=ObjectId(_id))
         precondition.title = title
         precondition.condition = condition
+        precondition.auto_generated = False
+        precondition.status = Precondition.STATUS.UNREAD
         precondition._workspace = workspace
 
         return dict(errors=None, redirect_url=None)
