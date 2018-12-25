@@ -147,7 +147,7 @@ class TestQaController(TestController):
 
         resp = self.app.put_json('/qa/put', params=params, status=412).json
         assert resp['errors'] is not None
-        assert resp['errors']['answers'] == "Please add at least one more answer"
+        assert resp['errors']['answers'] == "Please add at least one more Answer"
 
     def test_put_qa_with_not_valid_answers(self):
         self._login_lawyer()
@@ -182,7 +182,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Please add at least one more answer"
+        assert resp['errors']['answers'] == "Please add at least one more Answer"
 
         qa_text_single_missing_one_answers = {
             'title': 'Title of QA',
@@ -196,7 +196,7 @@ class TestQaController(TestController):
         resp = self.app.post_json(
             '/qa/post', params=qa_text_single_missing_one_answers, status=412
         ).json
-        assert resp['errors']['answers'] == "Please add at least one more answer"
+        assert resp['errors']['answers'] == "Please add at least one more Answer"
 
     def test_post_valid_qa_single(self):
         self._login_lawyer()
@@ -237,7 +237,7 @@ class TestQaController(TestController):
             '/qa/post', params=qa_text_multi_missing_answers, status=412
         )
         errors = resp.json['errors']
-        assert errors['answers'] == "Please add at least one more answer", errors
+        assert errors['answers'] == "Please add at least one more Answer", errors
 
     def test_post_valid_qa_multi_with_one_answer(self):
         self._login_lawyer()

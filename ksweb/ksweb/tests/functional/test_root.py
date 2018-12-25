@@ -7,6 +7,7 @@ from ksweb import model
 
 from ksweb.tests import TestController
 from bson import ObjectId
+from nose.tools import ok_
 
 
 class TestRootController(TestController):
@@ -50,7 +51,7 @@ class TestRootController(TestController):
         self._login_lawyer()
         lawyer = self._get_user('lawyer1@ks.axantweb.com')
         resp = self.app.get('/dashboard', params={'share_id': str(lawyer._id)}, status=302).follow()
-        assert 'Select your workspace or create a new one' in resp, resp.body
+        assert 'Select your Workspace or create a new one' in resp, resp.body
 
     def test_start_sidebar_is_hidden(self):
         self._login_lawyer()
@@ -59,7 +60,7 @@ class TestRootController(TestController):
 
     def test_legal(self):
         response = self.app.get('/legal', status=200)
-        assert "ACCETTAZIONE ESPRESSA" in response
+        ok_("EXPRESS CONFIRMATION" in response, response)
 
     def test_source(self):
         response = self.app.get('/source', status=200)

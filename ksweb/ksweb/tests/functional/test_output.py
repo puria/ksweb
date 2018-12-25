@@ -191,7 +191,7 @@ class TestOutput(TestController):
 
         assert resp is not None
         assert resp['errors'] is not None, resp
-        assert resp['errors']['content'] == "The question/s {'%s'} is not related to the filter" % str(fake_qa._id), resp['errors']['content']
+        assert resp['errors']['content'] == "The Question/s {'%s'} is not related to the filter" % str(fake_qa._id), resp['errors']['content']
 
     def test_update_output_with_related_entities(self):
         self._login_lawyer()
@@ -246,7 +246,7 @@ class TestOutput(TestController):
 
         assert resp
         resp = resp['errors']
-        assert resp['workspace'] == 'Work Area does not exists', resp
+        assert resp['workspace'] == 'Workspace does not exists', resp
         assert resp['precondition'] == 'Filter does not exists', resp
         assert resp['title'] == 'Must be at least 2 characters', resp
         assert output is None
