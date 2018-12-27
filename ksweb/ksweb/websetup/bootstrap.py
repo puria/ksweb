@@ -46,26 +46,6 @@ def bootstrap(command, conf, vars):
     u2.email_address = 'user@somedomain.com'
     u2.password = 'userks'
 
-    c0 = model.Workspace(
-        name="Area 1",
-        visible=True
-    )
-
-    c1 = model.Workspace(
-        name="Area 2",
-        visible=True
-    )
-
-    c2 = model.Workspace(
-        name="Area 51",
-        visible=True
-    )
-
-    c3 = model.Workspace(
-        name="Not Visible Workspace",
-        visible=False
-    )
-
     model.DBSession.flush()
     model.DBSession.clear()
 

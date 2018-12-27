@@ -116,7 +116,7 @@ class DocumentController(RestController):
                                   entity_model=model.Document))
     def edit(self, _id, workspace, **kw):
         tmpl_context.sidebar_document = "document-new"
-        document = model.Document.query.find({'_id': ObjectId(_id)}).first()
+        document = model.Document.by_id(_id)
         return dict(document=document, workspace=workspace, errors=None)
 
     @expose('json')

@@ -104,7 +104,7 @@ class FormController(BaseController):
     }, error_handler=validation_errors_response)
     @require(CanManageEntityOwner(msg=l_(u'You are not allowed to edit this questionary.'), field='_id',
                                   entity_model=model.Questionary))
-    def compile(self, _id, workspace, **kwargs):
+    def compile(self, _id, **kwargs):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         return dict(questionary=questionary,
                     quest_compiled=questionary.evaluate_questionary,
