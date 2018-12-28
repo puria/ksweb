@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
 py_version = sys.version_info[:2]
 
 try:
     from setuptools import setup, find_packages
 except ImportError:
     from ez_setup import use_setuptools
+
     use_setuptools()
     from setuptools import setup, find_packages
 
-testpkgs = [
-    'WebTest ==2.0.30',
-    'nose',
-    'coverage',
-    'gearbox',
-    'backlash',
-]
+testpkgs = ["WebTest ==2.0.30", "nose", "coverage", "gearbox", "backlash", "pre-commit"]
 
 install_requires = [
     "TurboGears2>=2.4.0a1",
@@ -35,7 +31,6 @@ install_requires = [
     "tgapp-resetpassword @ git+https://github.com/puria/tgapp-resetpassword",
     "tgext.datahelpers",
     "tgapp-userprofile @ git+https://github.com/puria/tgapp-userprofile",
-#    "tgapp-userprofile==0.3.6",
     "axf==0.0.19",
     "tgext.evolve==0.0.4",
     "dukpy",
@@ -46,37 +41,29 @@ if py_version != (3, 2):
     install_requires.append("Babel")
 
 setup(
-    name='ksweb',
-    version='1.0',
-    description='',
-    author='',
-    author_email='',
-    url='',
-    packages=find_packages(exclude=['ez_setup']),
+    name="ksweb",
+    version="1.0",
+    description="",
+    author="",
+    author_email="",
+    url="",
+    packages=find_packages(exclude=["ez_setup"]),
     install_requires=install_requires,
-    extras_require={
-       'testing': testpkgs
-    },
+    extras_require={"testing": testpkgs},
     include_package_data=True,
-    test_suite='nose.collector',
+    test_suite="nose.collector",
     tests_require=testpkgs,
-    package_data={'ksweb': [
-        'i18n/*/LC_MESSAGES/*.mo',
-        'templates/*/*',
-        'public/*/*'
-    ]},
-    message_extractors={'ksweb': [
-        ('**.py', 'python', None),
-        ('templates/**.xhtml', 'kajiki', {'extract_python': True}),
-        ('public/**', 'ignore', None)
-    ]},
-    entry_points={
-        'paste.app_factory': [
-            'main = ksweb.config.middleware:make_app'
-        ],
-        'gearbox.plugins': [
-            'turbogears-devtools = tg.devtools'
+    package_data={"ksweb": ["i18n/*/LC_MESSAGES/*.mo", "templates/*/*", "public/*/*"]},
+    message_extractors={
+        "ksweb": [
+            ("**.py", "python", None),
+            ("templates/**.xhtml", "kajiki", {"extract_python": True}),
+            ("public/**", "ignore", None),
         ]
     },
-    zip_safe=False
+    entry_points={
+        "paste.app_factory": ["main = ksweb.config.middleware:make_app"],
+        "gearbox.plugins": ["turbogears-devtools = tg.devtools"],
+    },
+    zip_safe=False,
 )
