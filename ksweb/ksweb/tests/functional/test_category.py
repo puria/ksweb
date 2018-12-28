@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from ksweb.model import Workspace, DBSession
 from ksweb.tests import TestController
 
 
@@ -31,12 +32,19 @@ class TestWorkspace(TestController):
         self._login_lawyer()
         workspace1 = self._get_workspace('Area 1')
         workspace2 = self._get_workspace('Area 2')
-        workspace3 = self._get_workspace('Not Visible Workspace')
 
         resp = self.app.get('/workspace/get_all')
         assert str(workspace1._id) in resp
         assert str(workspace2._id) in resp
-        assert str(workspace3._id) not in resp
+
+    def test_invisble_workspaces(self):
+        iw = Workspace(name="invisible", visible=False)
+        DBSession.flush(iw)
+
+        self._login_lawyer()
+        resp = self.app.get('/workspace/get_all')
+        w = self._get_workspace('invisible')
+        assert str(w._id) not in resp
 
     def test_create_workspace(self):
         self._login_lawyer()

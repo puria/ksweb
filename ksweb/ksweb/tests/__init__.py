@@ -74,6 +74,10 @@ class TestController(object):
         """Setup test fixture for each functional test method."""
         self.app = load_app(self.application_under_test)
         setup_app()
+        w = model.Workspace(name="Area 1", visible=True)
+        w2 = model.Workspace(name="Area 2", visible=True)
+        DBSession.flush(w)
+        DBSession.flush(w2)
 
     def tearDown(self):
         """Tear down test fixture for each functional test method."""
