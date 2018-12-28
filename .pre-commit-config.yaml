@@ -10,3 +10,10 @@ repos:
     hooks:
     - id: flake8
     - id: check-json
+-   repo: local
+    hooks:
+    -   id: nosetests
+        name: nosetests
+        entry: ./nose
+        language: system
+        always_run: true
