@@ -12,7 +12,7 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
-testpkgs = ["WebTest ==2.0.30", "nose", "coverage", "gearbox", "backlash", "pre-commit"]
+testpkgs = ["WebTest ==2.0.33", "nose", "coverage", "gearbox", "backlash", "pre-commit"]
 
 install_requires = [
     "TurboGears2>=2.4.0a1",
