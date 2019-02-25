@@ -18,7 +18,7 @@ install_requires = [
     "TurboGears2>=2.4.0a1",
     "Beaker==1.10.0",
     "Kajiki==0.7.2",
-    "Ming==0.6.5",
+    "Ming==0.9.0",
     "repoze.who==2.3",
     "tw2.forms==2.2.5",
     "tgext.admin==0.7.4",
