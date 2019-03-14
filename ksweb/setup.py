@@ -24,7 +24,7 @@ install_requires = [
     "tgext.admin==0.7.4",
     "WebHelpers2==2.0",
     "tgext.webassets==0.0.2",
-    "libsass==0.17.0",
+    "libsass==0.18.0",
     "tgapp-registration @ git+https://github.com/axant/tgapp-registration",
     "tgext.pluggable @ git+https://github.com/TurboGears/tgext.pluggable",
     "tgext.mailer @ git+https://github.com/amol-/tgext.mailer",
