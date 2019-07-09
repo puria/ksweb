@@ -21,15 +21,13 @@
 ##############################################################################
 from ksweb.controllers.output_plus import OutputPlusController
 from ksweb.lib.utils import entity_from_id, ksweb_error_handler, entity_from_hash
-from ksweb.lib.validator import WorkspaceExistValidator
-from ksweb.model import Output, Precondition, Qa, Document
-from tg import expose, flash, require, url, lurl, response, config, abort
-from tg import request, redirect, tmpl_context
+from tg import expose, flash, require, lurl, response, config, abort
+from tg import request, redirect
 from tg.decorators import paginate, decode_params, validate
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
-from tg.controllers.util import auth_force_login, validation_errors_response
+from tg.controllers.util import auth_force_login
 from ksweb import model
 from bson import ObjectId
 from tg.validation import Convert
@@ -46,7 +44,7 @@ from ksweb.lib.base import BaseController
 from ksweb.controllers.error import ErrorController
 from ksweb.controllers.resolve import ResolveController
 
-__all__ = ['RootController']
+__all__ = ["RootController"]
 
 
 class RootController(BaseController):
@@ -62,75 +60,102 @@ class RootController(BaseController):
 
     error = ErrorController()
 
-    @expose('ksweb.templates.index')
+    @expose("ksweb.templates.index")
     def index(self):
-        if predicates.has_any_permission('manage', 'lawyer'):
-            redirect('/start')
+        if predicates.has_any_permission("manage", "lawyer"):
+            redirect("/start")
         return dict()
 
-    @expose('ksweb.templates.questionary.index')
-    @paginate('entities', items_per_page=int(config.get('pagination.items_per_page')))
+    @expose("ksweb.templates.questionary.index")
+    @paginate("entities", items_per_page=int(config.get("pagination.items_per_page")))
     def dashboard(self, share_id):
-        user = model.User.query.find({'_id': ObjectId(share_id)}).first()
+        user = model.User.query.find({"_id": ObjectId(share_id)}).first()
 
         if not user:
             response.status_code = 403
-            flash(_('You are not allowed to operate in this page'))
-            redirect('/start')
+            flash(_("You are not allowed to operate in this page"))
+            redirect("/start")
 
-        entities = model.Questionary.query.find({'$or': [
-            {'_user': ObjectId(user._id)},
-            {'_owner': ObjectId(user._id)}
-        ]}).sort('title')
+        entities = model.Questionary.query.find(
+            {"$or": [{"_user": ObjectId(user._id)}, {"_owner": ObjectId(user._id)}]}
+        ).sort("title")
 
         if not entities.count():
-            flash(_('You don\'t have any form associated to %s' % user.email_address))
-            redirect('/start')
+            flash(_("You don't have any form associated to %s" % user.email_address))
+            redirect("/start")
 
         auth_force_login(user.user_name)
         return dict(
-            page='questionary-index',
+            page="questionary-index",
             fields={
-                'columns_name': [_('Title'), _('Owner'), _('Shared with'), _('Created on'),
-                                 _('Completion %')],
-                'fields_name': ['title', '_owner', '_user', 'creation_date', 'completion']
+                "columns_name": [
+                    _("Title"),
+                    _("Owner"),
+                    _("Shared with"),
+                    _("Created on"),
+                    _("Completion %"),
+                ],
+                "fields_name": [
+                    "title",
+                    "_owner",
+                    "_user",
+                    "creation_date",
+                    "completion",
+                ],
             },
             entities=entities,
             actions=False,
-            actions_content=[_('Export')],
+            actions_content=[_("Export")],
             workspace=None,
             show_sidebar=False,
-            share_id=share_id
+            share_id=share_id,
         )
 
-    @decode_params('json')
-    @expose('json')
+    @decode_params("json")
+    @expose("json")
     def become_editor_from_user(self, **kw):
-        user = model.User.query.find({'_id': ObjectId(kw['share_id'])}).first()
+        user = model.User.query.find({"_id": ObjectId(kw["share_id"])}).first()
         if user and not user.password:
-            user.password = kw['password']
-            user.user_name = kw['username']
-            group = model.Group.query.find({'group_name': 'lawyer'}).first()
+            user.password = kw["password"]
+            user.user_name = kw["username"]
+            group = model.Group.query.find({"group_name": "lawyer"}).first()
             user.groups = [group]
         return dict()
 
-    @expose('ksweb.templates.start')
-    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    @expose("ksweb.templates.start")
+    @require(
+        predicates.has_any_permission(
+            "manage", "lawyer", msg=l_("Only for admin or lawyer")
+        )
+    )
     def start(self):
-        user = request.identity['user']
+        user = request.identity["user"]
         categories = model.Workspace.per_user(user._id)
-        return dict(page='index', user=user, workspaces=categories, show_sidebar=False)
+        return dict(page="index", user=user, workspaces=categories, show_sidebar=False)
 
-    @expose('ksweb.templates.welcome')
-    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
-    @validate({'workspace': Convert(ObjectId, 'must be a valid ObjectId')}, error_handler=ksweb_error_handler)
+    @expose("ksweb.templates.welcome")
+    @require(
+        predicates.has_any_permission(
+            "manage", "lawyer", msg=l_("Only for admin or lawyer")
+        )
+    )
+    @validate(
+        {"workspace": Convert(ObjectId, "must be a valid ObjectId")},
+        error_handler=ksweb_error_handler,
+    )
     def welcome(self, workspace):
-        user = request.identity['user']
-        ws = model.Workspace.query.find({'_id': ObjectId(workspace)}).first()
-        return dict(page='welcome', user=user, workspace=workspace, ws=ws, show_sidebar=True)
+        user = request.identity["user"]
+        ws = model.Workspace.query.find({"_id": ObjectId(workspace)}).first()
+        return dict(
+            page="welcome", user=user, workspace=workspace, ws=ws, show_sidebar=True
+        )
 
-    @expose('json')
-    @require(predicates.has_any_permission('manage', 'lawyer',  msg=l_('Only for admin or lawyer')))
+    @expose("json")
+    @require(
+        predicates.has_any_permission(
+            "manage", "lawyer", msg=l_("Only for admin or lawyer")
+        )
+    )
     def entity(self, _id):
         entity = entity_from_hash(_id)
         if not entity:
@@ -140,49 +165,52 @@ class RootController(BaseController):
 
         abort(404)
 
-    @expose('ksweb.templates.terms')
+    @expose("ksweb.templates.terms")
     def terms(self):
         return dict()
 
-    @expose('ksweb.templates.privacy')
+    @expose("ksweb.templates.privacy")
     def privacy(self):
         return dict()
 
-    @expose('ksweb.templates.legal')
+    @expose("ksweb.templates.legal")
     def legal(self):
         return dict()
 
-    @expose('ksweb.templates.source')
+    @expose("ksweb.templates.source")
     def source(self):
         return dict()
 
-    @expose('ksweb.templates.login')
-    def login(self, came_from=lurl('/'), failure=None, login=''):
+    @expose("ksweb.templates.login")
+    def login(self, came_from=lurl("/"), failure=None, login=""):
         if failure is not None:
-            if failure == 'user-not-found':
-                flash(_('User not found'), 'error')
-            elif failure == 'invalid-password':
-                flash(_('Invalid Password'), 'error')
-            elif failure == 'user-created':
-                flash(_('User successfully created'))
+            if failure == "user-not-found":
+                flash(_("User not found"), "error")
+            elif failure == "invalid-password":
+                flash(_("Invalid Password"), "error")
+            elif failure == "user-created":
+                flash(_("User successfully created"))
 
-        login_counter = request.environ.get('repoze.who.logins', 0)
+        login_counter = request.environ.get("repoze.who.logins", 0)
         if failure is None and login_counter > 0:
-            flash(_('Wrong credentials'), 'warning')
-        return dict(page='login', login_counter=str(login_counter),
-                    came_from=came_from, login=login)
+            flash(_("Wrong credentials"), "warning")
+        return dict(
+            page="login",
+            login_counter=str(login_counter),
+            came_from=came_from,
+            login=login,
+        )
 
     @expose()
-    def post_login(self, came_from=lurl('/')):
+    def post_login(self, came_from=lurl("/")):
         if not request.identity:
-            login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login',
-                     params=dict(came_from=came_from, __logins=login_counter))
-        userid = request.identity['repoze.who.userid']
-        flash(_('Welcome back, %s!') % userid)
+            login_counter = request.environ.get("repoze.who.logins", 0) + 1
+            redirect("/login", params=dict(came_from=came_from, __logins=login_counter))
+        userid = request.identity["repoze.who.userid"]
+        flash(_("Welcome back, %s!") % userid)
         return HTTPFound(location=came_from)
 
     @expose()
-    def post_logout(self, came_from=lurl('/')):
-        flash(_('We hope to see you soon!'))
+    def post_logout(self, came_from=lurl("/")):
+        flash(_("We hope to see you soon!"))
         return HTTPFound(location=came_from)
