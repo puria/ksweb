@@ -15,8 +15,9 @@ except ImportError:
 testpkgs = ["WebTest ==2.0.30", "nose", "coverage", "gearbox", "backlash", "pre-commit"]
 
 install_requires = [
-    "TurboGears2>=2.4.0a1",
+    "TurboGears2==2.4.0",
     "Beaker==1.10.0",
+    "PyYAML==5.1.1",
     "Kajiki==0.8.0",
     "Ming==0.6.5",
     "repoze.who==2.3",

@@ -1,4 +1,4 @@
 #!/bin/bash
 cd ksweb
-nosetests
+nosetests -x
 exit $?
