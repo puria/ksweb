@@ -49,6 +49,8 @@ Checkout the project
 Before install KSweb you need to have an instance of **[:leaves:mongodb](https://www.mongodb.com/download-center/community)** up and running, the **python development headers** and **python3-virtualenv** packages
 *NB* you need `python3 >= 3.6` and `pip >= 18.1`
 
+You also need to have to install [pandoc](https://pandoc.org/) for exporting the actual output to different formats.
+
 ### Installer
 run the installer:
 

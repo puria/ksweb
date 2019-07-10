@@ -7,11 +7,23 @@
     <div class="row mt-2">
         <h1 class="col type-page-title">${_('Complete the form')}: {{questionary.title}}</h1>
         <div class="col-md-auto text-right">
-            <a href="${tg.url('/questionary/download', params={'_id': questionary._id})}"
+            <a href="${tg.url('/questionary/download', params={'_id': questionary._id, 'format': 'docx'})}"
                class-disabled='!quest_compiled.completed'
                class-btn-outline-success="quest_compiled.completed"
                class="btn btn-outline">
-                    ${h.material_icon('download')} Download
+                    ${h.material_icon('download')} Download .docx
+            </a>
+            <a href="${tg.url('/questionary/download', params={'_id': questionary._id, 'format': 'markdown'})}"
+               class-disabled='!quest_compiled.completed'
+               class-btn-outline-success="quest_compiled.completed"
+               class="btn btn-outline">
+                    ${h.material_icon('download')} Download md
+            </a>
+            <a href="${tg.url('/questionary/download', params={'_id': questionary._id, 'format': 'odt'})}"
+               class-disabled='!quest_compiled.completed'
+               class-btn-outline-success="quest_compiled.completed"
+               class="btn btn-outline">
+                    ${h.material_icon('download')} Download odt
             </a>
             <button type="button" class="btn btn-outline"
                     class-disabled='!quest_compiled.completed'
