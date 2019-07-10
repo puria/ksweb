@@ -3,6 +3,9 @@ python:
   - "3.6"
   - "3.7-dev"
 
+before_install:
+  - sudo apt-get install -y pandoc
+
 before_script: cd ksweb
 
 install:

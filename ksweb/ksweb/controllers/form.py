@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """Questionary controller module"""
+from tempfile import NamedTemporaryFile
+
+import pypandoc
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import (
@@ -153,7 +156,7 @@ class FormController(BaseController):
     )
     @require(
         CanManageEntityOwner(
-            msg=l_(u"You are not allowed to edit this questionary."),
+            msg=l_("You are not allowed to edit this questionary."),
             field="_id",
             entity_model=model.Questionary,
         )
@@ -167,27 +170,39 @@ class FormController(BaseController):
             recap=questionary.answers,
         )
 
-    @expose(content_type="text/html")
+    @expose(content_type="application/application/octet-stream")
     @validate(
         {"_id": QuestionaryExistValidator(required=True)},
         error_handler=validation_errors_response,
     )
     @require(
         CanManageEntityOwner(
-            msg=l_(u"You are not allowed to download this questionary."),
+            msg=l_("You are not allowed to download this questionary."),
             field="_id",
             entity_model=model.Questionary,
         )
     )
-    def download(self, _id):
+    def download(self, _id, format):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         filename = slugify(questionary, questionary.title)
         response.headerlist.append(
-            ("Content-Disposition", "attachment;filename=%s.md" % filename)
+            ("Content-Disposition", f"attachment;filename={filename}.{format}")
         )
         filled_md = self.get_questionary_html(_id)
         unanswered, __ = find_entities_from_html(filled_md)
-        return TemplateOutput(filled_md).safe_substitute({k: "" for k in unanswered})
+        output = NamedTemporaryFile()
+        with NamedTemporaryFile() as input:
+            input.write(
+                TemplateOutput(filled_md)
+                .safe_substitute({k: "" for k in unanswered})
+                .encode()
+            )
+            input.seek(0)
+            pypandoc.convert_file(
+                input.name, format, format="md", outputfile=output.name
+            )
+
+        return output
 
     @staticmethod
     def get_questionary_html(quest_id):
@@ -233,7 +248,7 @@ class FormController(BaseController):
     )
     @require(
         CanManageEntityOwner(
-            msg=l_(u"You are not allowed to edit this questionary."),
+            msg=l_("You are not allowed to edit this questionary."),
             field="_id",
             entity_model=model.Questionary,
         )
@@ -298,7 +313,7 @@ class FormController(BaseController):
     )
     @require(
         CanManageEntityOwner(
-            msg=l_(u"You are not allowed to edit this questionary."),
+            msg=l_("You are not allowed to edit this questionary."),
             field="_id",
             entity_model=model.Questionary,
         )
