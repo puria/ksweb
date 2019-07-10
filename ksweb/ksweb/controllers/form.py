@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """Questionary controller module"""
+from tempfile import NamedTemporaryFile
+
+import pypandoc
 from bson import ObjectId
 from ksweb.lib.predicates import CanManageEntityOwner
 from ksweb.lib.utils import (
@@ -167,7 +170,7 @@ class FormController(BaseController):
             recap=questionary.answers,
         )
 
-    @expose(content_type="text/html")
+    @expose(content_type="application/vnd.oasis.opendocument.text")
     @validate(
         {"_id": QuestionaryExistValidator(required=True)},
         error_handler=validation_errors_response,
@@ -183,11 +186,23 @@ class FormController(BaseController):
         questionary = model.Questionary.query.get(_id=ObjectId(_id))
         filename = slugify(questionary, questionary.title)
         response.headerlist.append(
-            ("Content-Disposition", "attachment;filename=%s.md" % filename)
+            ("Content-Disposition", "attachment;filename=%s.odt" % filename)
         )
         filled_md = self.get_questionary_html(_id)
         unanswered, __ = find_entities_from_html(filled_md)
-        return TemplateOutput(filled_md).safe_substitute({k: "" for k in unanswered})
+        output = NamedTemporaryFile()
+        with NamedTemporaryFile() as input:
+            input.write(
+                TemplateOutput(filled_md)
+                .safe_substitute({k: "" for k in unanswered})
+                .encode()
+            )
+            input.seek(0)
+            pypandoc.convert_file(
+                input.name, "odt", format="md", outputfile=output.name
+            )
+
+        return output
 
     @staticmethod
     def get_questionary_html(quest_id):
