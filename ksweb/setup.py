@@ -15,7 +15,7 @@ except ImportError:
 testpkgs = ["WebTest ==2.0.30", "nose", "coverage", "gearbox", "backlash", "pre-commit"]
 
 install_requires = [
-    "TurboGears2==2.4.0",
+    "TurboGears2==2.4.1",
     "Beaker==1.10.0",
     "PyYAML==5.1.1",
     "pypandoc==1.4",
