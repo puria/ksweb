@@ -19,7 +19,7 @@ install_requires = [
     "Beaker==1.10.0",
     "PyYAML==5.1.1",
     "pypandoc==1.4",
-    "Kajiki==0.8.0",
+    "Kajiki==0.8.1",
     "Ming==0.6.5",
     "repoze.who==2.3",
     "tw2.forms==2.2.5",
