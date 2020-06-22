@@ -20,7 +20,7 @@ install_requires = [
     "PyYAML==5.1.1",
     "pypandoc==1.5",
     "Kajiki==0.8.0",
-    "Ming==0.9.2",
+    "Ming==0.10.2",
     "repoze.who==2.4",
     "tw2.forms==2.2.5",
     "tgext.admin==0.7.4",
