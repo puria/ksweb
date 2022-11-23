@@ -6,8 +6,7 @@
   <meta charset="${response.charset}" />
 
   <title py:block="master_title">KS Web</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'/>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" py:for="asset_url in g.webassets['fonts'].urls()" href="$asset_url"/>
   <link py:for="asset_url in g.webassets['css_all'].urls()" rel="stylesheet" type="text/css"
         media="all" href="$asset_url"/>
   <script py:for="asset_url in g.webassets['js_all'].urls()" src="$asset_url"></script>

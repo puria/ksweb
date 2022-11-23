@@ -1,40 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="${response.charset}" />
 
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta charset="${response.charset}" />
+    <title py:block="master_title">KS Web</title>
+    <link
+      rel="stylesheet"
+      href="${'/css/vendors/simple-line-icons/css/simple-line-icons.css'}"
+    />
+    <link
+      rel="stylesheet"
+      py:for="asset_url in g.webassets['fonts'].urls()"
+      href="$asset_url"
+    />
+    <link
+      rel="stylesheet"
+      py:for="asset_url in g.webassets['css_all'].urls()"
+      href="$asset_url"
+    />
+    <link
+      rel="stylesheet"
+      py:for="asset_url in g.webassets['new-age'].urls()"
+      href="$asset_url"
+    />
 
-  <title py:block="master_title">KS Web</title>
-  <link rel="stylesheet" href="${'/css/vendors/simple-line-icons/css/simple-line-icons.css'}" />
-  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" py:for="asset_url in g.webassets['css_all'].urls()" href="$asset_url"/>
-  <link rel="stylesheet" py:for="asset_url in g.webassets['new-age'].urls()" href="$asset_url"/>
-
-  <script async="async" defer="defer" src="https://buttons.github.io/buttons.js"></script>
-  <script py:for="asset_url in g.webassets['js_all'].urls()" src="$asset_url"></script>
-  <script src="${tg.url('/javascript/axel.js')}"></script>
-  <script type="text/javascript">
-    <![CDATA[
-    if (typeof jQuery === 'undefined')
-      axel.register('jquery', 'https://code.jquery.com/jquery.js');
-    else
-      axel.register('jquery', axel.Preloaded);
-    ]]>
-  </script>
-  <py:block name="head"></py:block>
-</head>
+    <script
+      py:for="asset_url in g.webassets['js_all'].urls()"
+      src="$asset_url"
+    ></script>
+    <script src="${tg.url('/javascript/axel.js')}"></script>
+    <script type="text/javascript">
+      <![CDATA[
+      if (typeof jQuery === 'undefined')
+        axel.register('jquery', 'https://code.jquery.com/jquery.js');
+      else
+        axel.register('jquery', axel.Preloaded);
+      ]]>
+    </script>
+    <py:block name="head"></py:block>
+  </head>
 
   <body id="page-top">
-
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">KNOWLEDGE SHAPER</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top"
+          >KNOWLEDGE SHAPER</a
+        >
+        <button
+          class="navbar-toggler navbar-toggler-right"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           Menu
           <i class="fa fa-bars"></i>
         </button>
@@ -44,7 +66,9 @@
               <a class="nav-link js-scroll-trigger" href="#try">Try</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#features">Features</a>
+              <a class="nav-link js-scroll-trigger" href="#features"
+                >Features</a
+              >
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#cta">Freedom</a>
@@ -62,8 +86,12 @@
         <div class="row h-100">
           <div class="col-lg-7 my-auto">
             <div class="header-content mx-auto">
-              <h1 class="mb-5">Knowledge Shaper. L’editor per condividere la tua conoscenza</h1>
-              <a href="#try" class="btn btn-outline btn-xl js-scroll-trigger">Scoprilo subito!</a>
+              <h1 class="mb-5">
+                Knowledge Shaper. L’editor per condividere la tua conoscenza
+              </h1>
+              <a href="#try" class="btn btn-outline btn-xl js-scroll-trigger"
+                >Scoprilo subito!</a
+              >
             </div>
           </div>
           <div class="col-lg-5 my-auto">
@@ -71,10 +99,9 @@
               <div class="device-mockup iphone6_plus portrait white">
                 <div class="device">
                   <div class="screen">
-                    <img src="img/demo-screen-1.jpg" class="img-fluid" alt=""/>
+                    <img src="img/demo-screen-1.jpg" class="img-fluid" alt="" />
                   </div>
-                  <div class="button">
-                  </div>
+                  <div class="button"></div>
                 </div>
               </div>
             </div>
@@ -88,9 +115,20 @@
         <div class="row">
           <div class="col-md-8 mx-auto">
             <h2 class="section-heading">Prova il Knowledge Shaper.</h2>
-              <a class="mb-3 btn btn-xl btn-success" href="https://ks.studiolegale.it/registration">Register to try KS as an editor</a>
-              <a class="mb-3  btn btn-outline btn-xl ml-5" target="_blank" href="https://ks.studiolegale.it/login_handler?login=demo&amp;password=demo">Try the KS demo</a>
-              <a class="btn btn-outline btn-xl ml-5" target="_blank" href="#">Try the GRPR Memorandum as a user</a>
+            <a
+              class="mb-3 btn btn-xl btn-success"
+              href="https://ks.studiolegale.it/registration"
+              >Register to try KS as an editor</a
+            >
+            <a
+              class="mb-3 btn btn-outline btn-xl ml-5"
+              target="_blank"
+              href="https://ks.studiolegale.it/login_handler?login=demo&amp;password=demo"
+              >Try the KS demo</a
+            >
+            <a class="btn btn-outline btn-xl ml-5" target="_blank" href="#"
+              >Try the GRPR Memorandum as a user</a
+            >
           </div>
         </div>
       </div>
@@ -99,8 +137,14 @@
     <section class="features" id="features">
       <div class="container">
         <div class="section-heading text-center">
-          <h2>Knowledge Shaper ti permette di lavorare con le tue basi di conoscenza</h2>
-          <p class="text-muted">Componi le tue basi di conoscenza creando domande, risposte, filtri e output per comporre wizard, formulari ecc.</p>
+          <h2>
+            Knowledge Shaper ti permette di lavorare con le tue basi di
+            conoscenza
+          </h2>
+          <p class="text-muted">
+            Componi le tue basi di conoscenza creando domande, risposte, filtri
+            e output per comporre wizard, formulari ecc.
+          </p>
           <hr />
         </div>
         <div class="row">
@@ -109,10 +153,13 @@
               <div class="device-mockup iphone6_plus portrait white">
                 <div class="device">
                   <div class="screen">
-                    <img src="${'/img/demo-screen-1.png'}" class="img-fluid" alt=""/>
+                    <img
+                      src="${'/img/demo-screen-1.png'}"
+                      class="img-fluid"
+                      alt=""
+                    />
                   </div>
-                  <div class="button">
-                  </div>
+                  <div class="button"></div>
                 </div>
               </div>
             </div>
@@ -157,7 +204,12 @@
       <div class="cta-content">
         <div class="container">
           <h2>Knowledge shaper è software libero!</h2>
-          <a class="btn btn-outline btn-xl ml-5" target="_blank" href="https://github.com/puria/ksweb">SORGENTI</a>
+          <a
+            class="btn btn-outline btn-xl ml-5"
+            target="_blank"
+            href="https://github.com/puria/ksweb"
+            >SORGENTI</a
+          >
         </div>
       </div>
       <div class="overlay"></div>
@@ -165,20 +217,46 @@
 
     <section class="contact bg-primary" id="contact">
       <div class="container">
-        <h2>Ti incoraggiamo a pubblicare le tue basi di conoscenza con licenza libera
-          (per es, vedi <a href="https://github.com/marco55555/Memorandum-GDPR"
-                           target="_blank">Memorandum GDPR</a>)</h2>
+        <h2>
+          Ti incoraggiamo a pubblicare le tue basi di conoscenza con licenza
+          libera (per es, vedi
+          <a
+            href="https://github.com/marco55555/Memorandum-GDPR"
+            target="_blank"
+            >Memorandum GDPR</a
+          >)
+        </h2>
         <h3>e a metterci una stellina su github</h3>
         <p>
-          <a class="github-button" href="https://github.com/puria/ksweb" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star puria/ksweb on GitHub">Star</a>
-          <a class="github-button" href="https://github.com/puria/ksweb/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork puria/ksweb on GitHub">Fork</a>
+          <a
+            class="github-button"
+            href="https://github.com/puria/ksweb"
+            data-icon="octicon-star"
+            data-size="large"
+            data-show-count="true"
+            aria-label="Star puria/ksweb on GitHub"
+            >Star</a
+          >
+          <a
+            class="github-button"
+            href="https://github.com/puria/ksweb/fork"
+            data-icon="octicon-repo-forked"
+            data-size="large"
+            data-show-count="true"
+            aria-label="Fork puria/ksweb on GitHub"
+            >Fork</a
+          >
         </p>
       </div>
     </section>
 
     <footer>
       <div class="container">
-        <p>Made with <i class="fa fa-heart"></i> by AXANT<br/>Studio Legale Ciurcina Tita Ass. Prof. · Torino, Via San Quintino n. 32, cap 10121 · C.F. e P. IVA 09027200014</p>
+        <p>
+          Made with <i class="fa fa-heart"></i> by AXANT<br />Studio Legale
+          Ciurcina Tita Ass. Prof. · Torino, Via San Quintino n. 32, cap 10121 ·
+          C.F. e P. IVA 09027200014
+        </p>
         <ul class="list-inline">
           <li class="list-inline-item">
             <a href="${tg.url('/privacy')}">Privacy Policy</a>
@@ -192,5 +270,4 @@
     <script src="${tg.url('/javascript/vendors/jquery-easing/jquery.easing.min.js')}"></script>
     <script src="${tg.url('/javascript/vendors/new-age/new-age.min.js')}"></script>
   </body>
-
 </html>
