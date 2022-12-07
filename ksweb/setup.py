@@ -16,7 +16,7 @@ testpkgs = ["WebTest ==2.0.30", "nose", "coverage", "gearbox", "backlash", "pre-
 
 install_requires = [
     "TurboGears2==2.4.0",
-    "Beaker==1.10.0",
+    "Beaker==1.12.0",
     "PyYAML==5.1.1",
     "pypandoc==1.5",
     "Kajiki==0.8.0",
