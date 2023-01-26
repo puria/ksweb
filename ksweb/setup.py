@@ -21,7 +21,7 @@ install_requires = [
     "pypandoc==1.5",
     "Kajiki==0.8.0",
     "Ming==0.9.2",
-    "repoze.who==2.4",
+    "repoze.who==3.0.0",
     "tw2.forms==2.2.5",
     "tgext.admin==0.7.4",
     "WebHelpers2==2.0",
