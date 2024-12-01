@@ -22,7 +22,7 @@ install_requires = [
     "Kajiki==0.8.0",
     "Ming==0.9.2",
     "repoze.who==2.4",
-    "tw2.forms==2.2.5",
+    "tw2.forms==2.2.6",
     "tgext.admin==0.7.4",
     "WebHelpers2==2.0",
     "tgext.webassets==0.0.2",
