@@ -34,7 +34,7 @@ install_requires = [
     "tgext.datahelpers",
     "tgapp-userprofile @ git+https://github.com/puria/tgapp-userprofile",
     "axf==0.0.19",
-    "tgext.evolve==0.0.4",
+    "tgext.evolve==0.0.5",
     "dukpy",
 ]
 
